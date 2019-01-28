@@ -1,0 +1,88 @@
+import os
+import time
+import urllib
+import random
+
+##from cinfony import cdk, rdkit, pybel
+from cinfony import cdk
+
+def getfromPubChem(N = 100, filename = "dataset.sdf"):
+    url = ("http://pubchem.ncbi.nlm.nih.gov/summary/"
+           "summary.cgi?cid=%d&disopt=DisplaySDF")
+    tot = 0
+    ans = []
+    while tot < N:
+        cid = random.randint(1, 24000000)
+        sdfile = urllib.urlopen(url % cid).read().rstrip()
+        if pybel.readstring("sdf", sdfile).data['PUBCHEM_COMPONENT_COUNT'] != "1":
+            continue
+        ans.append(sdfile)
+        tot += 1
+    print >> open("dataset.sdf", "w"), "\n".join(ans)
+    return "".join(ans)
+
+if __name__ == "__main__":
+    N = 100
+    # getfromPubChem(N)
+##    toolkits = [cdk, rdkit, pybel]
+    toolkits = [cdk]
+    iters = [x.readfile("sdf", "dataset.sdf") for x in toolkits]
+    output_sdg = """<html><body>
+<table border="1">
+ <tr><th>SDG</th><th>PubChem</th><th>OASA</th>
+     <th>RDKit</th><th>CDK</th><th>CDK</th>
+ </tr>
+ <tr><th>Depiction</th><th>PubChem</th><th>OASA</th>
+     <th>RDKit devel</th><th>ChemBioGrid</th><th>OASA</th>
+ </tr>
+"""
+    output_depict = """<html><body>
+<table border="1">
+ <tr><th>Depiction</th><th>PubChem</th><th>RDKit</th>
+     <th>RDKit devel</th><th>CDK</th><th>OASA</th>
+ </tr>
+ """
+    url = "http://pubchem.ncbi.nlm.nih.gov/image/imgsrv.fcgi?t=l&cid=%s"
+##    for i, (cdkmol, rdkmol, pybelmol) in enumerate(zip(*iters)):
+    for i, (cdkmol,) in enumerate(zip(*iters)):
+        # time.sleep(1)
+        if cdkmol.data['PUBCHEM_COMPONENT_COUNT'] != "1":
+            continue
+        title = cdkmol.data['Title']
+        if title=="1373132": # BKChem error
+            continue
+        print title
+        # urllib.urlretrieve(url % title, "sdg/%d_pubchem.png" % i)
+        # pybelmol.draw(filename="sdg/%d_pubchem_oasa.png" % i, show=False, usecoords=True)
+        # pybelmol.draw(filename="sdg/%d_pybel_oasa.png" % i, show=False)
+        # rdkmol.draw(filename="sdg/%d_pubchem_rdk.png" % i, show=False, usecoords=True)
+        # rdkmol.draw(filename="sdg/%d_pubchem_rdkdev.png" % i, show=False, newdraw=True, usecoords=True)
+        # rdkmol.draw(filename="sdg/%d_rdk_newdraw.png" % i, show=False, newdraw=True)
+        # cdkmol.draw(filename="sdg/%d_cdk_oasa.png" % i, show=False)
+        # cdkmol.draw(filename="sdg/%d_cdk_web.jpeg" % i, show=False, web=True)
+        cdkmol.draw(filename="sdg/%d_pubchem_cdk.png" % i, show=False, usecoords=True)
+        output_sdg += """<td>
+<tr><td>%s</td>
+<td><img src="sdg/%d_pubchem.png"/></td>
+<td><img src="sdg/%d_pybel_oasa.png"/></td>
+<td><img src="sdg/%d_rdk_newdraw.png"/></td>
+<td><img src="sdg/%d_cdk_web.jpeg"/></td>
+<td><img src="sdg/%d_cdk_oasa.png"/></td>
+</tr>
+""" % (title, i, i, i, i, i)
+        output_depict += """<td>
+<tr><td>%s</td>
+<td><img src="sdg/%d_pubchem.png"/></td>
+<td><img src="sdg/%d_pubchem_rdk.png"/></td>
+<td><img src="sdg/%d_pubchem_rdkdev.png"/></td>
+<td><img src="sdg/%d_pubchem_cdk.png"/></td>
+<td><img src="sdg/%d_pubchem_oasa.png"/></td>
+</tr>
+""" % (title, i, i, i, i, i)        
+        
+    end = "</table></body></html>"
+    output_sdg += end
+    output_depict += end
+    print >> open("sdg.html", "w"), output_sdg
+    print >> open("depict.html", "w"), output_depict
+    
