@@ -1,0 +1,1 @@
+/home/noel/Tools/rasmol2js/emsdk_portable/emscripten/master/emcc  -O3    CMakeFiles/rassdl.dir/rassdl.c.o  -o rassdl.html  libraslib.a --preload-file pdb1crn.ent -s EXPORTED_FUNCTIONS="['_main','_HandleCommand', '_HandleMenu', '_SetScreenSize', '_SetTransparentMode']" --preload-file rasmol.hlp --preload-file fort.25 --preload-file 3blm.pdb
