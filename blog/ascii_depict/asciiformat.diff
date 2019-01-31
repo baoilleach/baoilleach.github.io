@@ -1,0 +1,489 @@
+Index: include/openbabel/depict/asciipainter.h
+===================================================================
+--- include/openbabel/depict/asciipainter.h	(revision 0)
++++ include/openbabel/depict/asciipainter.h	(revision 0)
+@@ -0,0 +1,53 @@
++#ifndef OB_ASCIIPAINTER_H
++#define OB_ASCIIPAINTER_H
++
++#include <openbabel/depict/painter.h>
++#include <aalib.h>
++
++namespace OpenBabel
++{
++  class AsciiPainter : public OBPainter
++  {
++    public:
++      AsciiPainter();
++      ~AsciiPainter();
++      //! @name OBPainter methods
++      //@{
++      void NewCanvas(double width, double height);
++      bool IsGood() const;
++      void SetFontFamily(const std::string &fontFamily) {} // FIXME
++      void SetFontSize(int pointSize);
++      void SetFillColor(const OBColor &color);
++      void SetPenColor(const OBColor &color);
++      void SetPenWidth(double width);
++      void DrawLine(double x1, double y1, double x2, double y2);
++      void DrawPolygon(const std::vector<std::pair<double,double> > &points);
++      void DrawCircle(double x, double y, double r);
++      void DrawText(double x, double y, const std::string &text);
++      OBFontMetrics GetFontMetrics(const std::string &text);
++      //@}
++
++      //! @name AsciiPainter specific
++      //@{
++      void WriteImage(const std::string &filename);
++      void WriteImage(std::ostream& ofs);
++      struct TextItem {
++       int x;
++       int y;
++       std::string text;
++      };
++      //@}
++ 
++    private:
++      aa_context *m_context;
++      struct aa_hardware_params m_ascii_hwparms; 
++      struct aa_savedata m_ascii_save;
++      char m_filename[100];
++      double m_width, m_height;
++      std::vector<TextItem> m_textitems;
++      
++  };
++
++}
++
++#endif
+Index: src/depict/depict.cpp
+===================================================================
+--- src/depict/depict.cpp	(revision 4530)
++++ src/depict/depict.cpp	(working copy)
+@@ -319,11 +319,12 @@
+         min_y = std::min(min_y, atom->GetY());
+         max_y = std::max(max_y, atom->GetY());
+       }
++      double scale = 0.7;
+ 
+-      const double margin = 40.0;
++      const double margin = 20.0;
+       // translate all atoms so the bottom-left atom is at margin,margin
+       for (atom = d->mol->BeginAtom(i); atom; atom = d->mol->NextAtom(i))
+-        atom->SetVector(atom->GetX() - min_x + margin, atom->GetY() - min_y + margin, 0.0);
++        atom->SetVector((atom->GetX() - min_x + margin)*scale, ( atom->GetY() - min_y + margin)*scale, 0.0);
+ 
+       width  = max_x - min_x + 2*margin;
+       height = max_y - min_y + 2*margin;
+Index: src/depict/asciipainter.cpp
+===================================================================
+--- src/depict/asciipainter.cpp	(revision 0)
++++ src/depict/asciipainter.cpp	(revision 0)
+@@ -0,0 +1,248 @@
++#include <string.h>
++#include <iostream>
++
++#include <openbabel/depict/asciipainter.h>
++#include <aalib.h>
++
++using namespace std;
++
++/*
++ * Draws a line in octant 0 or 3 ( |xlen| >= ylen ).
++ *  For internal use, Use aa_drawline instead.
++ */
++void aa_octant0(aa_context *context, int x0, int y0,
++			int xlen, int ylen,
++			int xdir, int color) {
++	int ylenX2;
++	int ylenminusxlenX2;
++	int errorterm;
++
++	ylenX2 = ylen * 2;
++	ylenminusxlenX2 = ylenX2 - (int)(2 * xlen);
++	errorterm = ylenX2 - (int)xlen;
++
++	aa_putpixel(context, x0, y0, color);
++	while ( xlen-- ) {
++		if ( errorterm >= 0 ) {
++			y0++;
++			errorterm += ylenminusxlenX2;
++		} else {
++			errorterm += ylenX2;
++		}
++		x0 += xdir;
++		aa_putpixel(context, x0, y0, color);
++	}
++}
++
++
++/*
++ * Draws a line in octant 1 or 2 ( |xlen| < ylen ).
++ *  For internal use, Use aa_drawline instead.
++ */
++void aa_octant1(aa_context *context, int x0, int y0,
++			int xlen, int ylen,
++			int xdir, int color) {
++	int xlenX2;
++	int xlenminusylenX2;
++	int errorterm;
++
++	xlenX2 = xlen * 2;
++	xlenminusylenX2 = xlenX2 - (int)(2 * ylen);
++	errorterm = xlenX2 - (int)ylen;
++
++	aa_putpixel(context, x0, y0, color);
++	while ( ylen-- ) {
++		if ( errorterm >= 0 ) {
++			x0 += xdir;
++			errorterm += xlenminusylenX2;
++		} else {
++			errorterm += xlenX2;
++		}
++		y0++;
++		aa_putpixel(context, x0, y0, color);
++	}
++}
++
++
++/* Bresenham's, flagrantly lifted from Abrash's black book */
++/* Doesn't call aa_flush */
++void aa_drawline(aa_context *context, int x0, int y0,
++				int x1, int y1, int color) {
++	int xlen, ylen;
++	unsigned char *horiz_linestart;
++	int tmp;
++
++	if(y0 == y1) {
++		/* It's a flat line, which we can optimise a little :-) */
++		if(x0 > x1) {
++			tmp = x0;
++			x0 = x1;
++			x1 = tmp;
++		}
++
++		horiz_linestart = context->imagebuffer + x0 +
++				y0*aa_imgwidth(context);
++		memset((void *)horiz_linestart,(unsigned char)color, (size_t)x1-x0);
++		return;
++	}
++
++	if(y0>y1) {
++		tmp = y0;
++		y0 = y1;
++		y1 = tmp;
++		tmp = x0;
++		x0 = x1;
++		x1 = tmp;
++	}
++
++	xlen = x1 - x0;
++	ylen = y1 - y0;
++
++	if ( xlen > 0 ) {
++		if ( xlen > ylen ) {
++			aa_octant0(context, x0, y0, xlen, ylen, 1, color);
++		} else {
++			aa_octant1(context, x0, y0, xlen, ylen, 1, color);
++		}
++	} else {
++		xlen = -xlen;
++		if ( xlen > ylen ) {
++			aa_octant0(context, x0, y0, xlen, ylen, -1, color);
++		} else {
++			aa_octant1(context, x0, y0, xlen, ylen, -1, color);
++		}
++	}
++}
++
++namespace OpenBabel
++{
++
++  // Class definition of AsciiPainter
++  AsciiPainter::AsciiPainter()
++  {
++  }
++
++  AsciiPainter::~AsciiPainter()
++  {
++    if (m_context)
++      aa_close(m_context);
++  }
++
++  void AsciiPainter::NewCanvas(double width, double height)
++  {
++    m_width = width;
++    m_height = height;
++
++    memcpy (&m_ascii_hwparms, &aa_defparams, sizeof (struct aa_hardware_params));
++    m_ascii_hwparms.width = 80;
++    m_ascii_hwparms.height = 30;
++
++    strcpy(m_filename, "hello.txt");
++    m_ascii_save.name = m_filename;
++    m_ascii_save.format = &aa_text_format;
++    m_ascii_save.file = NULL;
++    m_context = aa_init(&save_d, &m_ascii_hwparms, &m_ascii_save);
++
++  }
++  
++  bool AsciiPainter::IsGood() const
++  {
++    return true;
++  }
++      
++  void AsciiPainter::SetFontSize(int pointSize)
++  {
++  }
++
++  void AsciiPainter::SetFillColor(const OBColor &color)
++  {
++  }
++
++  void AsciiPainter::SetPenColor(const OBColor &color)
++  {
++  }
++      
++  void AsciiPainter::SetPenWidth(double width)
++  {
++  }
++
++  void AsciiPainter::DrawLine(double x1, double y1, double x2, double y2)
++  {
++    aa_drawline(m_context, x1, y1/2., x2, y2/2., 255);
++  }
++
++  void AsciiPainter::DrawPolygon(const std::vector<std::pair<double,double> > &points)
++  {
++  }
++
++  void AsciiPainter::DrawCircle(double x, double y, double r)
++  {
++  }
++
++  void AsciiPainter::DrawText(double x, double y, const std::string &text)
++  {
++    TextItem txt;
++    txt.x = int(x/2.);
++    txt.y = int(y/4.);
++    txt.text = text;
++    if (txt.x < aa_scrwidth(m_context) && txt.y < aa_scrheight(m_context))
++      m_textitems.push_back(txt);
++  }
++
++  OBFontMetrics AsciiPainter::GetFontMetrics(const std::string &text)
++  {
++    OBFontMetrics metrics;
++    metrics.fontSize = 1;
++    metrics.ascent = 1;
++    metrics.descent = 0;
++    metrics.width = 1;
++    metrics.height = 1;
++
++    return metrics;
++  }
++      
++  void AsciiPainter::WriteImage(const std::string &filename)
++  {
++  /*ascii_rndparms->bright = aa_geo.bright;
++  ascii_rndparms->contrast = aa_geo.contrast;
++  ascii_rndparms->gamma = aa_geo.gamma;
++  // those are left to be setted by aalib options
++  //  ascii_rndparms->dither = AA_FLOYD_S;
++  //  ascii_rndparms->inversion = invert;
++  //  ascii_rndparms->randomval = 0;*/
++
++    struct aa_renderparams *ascii_rndparms;
++    ascii_rndparms = aa_getrenderparams();
++    aa_render (m_context, ascii_rndparms, 0, 0,
++               aa_scrwidth(m_context), aa_scrheight(m_context));
++    for (vector<TextItem>::iterator it = m_textitems.begin(); it != m_textitems.end(); it++) {
++      aa_text(m_context)[it->y * aa_scrwidth(m_context) + it->x] = it->text.at(0);
++    }
++    aa_flush (m_context);
++
++  }
++
++
++  void AsciiPainter::WriteImage(std::ostream& ofs)
++  {
++    struct aa_renderparams *ascii_rndparms;
++    ascii_rndparms = aa_getrenderparams();
++    aa_render (m_context, ascii_rndparms, 0, 0,
++               aa_scrwidth(m_context), aa_scrheight(m_context));
++    for (vector<TextItem>::iterator it = m_textitems.begin(); it != m_textitems.end(); it++) {
++      for(int i=0; i<it->text.size() && i+it->x < aa_scrwidth(m_context); ++i)
++        aa_text(m_context)[it->y * aa_scrwidth(m_context) + it->x + i] = it->text.at(i);
++    }
++    aa_flush (m_context);
++    int w = aa_scrwidth(m_context);
++    int h = aa_scrheight(m_context);
++    for(int y=0; y<h; y++) {
++      for(int x=0; x<w; x++)
++        ofs << aa_text(m_context)[y * w + x];
++      ofs << "\n";
++    }
++
++  }
++
++}
++
+Index: src/formats/asciiformat.cpp
+===================================================================
+--- src/formats/asciiformat.cpp	(revision 0)
++++ src/formats/asciiformat.cpp	(revision 0)
+@@ -0,0 +1,133 @@
++/**********************************************************************
++Copyright (C) 2011 by Noel O'Boyle
++
++This program is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation version 2 of the License.
++
++This program is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
++***********************************************************************/
++
++#include <openbabel/babelconfig.h>
++#include <openbabel/obmolecformat.h>
++#include <openbabel/op.h>
++#include <openbabel/depict/depict.h>
++#include <openbabel/depict/asciipainter.h>
++
++using namespace std;
++
++
++
++namespace OpenBabel
++{
++
++class ASCIIFormat : public OBMoleculeFormat
++{
++public:
++  //Register this format type ID in the constructor
++  ASCIIFormat()
++  {
++    OBConversion::RegisterFormat("asc",this);
++  }
++
++  virtual const char* Description() //required
++  {
++    return
++    "PNG2 format\n"
++    "2D depiction of a single molecule as a .png file\n\n"
++
++    "The PNG2 format is used 'behind the scenes' by the :ref:`PNG format<PNG_2D_depiction>`\n"
++    "if generating image files, and the best way to use it is\n"
++    "actually through the PNG format. While it possible to generate\n"
++    "a :file:`.png` file directly using the PNG2 format as follows...::\n\n"
++    "  obabel -:\"CC(=O)Cl\" -opng2 -O mymol.png\n\n"
++    "...it is much better to generate it using the PNG format\n"
++    "as this allows you to embed a chemical structure in the\n"
++    ":file:`.png` file header which you can later extract::\n\n"
++    "  $ obabel -:\"CC(=O)Cl\" -O mymol.png -xO smi\n"
++    "  $ obabel mymol.png -osmi\n"
++    "  CC(=O)Cl\n\n"
++
++    "The PNG2 format uses the Cairo library to generate the\n"
++    ":file:`.png` files.\n"
++    "If Cairo was not found when Open Babel was compiled, then\n"
++    "this format will be unavailable. However, it will still be possible\n"
++    "to use the PNG format to read :file:`.png` files if they contain\n"
++    "embedded information.\n\n"
++
++    ".. seealso::\n\n"
++
++    "    :ref:`PNG_2D_depiction`\n\n"
++
++    "Write Options e.g. -xp 500\n"
++    " p <pixels> image size, default 300\n\n"
++
++    ;
++  };
++
++
++  virtual unsigned int Flags()
++  {
++      return NOTREADABLE | WRITEBINARY | WRITEONEONLY;
++  };
++
++  virtual bool WriteMolecule(OBBase* pOb, OBConversion* pConv);
++};
++  ////////////////////////////////////////////////////
++
++//Make an instance of the format class
++ASCIIFormat theASCIIFormat;
++
++/////////////////////////////////////////////////////////////////
++
++////////////////////////////////////////////////////////////////
++
++bool ASCIIFormat::WriteMolecule(OBBase* pOb, OBConversion* pConv)
++{
++  OBMol* pmol = dynamic_cast<OBMol*>(pOb);
++  if(pmol==NULL)
++      return false;
++
++  ostream& ofs = *pConv->GetOutStream();
++
++  OBMol workingmol(*pmol); // Copy the molecule
++
++  //*** Coordinate generation ***
++  //Generate coordinates only if no existing 2D coordinates
++  if(!workingmol.Has2D(true))
++  {
++    OBOp* pOp = OBOp::FindType("gen2D");
++    if(!pOp)
++    {
++      obErrorLog.ThrowError("ASCIIFormat", "gen2D not found", obError, onceOnly);
++      return false;
++    }
++    if(!pOp->Do(&workingmol))
++    {
++      obErrorLog.ThrowError("ASCIIFormat", string(workingmol.GetTitle()) + "- Coordinate generation unsuccessful", obError);
++      return false;
++    }
++  }
++  if(!workingmol.Has2D() && workingmol.NumAtoms()>1)
++  {
++    string mes("Molecule ");
++    mes += workingmol.GetTitle();
++    mes += " needs 2D coordinates to display in PNG2format";
++    obErrorLog.ThrowError("ASCIIFormat", mes, obError);
++    return false;
++  }
++  const char* pp = pConv->IsOption("p");
++  int size  = pp ? atoi(pp) : 300;
++  AsciiPainter painter;
++  OBDepict depictor(&painter);
++  depictor.DrawMolecule(&workingmol);
++  painter.WriteImage(ofs);
++
++  return true; //or false to stop converting
++}
++
++} //namespace OpenBabel
++
+Index: src/formats/CMakeLists.txt
+===================================================================
+--- src/formats/CMakeLists.txt	(revision 4530)
++++ src/formats/CMakeLists.txt	(working copy)
+@@ -124,6 +124,16 @@
+   set(libs ${libs} ${CAIRO_LIBRARIES})
+ endif(CAIRO_FOUND)
+ 
++  set(formats_ascii
++    asciiformat
++  )
++  set(asciiformat_additional_sources ../depict/asciipainter.cpp)
++  set(optional_formatgroups
++    ${optional_formatgroups} formats_ascii
++    )
++  include_directories(${AALIB_INCLUDE_DIRS})
++  set(libs ${libs} ${AALIB_LIBRARIES})
++
+ set(ADD_INCHI_FORMAT FALSE)
+ if(WITH_INCHI)
+   if(NOT OPENBABEL_USE_SYSTEM_INCHI)
