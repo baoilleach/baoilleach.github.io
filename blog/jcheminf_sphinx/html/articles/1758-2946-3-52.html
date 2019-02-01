@@ -1,0 +1,494 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Automated annotation of chemical names in the literature with tunable accuracy &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="MyChemise: A 2D drawing program that uses morphing for visualisation purposes" href="1758-2946-3-53.html" />
+    <link rel="prev" title="An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential" href="1758-2946-3-51.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-51.html" title="An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-53.html" title="MyChemise: A 2D drawing program that uses morphing for visualisation purposes"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="automated-annotation-of-chemical-names-in-the-literature-with-tunable-accuracy">
+<h1>Automated annotation of chemical names in the literature with tunable accuracy<a class="headerlink" href="#automated-annotation-of-chemical-names-in-the-literature-with-tunable-accuracy" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>A significant portion of the biomedical and chemical literature refers to small molecules. The accurate identification and annotation of compound name that are relevant to the topic of the given literature can establish links between scientific publications and various chemical and life science databases. Manual annotation is the preferred method for these works because well-trained indexers can understand the paper topics as well as recognize key terms. However, considering the hundreds of thousands of new papers published annually, an automatic annotation system with high precision and relevance can be a useful complement to manual annotation.</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>An automated chemical name annotation system, MeSH Automated Annotations (MAA), was developed to annotate small molecule names in scientific abstracts with tunable accuracy. This system aims to reproduce the MeSH term annotations on biomedical and chemical literature that would be created by indexers. When comparing automated free text matching to those indexed manually of 26 thousand MEDLINE abstracts, more than 40% of the annotations were false-positive (FP) cases. To reduce the FP rate, MAA incorporated several filters to remove &#8220;incorrect&#8221; annotations caused by nonspecific, partial, and low relevance chemical names. In part, relevance was measured by the position of the chemical name in the text. Tunable accuracy was obtained by adding or restricting the sections of the text scanned for chemical names. The best precision obtained was 96% with a 28% recall rate. The best performance of MAA, as measured with the F statistic was 66%, which favorably compares to other chemical name annotation systems.</p>
+</div>
+<div class="section" id="conclusions">
+<h3>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h3>
+<p>Accurate chemical name annotation can help researchers not only identify important chemical names in abstracts, but also match unindexed and unstructured abstracts to chemical records. The current work is tested against MEDLINE, but the algorithm is not specific to this corpus and it is possible that the algorithm can be applied to papers from chemical physics, material, polymer and environmental science, as well as patents, biological assay descriptions and other textual data.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Significant portions of the biomedical literature refer to chemical structures. For example, metabolites and small signaling molecules are crucial to life and well-studied, while many natural and synthetic products are examined in the context of drug discovery. The accurate identification and annotation of chemical names that are topically relevant to literature is a critical first step to establish links between scientific publications and the databases containing information about the chemical structure the name represents (<em>e.g</em>., molecular structures, measured biological activities, and drug information). Currently, manual identification is the preferred method for these chemical annotations as well-trained indexers can semantically understand and rank paper topics as well as recognize key terms; however, when considering the hundreds of thousands of new scientific articles published annually, an automatic annotation algorithm with high precision and relevance is a useful adjunct to manual annotation.</p>
+<p>Current studies <a class="footnote-reference" href="#b1" id="id2">[1]</a><a class="footnote-reference" href="#b2" id="id3">[2]</a><a class="footnote-reference" href="#b3" id="id4">[3]</a><a class="footnote-reference" href="#b4" id="id5">[4]</a><a class="footnote-reference" href="#b5" id="id6">[5]</a><a class="footnote-reference" href="#b6" id="id7">[6]</a><a class="footnote-reference" href="#b7" id="id8">[7]</a><a class="footnote-reference" href="#b8" id="id9">[8]</a><a class="footnote-reference" href="#b9" id="id10">[9]</a><a class="footnote-reference" href="#b10" id="id11">[10]</a><a class="footnote-reference" href="#b11" id="id12">[11]</a><a class="footnote-reference" href="#b12" id="id13">[12]</a><a class="footnote-reference" href="#b13" id="id14">[13]</a> on the text mining of small molecule names focus on the named entity recognition (NER) of chemical descriptors, including systematic chemical names such as IUPAC names and common names. Dictionary and rules (DR) based methods and statistical machine learning (ML) methods are two major approaches in this area. In 1992, Chowdhury and Lynch <a class="footnote-reference" href="#b1" id="id15">[1]</a><a class="footnote-reference" href="#b2" id="id16">[2]</a> developed a dictionary and rule based semiautomatic method to convert chemical texts into structure representation by morphological analysis and dictionary lookup. In 1999, Wilbur, <em>et. al</em>. <a class="footnote-reference" href="#b3" id="id17">[3]</a> compared three NER methods (one rule and dictionary based method and two Naïve Bayes statistical methods) to recognize chemical terms in biological text, and concluded that an integrated method might perform best. Hettne and co-workers <a class="footnote-reference" href="#b4" id="id18">[4]</a><a class="footnote-reference" href="#b5" id="id19">[5]</a> generated dictionaries identifying small molecules and drugs in text, and found that a dictionary generated from a reliable single source, ChemIDplus <a class="footnote-reference" href="#b14" id="id20">[14]</a> performs as well as a dictionary from combined multiple sources. Wren <a class="footnote-reference" href="#b6" id="id21">[6]</a> evaluated a first order Markov Model for its ability to distinguish chemical names from words. Klinger <a class="footnote-reference" href="#b7" id="id22">[7]</a> implemented a new machine learning approach based on Conditional Random Fields (CRF) to detect IUPAC and IUPAC-like chemical names in the scientific literature and obtained good performance: an F measure of 85.6% on a MEDLINE <a class="footnote-reference" href="#b15" id="id23">[15]</a> corpus. Corbett, Jessop and co-workers <a class="footnote-reference" href="#b8" id="id24">[8]</a><a class="footnote-reference" href="#b9" id="id25">[9]</a><a class="footnote-reference" href="#b10" id="id26">[10]</a><a class="footnote-reference" href="#b11" id="id27">[11]</a> performed studies on chemical name mining on text and developed OSCAR4 <a class="footnote-reference" href="#b11" id="id28">[11]</a>, an open source system to identify chemical names in scientific articles. Kolarik and her co-workers <a class="footnote-reference" href="#b12" id="id29">[12]</a><a class="footnote-reference" href="#b13" id="id30">[13]</a> analyzed chemical terminology resources and generated an annotated text corpus for evaluation of dictionaries. Recently, Zhou and his co-workers <a class="footnote-reference" href="#b16" id="id31">[16]</a> designed and implemented a chemistry text hybrid search engine to combine both chemistry text and structure searching in literature. Generally speaking, the ML based methods perform extremely well in recognition on IUPAC or IUPAC-like chemical names, but not as well on common names. On the other hand, the DR based methods can identify both IUPAC and trivial names, but it is not possible to identify names not in the dictionary. Nevertheless, both approaches concentrate on the identification of chemical names but focus less on ranking the annotations for relevance, which is a key goal of this study. For example, a chemical mentioned in a metabolic pathway paper may not be the molecule that can trigger the pathway, rather it might be an inactive chemical compound, related to the methodology, or a substrate mentioned in a longer protein name or gene name. Banville <a class="footnote-reference" href="#b17" id="id32">[17]</a> addressed a similar problem: how do you find documents of relevance to a chemical instead of simply finding the chemical name present in a document?</p>
+<p>Medical Subject Headings <a class="footnote-reference" href="#b18" id="id33">[18]</a> (MeSH) annotation, which is performed by trained curators of the National Library of Medicine (NLM) to index and categorize articles in the MEDLINE databases, is a reliable source for users of MEDLINE and PubMed <a class="footnote-reference" href="#b19" id="id34">[19]</a> to obtain relevant and accurate scientific term annotations. To aid human indexing of the MEDLINE database, NLM developed an automatic indexing system <a class="footnote-reference" href="#b20" id="id35">[20]</a><a class="footnote-reference" href="#b21" id="id36">[21]</a><a class="footnote-reference" href="#b22" id="id37">[22]</a>, the Indexing Initiative system (IIS), to identify candidate MeSH concepts in papers being indexed, helping to speed the manual annotation of the biomedical literature.</p>
+<p>In recent years as the volume of literature has grown, the accuracy and relevance of retrieved information have become key performance indicators of on-line chemical databases. A single query can retrieve many thousands of records, making it essential that the top ranked results are highly relevant to the user. Additionally, it is very useful to link records from one database to those in another. In the NCBI Entrez query system <a class="footnote-reference" href="#b23" id="id38">[23]</a>, MeSH plays a vital role in both improving query performance and for making links between databases. For example, the MeSH vocabulary allows for synonym expansion in PubMed queries, precise querying of chemical names, and allows the linking of abstracts to the small molecule records in the PubChem <a class="footnote-reference" href="#b24" id="id39">[24]</a> database; however, manual annotation of MeSH onto PubMed abstracts can have a time lag of a few months and other sources of scientific literature may not have MeSH annotation at all. In these situations, it may be useful to have an algorithm for automatic annotation of MeSH terms.</p>
+<p>In this article, we present an implementation of an automated chemical name annotation system based on the MeSH controlled vocabulary called MeSH Automated Annotations (MAA). The primary aim of MAA is to reproduce the MeSH term annotations created by curators.</p>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="corpus-generation">
+<h3>1. Corpus generation<a class="headerlink" href="#corpus-generation" title="Permalink to this headline">¶</a></h3>
+<p>The annotated text corpus is generated directly from MEDLINE, with PubMed identifier (PMID) ranging from 16200042 to 17342794. In order to increase the recall of automated annotation, we only select entries with both title and full abstract available, giving a total of 261,227 MEDLINE abstracts inside the corpus. Each paper in the corpus has been annotated by the NLM indexers. These human annotations of chemical names are used as the &#8220;gold standard&#8221; for comparison with the various versions of MAA described in this paper. We performed spot checking of randomly selected manual annotations and found they are reliable to be used as standards. However, the NLM indexers&#8217; aim is to annotate topic-related chemical entities, thus the selections depend on the indexers&#8217; understanding of the topic of a paper. It is nontrivial to tell if the unselected chemical entities are valid or not. Nevertheless, an automated annotation system should provide improvements on the possible errors of manual indexing. A randomly selected data set, which contains 26,123 abstracts, was selected to test our MAA program. The remaining abstracts were used as a training set to obtain statistics used to set thresholds for various filters used in the algorithm.</p>
+</div>
+<div class="section" id="mesh-chemical-dictionary-generation">
+<h3>2. MeSH chemical dictionary generation<a class="headerlink" href="#mesh-chemical-dictionary-generation" title="Permalink to this headline">¶</a></h3>
+<p>MeSH is a controlled vocabulary thesaurus from the NLM used to help index the biomedical literature. MeSH is organized in a hierarchical tree where each scientific concept is either a node or leaf of the tree. Scientific concepts include a MeSH heading (being the most common name used to refer to the concept), synonyms, and inflectional MeSH term variants. The parts of the MeSH tree associated with chemicals is composed of two parts, the &#8216;Chemicals and Drugs&#8217; branch of the MeSH hierarchy and an independent set of supplementary concept records (denoted as MeSH substances). Each MeSH substance is mapped to at least one MeSH term. Chemical compounds of relatively recent biomedical interest are either appended to the MeSH tree or added to the MeSH substances. The MeSH chemical vocabularies are used as the basis of our dictionary. In the following text, we will use the phrase &#8216;MeSH term&#8217; to refer to any MeSH heading, MeSH term, or MeSH substance under or mapped to the Chemicals and Drugs branch of MeSH.</p>
+</div>
+<div class="section" id="statistical-terminology-for-evaluation-of-maa">
+<h3>3. Statistical terminology for evaluation of MAA<a class="headerlink" href="#statistical-terminology-for-evaluation-of-maa" title="Permalink to this headline">¶</a></h3>
+<p>The objective of our MAA system is to find relevant MeSH terms in abstracts. As mentioned previously, in an abstract there may be many MeSH terms found in the text, but not all of these are related to the topic of the document. The human MeSH indexer annotates these relevant MeSH terms by reading and understanding the subject material. Thus, we compare our MAA system to the manual annotations of the MeSH indexers. In our approach, we intend to reproduce the MeSH indexers&#8217; annotation by extracting relevant terms and filtering out unimportant MeSH terms. Using this manual indexing as the standard, the terminologies used for evaluation of MAA are:</p>
+<p>True positive (TP) match &#8211; A MeSH term found by both MAA and manual indexing.</p>
+<p>True negative (TN) match &#8211; A MeSH term not found by either MAA or manual indexing.</p>
+<p>False positive (FP) match &#8211; A MeSH term found by MAA but not by manual indexing.</p>
+<p>False negative (FN) match &#8211; A MeSH term found by manual indexing but not by MAA.</p>
+<p>Note that the false negatives include terms that are not in the title or abstract of the documents as the MeSH indexers have access to the complete document. These terms cannot be found by MAA as the algorithm does not have access to the complete document. In the following figures and discussions, the total FN matches were separated into two groups: the group &#8220;In Text, Not Found&#8221; refers to MeSH annotations where the MeSH terms are in the abstract but are not found by MAA and &#8220;Not in Text&#8221; to refer to instances where the MeSH term is not present in the text. In the latter case, terms are typically found in the body of the paper.</p>
+<p>Precision and recall are calculated as following:</p>
+</div>
+<div class="section" id="chemical-tokens-and-rules">
+<h3>4. Chemical Tokens and Rules<a class="headerlink" href="#chemical-tokens-and-rules" title="Permalink to this headline">¶</a></h3>
+<p>A Chemical token is a string used to build chemical names. In this study, a chemical token dictionary was created to generate chemical morphemes. These chemical tokens are made by dissecting chemical names at white space and other separators. The chemical names are taken from MeSH terms and PubChem Compound synonyms, encompassing over 31 million chemical records. We chose the PubChem as a source of chemical names as it is a large database of small molecule structures (&gt; 30 million), including depositions from many popular chemical databases, such as ChemIDPlus, ChEBI, ZINC, etc. MeSH was selected as it is a comprehensive controlled vocabulary that has been applied extensively in biomedical literature indexing, including the indexing of most PubMed records, making it likely to contain a significant subset of biomedically interesting chemical names. However, the MAA algorithm is not limited to these sources - in particular, a more detailed controlled vocabulary may improve the results of the algorithm. After the tokens are generated, two English novels &#8220;<em>Jane Eyre</em>&#8221; and &#8220;<em>Pride and Prejudice</em>&#8221; are used to filter out common English words from the tokens. Numbers, numerical identifiers, single characters and special characters are removed. Overall, there are total 326,610 chemical tokens stored in our token dictionary. These chemical tokens, along with name decision rules, were used to check if a MeSH term embedded in text is a full name or a sub-string of another name. In MAA, a MeSH term and two tokens before and after the MeSH term are analyzed. If the combination of the MeSH term and the tokens fulfill one of the name decision rules, the MeSH term will be marked as a likely substring of a complete chemical name.</p>
+</div>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>Results and Discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<p>There are several steps in the MAA algorithm. The first step is free-text matching of the MeSH vocabulary to the MEDLINE abstracts. To measure the performance of this step and subsequent steps, we compare the results to manual annotations of these abstracts done by the MeSH indexers. In this comparison, we take into account that in some cases the indexer used a more general term (aka a &#8220;relative node&#8221;) than the precise name of the chemical, such as &#8220;Benzodiazepines&#8221; instead of &#8220;Diazepam.&#8221; Note that it is not possible for the algorithm to find all terms annotated by the indexers as the indexers have access to the complete paper and the algorithm does not.</p>
+<p>Subsequent steps in the algorithm attempt to reduce the number of false positives, which are the matches found by the algorithm but not indexers. The first step, the &#8220;MeSH Filter&#8221; eliminates MeSH records that do not have an associated chemical structure. The second step, &#8220;Tokens and Rules&#8221;, discards partial matches to terms that follow chemical nomenclature rules or have additional chemical name tokens. The third step, &#8220;Protein and Gene Names&#8221;, screens out protein and gene names as these names can contain the names of chemicals. Finally, the &#8220;TP filter&#8221; eliminates matches using MeSH terms that are also common English terms, such as &#8220;lead.&#8221;</p>
+<p>The comparison between the various steps in MAA and manual indexing is depicted in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a> and will be discussed in detail below. From left to right, each group of bars indicates the matching results for different steps in the algorithm. Within each group there are 4 bars, starting from the left:</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-52-1.jpg" src="../_images/1758-2946-3-52-1.jpg" />
+<p class="caption">Figure 1. Comparison of MeSH automated (MAA) and manual indexing annotations with a series of algorithmic filters added</p>
+<div class="legend">
+<strong>Comparison of MeSH automated (MAA) and manual indexing annotations with a series of algorithmic filters added</strong>. From left to right, filters are applied cumulatively. &#8220;False Positives&#8221; are matches found by the algorithm but not in manual indexing. &#8220;True Positives&#8221; are found by the algorithm and in manual indexing. &#8220;In text, not found&#8221; are found in manual indexing, but not by the algorithm. &#8220;Not in text&#8221; are manually indexed terms not found in the abstract.</div>
+</div>
+<ol class="arabic simple">
+<li>False positive (blue): MeSH terms found in an abstract by MAA but not found by manual indexing.</li>
+<li>True positive (red): MeSH terms found in an abstract by MAA and also found by manual indexing.</li>
+<li>In Text, Not found (green): MeSH terms present in the abstract and found by manual indexing but not found by MAA.</li>
+<li>Not in text (purple): MeSH terms not present in the abstract but found by manual indexing. As mentioned earlier, some terms are found in the body of a paper and not in the abstract. Since the MAA algorithm does not have access to the body of the paper, it is unable to find these terms. The value shown in the figure is likely an upper bound as it is possible that the algorithm may not find a term due to various potential issues (e.g. punctuation, spelling, unknown synonyms, etc.).</li>
+</ol>
+<div class="section" id="free-text-mesh-matching">
+<h3>1. Free-Text MeSH matching<a class="headerlink" href="#free-text-mesh-matching" title="Permalink to this headline">¶</a></h3>
+<p>As displayed on Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, the free-text MeSH string matching, if used to annotate small molecules directly, generates a significant number of false-positive cases compared to the MeSH indexers&#8217; annotations. More than 70% of the MeSH terms appearing in the text were not annotated by indexers (see Table <em class="xref std std-ref">1</em> for values and Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a> for graphs of the precision, recall and F measure). By inspection, it appears that in most cases the MeSH term may either be a text fragment of another scientific concept (e.g., many protein names include aspects of a chemical name) or the MeSH term is simply present but not relevant to the paper context (e.g., used in a descriptive or comparative sense, as a reagent in an experiment, etc.). Thus, in order to annotate a chemical term accurately, algorithmic filters need to be applied to the free-text matches. In some cases, the indexer missed annotating a valid chemical name. However, this category was not examined as it would have required another standard of truth, which was unavailable for the large set of abstracts considered in this study.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-52-2.jpg" src="../_images/1758-2946-3-52-2.jpg" />
+<p class="caption">Figure 2. The recall, precision and F measure of MeSH automated annotations (MAA) on the titles and abstracts of the test corpus with a series of algorithmic filters added cumulatively</p>
+<div class="legend">
+<strong>The recall, precision and F measure of MeSH automated annotations (MAA) on the titles and abstracts of the test corpus with a series of algorithmic filters added cumulatively</strong>.</div>
+</div>
+</div>
+<div class="section" id="using-relative-nodes-in-the-comparison">
+<h3>2. Using relative nodes in the comparison<a class="headerlink" href="#using-relative-nodes-in-the-comparison" title="Permalink to this headline">¶</a></h3>
+<p>In comparing results between the MAA and the manual indexers, tree-node expansion is applied to the results from the MAA system. The term &#8220;tree-node&#8221; comes from the hierarchical tree structure of the MeSH thesaurus. Examination of the MeSH annotations in MEDLINE finds that the indexers will sometimes select a higher level node in the MeSH tree than the nodes that correspond exactly to the chemicals mentioned in an abstract. For example, they may select a more generic term &#8220;Penicillins&#8221; instead of the &#8220;Penicillin G&#8221; and &#8220;Penicillin V&#8221; mentioned in a paper. This use of higher level (&#8220;super-concept&#8221;) nodes also happens for MeSH substances as they are manually mapped to nodes in the MeSH tree. Therefore, for a given MeSH substance or MeSH term, we include its assigned MeSH tree node and/or super-concept node, respectively. This tree-node expansion significantly increases the number of matches between manual indexing and our MAA algorithm (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>), while also increasing the recall and precision due to the increase in the number of true positives (Table <em class="xref std std-ref">1</em> and Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>).</p>
+</div>
+<div class="section" id="improving-free-text-maa-by-adding-filters">
+<h3>3. Improving free-text MAA by adding filters<a class="headerlink" href="#improving-free-text-maa-by-adding-filters" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="mesh-filter-using-terms-with-associated-chemical-structure">
+<h4>3.1. MeSH filter: using terms with associated chemical structure<a class="headerlink" href="#mesh-filter-using-terms-with-associated-chemical-structure" title="Permalink to this headline">¶</a></h4>
+<p>From the entire set of chemical MeSH terms, MeSH terms representing small molecules are extracted to generate a chemical dictionary. This constraint is implemented by selecting MeSH terms which can map to PubChem (<a class="reference external" href="http://pubchem.ncbi.nlm.nih.gov/">http://pubchem.ncbi.nlm.nih.gov/</a>) CIDs, which identify unique small molecule structures. This filter removes almost 65% of the total MeSH terms (see Table <em class="xref std std-ref">2</em>, the numbers of MeSH terms change from 521 k to 178 k). Filtered terms include protein names, category names, non-specific names and chemical names which cannot be represented by molecule structures. After filtering out terms, we expand the MeSH dictionary by adding 541 chemical formulas of inorganic compounds as synonyms of associated MeSH concepts. All of these chemical formulas are from Wikipedia <a class="footnote-reference" href="#b25" id="id40">[25]</a> and were manually verified. This addition increases the ability of MAA to recognize chemicals such as &#8216;KOH&#8217; and &#8216;NaCl&#8217; if no compound common name is mentioned in the text. After updating our dictionary, we performed another free-text match and compared the results with manual indexing. The results are shown in the second group of bars labeled &#8220;MeSH Filter&#8221; in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>. Compared to &#8220;Relative Nodes&#8221;, the number of FP cases after adding the MeSH Filter drops from 79 K to 30 K, and the number of TP cases decreases less than 1 K. The performance of MeSH filter, indicated by precision, recall and F measure is displayed in Table <em class="xref std std-ref">1</em>. The precision jumps from 0.32 to 0.54, and loses 0.03 recall. As a result, the F measure has an increase from 0.45 to 0.62. The MeSH filter assures that all extracted MeSH terms by MAA are entries in PubChem. It thus implicitly links chemical names in literature to variant features of the PubChem database, such as chemical structures, properties and bioactivities etc.</p>
+</div>
+<div class="section" id="tokens-and-rules-removing-false-positive-annotations-by-syntactic-analysis">
+<h4>3.2. Tokens and Rules: removing false positive annotations by syntactic analysis<a class="headerlink" href="#tokens-and-rules-removing-false-positive-annotations-by-syntactic-analysis" title="Permalink to this headline">¶</a></h4>
+<p>MeSH terms that are sub-strings of another entity name is one reason for false-positive annotation. The chemical tokens and chemical name decision rules (introduced in Methods part 4) were used to decide if matched MeSH terms are full names or substrings.</p>
+<p>Some of the applied rules are listed below:</p>
+<p>[1]. If two words in front of a matched MeSH term are both chemical tokens, the MeSH term is treated as a FP annotation. This rule by itself yields a 0.25% increase in precision, a 0.34% decrease in recall and a 0.04% increase in F measure;</p>
+<p>[2]. If one word in front of a matched MeSH term is a chemical token, the MeSH term is treated as a FP annotation. This rule by itself yields a 1.3% increase in precision, a 1.6% decrease in recall and a 0.24% increase in F measure;</p>
+<p>[3]. If one word behind a matched MeSH term is a chemical token, the MeSH term is treated as a FP annotation. This rule by itself yields a 2.2% increase in precision, a 1.9% decrease in recall and a 0.68% increase in F measure. Note that the F measure is the harmonic average of precision and recall, which is why the change in F measure is not exactly the difference between the change in precision and recall.</p>
+<p>Using more than two tokens before and after the MeSH term did not yield any improvements. For example, if the algorithm checks 3 tokens before and after the matching MeSH term, the recall decreases 0.72% and precision decreases 0.87%.</p>
+<p>In addition to these name decision rules, we also created several prefix and suffix rules to check whether a matched term is FP annotation. For example, if the token &#8216;<em>poly</em>&#8216; is the prefix of a MeSH term, this MeSH term is treated as a FP annotation, yielding a 0.12% increase in precision, 0.03% decrease in recall and 0.07% increase in F measure; if &#8216;<em>ase</em>&#8216; is the suffix of a MeSH term (except &#8216;<em>release</em>&#8216; and &#8216;<em>base</em>&#8216;) the MeSH term is treated as a FP annotation, yielding a 1.2% increase in precision, 0.15% decrease in recall and 0.75% increase in F measure. These rules were primarily heuristic in nature and were developed by manual examination of the annotations.</p>
+<p>It is possible to apply hundreds of rules to increase the precision of MAA. However the recall decreases as each rule applied. It is nontrivial to decide which rules should be used. In the MAA system, we select rules according to the computed F measure. If we obtained a relatively significant positive increment of F measure by applying a rule, the rule was kept.</p>
+<p>The following is an actual annotation of a PubMed abstract (PMID 16704345) to show how this filter works:</p>
+<p><em>benzoyl-CoA 4-hydroxybenzoyl-CoA adenine 4-hydroxybutyryl-CoA ...Related enzymes are the ATP-dependent</em> .</p>
+<p>The bold words are mapped MeSH terms, and the words underlined are chemical tokens found before or after MeSH terms. For example, according to the rules, &#8220;<em>adenine</em>&#8221; is the complete name and MeSH term &#8220;adenine&#8221; is just part of this name. Thus, the MeSH term &#8220;adenine&#8221; is regarded as a false-positive by our MAA program.</p>
+<p>In Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, the fourth group of bars indicates the change after adding the &#8220;Token and Rules&#8221; filter. Compared to previous group of bars (MeSH Filter), the blue bar (false-positive annotation) dropped more than 5000 and red bar (true-positive) only lost 1300 annotations. Please see additional file</p>
+<p>Additional file 1</p>
+<p><strong>Details of token generation and rules</strong>. Detailed description of chemical token generation and chemical name decision rules.</p>
+<p>Click here for file</p>
+</div>
+<div class="section" id="protein-and-gene-names-removing-mesh-terms-that-are-sub-strings-of-protein-gene-and-non-chemical-mesh-terms">
+<h4>3.3. Protein and gene names: removing MeSH terms that are sub-strings of protein, gene and non-chemical MeSH terms<a class="headerlink" href="#protein-and-gene-names-removing-mesh-terms-that-are-sub-strings-of-protein-gene-and-non-chemical-mesh-terms" title="Permalink to this headline">¶</a></h4>
+<p>Chemical terms are a common part of protein names, such as &#8220;benzoyl-CoA reductase&#8221; and &#8220;4-hydroxybutyryl-CoA dehydratase&#8221; shown above. When these protein names are mentioned in text, it is likely that the topic of the paper is the protein instead of the prefix chemicals. To address this issue, we created a group of &#8220;negative vocabularies&#8221; to collect names that contain MeSH terms as sub-strings. In the MAA algorithm, if a term in the negative vocabularies is found in text, then its sub-string will not be annotated if this sub-string is a MeSH term. The protein and gene names are collected from MeSH and the NCBI Entrez Gene database. The performance of this method depends on the completeness of the negative vocabularies. It is not possible to construct a complete dictionary, as new names are generated every day. In Table <em class="xref std std-ref">1</em>, we can see that this filter results in only a small increase of the F measure at best. This is because the &#8220;token and rules&#8221; filter and the &#8220;protein and gene&#8221; filter are not mutually exclusive: some rules in section 3.2 already remove many protein names. If &#8220;tokens and rule&#8221; and &#8220;protein and gene name&#8221; filters are applied independently on the same corpus, the former will yield 2.6% more precision and 0.5% more F measure. This result is possibly due to the fact that the &#8220;token and rule&#8221; filter attempts to be a superset of the &#8220;protein and gene name&#8221; filter. Nevertheless, the protein and gene name rule is still useful in removing false positive matches for certain protein names.</p>
+</div>
+<div class="section" id="tp-filter-removing-mesh-terms-with-low-tp-ratios">
+<h4>3.4. TP filter: removing MeSH terms with low TP ratios<a class="headerlink" href="#tp-filter-removing-mesh-terms-with-low-tp-ratios" title="Permalink to this headline">¶</a></h4>
+<p>Some MeSH terms, such as the dental sealant &#8220;Conclude&#8221; (also known as &#8220;Concise&#8221;), have a high false positive rate due to nonspecific matching. These terms are filtered out to improve match statistics. To do this, we pre-calculated the true positive ratios of each MeSH term using free-text string matching on the training set. A binary value (1 or 0) was assigned to each MeSH term to indicate if it exists or not in the MEDLINE abstract. If a term was mentioned multiple times in an abstract, it was still counted as 1. The ratio of TP annotation for a specific MeSH term was calculated by the number of times the term was applied during manual indexing divided by the count of abstracts with free text matches. This ratio is used to measure the propensity of a MeSH term to be correctly annotated in text. Some MeSH terms with their TP ratios are listed in Table <em class="xref std std-ref">3</em>. Common chemicals such as &#8216;water&#8217; and &#8216;glucose&#8217; tend to have a less than 50% TP ratio. The term &#8216;lead&#8217; has only 11% TP ratio, which indicates in only 11 out 100 papers, &#8216;lead&#8217; is indexed as a chemical element. Additional term types with low TP ratios include homonyms of common English words, such as &#8216;link&#8217; and &#8216;monitor&#8217;, or acronyms such as &#8216;CI-2&#8217; that have only a few characters. Using the TP ratio, one may set up a tunable threshold to eliminate non-specific MeSH terms in automatic annotation.</p>
+<p>Once a threshold ratio is selected, MeSH terms with a ratio lower than the threshold will not be annotated on the testing data set. Selecting a reasonable threshold will remove false-positive annotations and increase the precision of MAA while not significantly reducing the recall. For example, if the threshold is set to 0.025, there are only 401 total MeSH terms eliminated, but nearly 8297 FP annotations are removed (in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, this difference is shown by the blue bar when going from &#8216;Proteins and Genes name&#8217; to &#8216;TP ratio 0.0025&#8217;), while 2466 TP annotations are lost (In Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, this difference is shown by the red bar when going from &#8216;Proteins and Genes name&#8217; to &#8216;TP ratio 0.025&#8217;). In our study, the thresholds are adjusted from 0.025 to 0.4 to show the trade off in recall as precision increases. Thresholds larger than 0.5 were not evaluated, since the MAA will lose more TP annotations than FP annotations. The best threshold ratio by F measure is between 0.1 and 0.2 (see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>). This TP ratio filter provides a degree of tunable accuracy for the MAA system.</p>
+</div>
+</div>
+<div class="section" id="term-position-in-the-text">
+<h3>4. Term position in the text<a class="headerlink" href="#term-position-in-the-text" title="Permalink to this headline">¶</a></h3>
+<p>The title is often a summary of a paper. In the abstract, the author often mentions objectives in the first sentence (FT) and conclusions in the last sentence (LT). The appearance of a chemical name in these parts of an abstract is likely to indicate a high degree of relevance. We performed MAA on the title, FT and LT of the abstracts and then again just on the title of the abstract to see if we could obtain higher precision. The results are presented in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> and Table <em class="xref std std-ref">1</em>. In the title-only annotation, MAA could provide the 96% precision if the TP filter threshold is set to 0.4. At this filter level, there is greater than 27% recall on the corpus. Eliminating the TP filter for title-only annotation yields 91% precision with 33% recall. This may be because all words in the title are relatively important, reducing the necessity of the TP filter to remove non-specific MeSH terms. For an information retrieval task that requires a high degree of specificity, MAA on the title-only is a reasonable selection. Including the FT and LT in MAA yields less precision than title alone MAA, but with better precision than MAA on the entire abstract.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-52-3.jpg" src="../_images/1758-2946-3-52-3.jpg" />
+<p class="caption">Figure 3. The recall (dashed line), precision (dotted line) and F measure (solid line) of MeSH Automated Annotation (MAA) on titles only and on title and selected abstract sentences of the test corpus with a series of algorithmic filters added cumulatively</p>
+<div class="legend">
+<strong>The recall (dashed line), precision (dotted line) and F measure (solid line) of MeSH Automated Annotation (MAA) on titles only and on title and selected abstract sentences of the test corpus with a series of algorithmic filters added cumulatively</strong>. Sentences = first and last sentences of abstract.</div>
+</div>
+</div>
+<div class="section" id="comparison-with-other-studies">
+<h3>5. Comparison with other studies<a class="headerlink" href="#comparison-with-other-studies" title="Permalink to this headline">¶</a></h3>
+<p>In Table <em class="xref std std-ref">4</em>, the performance of MAA is compared to similar studies that matched MeSH to text. The top two rows in Table <em class="xref std std-ref">4</em> list results from Hettne <a class="footnote-reference" href="#b4" id="id41">[4]</a> and Kolarik <a class="footnote-reference" href="#b13" id="id42">[13]</a>. As a gold standard, Hettne and Kolarik used a text corpus with Kolarik&#8217;s manual annotations of chemical terms, which were not restricted to the MeSH vocabulary. We applied MAA to Kolarik&#8217;s testing corpus (2009 version, containing 100 full abstracts). The dictionary used in MAA is a combination of MeSH tree chemical terms (MeSH C) and MeSH substances (MeSH S), but both Hettne and Kolarik separated these vocabularies. We first perform free-text matching of the MeSH dictionary to the Kolarik&#8217;s corpus. The performance is very similar to Kolarik&#8217;s, which were also performed using free-text matching. Then we applied each filter cumulatively as we did in our testing set in Section 3 of this paper. Once the TP filter threshold was set to 0.4, the performance we obtained is quite similar to those of Hettne&#8217;s work, in which he used a &#8220;term disambiguation&#8221; pipeline to filter out some MeSH terms.</p>
+<p>MAA has a precision range from of 0.44 ~ 0.79 with different filters, which is better than Kolarik&#8217;s precision range of 0.34~0.44 (for MeSH C and MeSH S, respectively). However, the MAA gives a higher recall range (0.23 ~ 0.37) than Hettne&#8217;s (0.22~0.07) or Kolarik&#8217;s (0.27~0.10). The best F measure which MAA generated is 0.43, which is better than the F-measure taken from either work (maximum of 0.34). Overall, the MAA results are closer to Kolarik&#8217;s results if no filters applied and Hettne&#8217;s results if TP threshold set to 0.4. However, as shown in Section 3.4, the higher TP threshold doesn&#8217;t necessarily produce the better performance as ranked by F measure. When examining our 26123 abstracts testing set, the best performance of MAA was obtained when TP threshold was set to 0.15 and, when examining Kolaik&#8217;s corpus, it was without applying the TP filter. This is consistent with results on our test corpus; while the TP filter significantly increases precision, it does so at the cost of recall.</p>
+<p>The bottom rows of Table <em class="xref std std-ref">4</em> show results from our MAA system and the Medical Text Indexer (MTI), which was developed for NLM&#8217;s Indexing Initiative system (IIS) and whose goal was to provide suggested annotations to MeSH indexers. The results of MTI are not restricted to chemical names, so we cannot directly compare the results of MTI to MAA, but we include the results for reference. When MTI lists up to 25 recommendations for each article from a 273 articles corpus, it provided a recall of 0.55 and a precision of 0.29.</p>
+</div>
+</div>
+<div class="section" id="conclusion-and-future-application">
+<h2>Conclusion and Future Application<a class="headerlink" href="#conclusion-and-future-application" title="Permalink to this headline">¶</a></h2>
+<p>In this article, we present the design and implementation of an automated chemical name annotation system (MAA). This annotation system uses the MeSH controlled vocabulary applied to biomedical abstracts from MEDLINE. To avoid false positive annotations, we implemented filters to allow for tunable accuracy. The maximum precision obtained was 96% with 28% recall when performing MAA on titles of the abstracts. The best performance of MAA as measured with the F statistic was 66%, which required applying all filters (including the FP filter with a threshold of 0.15). The MAA system compared favorably to other chemical name retrieval studies. The current work is tested against MEDLINE, but the algorithm is not specific to this corpus and it is possible that the algorithm can be applied to papers from chemical physics, material, polymer and environmental science, as well as patents, bioassay descriptions and other textual data. Accurate MeSH annotation and text mining can help researchers not only to identify important chemical names in abstracts, but also match unindexed and unstructured texts to chemical records.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>JDZ carried out the study and wrote the manuscript. LYG helped conceive, design and coordinate the study. LYG also revised the manuscript. EEB helped conceive and design the study. EEB also revised the manuscript. SHB supervised and helped conceive and design the study. All authors read and approved the final manuscript.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>We are indebted to John Wilbur and Natalie Xie of NCBI for their helpful comments and assistance in obtaining data. This research was supported (in-part) by the Intramural Research Program of the NIH, National Library of Medicine.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id15">2</a>)</em> Automatic interpretation of the texts of chemical patent abstracts. 1. lexical analysis and categorization</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id16">2</a>)</em> Automatic interpretation of the texts of chemical patent abstracts. 2. processing and results</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id17">2</a>)</em> Analysis of biomedical text for chemical names: A comparison of three methods</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[4]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id18">2</a>, <a class="fn-backref" href="#id41">3</a>)</em> A dictionary to identify small molecules and drugs in free text</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[5]</td><td><em>(<a class="fn-backref" href="#id6">1</a>, <a class="fn-backref" href="#id19">2</a>)</em> Automatic vs. manual curation of a multi-source chemical dictionary: the impact on text mining</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[6]</td><td><em>(<a class="fn-backref" href="#id7">1</a>, <a class="fn-backref" href="#id21">2</a>)</em> A scalable machine-learning approach to recognize chemical names within large text databases</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[7]</td><td><em>(<a class="fn-backref" href="#id8">1</a>, <a class="fn-backref" href="#id22">2</a>)</em> Detection of IUPAC and IUPAC-like chemical names</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[8]</td><td><em>(<a class="fn-backref" href="#id9">1</a>, <a class="fn-backref" href="#id24">2</a>)</em> An Architecture for language technology for processing Scientific texts</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[9]</td><td><em>(<a class="fn-backref" href="#id10">1</a>, <a class="fn-backref" href="#id25">2</a>)</em> High-throughput identification of chemistry in life science texts</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[10]</td><td><em>(<a class="fn-backref" href="#id11">1</a>, <a class="fn-backref" href="#id26">2</a>)</em> Annotation of chemical named entities</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[11]</td><td><em>(<a class="fn-backref" href="#id12">1</a>, <a class="fn-backref" href="#id27">2</a>, <a class="fn-backref" href="#id28">3</a>)</em> OSCAR4: A flexible architecture for chemical text-mining</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[12]</td><td><em>(<a class="fn-backref" href="#id13">1</a>, <a class="fn-backref" href="#id29">2</a>)</em> Chemical names: Terminological resources and corpora annotation. In: European Language Resources Association</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[13]</td><td><em>(<a class="fn-backref" href="#id14">1</a>, <a class="fn-backref" href="#id30">2</a>, <a class="fn-backref" href="#id42">3</a>)</em> Identification of new drug classification terms in textual resources</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[14]</a></td><td>ChemIDplus</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[15]</a></td><td>MEDLINE</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id31">[16]</a></td><td>Chemical-Text Hybrid Search Engines</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[17]</a></td><td>Mining chemical and biological information from the drug literature</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id33">[18]</a></td><td>Medical subject headings (MeSH)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[19]</a></td><td>PUBMED</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[20]</a></td><td>The NLM indexing initiative</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id36">[21]</a></td><td>The NLM indexing initiative&#8217;s medical text indexer</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id37">[22]</a></td><td>A strategy for assigning new concepts in the MEDLINE database</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id38">[23]</a></td><td>Entrez</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id39">[24]</a></td><td>PubChem: Integrated Platform of Small Molecules and Biological Activities</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id40">[25]</a></td><td>Wikipedia: List of inorganic compounds</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Automated annotation of chemical names in the literature with tunable accuracy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corpus-generation">1. Corpus generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mesh-chemical-dictionary-generation">2. MeSH chemical dictionary generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#statistical-terminology-for-evaluation-of-maa">3. Statistical terminology for evaluation of MAA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chemical-tokens-and-rules">4. Chemical Tokens and Rules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">Results and Discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#free-text-mesh-matching">1. Free-Text MeSH matching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-relative-nodes-in-the-comparison">2. Using relative nodes in the comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#improving-free-text-maa-by-adding-filters">3. Improving free-text MAA by adding filters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#mesh-filter-using-terms-with-associated-chemical-structure">3.1. MeSH filter: using terms with associated chemical structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tokens-and-rules-removing-false-positive-annotations-by-syntactic-analysis">3.2. Tokens and Rules: removing false positive annotations by syntactic analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#protein-and-gene-names-removing-mesh-terms-that-are-sub-strings-of-protein-gene-and-non-chemical-mesh-terms">3.3. Protein and gene names: removing MeSH terms that are sub-strings of protein, gene and non-chemical MeSH terms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tp-filter-removing-mesh-terms-with-low-tp-ratios">3.4. TP filter: removing MeSH terms with low TP ratios</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#term-position-in-the-text">4. Term position in the text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#comparison-with-other-studies">5. Comparison with other studies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusion-and-future-application">Conclusion and Future Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-51.html" title="An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential"
+             >previous</a> |
+          <a href="1758-2946-3-53.html" title="MyChemise: A 2D drawing program that uses morphing for visualisation purposes"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-52.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

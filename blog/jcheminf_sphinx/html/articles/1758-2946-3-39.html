@@ -1,0 +1,1176 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>CMLLite: a design philosophy for CML &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Mining chemical information from open patents" href="1758-2946-3-40.html" />
+    <link rel="prev" title="The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age" href="1758-2946-3-38.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-38.html" title="The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-40.html" title="Mining chemical information from open patents"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="cmllite-a-design-philosophy-for-cml">
+<h1>CMLLite: a design philosophy for CML<a class="headerlink" href="#cmllite-a-design-philosophy-for-cml" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>CMLLite is a collection of definitions and processes which provide strong and flexible validation for a document in Chemical Markup Language (CML). It consists of an updated CML schema (schema3), conventions specifying rules in both human and machine-understandable forms and a validator available both online and offline to check conformance. This article explores the rationale behind the changes which have been made to the schema, explains how conventions interact and how they are designed, formulated, implemented and tested, and gives an overview of the validation service.</p>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>There is an on-going need for formal, computable representations of scientific data and documents which are also accessible to humans <a class="footnote-reference" href="#b1" id="id1">[1]</a><a class="footnote-reference" href="#b2" id="id2">[2]</a><a class="footnote-reference" href="#b3" id="id3">[3]</a>. The challenge is to devise systems that people will not only use but for which they will, critically, develop additional tools and content. Our approach for chemistry is Chemical Markup Language (CML) (whose evolution and philosophy is described elsewhere in this issue <a class="footnote-reference" href="#b4" id="id4">[4]</a>) which has been developed to support five main areas of chemistry (molecules, reactions, solid-state, spectroscopy and computational chemistry).</p>
+<p>The strengths and weaknesses of CML have been recently analysed by Dumontier <a class="footnote-reference" href="#b3" id="id5">[3]</a> and we quote directly:</p>
+<p><em>Chemical Markup Language, backed by a controlled vocabulary, has been rather successful in specifying most aspects of chemistry, from small molecules and their connectivity to polymers and crystal structures</em>.</p>
+<p><em>Unfortunately, while most elements of this specification can be parsed out using one of the many XML libraries, certain elements do not render themselves to facile interpretation. Consider the sample CML specification of a water molecule [...]. In order to identify the member atoms in a given bond, it is necessary to carry out string processing as an intermediate step. Further, while many of the elements of CML are defined in a controlled vocabulary, the lack of explicit, consistent, and formal axiomatization of the involved concepts gives rise to difficulties in inferring connections between chemical concepts where no such connections are stated explicitly, something that is possible in formal ontology-backed RDF-based information specifications. Although CML specifications have been increasingly evolving to incorporate elements of the Semantic Web, the lack of widespread adoption of the format, and the limited availability of large-scale CML-based chemical knowledge repositories, have somewhat limited CML-assisted federation of the world of chemical data. Furthermore, the implementation of coverage of additional chemical concepts in most chemical representations requires a formal, rigorous representation specification, complicating the incorporation of data represented using domain-specific representation extensions. We believe that an ideal chemical representation would require no specialized wrapper or interpreter, would be generic such as to allow for facile and conflict-free extensions, would be based on a formal ontology, and would be encoded in a machine-*understandable *(as opposed to simply machine-readable, as in CML) manner and therefore facilitates automated reasoning and data integration</em>.</p>
+<p>This article addresses these points and describes a system we have built for managing explicit and implicit semantics. It was initially developed during the Chem4Word (C4W) project <a class="footnote-reference" href="#b5" id="id6">[5]</a> (which creates or edits CML documents in a.NET/Word context) and which we have now generalised to any CML deployment. In C4W we agreed that a fundamental part of the design was that the semantics could be verified. Any document input to the system must be semantically valid so that the C4W system would not break for invalid input. Essentially we designed a contract between the importing system, and the editing/display system.</p>
+<p>Rather than rewrite JUMBO <a class="footnote-reference" href="#b6" id="id7">[6]</a> and other CML libraries, we designed a set of rules for conformant input documents and tools to process validation. These tools (CML schema3 and CMLValidator) are platform-independent and are reported in this article.</p>
+<div class="section" id="semantics-in-cml">
+<h3>Semantics in CML<a class="headerlink" href="#semantics-in-cml" title="Permalink to this headline">¶</a></h3>
+<p>We agree with Dumontier&#8217;s analysis and in this article show how our current approach to semantics in CML is both achievable and largely compatible with his and others&#8217; <a class="footnote-reference" href="#b7" id="id8">[7]</a><a class="footnote-reference" href="#b8" id="id9">[8]</a> ideal chemical representations. As noted, CML has a small, but important, set of elements (molecule, atom, bond, crystal, spectrum and a few others) where some semantics are implicit and the rules hardcoded. This approach is pragmatic; translating the implicit rules to formal semantics is a considerable effort and makes it more difficult to write libraries to support them.</p>
+<p>However most CML concepts can be automatically expressed in equivalent semantic form, <em>e.g</em>. using RDF format <a class="footnote-reference" href="#b9" id="id10">[9]</a> for the document and RDFSchema <a class="footnote-reference" href="#b10" id="id11">[10]</a> or (if appropriate) the OWL language to specify an ontology <a class="footnote-reference" href="#b11" id="id12">[11]</a> (see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>) and managed with generic (non-chemical) semantic tools. The use of RDF in this manner is advocated by <em>e.g</em>. the Bio2RDF project <a class="footnote-reference" href="#b12" id="id13">[12]</a>. In particular property and parameter can be completely represented in RDF and we already use this extensively in Quixote <a class="footnote-reference" href="#b13" id="id14">[13]</a><a class="footnote-reference" href="#b14" id="id15">[14]</a> and similar projects (where CML is imported as RDF).</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-39-1.jpg" src="../_images/1758-2946-3-39-1.jpg" />
+<p class="caption">Figure 1. A property represented in CML (top) and the equivalent RDF (bottom)-as used in the Quixote repository</p>
+<div class="legend">
+<strong>A property represented in CML (top) and the equivalent RDF (bottom)-as used in the Quixote repository</strong> <a class="footnote-reference" href="#b47" id="id16">[47]</a>. The dictionary is referenced by <strong>compchem:hfenergy</strong> for which there must be an entry in an online dictionary. These are completely equivalent and can be translated in both directions without semantic loss. (There are minor syntactic variants such as the capitalization varying systematically.) It is always possible to generate RDF from CML; the reverse may not be possible for arbitrary RDF. The challenge is to create communally acceptable dictionaries/ontologies-the syntax (CML or RDF) is immaterial.</div>
+</div>
+<p>We have explored a full RDF implementation of CML through ChemAxiom <a class="footnote-reference" href="#b15" id="id17">[15]</a> (an OWL-compatible representation of physical chemical properties) and we have also explored full RDF in Open Bibliography <a class="footnote-reference" href="#b16" id="id18">[16]</a>). Both of these have shown that the entry overhead is high as the tools are at an early stage. For example there is no support for RDFSchema-based approaches in chemistry. At this stage in chemical informatics, therefore, we feel that CML as a mixture of explicit and implicit semantics provides a useful infrastructure accessible to a large number of implementers and users.</p>
+</div>
+<div class="section" id="implicit-semantics">
+<h3>Implicit semantics<a class="headerlink" href="#implicit-semantics" title="Permalink to this headline">¶</a></h3>
+<p>As a typical example of implicit semantics CML schema2.4 requires the formalCharge on a molecule to be consistent with the formalCharges on descendant molecules and atoms. We can express this in pseudocode:</p>
+<p>if (not molecule[&#64;formalCharge]) then</p>
+<p><a class="reference external" href="mailto:molecule&#37;&#52;&#48;formalCharge">molecule<span>&#64;</span>formalCharge</a>: = =</p>
+<p>sum (./<a class="reference external" href="mailto:molecule&#37;&#52;&#48;formalCharge">molecule<span>&#64;</span>formalCharge</a> <a href="#id19"><span class="problematic" id="id20">*</span></a>./<a class="reference external" href="mailto:molecule&#37;&#52;&#48;count">molecule<span>&#64;</span>count</a>) +</p>
+<p>sum (./atomArray/atom(&#64;formalCharge * &#64;occupancy * &#64;count))</p>
+<p>(If the formal charge (an integer) is missing on a molecule, calculate it by recursively summing its descendants. This is more complex in practice as we have to apply semantics for atoms without formalCharge.)</p>
+<p>CML has thousands of relationships like this, and they are relatively straightforward to implement through procedural code (in libraries such as JUMBO, Chem4Word, the Chemistry Development Kit (CDK) <a class="footnote-reference" href="#b17" id="id21">[17]</a>, Open Babel [#B18]_*etc*.). This article describes how their combination with unit tests and other validation procedures creates strong accessible semantics.</p>
+</div>
+<div class="section" id="choice-of-semantic-system">
+<h3>Choice of semantic system<a class="headerlink" href="#choice-of-semantic-system" title="Permalink to this headline">¶</a></h3>
+<p>It is commonly believed that the (perceived) ease of use of a new technology will affect its adoption by communities <a class="footnote-reference" href="#b19" id="id22">[19]</a>. A successful deployed system needs to have the following interconnected components:</p>
+<p>• Accessibility for humans</p>
+<p>• Proven infrastructure</p>
+<p>• Authoring tools</p>
+<p>• Reading tools</p>
+<p>• Editors</p>
+<p>• Domain libraries</p>
+<p>• Critical mass of content</p>
+<p>• Agreed concepts and vocabularies</p>
+<p>• Critical mass of users.</p>
+<p>This requires a large investment to which we also have to add <em>Postel&#8217;s Law</em> <a class="footnote-reference" href="#b20" id="id23">[20]</a>: &#8220;be conservative in what you send, liberal in what you accept&#8221; <em>i.e</em>. do extra implementation work to make it forgiving to use. However we believe the investment in CML <a class="footnote-reference" href="#b44" id="id24">[44]</a> has been sufficient to make the semantic approach valuable and tractable.</p>
+<p>There seems to be a conservation law which trades ease of implementation and deployment for semantic power. At one of the spectrum is natural language (NL) which is almost infinitely expressive. It relies on an implicit fluid vocabulary and the burden on interpretation is almost completely on the accepter. Its flexibility also generates ambiguity. At the other end are completely hardcoded unambiguous systems with very limited scope (such as InChI <a class="footnote-reference" href="#b21" id="id25">[21]</a>); this works because there is a single global implementation of a canonical InChI generator. NL can transmit the concept of &#8220;boiling point&#8221; because &#8220;everybody knows what a boiling point is&#8221;; InChI cannot represent the concept at all. To represent &#8220;boiling point&#8221; formally, however, is by no means trivial-we have to think about units, pressure, error estimations, <em>etc</em>. Does boiling point apply to vapour- &gt; liquid transitions? There are thousands of similar chemical concepts all of which must be formalized. There is no escape from this labour.</p>
+<p>CML trades full semantic representability for (relative) ease of implementation together with clarity for humans. CML takes a pragmatic view that a large number of chemical concepts are implicitly very well understood (most were formulated 100+ years ago) and the semantics can be hardcoded. This allows us to write software libraries for analysing orbital energies, balancing reactions, finding moments of inertia, <em>etc</em>. using the common representation that CML provides.</p>
+<p>Here we explore how CML, which represents a set of basic chemical &#8220;nouns&#8221; (objects), can be combined in flexible, yet rigorous ways. In particular it has to be possible to write software systems that support these developments. We do not set <em>a priori</em> constraints on how these nouns can be used, but we require that these usages are documented and validatable, allowing us to write conformant software for each usage.</p>
+<p>CML deliberately does not attempt to represent relationships between objects leaving that to RDF; nor does it represent processes (we are still searching for a good, common, formulation). CML is designed to interoperate with other markup languages (XHTML <a class="footnote-reference" href="#b22" id="id26">[22]</a>, MathML <a class="footnote-reference" href="#b23" id="id27">[23]</a>, SVG <a class="footnote-reference" href="#b24" id="id28">[24]</a>, <em>etc</em>.) and is incorporated in some approaches, <em>e.g</em>. BioPAX <a class="footnote-reference" href="#b25" id="id29">[25]</a>.</p>
+<p>At the present time, therefore, CMLLite represents a cost-effective system which can validate a wide range of chemical documents.</p>
+</div>
+<div class="section" id="community-requirements-and-cmllite-conventions">
+<h3>Community requirements and CMLLite conventions<a class="headerlink" href="#community-requirements-and-cmllite-conventions" title="Permalink to this headline">¶</a></h3>
+<p>CML is now largely developed by communities who build prototypes and provide feedback on how well they work; CMLLite has been created and deployed in this way (Table <em class="xref std std-ref">1</em>).</p>
+<p>The greater flexibility introduced with CML schema3 allows users to create valid documents almost as they want but requires a greater effort understanding for both humans and machines to understand the document. Here are typical community requirements:</p>
+<p>• CMLSpect. &#8220;All spectra MUST contain x-data and y-data&#8221;.</p>
+<p>• CMLComp. &#8220;only the following CML elements are allowed: module, molecule, atom, property,...&#8221; &#8220;bond MUST NOT appear as it is not a QM concept&#8221;</p>
+<p>• molecular (from the Chem4Word project). &#8220;a bond MUST contain references to two distinct atoms, the atoms MUST exist, and be in the same ancestor molecule&#8221;.</p>
+<p>• compchem (from Quixote). &#8220;a document MUST have a list of jobs, and each job MUST describe environment, initialization, calculation, and finalization&#8221;. All molecules MUST obey the molecular convention.</p>
+<p>• dictionary. &#8220;all entries MUST have a definition and MAY have one description.&#8221;</p>
+<p>• Unit-dictionary. &#8220;there SHOULD be a specific dictionary for SI units and unitTypes.&#8221;</p>
+<p>The terms are used as in the IETF&#8217;s RFC 2199 <a class="footnote-reference" href="#b29" id="id30">[29]</a>: &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221;. This approach is central to CMLLite.</p>
+<p>These domains of chemistry think about chemistry differently from each other; often this means a very tight specification of rules in one particular area of expertise and very little if any applied to the rest. The loosening of the content model in schema3 allows users to combine the elements and attributes as they need. However, users still need to be able to specify a set of rules (constraints) which model their particular domain. The entire set of constraints which the CML should conform to is called a <em>convention</em>. Every convention requiring another recursively inherits (aggregates) the requirements from that convention.</p>
+<p>A convention should be the result of community engagement and discussion reflecting historical practice and experience. The social aspects of the process of agreeing conventions are discussed in the companion articles <a class="footnote-reference" href="#b13" id="id31">[13]</a><a class="footnote-reference" href="#b30" id="id32">[30]</a>.</p>
+<p>A convention is:</p>
+<p>• A description to a human reader of the purpose of the convention, its scope and its implementation. A human MUST be able to hand-craft a compliant document by reading the specification.</p>
+<p>• A description to an implementer of exactly how software SHOULD, MAY, MUST and MUST NOT behave when given any possible input. For example software validating a document purporting to be compliant to a particular convention MUST raise an error if it encounters a node defined in the convention but used incorrectly. If it encounters a node not in the convention, its behaviour is undefined but the default should be to inform the user.</p>
+<p>• A statement of interest in a particular subset of CML by a community.</p>
+<p>The prime purpose of the convention is validation of documents before transferring them to software. As a result the software is more straightforward to implement and test.</p>
+</div>
+<div class="section" id="the-need-for-validation">
+<h3>The Need for Validation<a class="headerlink" href="#the-need-for-validation" title="Permalink to this headline">¶</a></h3>
+<p>Validation of input documents is at the heart of the CMLLite approach. There are two complementary approaches to validation (see also Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>). Both components (Schema and convention) are <em>validators</em> and are normally run sequentially</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-39-2.jpg" src="../_images/1758-2946-3-39-2.jpg" />
+<p class="caption">Figure 2. (a) historical approach to CML processing</p>
+<div class="legend">
+<strong>(a) historical approach to CML processing</strong>. Software was expected to perform a wide variety of tasks including validation and transformations (processing). (b) the CMLLite approach: each module performs only one task <em>i.e</em>. validation, normalisation or transformation (processing). This makes each of the modules more straightforward to understand and produces cleaner code.</div>
+</div>
+<p>• <strong>XSD Schema</strong> <a class="footnote-reference" href="#b31" id="id33">[31]</a><a class="footnote-reference" href="#b32" id="id34">[32]</a>. CML has used this for many years. It works well for isolated elements and attributes with uncomplicated child content. It breaks or is inappropriate for several chemical concepts, complicated content and relationships. In this article we report schema3 where many of the broken and inflexible constraints have been removed. Note that all CML documents now should validate against schema3.</p>
+<p>• <strong>Conventions</strong>. These add power to schema3 and allow many complicated concepts to be represented (in XSLT <a class="footnote-reference" href="#b33" id="id35">[33]</a>/XPath <a class="footnote-reference" href="#b34" id="id36">[34]</a>).</p>
+<p>These components are now described in more detail.</p>
+</div>
+<div class="section" id="cml-schemas-evolution-to-schema3">
+<h3>CML Schemas-Evolution to schema3<a class="headerlink" href="#cml-schemas-evolution-to-schema3" title="Permalink to this headline">¶</a></h3>
+<p>In themselves, schema constraints can provide little chemical validation but provide good support for other simple concepts (<em>e.g</em>. numeric, date, and containers) and are the platform on which further constraints are built.</p>
+<div class="section" id="content-models">
+<h4>Content Models<a class="headerlink" href="#content-models" title="Permalink to this headline">¶</a></h4>
+<p>Schema2.4 introduced flexibility through more relaxed content models than previous incarnations (an unordered child set with no enforced cardinality), and re-usable attributes. Schema3 has even more flexible content (effectively &#8220;any&#8221; for most elements) and much of the burden of validation has been devolved to conventions. Specific issues are described below (and are also addressed in the CML retrospective paper). The move away from the &#8216;one-size-fits-all&#8217; model imposed by schema2.4 to a more modular, flexible approach, with supporting tools for implementation, has been driven by challenges in the general areas listed below in approximate order of importance:</p>
+<p>• <strong>Content Model</strong> (what elements are allowed as children of which elements). Schema3 explicitly removes as much of the content model as possible.</p>
+<p>• <strong>Attribute names and attributeGroups</strong>. Schema2.4 allowed attributes to be defined independently of elements. For maintenance purposes each attribute was defined in its own <em>attributeGroup</em>. Unfortunately some attributes used polymorphic names (<em>e.g</em>. &#8220;type&#8221;) and were not re-locatable. The desire to maintain backward compatibility with the majority of existing software means that we were unable to redesign the attribute names..</p>
+<p>• <strong>Union of enumerated values</strong>. Some attributes (and string content) used the XSD union approach to express both controlled (enumerated) and uncontrolled vocabulary. Here enumerated values are of one data type whilst the UNIONed value is of a different type, and has to be processed differently. The CMLLite approach restricts attribute values to a single data type, and uses the dictionary (dictRef) mechanism to provide additional information as required.</p>
+<p>• <strong>Mixed content</strong> (text and element children). This was used to support free text but is technically challenging and we are deprecating its use in favour of (say) XHTML constructs.</p>
+<p>• <strong>Aliases</strong> (<em>e.g</em>. &#8216;1&#8217; and &#8216;S&#8217; for the order of single bonds). These cause a huge overhead in software, are deprecated, and will trigger warnings when the CML is validated against the validation service based on schema3. Normalisation is advised at this stage.</p>
+<p>CML has grown to have a collection of approximately 100 elements and approximately 100 attributes. Most of these are in common use, but there are very few documents which use more than about 20 elements and 20 attributes at a time. For example a solid-state calculation has relatively little in common with the textual report of a chemical synthesis. Most elements in CML can be used independently of most other elements and schema3 explicitly supports this. For example a spectrum might occur with a molecule, with a crystal structure or with a computational chemistry output. Some elements have a more restricted use, for example bonds and atoms normally only occur within the context of a molecule. Attributes are more varied, in that some are specific to particular elements (<em>e.g</em>. atomRefs2 normally only occurs on the bond elements) while others are very generic (<em>e.g</em>. title, id, dictRef). The CML schema determines some of the pattern of attribute occurrence, but leaves others up to the individual conventions.</p>
+<p>Almost all changes are backward-compatible as schema3 is more forgiving than schema2.4; a few elements contained mixed content and have been obsoleted (annotation, appinfo, documentation, relatedEntry).</p>
+</div>
+<div class="section" id="attributes">
+<h4>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h4>
+<p>Attributes define string values and can constrain syntax, dataTypes, lists and other constructs. In schema2.4 many attributes had data types defined by a union of enumerations and a &#8220;namespaceRef&#8221; pattern (effectively a QName). This has now been relaxed to the enumeration with the addition of &#8220;other&#8221;. Constraints are then added with XPath/XSLT rules. The polymorphism of attributes with names such as type (Appendix A) has not yet been addressed. In schema3 attributes are used in the same way as in schema2.4 and rely on additional constraints added through conventions. Elements with text-only content (scalar, array, matrix) are polymorphic (<em>e.g</em>. can be numeric, string, date) and are not supported well by schema constraints.</p>
+</div>
+</div>
+<div class="section" id="conventions">
+<h3>Conventions<a class="headerlink" href="#conventions" title="Permalink to this headline">¶</a></h3>
+<p>A convention specifies and can enforce the relationships between schema components and consists of (often a large number of) statements (rules) that can be understood by humans and enforced by machines. The choice of language for implementation is in principle, arbitrary. We initially used the Schematron <a class="footnote-reference" href="#b35" id="id37">[35]</a><a class="footnote-reference" href="#b36" id="id38">[36]</a> approach but have since moved to XSLT making heavy use of XPath, an extremely expressive language. XSLT has the advantage that it is implemented in all major languages and highly portable.</p>
+<p>CMLLite has to support documents in a rigorous manner whilst accepting that these could come from a variety of sources and describe a wide range of possible chemical concepts. Therefore any CML element in the schema should be allowed, but would not by default have specific constraints. Any foreign XML elements would also be allowed and again would not have any specific constraints.</p>
+<p>• An element can have text-only or element-only content (which may be empty, but there are no specifically empty models). For elements described in a defined convention constraints may apply. There are no restrictions on the order of elements in most content models.</p>
+<p>• A document MAY contain more than one convention. Conventions are allowed to mandate other conventions.</p>
+<p>• An element not specifically mentioned in a convention is effectively ignored by any tools that process after validation has succeeded (<em>i.e</em>. treated as any other foreign element), but is not removed from the document.</p>
+<p>• Attribute data types are validated by their constraints in the CML schema but further constraints including <em>e.g</em>. required/forbidden, scoping of uniqueness and co-occurrence MAY be specified by conventions. These may restrict, but not alter the schema3 interpretation.</p>
+<p>The interpretation of an element should not normally be affected by a convention. It constrains inputs and outputs but not the meaning of concepts. For example the <a class="reference external" href="mailto:atom/&#37;&#52;&#48;x3">atom/<span>&#64;</span>x3</a> attribute always defines Cartesian coordinates, and in a right-handed system. A convention can insist that they do or do not exist, that other nodes must or must not exist, but it cannot change the primary semantics.</p>
+</div>
+</div>
+<div class="section" id="methodology-of-validation">
+<h2>Methodology of Validation<a class="headerlink" href="#methodology-of-validation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="validation-driven-development">
+<h3>Validation-driven Development<a class="headerlink" href="#validation-driven-development" title="Permalink to this headline">¶</a></h3>
+<p>Our approach to validation is strongly informed by test-driven development (TDD), a well-used methodology for building modern software systems <a class="footnote-reference" href="#b37" id="id39">[37]</a>. The schema and the validator have been built by creating tests and refining the schema and software such that the tests produce conformant behaviour. To illustrate the philosophy of TDD, we show a typical unit test before describing the construction of the validator. There are thousands of unit tests using CML in JUMBO, JUMBO-Converters <a class="footnote-reference" href="#b38" id="id40">[38]</a>, Bioclipse <a class="footnote-reference" href="#b39" id="id41">[39]</a>, CDK, Open Babel, <em>etc</em>.).</p>
+</div>
+<div class="section" id="a-typical-example-of-tdd">
+<h3>A typical example of TDD<a class="headerlink" href="#a-typical-example-of-tdd" title="Permalink to this headline">¶</a></h3>
+<p>The following XML and Java snippets define the semantics of moleculeTool.getAverageBondLength() using the JUnit <a class="footnote-reference" href="#b40" id="id42">[40]</a> framework:</p>
+<p>&lt;molecule id = &#8216;mol5&#8217;&gt;</p>
+<p>&lt;atomArray&gt;</p>
+<p>&lt;atom id = &#8216;a1&#8217; elementType = &#8216;C&#8217; x3 = &#8216;0.0&#8217; y3 = &#8216;0.0&#8217; z3 = &#8216;0.0&#8217;/&gt;</p>
+<p>&lt;atom id = &#8216;a2&#8217; elementType = &#8216;N&#8217; x3 = &#8216;0.0&#8217; y3 = &#8216;1.3&#8217; z3 = &#8216;0.0&#8217;/&gt;</p>
+<p>&lt;atom id = &#8216;a3&#8217; elementType = &#8216;O&#8217; x3 = &#8216;1.0&#8217; y3 = &#8216;2.2&#8217; z3 = &#8216;0.0&#8217;/&gt;</p>
+<p>&lt;atom id = &#8216;a4&#8217; elementType = &#8216;H&#8217; x3 = &#8216;0.85&#8217; y3 = &#8216;-0.54&#8217; z3 = &#8216;0.5&#8217;/&gt;</p>
+<p>&lt;atom id = &#8216;a5&#8217; elementType = &#8216;H&#8217; x3 = &#8216;-0.85&#8217; y3 = &#8216;-0.54&#8217; z3 = &#8216;0.5&#8217;/&gt;</p>
+<p>&lt;/atomArray&gt;</p>
+<p>&lt;/molecule&gt;</p>
+<p>The function is described in words (in this case the method name is sufficient) and we implement a test which runs the code against an expected valid output:</p>
+<p>&#64;Test</p>
+<p><strong>public void</strong> testGetAverageBondLength() {</p>
+<p>molTool5.calculateBondedAtoms();</p>
+<p>Assert.*assertEquals*(&#8220;average length&#8221;, 1.2235,</p>
+<p>molTool5.getAverageBondLength(CoordinateType.*CARTESIAN*),.0001);</p>
+<p>}</p>
+<p>This test passes the assertEquals statement if it can calculate the averageBondLength and also if the result is equal to the expected values within a given tolerance (0.0001). The test gives an example of conformant input and besides being a useful pedagogic and reference document it also implicitly defines semantics (&#8220;an average bond length calculation requires all atoms to have 3-D coordinates; these can be supplied as x3/y3/z3&#8221;).</p>
+</div>
+<div class="section" id="general-aspects-of-tdd">
+<h3>General aspects of TDD<a class="headerlink" href="#general-aspects-of-tdd" title="Permalink to this headline">¶</a></h3>
+<p>Test-driven development not only provide a method for verifying the behaviour of existing software-it also provides examples of typical use cases for anyone using CML. Note that unit tests provide implicit rather than explicit semantics-we can define any number of valid input and the outputs required for these, but the actual transformation can be performed by any means.</p>
+</div>
+<div class="section" id="schemas-and-cmlvalidator">
+<h3>Schemas and CMLValidator<a class="headerlink" href="#schemas-and-cmlvalidator" title="Permalink to this headline">¶</a></h3>
+<p>Schemas and conventions are systems to validate documents (<em>validators</em>). The basic strategy used throughout the validator design process is to create documents to test them (<em>validatorTests</em>). The choice of tests is critical-ideally the implementer should think of every possible distinct case, but in practice this is reduced to generic cases. It is important to generate broken documents as well as valid ones, and this is often surprisingly difficult. In practice edge cases crop up unexpectedly in large corpora and these must then be added to the validatorTests. Appendix B shows the effort required to create tests for even a simple convention.</p>
+<p>Once the validatorTests are created the convention or schema is then coded. In line with test-driven development this starts with the tests failing (deliberately) as there is no code. The validator is then coded until it passes the tests. Frequently during this process the author will gain insight and inspiration and refine the validatorTests.</p>
+</div>
+<div class="section" id="a-schema3-validatortest">
+<h3>A schema3 validatorTest<a class="headerlink" href="#a-schema3-validatortest" title="Permalink to this headline">¶</a></h3>
+<p>As an example of how to test schema3 we take the definition of molecule in schema3 (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>).</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-39-3.jpg" src="../_images/1758-2946-3-39-3.jpg" />
+<p class="caption">Figure 3. A snippet from schema3 showing the typical relaxed content model of the molecule element container</p>
+<div class="legend">
+<strong>A snippet from schema3 showing the typical relaxed content model of the molecule element container</strong>.</div>
+</div>
+<p>This is read as:</p>
+<p><em>A molecule can have zero (minOccurs = 0) or many (maxOccurs = unbounded) child elements in any order; it has no mixed content. The children can be any CML elements (&#8220;anyCml&#8221;), any elements with a foreign namespace (#other or #local (default namespace when not CML)). All the elements in the CML namespace are part of the anyCml substitution group</em>.</p>
+<p>There are currently <em>ca</em>. 300 validatorTests (which test both schema and conventions) and we show examples that can validate the schema snippet for molecule. Each validatorTest is run against the schema, which only emits messages for invalid constructs.</p>
+<ol class="lowerroman simple">
+<li></li>
+</ol>
+<p>&lt;cml:molecule xmlns:cml = &#8220;<a class="reference external" href="http://www.xml-cml.org/schema">http://www.xml-cml.org/schema</a>&#8220;&gt;</p>
+<p>&lt;element-in-default-namespace&gt;</p>
+<p>This is fine. The null prefix is not bound</p>
+<p>to anything and therefore is associated with</p>
+<p>the default namespace</p>
+<p>&lt;/element-in-default-namespace&gt;</p>
+<p>&lt;/cml:molecule&gt;</p>
+<p>This is valid because the null prefix is not explicitly bound to anything and therefore associated with the default namespace and the CML namespace is bound to the cml prefix. This construct is permitted because of the xsd:any namespace = &#8216;##local&#8217; in the schema.</p>
+<ol class="lowerroman simple" start="2">
+<li></li>
+</ol>
+<p>&lt;molecule xmlns = &#8220;<a class="reference external" href="http://www.xml-cml.org/schema">http://www.xml-cml.org/schema</a> &#8220;xmlns:other = &#8220;<a class="reference external" href="http://www.example.net">http://www.example.net</a>&#8220;&gt;</p>
+<p>&lt;other:foreign-element&gt;</p>
+<p>This is fine. The null prefix is bound to the</p>
+<p>CML namespace and the &#8220;other&#8221; prefix</p>
+<p>is bound to a non-CML namespace</p>
+<p>&lt;/other:foreign-element&gt;</p>
+<p>&lt;/molecule&gt;</p>
+<p>This document is valid because the null prefix is bound to the CML namespace and the other prefix is bound to a non-CML namespace. This construct is permitted because of the xsd:any namespace = &#8216;##other&#8217; in the schema.</p>
+<ol class="lowerroman simple" start="3">
+<li></li>
+</ol>
+<p>&lt;molecule xmlns = &#8220;<a class="reference external" href="http://www.xml-cml.org/schema">http://www.xml-cml.org/schema</a>&#8220;&gt;</p>
+<p>&lt;non-cml-element&gt;</p>
+<p>This is invalid. The null prefix is bound</p>
+<p>to the CML namespace and the element</p>
+<p>&#8220;non-cml-element&#8221; is not part of this</p>
+<p>&lt;/non-cml-element&gt;</p>
+<p>&lt;/molecule&gt;</p>
+<p>This document is <em>not</em> valid because the null prefix is bound to the CML namespace and the element non-cml-element does not appear in the schema which defines CML.</p>
+<ol class="lowerroman simple" start="4">
+<li></li>
+</ol>
+<p>&lt;cml:molecule xmlns:cml = &#8220;<a class="reference external" href="http://www.xml-cml.org/schema">http://www.xml-cml.org/schema</a>&#8220;&gt;</p>
+<p>&lt;cml:non-cml-element&gt;</p>
+<p>This is invalid. The cml prefix is bound</p>
+<p>to the CML namespace and the element</p>
+<p>&#8220;non-cml-element&#8221; does not form part of this</p>
+<p>&lt;/cml:non-cml-element&gt;</p>
+<p>&lt;/cml:molecule&gt;</p>
+<p>This document is <em>not</em> valid because the cml prefix is bound to the CML namespace and the element non-cml-element does not appear in the schema which defines CML.</p>
+</div>
+<div class="section" id="cmlvalidator-report-language">
+<h3>CMLValidator report language<a class="headerlink" href="#cmlvalidator-report-language" title="Permalink to this headline">¶</a></h3>
+<p>Because we have taken a unit-test-based approach the initial design of our convention verification software used Schematron, an ISO Standard for testing assertions about the structure of XML documents. After initial testing we found that Schematron scaled poorly with the complexity of the rules and was difficult to debug. We also desired a report language that could better support partial validation required to reflect the MUST, SHOULD, MAY approach to defining rules adopted by CMLLite.</p>
+<p>The validating rules are now expressed directly as XSLT which gives greater flexibility and control structure. To support the MUST, SHOULD, MAY style of rules we have developed a small report language (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>) to indicate the different levels of severity.</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-39-4.jpg" src="../_images/1758-2946-3-39-4.jpg" />
+<p class="caption">Figure 4. An outline of the CML report language</p>
+<div class="legend">
+<strong>An outline of the CML report language</strong>. If a test (<em>e.g</em>. well-formed-test or URIs-reachable-test) contains a valid element child then it MUST NOT contain any warning or error element children. There is no such restriction on info elements and these may occur for input documents that otherwise conform completely to the convention.</div>
+</div>
+<p>Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a> shows how we use XSLT to encode a typical rule in the molecular convention:</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-39-5.jpg" src="../_images/1758-2946-3-39-5.jpg" />
+<p class="caption">Figure 5. Example rules expressed in XSLT: an atom must have an id attribute and the value of the id must be unique among the ids of all the atoms in the eldest containing parent molecule</p>
+<div class="legend">
+<strong>Example rules expressed in XSLT: an atom must have an id attribute and the value of the id must be unique among the ids of all the atoms in the eldest containing parent molecule</strong>. The cml prefix is bound to <a class="reference external" href="http://www.xml-cml.org/schema">http://www.xml-cml.org/schema</a> and the report prefix is bound to <a class="reference external" href="http://www.xml-cml.org/report/">http://www.xml-cml.org/report/</a>. The error reporting has been simplified for clarity (the location attribute is omitted).</div>
+</div>
+<p>• An atom must have an id attribute.</p>
+<p>• The value of the id of an atom must be unique within the eldest containing molecule.</p>
+<p>The XPath expression</p>
+<p>count(ancestor::cml:molecule//cml:atom[&#64;id = current()/&#64;id] &gt; 1)</p>
+<p>can be decomposed into a set of steps which define a set of elements to query over and the query itself:</p>
+<p>• ancestor::cml:molecule selects any molecule element of which the current atom is a descendent (child, grandchild <em>etc</em>.).</p>
+<p>•//cml:atom then selects every single atom element that is a descendent of any of the set of molecules. Note that this must by definition include the original atom.</p>
+<p>• [&#64;id = current()/&#64;id] restricts the set of atoms to only include those that have an id that is identical to the original atom (matched in the template).</p>
+<p>• The count(...) &gt; 1 expression forms the query and evaluates the number of atoms left in the set. If this is greater than 1 then multiple atoms in the same ancestor molecule have the same id.</p>
+<p>The conventions in CMLLite have built-in rules which are generally not explicitly stated in the specification of conventions:</p>
+<p>• A convention is applied through an element carrying the convention attribute. The convention applies to that element and all its descendants.</p>
+<p>• The value of the convention attribute MUST be a QName that expands to the URI identifying the convention to be applied.</p>
+<p>• A convention can require other conventions which must be explicitly specified on appropriate elements.</p>
+<p>• If no conventions are declared a warning is issued.</p>
+<p>We do not intend conventions to replace the CML schema and they are not a general schema language.</p>
+<p>CMLValidator uses normal XSLT processing rules but makes special use of the mode attribute to allow validation of different conventions within the same document. &lt; apply-templates mode = &#8220;<em>mode-name</em>&#8221; &gt; limits subsequent validation to templates with mode = &#8220;mode-name&#8221;. An apply-templates call without a mode will only call those templates without a mode (<em>i.e</em>. not governed by a convention in the document).</p>
+</div>
+<div class="section" id="an-example-simpleunit">
+<h3>An example-simpleUnit<a class="headerlink" href="#an-example-simpleunit" title="Permalink to this headline">¶</a></h3>
+<p>The current conventions contain many hundreds of validatorTest and to illustrate them we create a very simple sub-convention: simpleUnit. There is already a mature convention for units using the schema3 elements unitList and unit. (Schema3 also defines a variety of attributes on unit which are still relevant but as they have default schema3 semantics they do not need explicit redefinition.) simpleUnit explores a small portion of this.</p>
+</div>
+<div class="section" id="the-ruleset">
+<h3>The ruleset<a class="headerlink" href="#the-ruleset" title="Permalink to this headline">¶</a></h3>
+<p>1 The simpleUnit convention is specified with the <a class="reference external" href="http://www.xml-cml.org/convention/simpleUnit">http://www.xml-cml.org/convention/simpleUnit</a> namespace.</p>
+<p>2 The simpleUnit convention MUST be specified on a cml:unitList element using the convention attribute.</p>
+<p>3 A cml:unitList element MUST contain at least one cml:unit child element.</p>
+<p>4 A cml:unitList element MAY contain other child elements from the CML namespace or from foreign namespaces.</p>
+<p>There are no constraints on where in a document the unitList element may appear.</p>
+</div>
+<div class="section" id="validatortest">
+<h3>ValidatorTest<a class="headerlink" href="#validatortest" title="Permalink to this headline">¶</a></h3>
+<p>We start by creating an exhaustive set of tests against which the validator will be developed. These tests (Appendix B) are independent of the actual implementation of the validator. We can be confident that any validator that passes all these tests is likely to be useful in determining whether any of a wide range of documents is valid or invalid against the simpleUnit convention.</p>
+</div>
+<div class="section" id="validator">
+<h3>Validator<a class="headerlink" href="#validator" title="Permalink to this headline">¶</a></h3>
+<p>Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a> shows the XSLT required to encode the ruleset of the simpleUnit convention.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-39-6.jpg" src="../_images/1758-2946-3-39-6.jpg" />
+<p class="caption">Figure 6. the XSLT for the simpleUnit convention-the error reporting has been simplified for clarity</p>
+<div class="legend">
+<strong>the XSLT for the simpleUnit convention-the error reporting has been simplified for clarity</strong>.</div>
+</div>
+<p>We now address the purpose of each of the templates in the validator in detail.</p>
+<p><strong>Template 1</strong>: creates the root report:result element</p>
+<p><strong>Template 2</strong>: match = &#8220;<a href="#id47"><span class="problematic" id="id48">*</span></a><a href="#id49"><span class="problematic" id="id50">|</span></a>&#64;*|text()&#8221; matches any element, attribute or text node when not in simpleUnit mode. The match expressions for the three node types are the most general possible and will therefore be overridden by any more specific matches. This template takes no action but allows recursive traversal to find elements covered by the simpleUnit conventions arbitrarily deep in the input document.</p>
+<p><strong>Template 3</strong>: carries out the same operations as template 2 but only when in simpleUnit mode. Non-CML elements may be interspersed with CML in the text document and will not cause the validator to emit warnings.</p>
+<p><strong>Template 4</strong>: Only elements from the cml namespace will be matched; the element MUST have a convention attribute, with namespace <a class="reference external" href="http://www.xml-cml.org/convention/">http://www.xml-cml.org/convention/</a> and the local name simpleUnit. The schema enforces that the value of the convention attribute must be a namespaceRefType.</p>
+<p>If the element matched is cml:unitList this triggers mode = &#8220;simpleUnit&#8221; which remains in scope for all descendants.</p>
+<p>If the element matched is not cml:unitList the validator informs the users that it is an error to specify the simpleUnit convention and apply-templates is called but not in simpleUnit mode.</p>
+<p><strong>Template 5</strong>: matches any cml:unitList element. If this does not have at least one cml:unit child element then an error is reported. Any child nodes are then processed in simpleUnit mode.</p>
+<p><strong>Template 6</strong>: matches any cml:unit element in simpleUnit mode. XSLT rules dictate that it has higher priority than template 7.</p>
+<p><strong>Template 7</strong>: matches any element from the CML namespace in simpleUnit mode. The match is more specific than template 3 but less specific than templates 4, 5 and 6. This will therefore catch any CML namespaced elements other than unitList and unit. The elements matched by this template are covered by rule 4-they are allowed but they are not really part of the convention, hence the output contains information to this effect.</p>
+<p>This template is primarily for information, not errors-it is therefore appropriate to warn when CML elements might be ignored. Note that the presence of report:info elements in the report document does not mean that the input document is invalid.</p>
+</div>
+</div>
+<div class="section" id="interaction-and-extension-of-conventions">
+<h2>Interaction and extension of conventions<a class="headerlink" href="#interaction-and-extension-of-conventions" title="Permalink to this headline">¶</a></h2>
+<p>Conventions are generally designed so that they can be mixed in a document, typically as discrete sections of a document (<em>i.e</em>. they do not overlap (instance 2 in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>)). Thus the CMLSpect convention does not involve molecular, and molecular does not involve CMLSpect. The CMLValidator will engage the appropriate modes when processing each convention.</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-39-7.jpg" src="../_images/1758-2946-3-39-7.jpg" />
+<p class="caption">Figure 7. Documents with multiple conventions</p>
+<div class="legend">
+<strong>Documents with multiple conventions</strong>. The black lines represents the XML tree (DOM) and are shadowed by constraints imposed by conventions A (blue) and B (red).</div>
+</div>
+<p>It is sometimes desirable to nest conventions (a subtree with one convention being found completely within a larger tree with a different convention-<em>e.g</em>. instances 3 and 4 in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>). We use this approach in the current CMLLite conventions (Table <em class="xref std std-ref">1</em>) which may (recursively) validate subtrees labelled as having known conventions. The rules for nesting are under community review and Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a> shows the currently allowed interaction of conventions. The scope of a convention is thus similar to that of a namespace in that it &#8220;extends from the beginning of the start-tag in which it appears to the end of the corresponding end-tag&#8221; <a class="footnote-reference" href="#b41" id="id51">[41]</a>.</p>
+<p>Some of the specifications from the molecular convention <a class="reference external" href="http://www.xml-cml.org/convention/molecular">http://www.xml-cml.org/convention/molecular</a> are given below;</p>
+<p>• A molecule MUST contain at least one of the following elements: molecule, atomArray, name, label, formula.</p>
+<p>• A molecule MUST NOT contain both a child molecule and a child atomArray.</p>
+<p>• An atomArray MUST contain at least one atom.</p>
+<p>• A molecule MAY contain zero or one bondArray children and a bondArray MUST contain at least one bond.</p>
+<p>• Every atom MUST have an id which is unique within the eldest containing parent molecule.</p>
+<p>• If an atom has an x3 coordinate it MUST also have y3 and z3 (and similarly if y3 or z3 are present).</p>
+<p>The compchem convention <a class="reference external" href="http://www.xml-cml.org/convention/compchem">http://www.xml-cml.org/convention/compchem</a> has been developed as part of the Quixote project. It requires that the <em>initialization module</em> contains exactly one molecule and that all the atoms in this molecule MUST have three dimensional coordinates. Rather than create a new convention for molecules it was decided that these requirements were compatible with the molecular convention but required a tightening of some constraints.</p>
+<p>Some of the rules from the compchem convention are shown below:</p>
+<p>• There MUST be an initialization module which is a module element with a specific value of its dictRef attribute (cml:module/&#64;dictRef = &#8216;compchem:initialization&#8217; where the compchem prefix is bound to <a class="reference external" href="http://xml-cml.org/dictionary/compchem/">http://xml-cml.org/dictionary/compchem/</a>).</p>
+<p>• The initialization module MUST contain exactly one molecule.</p>
+<p>• molecules MUST declare that they conform to the molecular convention by declaring this in the convention attribute (cml:molecule/&#64;convention = &#8216;conventions:molecular&#8217; where the conventions prefix is bound to <a class="reference external" href="http://www.xml-cml.org/convention/">http://www.xml-cml.org/convention/</a>).</p>
+<p>• The molecule in the initialization module is REQUIRED to have an atomArray child.</p>
+<p>• All the atoms in the molecule in the initialization module MUST have three dimensional coordinates.</p>
+<p>Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a> shows the part of the XSLT that will enforce the requirements on the molecule in the initialization module described above. The first template tests that there is only a single molecule child of the initialization module and that the molecule must specify the molecular convention. The existence of this convention statement will trigger the CMLValidator to apply the relevant rules to the molecule and its descendant nodes.</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-39-8.jpg" src="../_images/1758-2946-3-39-8.jpg" />
+<p class="caption">Figure 8. A snippet showing how the compchem convention can rely on the molecular convention and add further restrictions</p>
+<div class="legend">
+<strong>A snippet showing how the compchem convention can rely on the molecular convention and add further restrictions</strong>.</div>
+</div>
+<p>The second template is in a separate mode (test-atoms-have-3d-coordinates) and tests that an atomArray is present and that all the child atoms of this have 3D coordinates. Note that we do not need to check whether or not the molecule has child molecules or other atomArray children because this will be done by the molecular convention.</p>
+<div class="section" id="validation-service">
+<h3>Validation Service<a class="headerlink" href="#validation-service" title="Permalink to this headline">¶</a></h3>
+<p>Following the W3C validation tools <a class="footnote-reference" href="#b42" id="id53">[42]</a> (specifically Unicorn <a class="footnote-reference" href="#b43" id="id54">[43]</a>), we have created the CML validation service <a class="footnote-reference" href="#b44" id="id55">[44]</a>. The validator is available in the following forms: an interactive form-based <a class="footnote-reference" href="#b45" id="id56">[45]</a> webpage, a RESTful <a class="footnote-reference" href="#b46" id="id57">[46]</a> web service and as a Java library.</p>
+<p>The Java library is the same as the backend engine for the web-based services. The program consists of validator classes, an overall workflow control class and a ValidationReport class. The validation report class encapsulates both an XML document containing information about which tests have passed, failed or caused warnings and a ValidationResult property. The ValidationResult can be VALID, VALID_WITH_WARNINGS or INVALID.</p>
+<p>The checks performed by the validator are shown below in order of application. If a particular check results in an INVALID ValidationResult no further processing is performed and the ValidationReport is created and returned.</p>
+<ol class="arabic simple">
+<li>It is well-formed XML. The control class can takes as input either an <em>InputStream</em> or a <em>nu.xom.Document</em> (xomDoc) and produces a ValidationReport. If input is an InputStream the program checks that it is well-formed XML (this is not necessary for a xomDoc as it is necessarily well-formed). A xomDoc is built from the InputStream and further processing is identical regardless of input format.</li>
+<li>The xomDoc conforms to the CML schema3.</li>
+<li>Deprecated constructs are not used. The use of deprecated constructs will give a VALID_WITH_WARNINGS result.</li>
+<li>Any conventions specified in the document are obeyed.</li>
+<li>All the prefixes used in namespaceRefTypes (effectively QNames) have been bound to namespaces and are resolvable URLs.</li>
+</ol>
+<p>The final check has been put in place as a reminder to users that sharing information is preferable and they can only &#8220;code to the green bar&#8221; <a class="footnote-reference" href="#b37" id="id58">[37]</a> by making their dictionaries and conventions <em>etc</em>. publicly available. The workflow is shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a> and <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>.</p>
+<div class="figure align-center" id="figure-9">
+<img alt="../_images/1758-2946-3-39-9.jpg" src="../_images/1758-2946-3-39-9.jpg" />
+<p class="caption">Figure 9. Workflow of validation in the CMLValidator</p>
+<div class="legend">
+<strong>Workflow of validation in the CMLValidator</strong>.</div>
+</div>
+<div class="figure align-center" id="figure-10">
+<img alt="../_images/1758-2946-3-39-10.jpg" src="../_images/1758-2946-3-39-10.jpg" />
+<p class="caption">Figure 10. The CMLValidator webform interface</p>
+<div class="legend">
+<strong>The CMLValidator webform interface</strong>. The input claims that it should conform to the unit-dictionary convention but unit 1 does not have an id attribute.</div>
+</div>
+<p>The RESTful webservice implementation is accessed by POSTing the XML/CML document to <a class="reference external" href="http://validator.xml-cml.org/validate">http://validator.xml-cml.org/validate</a> which returns a ValidationReport. This must then be queried by the user to determine whether the overall validation resulted in VALID, VALID_WITH_WARNINGS or INVALID. Informal feedback from users indicated that it was more useful to send the complete ValidationReport rather than just a ValidationResult as feedback as this would allow the calling tool to do more.</p>
+<p>The website is effectively an instance of a tool that uses the RESTful implementation to do the actual validation but then interprets the results and displays them in the most human-user friendly fashion. Figures <a class="reference internal" href="1758-2946-3-45.html#figure-11"><em>11</em></a>, <a class="reference internal" href="1758-2946-3-45.html#figure-12"><em>12</em></a> and <a class="reference internal" href="#figure-13"><em>13</em></a> show the interactive form-based service in use.</p>
+<div class="figure align-center" id="figure-11">
+<img alt="../_images/1758-2946-3-39-11.jpg" src="../_images/1758-2946-3-39-11.jpg" />
+<p class="caption">Figure 11. Part of the CMLValidator results page showing that the input (in Figure 10) was invalid</p>
+<div class="legend">
+<strong>Part of the CMLValidator results page showing that the input (in Figure 10) was invalid</strong>. The report contains a human-understandable message and an XPath (machine-understandable) expression giving the location of the error.</div>
+</div>
+<div class="figure align-center" id="figure-12">
+<img alt="../_images/1758-2946-3-39-12.jpg" src="../_images/1758-2946-3-39-12.jpg" />
+<p class="caption">Figure 12. Part of the CMLValidator results page showing that the input is valid but has warnings <em>i.e</em></p>
+<div class="legend">
+<strong>i.ePart of the CMLValidator results page showing that the input is valid but has warnings</strong> . the convention states that the dictionary element SHOULD have a title but none was found in the document. The warning gives a human-understandable message and an XPath (machine-understandable) expression giving the location of the warning.</div>
+</div>
+<div class="figure align-center" id="figure-13">
+<img alt="../_images/1758-2946-3-39-13.jpg" src="../_images/1758-2946-3-39-13.jpg" />
+<p class="caption">Figure 13. Part of the CMLValidator results page showing that the document is valid and which checks have been performed</p>
+<div class="legend">
+<strong>Part of the CMLValidator results page showing that the document is valid and which checks have been performed</strong>. Further information is also given because the input document contained a molecule element (which is not part of the unit-dictionary convention).</div>
+</div>
+</div>
+</div>
+<div class="section" id="conclusions">
+<h2>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h2>
+<p>We have developed an approach to extensible semantics for Chemical Markup Language, where we assume that the current schema (schema3) is stable and expressive. There is enough software and data that this approach has been widely deployed and tested, even if it is not yet mainstream. Semantics are defined in the XSD schema, with additional natural language and validated using a unit test approach (Java and .NET). It works in the main fields of chemistry for which CML has been developed (molecules, reactions/syntheses, crystallography/solid-state, spectroscopy and computational chemistry). The approach encourages sub-communities in chemistry to create <em>conventions</em> which can be as rigid or fluid as they wish. The conventions can be rigorously unit tested using CMLValidator.</p>
+<p>The convention-based approach is intermediate between natural language and formal systems. It relies, in part, on the wider community agreeing the semantics in schema3 (in several years deployment we have not yet had any disagreement with the basic elements and attributes and unit-tested examples). Sub-communities are starting to build their extensions of which the compchem convention being developed by the Quixote project is a prime example.</p>
+<p>We believe the convention-based approach will help developers to create better software quicker. The tests/conventions define clear, testable APIs and these are essential for any distributed development.</p>
+<p>The system interoperates fully with RDF-based systems. Many elements (especially value containers) can be algorithmically translated to RDF. A few core elements (primarily molecule, spectra, crystal) can be held in a more atomic form with bespoke semantics and software (it is, however, always possible to map into the details of these using URIs and to provide fine-grained links). By using this mixture of approaches we believe this is a cost-effective approach to interoperability within chemistry for those who wish to interoperate.</p>
+</div>
+<div class="section" id="availability-of-code">
+<h2>Availability of Code<a class="headerlink" href="#availability-of-code" title="Permalink to this headline">¶</a></h2>
+<p>The CMLValidator and associated tests are available at <a class="reference external" href="http://bitbucket.org/cml/cmllite-validator-code">http://bitbucket.org/cml/cmllite-validator-code</a> and the web-based implementation is available at <a class="reference external" href="http://bitbucket.org/cml/cmllite-validator-ws">http://bitbucket.org/cml/cmllite-validator-ws</a> both under an Apache 2.0 licence.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>JAT developed the CMLLite approach, created the CMLValidator and the test corpus, and wrote the manuscript. PMR is the original author of CML, created the test corpus and wrote the manuscript.</p>
+</div>
+<div class="section" id="appendix-a">
+<h2>Appendix A<a class="headerlink" href="#appendix-a" title="Permalink to this headline">¶</a></h2>
+<p>The attributes in CML are defined in attributeGroups which must have unique names allowing them to be disambiguated within the schema. The attributeGroup defines an attribute, its datatype/allowed values, and the name of the attribute in the document (these do not have to be unique).</p>
+<p>Element declarations in the schema specify which attributeGroups are allowed on them (which in this case caused polymorphism).</p>
+<p>Table <em class="xref std std-ref">2</em> shows all the attributes in CML schema3 that appear in the document as type. Values in &#8220;quotes&#8221; are enumerated allowed values, xsd:string means that any string content is permitted.</p>
+</div>
+<div class="section" id="appendix-b">
+<h2>Appendix B<a class="headerlink" href="#appendix-b" title="Permalink to this headline">¶</a></h2>
+<p>The documents below are a subset of the documents used to test the behaviour of the simpleUnit convention validator. After every alteration (new test, bug fix <em>etc</em>.) of the convention, the validator is run against this test set to verify that its behaviour still conforms to expectations.</p>
+<p>In all the examples below the cml prefix is bound to <a class="reference external" href="http://www.xml-cml.org/schema">http://www.xml-cml.org/schema</a> and the conventions prefix is bound to <a class="reference external" href="http://www.xml-cml.org/convention/.">http://www.xml-cml.org/convention/.</a></p>
+<div class="section" id="documents-valid-against-the-simpleunit-convention">
+<h3>Documents Valid Against the simpleUnit Convention<a class="headerlink" href="#documents-valid-against-the-simpleunit-convention" title="Permalink to this headline">¶</a></h3>
+<p>The input documents below should all result in a ValidationResult of VALID and the ValidationReport MUST NOT contain info elements. The tests in this section are primarily concerned with ensuring that the convention is recognised wherever it appears in a document and that non-CML elements do not give rise to info reports.</p>
+<ol class="lowerroman simple">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>This produces the following ValidationReport:</p>
+<p>&lt;report xmlns = &#8220;<a class="reference external" href="http://www.xml-cml.org/report/">http://www.xml-cml.org/report/</a>&#8220;&gt;</p>
+<p>&lt;well-formed-test&gt;</p>
+<p>&lt;valid &gt;xml is well formed&lt;/valid&gt;</p>
+<p>&lt;/well-formed-test&gt;</p>
+<p>&lt;schema-validation-test&gt;</p>
+<p>&lt;valid&gt;document conforms to the schema&lt;/valid&gt;</p>
+<p>&lt;/schema-validation-test&gt;</p>
+<p>&lt;convention-validation-test&gt;</p>
+<p>&lt;valid&gt;document conforms to all the conventions specified&lt;/valid&gt;</p>
+<p>&lt;/convention-validation-test&gt;</p>
+<p>&lt;uris-reachable-test&gt;</p>
+<p>&lt;valid&gt;All appropriate URIs were reachable&lt;/valid&gt;</p>
+<p>&lt;valid&gt;all dictRefs are resolvable &lt;/valid&gt;</p>
+<p>&lt;/uris-reachable-test&gt;</p>
+<p>&lt;/report&gt;</p>
+<p>The subsequent inputs produce exactly the same report and we therefore choose to explain what the document is testing for rather than show the output.</p>
+<ol class="lowerroman simple" start="2">
+<li></li>
+</ol>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>&lt;/x:p&gt;</p>
+<p>Tests that simpleUnit convention can be declared on a unitList that is not the root element of the document and is a child of a foreign namespaced element.</p>
+<ol class="lowerroman simple" start="3">
+<li></li>
+</ol>
+<p>&lt;cml:module&gt;</p>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>&lt;/cml:module&gt;</p>
+<p>The simpleUnit convention can be declared on a unitList that is not the root element of the document and is a child of a CML element (module).</p>
+<ol class="lowerroman simple" start="4">
+<li></li>
+</ol>
+<p>&lt;element-in-default-namespace&gt;</p>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>&lt;/element-in-default-namespace&gt;</p>
+<p>Tests that simpleUnit convention can be declared on a unitList that is not the root element of the document and is a child of an element from the default-namespace.</p>
+<ol class="loweralpha simple" start="22">
+<li></li>
+</ol>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>the unitList need not be the root element</p>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>&lt;/x:p&gt;</p>
+<p>Test that although CML does not have a mixed content model the unitList can occur within non-CML mixed content.</p>
+<ol class="lowerroman simple" start="6">
+<li></li>
+</ol>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>there are multiple instances of the simpleUnit</p>
+<p>convention in this document</p>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>&lt;/x:p&gt;</p>
+<p>Test that there can be multiple disjoint simpleUnit convention declarations in the same document.</p>
+<ol class="lowerroman simple" start="7">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>non cml child-this is fine</p>
+<p>&lt;/x:p&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Tests that the unitList element can contain foreign namespaced elements without giving rise to info reports.</p>
+<ol class="lowerroman simple" start="8">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;element-in-default-namespace/&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Tests that the unitList element can contain elements from the default namespace without giving rise to info reports.</p>
+<ol class="lowerroman simple" start="9">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit&gt;</p>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>non cml child-this is fine</p>
+<p>&lt;/x:p&gt;</p>
+<p>&lt;/cml:unit&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Tests that the unit element can contain foreign namespaced elements without giving rise to info reports.</p>
+<ol class="loweralpha simple" start="24">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit&gt;</p>
+<p>&lt;element-in-default-namespace/&gt;</p>
+<p>&lt;/cml:unit&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Tests that the unit element can contain elements from the default namespace without giving rise to info reports.</p>
+<ol class="lowerroman simple" start="11">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;cml:unit&gt;</p>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>multiple cml:unit elements are allowed</p>
+<p>&lt;/x:p&gt;</p>
+<p>&lt;/cml:unit&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Tests that a unitList may contain more than one unit child.</p>
+</div>
+<div class="section" id="documents-valid-with-info-reports-against-the-simpleunit-convention">
+<h3>Documents Valid (with info reports) Against the simpleUnit Convention<a class="headerlink" href="#documents-valid-with-info-reports-against-the-simpleunit-convention" title="Permalink to this headline">¶</a></h3>
+<p>The input documents below should all result in a ValidationResult of VALID and the ValidationReport should contain a single info element and MUST NOT contain either error or warning elements. info elements are used to give information about rules in a convention involving the MAY clause. Note that the complete ValidationReport is given for the first example but subsequent examples only contain the error message for brevity.</p>
+<ol class="lowerroman simple">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;cml:molecule/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Produces:</p>
+<p>&lt;report xmlns = &#8220;<a class="reference external" href="http://www.xml-cml.org/report/">http://www.xml-cml.org/report/</a>&#8220;&gt;</p>
+<p>&lt;well-formed-test&gt;</p>
+<p>&lt;valid &gt; xml is well formed &lt;/valid&gt;</p>
+<p>&lt;/well-formed-test&gt;</p>
+<p>&lt;schema-validation-test&gt;</p>
+<p>&lt;valid &gt; document conforms to the schema &lt;/valid&gt;</p>
+<p>&lt;/schema-validation-test&gt;</p>
+<p>&lt;convention-validation-test&gt;</p>
+<p>&lt;info location = &#8220;/<a href="#id68"><span class="problematic" id="id69">*</span></a>[local-name() = &#8216;unitList&#8217; and namespace-uri() = &#8216;<a class="reference external" href="http://www.xml-cml.org/schema'">http://www.xml-cml.org/schema&#8217;</a>] <a class="footnote-reference" href="#b1" id="id71">[1]</a>/<a href="#id72"><span class="problematic" id="id73">*</span></a>[local-name() = &#8216;molecule&#8217; and namespace-uri() = &#8216;<a class="reference external" href="http://www.xml-cml.org/schema">http://www.xml-cml.org/schema</a>&#8216;] <a class="footnote-reference" href="#b1" id="id75">[1]</a>&#8220;&gt;</p>
+<p>molecule is not a part of the <a class="reference external" href="http://www.xml-cml.org/convention/simpleUnit">http://www.xml-cml.org/convention/simpleUnit</a> convention and may be ignored by some processors.</p>
+<p>&lt;/info&gt;</p>
+<p>&lt;valid&gt;</p>
+<p>document conforms to all the conventions specified</p>
+<p>&lt;/valid&gt;</p>
+<p>&lt;/convention-validation-test&gt;</p>
+<p>&lt;uris-reachable-test&gt;</p>
+<p>&lt;valid &gt; All appropriate URIs were reachable &lt;/valid&gt;</p>
+<p>&lt;valid &gt; all dictRefs are resolvable &lt;/valid&gt;</p>
+<p>&lt;/uris-reachable-test&gt;</p>
+<p>&lt;/report&gt;</p>
+<ol class="lowerroman simple" start="2">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit&gt;</p>
+<p>&lt;cml:atom/&gt;</p>
+<p>&lt;/cml:unit&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Produces: &#8220;atom is not a part of the <a class="reference external" href="http://www.xml-cml.org/convention/simpleUnit">http://www.xml-cml.org/convention/simpleUnit</a> convention and may be ignored by some processors&#8221;</p>
+<ol class="lowerroman simple" start="3">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;cml:unit&gt;</p>
+<p>&lt;cml:bond/&gt;</p>
+<p>&lt;/cml:unit&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Produces: &#8220;bond is not a part of the <a class="reference external" href="http://www.xml-cml.org/convention/simpleUnit">http://www.xml-cml.org/convention/simpleUnit</a> convention and may be ignored by some processors&#8221;</p>
+<p>Note that if the bond specified a numeric bond order (<em>e.g</em>. order = &#8216;1&#8217;) the test result would be VALID_WITH_WARNINGS because numeric bond orders are deprecated.</p>
+<ol class="lowerroman simple" start="4">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unit&gt;</p>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>this is still going to be processed in</p>
+<p>unitList mode.</p>
+<p>&lt;cml:bond/&gt;</p>
+<p>&lt;/x:p&gt;</p>
+<p>&lt;/cml:unit&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Produces: &#8220;bond is not a part of the <a class="reference external" href="http://www.xml-cml.org/convention/simpleUnit">http://www.xml-cml.org/convention/simpleUnit</a> convention and may be ignored by some processors&#8221;</p>
+<ol class="loweralpha simple" start="22">
+<li></li>
+</ol>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>the unitList need not be the root element</p>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:molecule/&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>&lt;/x:p&gt;</p>
+<p>Produces: &#8220;molecule is not a part of the <a class="reference external" href="http://www.xml-cml.org/convention/simpleUnit">http://www.xml-cml.org/convention/simpleUnit</a> convention and may be ignored by some processors&#8221;.</p>
+</div>
+<div class="section" id="documents-invalid-against-the-simpleunit-convention">
+<h3>Documents Invalid Against the simpleUnit Convention<a class="headerlink" href="#documents-invalid-against-the-simpleunit-convention" title="Permalink to this headline">¶</a></h3>
+<p>The documents below should all result in a ValidationResult of INVALID. The ValidationReport should contain a single error element and should not contain either info or warning elements.</p>
+<ol class="lowerroman simple">
+<li></li>
+</ol>
+<p>&lt;cml:molecule convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unitList&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>&lt;/cml:molecule&gt;</p>
+<p>Produces the following ValidationReport:</p>
+<p>&lt;report xmlns = &#8220;<a class="reference external" href="http://www.xml-cml.org/report/">http://www.xml-cml.org/report/</a>&#8220;&gt;</p>
+<p>&lt;well-formed-test&gt;</p>
+<p>&lt;valid &gt; xml is well formed &lt;/valid&gt;</p>
+<p>&lt;/well-formed-test&gt;</p>
+<p>&lt;schema-validation-test&gt;</p>
+<p>&lt;valid &gt; document conforms to the schema &lt;/valid&gt;</p>
+<p>&lt;/schema-validation-test&gt;</p>
+<p>&lt;convention-validation-test&gt;</p>
+<p>&lt;error location = &#8220;/<a href="#id84"><span class="problematic" id="id85">*</span></a>[local-name() = &#8216;molecule&#8217; and namespace-uri() = &#8216;<a class="reference external" href="http://www.xml-cml.org/schema'">http://www.xml-cml.org/schema&#8217;</a>] [#B1]_&#64;*[local-name() = &#8216;convention&#8217; and namespace-uri() = &#8216;&#8217;]&#8221;&gt;</p>
+<p>the only valid cml element that can specify the simpleUnit convention is &#8220;unitList&#8221;</p>
+<p>&lt;/error&gt;</p>
+<p>&lt;/convention-validation-test&gt;</p>
+<p>&lt;uris-reachable-test&gt;</p>
+<p>&lt;valid &gt; All appropriate URIs were reachable &lt;/valid&gt;</p>
+<p>&lt;valid &gt; all dictRefs are resolvable &lt;/valid&gt;</p>
+<p>&lt;/uris-reachable-test&gt;</p>
+<p>&lt;/report&gt;</p>
+<ol class="lowerroman simple" start="2">
+<li></li>
+</ol>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>&lt;cml:molecule convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unitList&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>&lt;/cml:molecule&gt;</p>
+<p>&lt;/x:p&gt;</p>
+<p>Produces: &#8220;the only valid cml element that can specify the simpleUnit convention is &#8216;unitList&#8217;&#8221;. (Illustrating that the document is still being correctly traversed.)</p>
+<ol class="lowerroman simple" start="3">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;/&gt;</p>
+<p>Produces: &#8220;A unit list MUST contain child cml:unit elements&#8221;.</p>
+<ol class="lowerroman simple" start="4">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;!&#8211; not valid, a unitList must have at least one unit child &#8211;&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Produces: &#8220;A unit list MUST contain child cml:unit elements&#8221;.</p>
+<ol class="loweralpha simple" start="22">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>no unit child of unitList</p>
+<p>&lt;/x:p&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Produces: &#8220;A unit list MUST contain child cml:unit elements&#8221;.</p>
+<ol class="lowerroman simple" start="6">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>&lt;cml:unit/&gt;</p>
+<p>This unit is not a direct child of unitList</p>
+<p>and therefore should cause an error.</p>
+<p>&lt;/x:p&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Produces: &#8220;A unit list MUST contain child cml:unit elements&#8221;.</p>
+<ol class="lowerroman simple" start="7">
+<li></li>
+</ol>
+<p>&lt;cml:unitList convention = &#8220;conventions:simpleUnit&#8221;&gt;</p>
+<p>&lt;cml:unitList&gt;</p>
+<p>&lt;cml:unit&gt;</p>
+<p>&lt;x:p xmlns:x = &#8220;<a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;&gt;</p>
+<p>the outer unitList does not have at least</p>
+<p>one unit child</p>
+<p>&lt;/x:p&gt;</p>
+<p>&lt;/cml:unit&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>&lt;/cml:unitList&gt;</p>
+<p>Produces: &#8220;A unit list MUST contain child cml:unit elements&#8221;.</p>
+</div>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>We thank Microsoft Research for a grant for Chem4Word and EPSRC (Pathways to Impact) for dissemination. We also heartily thank Charlotte Bolton for all her help in preparing this manuscript.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id71">2</a>, <a class="fn-backref" href="#id75">3</a>)</em> Overcoming the Limitations of a Connection Table Description: A Universal Representation of Chemical Species</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>The semantic smart laboratory: a system for supporting the chemical <a href="#id91"><span class="problematic" id="id92">*</span></a>e*Scientist</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id5">2</a>)</em> Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>CML: Evolution and Design</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td>Chemistry Add-in for Word</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[6]</a></td><td>Chemical Markup Language</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[7]</a></td><td>Model Tool to Describe Chemical Structures in XML Format Utilizing Structural Fragments and Chemical Ontology</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[8]</a></td><td>Design and Development of Chemical Ontologies for Reaction Representation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[9]</a></td><td>Resource Description Framework, RDF</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[10]</a></td><td>RDF Vocabulary Description Language 1.0: RDF Schema</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[11]</a></td><td>Web Ontology Language (OWL)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[12]</a></td><td>Bio2RDF: Towards a mashup to build bioinformatics knowledge systems</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[13]</td><td><em>(<a class="fn-backref" href="#id14">1</a>, <a class="fn-backref" href="#id31">2</a>)</em> The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[14]</a></td><td>Quixote project on QC databases</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[15]</a></td><td>ChemAxiom-An Ontological Framework for Chemistry in Science</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[16]</a></td><td>Open Bibliography for Science, Technology, and Medicine</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[17]</a></td><td>The Chemistry Development Kit, CDK</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[18]</td><td>Open Babel: The Open Source Chemistry Toolbox</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[19]</a></td><td>Perceived usefulness, perceived ease of use, and user acceptance of information technology</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[20]</a></td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[21]</a></td><td>IUPAC International Chemical Identifier, InChI</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id26">[22]</a></td><td>XHTML specification</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id27">[23]</a></td><td>Mathematical Markup Language (MathML) specification</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id28">[24]</a></td><td>W3C Scalable Vector Graphics (SVG) Working Group</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[25]</a></td><td>The BioPAX community standard for pathway data sharing</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[26]</td><td>The use of XML and CML in computational chemistry and physics programs</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[27]</td><td>Chemical Markup, XML, and the World Wide Web. 7. CMLSpect, an XML Vocabulary for Spectral Data</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[28]</td><td>The JSpecView Project: an Open Source Java viewer and converter for JCAMP-DX, and XML spectral data files</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[29]</a></td><td>IETF RFC 2119: Key words for use in RFCs to Indicate Requirement Levels</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[30]</a></td><td>The semantics of Chemical Markup Language (CML): dictionaries and conventions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id33">[31]</a></td><td>XML Schema Definition Language (XSD) 1.1 Part 1: Structures</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[32]</a></td><td>XML Schema Definition Language (XSD) 1.1 Part 2: Datatypes</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[33]</a></td><td>XSL Transformations (XSLT)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b34" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id36">[34]</a></td><td>XML Path Language</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b35" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id37">[35]</a></td><td>Schematron, a language for making assertions about patterns found in XML documents</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b36" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id38">[36]</a></td><td>XSLT UK 2001 Report</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b37" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[37]</td><td><em>(<a class="fn-backref" href="#id39">1</a>, <a class="fn-backref" href="#id58">2</a>)</em> NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b38" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id40">[38]</a></td><td>JUMBO-Converters</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b39" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id41">[39]</a></td><td>Bioclipse</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b40" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id42">[40]</a></td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b41" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id51">[41]</a></td><td>Namespaces in XML</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b42" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id53">[42]</a></td><td>W3C Quality Assurance Tools</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b43" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id54">[43]</a></td><td>Unicorn-W3C&#8217;s Unified Validator</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b44" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[44]</td><td><em>(<a class="fn-backref" href="#id24">1</a>, <a class="fn-backref" href="#id55">2</a>)</em> CMLValidator service</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b45" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id56">[45]</a></td><td>HTML4 Recommendation-Forms</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b46" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id57">[46]</a></td><td>Architectural Styles and the Design of Network-based Software Architectures</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b47" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[47]</a></td><td>Chempound repository</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">CMLLite: a design philosophy for CML</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#semantics-in-cml">Semantics in CML</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implicit-semantics">Implicit semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#choice-of-semantic-system">Choice of semantic system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#community-requirements-and-cmllite-conventions">Community requirements and CMLLite conventions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-need-for-validation">The Need for Validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cml-schemas-evolution-to-schema3">CML Schemas-Evolution to schema3</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#content-models">Content Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#conventions">Conventions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#methodology-of-validation">Methodology of Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#validation-driven-development">Validation-driven Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#a-typical-example-of-tdd">A typical example of TDD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-aspects-of-tdd">General aspects of TDD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schemas-and-cmlvalidator">Schemas and CMLValidator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#a-schema3-validatortest">A schema3 validatorTest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cmlvalidator-report-language">CMLValidator report language</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#an-example-simpleunit">An example-simpleUnit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-ruleset">The ruleset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validatortest">ValidatorTest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validator">Validator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#interaction-and-extension-of-conventions">Interaction and extension of conventions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#validation-service">Validation Service</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#availability-of-code">Availability of Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#appendix-a">Appendix A</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#appendix-b">Appendix B</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#documents-valid-against-the-simpleunit-convention">Documents Valid Against the simpleUnit Convention</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#documents-valid-with-info-reports-against-the-simpleunit-convention">Documents Valid (with info reports) Against the simpleUnit Convention</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#documents-invalid-against-the-simpleunit-convention">Documents Invalid Against the simpleUnit Convention</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-38.html" title="The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age"
+             >previous</a> |
+          <a href="1758-2946-3-40.html" title="Mining chemical information from open patents"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-39.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

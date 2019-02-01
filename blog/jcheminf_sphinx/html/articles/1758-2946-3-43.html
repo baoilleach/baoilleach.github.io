@@ -1,0 +1,638 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The semantics of Chemical Markup Language (CML): dictionaries and conventions &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="CML: Evolution and design" href="1758-2946-3-44.html" />
+    <link rel="prev" title="The semantic architecture of the World-Wide Molecular Matrix (WWMM)" href="1758-2946-3-42.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-42.html" title="The semantic architecture of the World-Wide Molecular Matrix (WWMM)"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-44.html" title="CML: Evolution and design"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-semantics-of-chemical-markup-language-cml-dictionaries-and-conventions">
+<h1>The semantics of Chemical Markup Language (CML): dictionaries and conventions<a class="headerlink" href="#the-semantics-of-chemical-markup-language-cml-dictionaries-and-conventions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>The semantic architecture of CML consists of conventions, dictionaries and units. The conventions conform to a top-level specification and each convention can constrain compliant documents through machine-processing (validation). Dictionaries conform to a dictionary specification which also imposes machine validation on the dictionaries. Each dictionary can also be used to validate data in a CML document, and provide human-readable descriptions. An additional set of conventions and dictionaries are used to support scientific units. All conventions, dictionaries and dictionary elements are identifiable and addressable through unique URIs.</p>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>From an early stage, Chemical Markup Language (CML) was designed so that it could accommodate an indefinitely large amount of chemical and related concepts. This objective has been achieved by developing a dictionary mechanism where many of the semantics are added not through hard-coded elements and attributes but by linking to semantic dictionaries. CML has a number of objects and object containers which are abstract and which can be used to represent the structure and datatype of objects. The meaning of these, both for humans and machines, is then realised by linking an appropriate element in a dictionary.</p>
+<p>The dictionary approach was inspired by the CIF dictionaries <a class="footnote-reference" href="#b1" id="id1">[1]</a> from the International Union of Crystallography (IUCr) and has a similar (in many places isomorphous) structure to that project. The design allows for an indefinitely large number of dictionaries created by communities within chemistry who recognise a common semantic approach and who are prepared to create the appropriate dictionaries. At an early stage, CML provided for this with the concept of &#8220;convention&#8221;. This attribute is an indication that the current element and its descendants obey semantics defined by a group of scientists using a particularly unique label (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>).</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-43-1.jpg" src="../_images/1758-2946-3-43-1.jpg" />
+<p class="caption">Figure 1. The primary semantic components of CML</p>
+<div class="legend">
+<strong>The primary semantic components of CML</strong>. Elements in a document link to conventions, dictionaries and units through attributes. The referenced resources are themselves constrained by specification documents (convention spec, dictionary spec, system of units) with unique URIs. Within the dictionaries and the unit collections, every entry has a unique ID and when combined with the dictionary URI produces a globally-unique identifier.</div>
+</div>
+<p>During the evolution of CML we explored a number of syntactic approaches to representing and imposing semantics through dictionaries. These have ranged from a formally controlled ontology (ChemAxiom <a class="footnote-reference" href="#b2" id="id2">[2]</a>) which is consistent with OWL2.0 <a class="footnote-reference" href="#b3" id="id3">[3]</a> and the biosciences&#8217; Open Biological and Biomedical Ontologies (OBO)<a class="footnote-reference" href="#b4" id="id4">[4]</a> framework, to uncontrolled folksonomy-like tagging. Although we have implemented ChemAxiom and it is part of the bioscientists&#8217; description of chemistry, we regard it as too challenging for the current practice of chemistry and unnecessary for its communication. This is because chemistry has a well-understood (albeit implicit) ontology and the last 15 years have confirmed that it is highly stable. The power of declaration logic is therefore not required in building semantic structures. The consequence is that some of the mechanics of the semantics must be hard-coded, but this is a relatively small part and primarily consists of the linking mechanism and the treatment of scientific units of measurement. At the other end of the spectrum, we have found that the folksonomy approach is difficult to control without at least some formal semantic labelling. We have also found that there is considerable variation in how sub-communities approach their subject, and we do not wish to be prescriptive (even if we could). For example, the computational solids group (CMLComp) insisted that a molecule should not contain bonds as they did not exist, whereas the chemical informatics community is concerned not only that bonds should exist but that they should be annotated with their formal bond order.</p>
+<p>The design of CML has always been based on the need for dictionaries, and has also recognised that there are different conventions within chemical practice. The original design (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>) shows the linked dictionary concept and this has proved resilient and is the basis of the current architecture. However, the precise representation has varied over the years. This article represents a convergence and crystallisation of the semantic environment of CML, and we believe that there are now no immediate requirements for early refinement. This paper can therefore be used, we hope, for several years as a reference in a more robust manner than has been possible up to now. However, the exact practice of the CML community will be primarily governed by public discussions on mailing lists and formal releases of software and specifications.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-43-2.jpg" src="../_images/1758-2946-3-43-2.jpg" />
+<p class="caption">Figure 2. The original design for CML semantic architecture (1996)</p>
+<div class="legend">
+<strong>The original design for CML semantic architecture (1996)</strong>. This shows how different groups can create their own semantics and inter-operate. The concept has been proven over 15 years with appropriate changes to the terminology (<em>i.e</em>. we now talk of linked metadata rather than a hyperglossary).</div>
+</div>
+<p>This practice and principles are general to all the semantic elements in this article, and is best illustrated in the requirements for creating a convention and enforcing it. In the spirit of communal development, any sub-community is at liberty to create their own convention without formal permission from any central governance, subject to the requirement that it must be valid against the (very flexible) CML Schema 3 <a class="footnote-reference" href="#b5" id="id5">[5]</a>. This is done by associating the convention with a unique namespace identifier and the convention specification shows how this must be done, but does not dictate the contents or scope of any convention. In this way, an indefinite number of sub-communities can develop and &#8216;do their own thing&#8217; without breaking the CML semantics. The success of a convention is then a social, not technical, phenomenon. If group A develops a convention and groups B, C and D adopt it then there is wide interoperability. If A develops a convention and B develops an alternative then there is fragmentation. It&#8217;s not always a bad thing to have &#8220;more than one way to do it&#8221;<a class="footnote-reference" href="#b6" id="id6">[6]</a>, but it can it make life very complex for software developers.</p>
+<p>The price for this freedom is that a community cannot by default expect other users of CML to adopt their convention. If a community wishes its convention to be used, it needs to educate it in how CML can support it, and almost always to create or re-use software to support the convention. Thus, for example, the CMLSpect convention is supported by the JSpecView <a class="footnote-reference" href="#b7" id="id7">[7]</a> software, which has a vigorous community of practice. Similarly, the CMLCryst convention (not yet released) is being driven by the development of the CrystalEye <a class="footnote-reference" href="#b8" id="id8">[8]</a> knowledgebase and its adoption by the IUCr.</p>
+<p>The dictionary reference mechanism (the <em>i.e</em>. it has a prefix as well as a local name. Although this approach is not formally supported by XML, it is widespread in approaches such as XSD Schema. This has turned out to be a valuable design as it is isomorphic to the use of namespaced URIs and indeed the <a class="footnote-reference" href="#b9" id="id9">[9]</a> and that both the namespace and the local entry should be resolvable.</p>
+<p>The role attribute has been used for a variety of purposes in the past but is now developed as a general &#8220;tagging&#8221; tool. A typical example is shown in the &#8216;Roles&#8217; section below.</p>
+<p>The semantic tools (dictionary, convention and role) have been fluid over the last decade and there are examples where their use is not compatible with this paper. However, the tools to support them will work with modern CML libraries.</p>
+<p>The current tools in CML for adding semantics are therefore:</p>
+<p>• <strong>convention</strong></p>
+<p>• <strong>dictRef</strong></p>
+<p>• <strong>role</strong></p>
+<p>• <strong>units****and</strong> <strong>unitType</strong></p>
+<p>We now discuss each of these approaches in detail.</p>
+</div>
+<div class="section" id="semantic-elements-of-cml">
+<h2>Semantic Elements of CML<a class="headerlink" href="#semantic-elements-of-cml" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="convention">
+<h3>Convention<a class="headerlink" href="#convention" title="Permalink to this headline">¶</a></h3>
+<p>The initial (1996) use of convention was limited to certain elements such as bond to represent the different values that different communities might use. It has now grown to be a key concept in defining communities of practice, having started to be used <em>ca</em>. 2005 when individuals and groups worked to create sub-domains of CML. The leading areas were reactions (mainly enzymes), spectroscopy, crystallography and computational chemistry (compchem). It emerged from these exercises that the elements and attributes of CML were sufficient to support the sub-community but that additional semantics in their use and constraints was necessary. Thus, for example, the CMLSpect <a class="footnote-reference" href="#b10" id="id10">[10]</a> community decided that a spectrum must have a child representing the data in the spectrum (it is still possible to have an empty spectrum in CML but it would be used by a different community for a different purpose).</p>
+<p>Conventions specify a minimal set of elements and document structure that a community has agreed to. Other elements may be included in a document, but may be transparently ignored by processing software.</p>
+<p>Thus, a convention offers the following:</p>
+<p>• an announcement that an identified community cares about a sub-domain of chemistry.</p>
+<p>• a prose description of the scope and constraints and practice of the convention.</p>
+<p>• a validator <a class="footnote-reference" href="#b11" id="id11">[11]</a> that determines whether a given document conforms to a convention (and where it deviates).</p>
+<p>In addition for software developers it offers:</p>
+<p>• a statement as to what the components in a convention are, and how they can be combined.</p>
+<p>• indications of what constraints may/must/should be imposed on CML documents valid against this convention.</p>
+<p>• an indication or a guarantee as to what CML components may be found in a conformant document.</p>
+<p>• an indication of their semantics.</p>
+<p>CML Schema 3 is less restrictive than Schema 2.4 <a class="footnote-reference" href="#b12" id="id12">[12]</a> and is designed to be used in conjunction with conventions. The loosening of the restrictions in the schema mean that it is schema-valid to create documents which do not make chemical sense (such as molecules being the children of atoms and bonds being defined in a molecule with no atoms present). The chemical validity and constraints are now imposed through the use of conventions and XSLT/XPath. <a class="reference external" href="http://www.ietf.org/rfc/rfc2119.txt">http://www.ietf.org/rfc/rfc2119.txt</a>) be a convention document describing a convention.</p>
+<p>Currently supported conventions (see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>) are:</p>
+<p>• <a class="reference external" href="http://www.xml-cml.org/convention/dictionary">http://www.xml-cml.org/convention/dictionary</a>).</p>
+<p>• <a class="reference external" href="http://www.xml-cml.org/convention/molecular">http://www.xml-cml.org/convention/molecular</a>).</p>
+<p>• <a class="reference external" href="http://www.xml-cml.org/convention/compchem">http://www.xml-cml.org/convention/compchem</a>).</p>
+<p>• <a class="reference external" href="http://www.xml-cml.org/convention/unit-dictionary">http://www.xml-cml.org/convention/unit-dictionary</a>).</p>
+<p>• <a class="reference external" href="http://www.xml-cml.org/convention/unitType-dictionary">http://www.xml-cml.org/convention/unitType-dictionary</a>).</p>
+<p>Examples of constraints implemented in the</p>
+<p>• an</p>
+<p>• the value of an</p>
+<p>• a</p>
+<p>• a</p>
+</div>
+<div class="section" id="dictionaries">
+<h3>Dictionaries<a class="headerlink" href="#dictionaries" title="Permalink to this headline">¶</a></h3>
+<p>In a similar way, a dictionary ecology <a class="footnote-reference" href="#b13" id="id13">[13]</a> has developed supporting an extensible set of concepts in CML documents. The dictionaries add semantics to the CML primitives, particularly <em>e.g</em>. melting point) and common metadata such as users and dates. Conventions will almost certainly have one or more dictionaries so that compchem has an extended dictionary of concepts such as convergent limits, energies, gradients and so forth. The MACiE <a class="footnote-reference" href="#b14" id="id14">[14]</a> dictionary used the IUPAC Gold Book <a class="footnote-reference" href="#b15" id="id15">[15]</a> to define terms in reactions and the Atmospheric Chemistry dictionary is again taken from IUPAC <a class="footnote-reference" href="#b16" id="id16">[16]</a>.</p>
+<p>One important way of creating dictionaries is to extract terms and discourse from CML documents. A particular example is the markup of concepts created in computational chemistry and here we often associate a given program or code with a dictionary specific to that program/code. Thus, for example, a program/code might use a set of keywords found nowhere else; currently around six such dictionaries exist, and the number is increasing. In these cases we often find the need for a hierarchy so that a code might use code-specific dictionary terms in addition to those in the general computational chemistry dictionary. Different programs sometimes produce data with the same label but a different interpretation; does &#8220;<em>density&#8221;</em> mean electron density or mass density? There can be any number of dictionaries (and we envisage one for each code, or ideally fewer). Each dictionary has a unique namespace so there are no collisions. The entries can be minimal (id, term, definition, <em>etc</em>.) but will usually indicate the data structure (</p>
+<p>Applying</p>
+<p>might specify that this <em>e.g</em>. <a class="reference external" href="http://www.ietf.org/rfc/rfc2119.txt">http://www.ietf.org/rfc/rfc2119.txt</a>) be a dictionary</p>
+<p>Example (from <a class="reference external" href="http://www.xml-cml.org/convention/dictionary">http://www.xml-cml.org/convention/dictionary</a>):</p>
+<p><a class="reference external" href="http://www.xml-cml.org/schema">http://www.xml-cml.org/schema</a>&#8220;</p>
+<p><a class="reference external" href="http://www.xml-cml.org/convention/">http://www.xml-cml.org/convention/</a>&#8220;</p>
+<p><a class="reference external" href="http://www.xml-cml.org/unit/nonSi/">http://www.xml-cml.org/unit/nonSi/</a>&#8220;</p>
+<p><a class="reference external" href="http://www.xml-cml.org/unit/unitType/">http://www.xml-cml.org/unit/unitType/</a>&#8220;</p>
+<p><a class="reference external" href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>&#8220;</p>
+<p><a class="reference external" href="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</a>&#8220;</p>
+<p><a class="reference external" href="http://www.xml-cml.org/dictionary/dummy/">http://www.xml-cml.org/dictionary/dummy/</a>&#8220;</p>
+</div>
+<div class="section" id="roles">
+<h3>Roles<a class="headerlink" href="#roles" title="Permalink to this headline">¶</a></h3>
+<p>A third approach to semantics is driven by the need to &#8216;tag&#8217; information, and for this we provide the role attribute. Roles are less formalised than <em>ad hoc</em> semantics. They may, of course, link to formal semantic documents if required, though this cannot be enforced except by convention.</p>
+<p><em>i.e</em>. part of a folksonomy, while in other cases</p>
+<p>Example showing how role is used in the definition of a fragment within a polymer <a class="footnote-reference" href="#b17" id="id19">[17]</a>:</p>
+<p>&lt;?xml version = &#8220;1.0&#8221; encoding = &#8220;UTF-8&#8221;?&gt;</p>
+<p>&lt;fragment id = &#8220;cl_nsp2_methyl&#8221; convention = &#8220;cml:PML-complete&#8221; xmlns = &#8220;<a class="reference external" href="http://www.xml-cml.org/schema">http://www.xml-cml.org/schema</a>&#8221; xmlns:g = &#8220;<a class="reference external" href="http://www.xml-cml.org/mols/geom1">http://www.xml-cml.org/mols/geom1</a>&#8220;&gt;</p>
+<p>&lt;molecule role = &#8220;fragment&#8221; id = &#8220;benzene_1&#8221;&gt;</p>
+<p>&lt;atomArray&gt;</p>
+<p>&lt;atom elementType = &#8220;C&#8221; x3 = &#8220;9.526706134000763&#8221; y3 = &#8220;3.869733600000001&#8221; z3 = &#8220;5.213518402229052&#8221; id = &#8220;benzene_1_a1&#8221;&gt;</p>
+<p>&lt;label dictRef = &#8220;cml:torsionEnd&#8221;&gt; r6 &lt;/label&gt;</p>
+<p>&lt;/atom&gt;</p>
+<p>&lt;atom elementType = &#8220;C&#8221; x3 = &#8220;10.243299413197152&#8221; y3 = &#8220;3.932398500000001&#8221; z3 = &#8220;6.439022942911609&#8221; id = &#8220;benzene_1_a2&#8221;&gt;</p>
+<p>&lt;label dictRef = &#8220;cml:torsionEnd&#8221;&gt; r1 &lt;/label&gt;</p>
+<p>&lt;/atom&gt;</p>
+<p>&lt;atom elementType = &#8220;C&#8221; x3 = &#8220;8.713504556428543&#8221; y3 = &#8220;2.7185301000000006&#8221; z3 = &#8220;5.01720505576243&#8221; id = &#8220;benzene_1_a6&#8221;&gt;</p>
+<p>&lt;label dictRef = &#8220;cml:torsionEnd&#8221;&gt; r5 &lt;/label&gt;</p>
+<p>&lt;/atom&gt;</p>
+<p>&lt;atom elementType = &#8220;R&#8221; x3 = &#8220;8.385888936961882&#8221; y3 = &#8220;2.655387420737078&#8221; z3 = &#8220;4.323244676535362&#8221; id = &#8220;benzene_1_r6&#8221;/&gt;</p>
+<p>&lt;atom elementType = &#8220;C&#8221; x3 = &#8220;10.119474056141831&#8221; y3 = &#8220;2.9008920000000007&#8221; z3 = &#8220;7.3834992125284815&#8221; id = &#8220;benzene_1_a3&#8221;&gt;</p>
+<p>&lt;label dictRef = &#8220;cml:torsionEnd&#8221;&gt; r2 &lt;/label&gt;</p>
+<p>&lt;label dictRef = &#8220;cml:torsionEnd&#8221;&gt; r2 &lt;/label&gt;</p>
+<p>&lt;label dictRef = &#8220;cml:torsionEnd&#8221;&gt; r3 &lt;/label&gt;</p>
+<p>&lt;/atom&gt;</p>
+<p>&lt;atom elementType = &#8220;C&#8221; x3 = &#8220;9.320371405363035&#8221; y3 = &#8220;1.8151698000000005&#8221; z3 = &#8220;7.151684115065878&#8221; id = &#8220;benzene_1_a4&#8221;&gt;</p>
+<p>&lt;label dictRef = &#8220;cml:torsionEnd&#8221;&gt; r3 &lt;/label&gt;</p>
+<p>&lt;/atom&gt;</p>
+<p>&lt;atom elementType = &#8220;R&#8221; x3 = &#8220;9.280916015724046&#8221; y3 = &#8220;1.2657016684721403&#8221; z3 = &#8220;7.6896692864820775&#8221; id = &#8220;benzene_1_r4&#8221;/&gt;</p>
+<p>&lt;atom elementType = &#8220;C&#8221; x3 = &#8220;8.610030693701125&#8221; y3 = &#8220;1.7243409000000007&#8221; z3 = &#8220;5.934289686115539&#8221; id = &#8220;benzene_1_a5&#8221;&gt;</p>
+<p>&lt;label dictRef = &#8220;cml:torsionEnd&#8221;&gt; r4 &lt;/label&gt;</p>
+<p>&lt;/atom&gt;</p>
+<p>&lt;atom elementType = &#8220;R&#8221; x3 = &#8220;10.697234803620145&#8221; y3 = &#8220;4.543958438540135&#8221; z3 = &#8220;6.552323882423661&#8221; id = &#8220;benzene_1_r2&#8221;/&gt;</p>
+<p>&lt;atom elementType = &#8220;Cl&#8221; formalCharge = &#8220;0&#8221; hydrogenCount = &#8220;0&#8221; id = &#8220;cl_2_a1&#8221; x3 = &#8220;9.692011995771473&#8221; y3 = &#8220;5.151468187879777&#8221; z3 = &#8220;4.018767207085518&#8221;/&gt;</p>
+<p>&lt;atom elementType = &#8220;N&#8221; formalCharge = &#8220;0&#8221; hydrogenCount = &#8220;0&#8221; id = &#8220;nsp2_3_n1&#8221; x3 = &#8220;10.889175042006798&#8221; y3 = &#8220;2.9930090553818314&#8221; z3 = &#8220;8.690968080404991&#8221;/&gt;</p>
+<p>&lt;atom elementType = &#8220;R&#8221; formalCharge = &#8220;0&#8221; hydrogenCount = &#8220;0&#8221; id = &#8220;nsp2_3_r3&#8221; x3 = &#8220;10.937618525919527&#8221; y3 = &#8220;3.6140787328234207&#8221; z3 = &#8220;9.108611091395234&#8221;&gt; &lt;/atom&gt;</p>
+<p>&lt;atom elementType = &#8220;R&#8221; formalCharge = &#8220;0&#8221; hydrogenCount = &#8220;0&#8221; id = &#8220;nsp2_3_r2&#8221; x3 = &#8220;11.21097670608745&#8221; y3 = &#8220;2.3333885683637092&#8221; z3 = &#8220;8.845384731388283&#8221;&gt;</p>
+<p>&lt;label dictRef = &#8220;cml:torsionEnd&#8221;&gt; r1 &lt;/label&gt;</p>
+<p>&lt;/atom&gt;</p>
+<p>&lt;atom elementType = &#8220;C&#8221; id = &#8220;me_4_a1&#8221; x3 = &#8220;7.720415546204135&#8221; y3 = &#8220;0.5004327093517826&#8221; z3 = &#8220;5.6475256189660525&#8221;/&gt;</p>
+<p>&lt;atom elementType = &#8220;H&#8221; id = &#8220;me_4_a6&#8221; x3 = &#8220;7.8973212132921615&#8221; y3 = &#8220;0.15287314794224827&#8221; z3 = &#8220;4.629221766363621&#8221;&gt;</p>
+<p>&lt;label dictRef = &#8220;cml:torsionEnd&#8221;&gt; r1 &lt;/label&gt;</p>
+<p>&lt;/atom&gt;</p>
+<p>&lt;atom elementType = &#8220;H&#8221; id = &#8220;me_4_a7&#8221; x3 = &#8220;7.962448186970064&#8221; y3 = &#8220;-0.2976542125451189&#8221; z3 = &#8220;6.350030754819878&#8221;/&gt;</p>
+<p>&lt;atom elementType = &#8220;H&#8221; id = &#8220;me_4_a8&#8221; x3 = &#8220;6.673285676722817&#8221; y3 = &#8220;0.7788619666709824&#8221; z3 = &#8220;5.760051994135236&#8221;/&gt;</p>
+<p>&lt;/atomArray&gt;</p>
+<p>&lt;bondArray&gt;</p>
+<p>&lt;bond order = &#8220;2&#8221; id = &#8220;benzene_1_a1_benzene_1_a2&#8221; atomRefs2 = &#8220;benzene_1_a1 benzene_1_a2&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;1&#8221; id = &#8220;benzene_1_a1_benzene_1_a6&#8221; atomRefs2 = &#8220;benzene_1_a1 benzene_1_a6&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;1&#8221; id = &#8220;benzene_1_a3_benzene_1_a2&#8221; atomRefs2 = &#8220;benzene_1_a3 benzene_1_a2&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;1&#8221; id = &#8220;benzene_1_a2_benzene_1_r2&#8221; atomRefs2 = &#8220;benzene_1_a2 benzene_1_r2&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;1&#8221; id = &#8220;benzene_1_r6_benzene_1_a6&#8221; atomRefs2 = &#8220;benzene_1_r6 benzene_1_a6&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;2&#8221; id = &#8220;benzene_1_a5_benzene_1_a6&#8221; atomRefs2 = &#8220;benzene_1_a5 benzene_1_a6&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;2&#8221; id = &#8220;benzene_1_a3_benzene_1_a4&#8221; atomRefs2 = &#8220;benzene_1_a3 benzene_1_a4&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;1&#8221; id = &#8220;benzene_1_a5_benzene_1_a4&#8221; atomRefs2 = &#8220;benzene_1_a5 benzene_1_a4&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;1&#8221; id = &#8220;benzene_1_a4_benzene_1_r4&#8221; atomRefs2 = &#8220;benzene_1_a4 benzene_1_r4&#8221;/&gt;</p>
+<p>&lt;bond atomRefs2 = &#8220;benzene_1_a1 cl_2_a1&#8221; order = &#8220;S&#8221; id = &#8220;benzene_1_a1_cl_2_a1&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;S&#8221; atomRefs2 = &#8220;nsp2_3_n1 nsp2_3_r2&#8221; id = &#8220;nsp2_3_n1_nsp2_3_r2&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;S&#8221; atomRefs2 = &#8220;nsp2_3_n1 nsp2_3_r3&#8221; id = &#8220;nsp2_3_n1_nsp2_3_r3&#8221;/&gt;</p>
+<p>&lt;bond atomRefs2 = &#8220;benzene_1_a3 nsp2_3_n1&#8221; order = &#8220;S&#8221; id = &#8220;benzene_1_a3_nsp2_3_n1&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;1&#8221; atomRefs2 = &#8220;me_4_a1 me_4_a6&#8221; id = &#8220;me_4_a1_me_4_a6&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;1&#8221; atomRefs2 = &#8220;me_4_a1 me_4_a7&#8221; id = &#8220;me_4_a1_me_4_a7&#8221;/&gt;</p>
+<p>&lt;bond order = &#8220;1&#8221; atomRefs2 = &#8220;me_4_a1 me_4_a8&#8221; id = &#8220;me_4_a1_me_4_a8&#8221;/&gt;</p>
+<p>&lt;bond atomRefs2 = &#8220;benzene_1_a5 me_4_a1&#8221; order = &#8220;S&#8221; id = &#8220;benzene_1_a5_me_4_a1&#8221;/&gt;</p>
+<p>&lt;/bondArray&gt;</p>
+<p>&lt;/molecule&gt;</p>
+<p>&lt;/fragment&gt;</p>
+</div>
+<div class="section" id="units">
+<h3>Units<a class="headerlink" href="#units" title="Permalink to this headline">¶</a></h3>
+<p>The final component of the semantic framework is scientific units of measurement. In these we specify the type of the unit (<a class="footnote-reference" href="#b18" id="id21">[18]</a>. Every</p>
+<p>These &#8220;essentials&#8221; are adapted from NIST Special Publication 811 (SP 811)<a class="footnote-reference" href="#b19" id="id22">[19]</a> and NIST Special Publication 330 (SP 330)<a class="footnote-reference" href="#b20" id="id23">[20]</a>. We use the terminology from NIST, with some variation, and quote verbatim to avoid confusion:</p>
+<p><em>quantity in the general sense &#8220;A</em></p>
+<p>CML uses the term &#8220;</p>
+<p><em>quantity in the particular sense &#8220;A</em></p>
+<p>CML does not currently use this concept explicitly. Quantities are usually either parameters or properties (but not all parameters and properties (<em>e.g</em>. string values) map to quantities).</p>
+<p><em>physical quantity &#8220;A</em></p>
+<p>CML honours this concept in that</p>
+<p><em>&#8220;A unit is a particular physical quantity, defined and adopted by convention, with which other particular quantities of the same kind are compared to express their value.&#8221;</em></p>
+<p>CML maps onto this concept through the</p>
+<p><em>value of a physical quantity &#8220;The</em></p>
+<p>CML supports this in the</p>
+<p>CML will honour specifications of <a class="footnote-reference" href="#b21" id="id24">[21]</a> has been many years in incubation but now seems to be close to production release. CML will continue to use its own semantics for units but may also include interoperability with NIST.</p>
+<p>The CML system of units goes somewhat beyond NIST in that it is not limited to physical science and has to support concepts such as mg (drug)/kg (animal) where the semantics of the experiment have to be linked (this is not a simple dimensionless number - &#8220;drug&#8221; and &#8220;animal&#8221; do not cancel). CML units allow for dimensions and other concepts to be associated with &#8220;dimensionless&#8221;, such as ppm). CML software (JUMBO <a class="footnote-reference" href="#b22" id="id25">[22]</a>) allows for the values and units to be recomputed (&#8220;unit conversion&#8221;) and for simple dimensional analysis. Entries in</p>
+<p>Users can create their own <em>e.g</em>. &#8220;The optimum dose of rIL2 was 100-500 units (Jurkat units)/ml, &#8220;<a class="footnote-reference" href="#b23" id="id26">[23]</a>) which do not fit easily into the seven primary SI concepts, but are still critical attributes of the experiment. The general structure of the dictionaries is likely to be:</p>
+<p>• A single, community-driven and maintained dictionary for <em>e.g</em>. fifth virial coefficient units), we see this being gradually and carefully extended.</p>
+<p>• A number of local <em>e.g</em>. Jurkats).</p>
+<p>• A single dictionary for SI <a class="footnote-reference" href="#b24" id="id27">[24]</a> (paralleling the</p>
+<p>• A small number of core dictionaries for <a class="footnote-reference" href="#b25" id="id28">[25]</a> (<em>e.g</em>. CGS, atomic units, <em>etc</em>.).</p>
+<p>• A larger number of convention-specific</p>
+</div>
+</div>
+<div class="section" id="creating-dictionaries">
+<h2>Creating dictionaries<a class="headerlink" href="#creating-dictionaries" title="Permalink to this headline">¶</a></h2>
+<p>The biosciences have several approaches for creating ontologies, such as the Gene Ontology (GO)<a class="footnote-reference" href="#b26" id="id29">[26]</a>. GO was designed as a thesaurus to which individuals and groups could contribute. It has a directed acyclic graph (DAG) structure, where an entry can have several parents and several children. The hierarchy honours the broader/narrower term approach and used three axes (cellular component, molecular function, biological process) but is designed primarily for human navigability rather than machine computability. It and other dictionaries have been transformed to fuller OWL-compliant ontologies using the file format guide provided <a class="footnote-reference" href="#b27" id="id30">[27]</a>.</p>
+<p>We use the following approaches for creating dictionaries:</p>
+<p><strong>|nonascii_26| Borrow from established dictionaries</strong> (IUPAC, IUCr, Wikipedia) and convert to CML. The main challenge is that many of the terms are broad concepts and follow human rather than machine conventions. This approach was used for the MaCiE dictionary with terms borrowed from IUPAC where possible and with a hierarchy expressed in CML. We have also translated the IUCr&#8217;s CIF dictionary into CML format <a class="footnote-reference" href="#b28" id="id31">[28]</a>, and this is used in, for example, the CrystalEye system.</p>
+<p><strong>|nonascii_27| Observe and collect discourse/practice</strong>, both in program input/output and formulaic text. We create or collect a corpus of documents and extract the common terms. Assuming that they are associated with</p>
+<p>These processes lead to a community of dictionaries, with an implied but not necessarily explicit hierarchy.</p>
+</div>
+<div class="section" id="detailed-use-cases-of-dictionary-construction">
+<h2>Detailed use cases of dictionary construction<a class="headerlink" href="#detailed-use-cases-of-dictionary-construction" title="Permalink to this headline">¶</a></h2>
+<p>•With the ChemicalTagger <a class="footnote-reference" href="#b29" id="id32">[29]</a> system, we have built a natural language framework which recognises parts of speech and phrase. With over 100, 000 patents analysed we have a large corpus representing the current usage in describing chemical synthesis. The automatic analysis <a class="footnote-reference" href="#b30" id="id33">[30]</a> of this corpus throws up a variety of abstractions common to many of the texts, in particular for the actions and methods used to describe chemical syntheses. Currently we have extracted 21 types of action phrase from this corpus:</p>
+<p>Coupled with these phrases are qualifiers (sometimes English language adverbs) and specific uses of nouns which can be additionally used to label a text. This is an example of a small natural language driven dictionary into which a large number of specific terms can be entered.</p>
+<p>•In the Quixote project <a class="footnote-reference" href="#b31" id="id34">[31]</a><a class="footnote-reference" href="#b32" id="id35">[32]</a> we are creating a semantic infrastructure for compchem. Unlike crystallography, where the community has for many years sat in real and virtual committee to decide on dictionaries and their contents, compchem has very little common practice in this area. There is no commonality of approach to labelling either the input or output of compchem calculations. Our belief is that there is a strong implicit similarity, even isomorphism, between the main computational codes, and that by analysing the discourse (<em>i.e</em>. the logfiles), we can collect and systematise the types of object referenced in the logfiles. To do this, we have taken a number of codes (Gaussian <a class="footnote-reference" href="#b33" id="id36">[33]</a> (various versions), GAMESS-UK <a class="footnote-reference" href="#b34" id="id37">[34]</a>, Jaguar <a class="footnote-reference" href="#b35" id="id38">[35]</a>, NWChem <a class="footnote-reference" href="#b36" id="id39">[36]</a>, Quantum ESPRESSO <a class="footnote-reference" href="#b37" id="id40">[37]</a>) and analysed much of their logfile structure and vocabulary. Although the level of detail varies between programs, there are somewhere between 100-500 concepts in total which can be precisely labelled and which could contribute to a communal dictionary. We are in the process of building a table (spreadsheet) of the terms which occur in codes and their occurrence (or absence) in each code. These normally occur as CML parameters. The concepts currently cover the following areas:</p>
+<p>■Environment of the calculation. This includes machine configurations, version of code, time constraints, human and institutional metadata and other control parameters.</p>
+<p>■The method of calculation <em>e.g</em>. the functional.</p>
+<p>■The basis set or pseudo-potential.</p>
+<p>■Any physical constraints imposed on the system (<em>e.g</em>. pressure, temperature or electric field).</p>
+<p>■Levels of accuracy or cut-off desired in the calculation.</p>
+<p>■Strategy of calculation and algorithms used (<em>e.g</em>. search for a transition state, reaction coordinates, frequencies <em>etc</em>.).</p>
+<p>The output files normally deal with outcomes of running the job (<em>e.g</em>. abnormal termination, level of convergence achieved, elapsed time) and calculated properties.</p>
+<p>Most of these concepts are common to all codes and where possible we are creating entries in a single common compchem dictionary <a class="footnote-reference" href="#b38" id="id41">[38]</a> (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>). In some cases, however, methods and properties are unique to one code, and many of the intricate details in the logfiles are not directly transferable. For that reason, we are using a hierarchy of dictionaries with the following components:</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-43-3.jpg" src="../_images/1758-2946-3-43-3.jpg" />
+<p class="caption">Figure 3. A compchem-compliant document read into the Avogadro browser and computational chemistry manager</p>
+<div class="legend">
+<strong>A compchem-compliant document read into the Avogadro</strong> [#B39]_**browser and computational chemistry manager**. The structure of the document is shown with the primary subdivisions. Each piece of information is in a precisely specified position in the hierarchy, so that it may easily be discovered by processing software. For example the</div>
+</div>
+<ol class="arabic simple">
+<li>A dictionary common to all or most of computational chemistry (compchem dictionary).</li>
+<li>A series of dictionaries, one per code, which is initially used to collect defined quantities in the output. At regular stages the community will decide whether these map onto concepts in the main compchem dictionary, and, in those cases, transfer their usage to that dictionary.</li>
+</ol>
+</div>
+<div class="section" id="software-support-for-dictionaries-and-units">
+<h2>Software support for dictionaries and units<a class="headerlink" href="#software-support-for-dictionaries-and-units" title="Permalink to this headline">¶</a></h2>
+<p>Besides the markup support for dictionaries and units, they are only really useful in chemistry if they are supported by a software system. Some of this can be provided by Web 2.0 tools such as RDF which can be used to lookup whether referenced units are present in appropriate dictionaries. However, it is often important to carry out manipulations on units such as conversion between different systems and multiplier prefixes. For that reason we have developed a suite of software within the JUMBO system for these manipulations.</p>
+<p>The following elements are established in CML:</p>
+<p>• Dictionary.</p>
+<p>• Entry.</p>
+<p>• Unit type (and unit type list.)</p>
+<p>• Unit (in unit list).</p>
+<p>In our recent work with dictionaries (especially in computational chemistry) we use the entries to provide some of the semantics to be applied at &#8220;run-time&#8221;. For example, a dictionary entry may define a syntactic template for the concept, or an enumeration of allowed values. In using the CIF dictionary, the data type (</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>The use of conventions and dictionaries has proved of enormous value in the development and robustification of CML. With well-defined protocols, groups can take the formal specifications and build their own systems such that they not only do what they want, but do not break other CML software. We are currently working actively on computational chemistry and, with a wide range of different codes and types of problem, we expect to be able to show that the current architecture is capable of supporting these.</p>
+<p>Assuming that semantic computational chemistry becomes widespread, the dictionaries will act as a catalyst to those communities to add more terms and to revise the precise usage of the concepts. It will also act as a demonstration to other areas of chemistry of the value of the convention/dictionary approach.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>PMR designed dictionaries and their schemas, and wrote the manuscript. JAT implemented conventions and the validator, and wrote the manuscript. SEA built supporting software, and wrote the manuscript. WP implemented conventions and dictionaries. JT designed compchem dictionaries. All authors have read and approved the final manuscript.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>IUCr CIF dictionaries</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>ChemAxiom - An Ontological Framework for Chemistry in Science</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>OWL 2 Web Ontology Language</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Open Biological and Biomedical Ontologies (OBO)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>CMl Schema 3</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td>&#8220;There&#8217;s more than one way to do it&#8221;, Perl motto</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[7]</a></td><td>JSpecView software</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[8]</a></td><td>CrystalEye</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[9]</a></td><td>Namespaces in XML, QName</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[10]</a></td><td>Chemical markup, XML, and the world wide web. 7. CMLSpect, an XML vocabulary for spectral data</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[11]</a></td><td>CML validators</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[12]</a></td><td>CML Schema 2.4</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[13]</a></td><td>CML dictionary ecology</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[14]</a></td><td>MACiE: a database of enzyme reaction mechanisms</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[15]</a></td><td>IUPAC Compendium of Chemical Terminology - the Gold Book</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[16]</a></td><td>IUPAC Project: Glossary of atmospheric chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[17]</a></td><td>Chemical Markup, XML and the World-Wide Web. 8. Polymer Markup Language</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[18]</a></td><td>CML unitType dictionary</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[19]</a></td><td>Guide for the Use of the International System of Units (SI)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[20]</a></td><td>The International System of Units (SI)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[21]</a></td><td>Units markup language (UnitsML)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[22]</a></td><td>JUMBO</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id26">[23]</a></td><td>Antitumor effects of interleukin 2 against renal cell carcinoma: basic study and clinical application</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id27">[24]</a></td><td>CML SI units dictionary</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id28">[25]</a></td><td>CML non-SI units dictionary</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[26]</a></td><td>The Gene Ontology, GO</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[27]</a></td><td>GO file format guide</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id31">[28]</a></td><td>CML CIF dictionary</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[29]</a></td><td>ChemicalTagger: A tool for Semantic Text-mining in Chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id33">[30]</a></td><td>Mining chemical information from Open patents</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[31]</a></td><td>Quixote project on QC databases</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[32]</a></td><td>The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id36">[33]</a></td><td>Official Gaussian website</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b34" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id37">[34]</a></td><td>GAMESS-UK software</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b35" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id38">[35]</a></td><td>Jaguar software, Schrödinger Inc</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b36" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id39">[36]</a></td><td>NWChem software</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b37" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id40">[37]</a></td><td>Quantum ESPRESSO software</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b38" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id41">[38]</a></td><td>CML compchem dictionary</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b39" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[39]</td><td>Avogadro software</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#semantic-elements-of-cml">Semantic Elements of CML</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#convention">Convention</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dictionaries">Dictionaries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#roles">Roles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#units">Units</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-dictionaries">Creating dictionaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#detailed-use-cases-of-dictionary-construction">Detailed use cases of dictionary construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#software-support-for-dictionaries-and-units">Software support for dictionaries and units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-42.html" title="The semantic architecture of the World-Wide Molecular Matrix (WWMM)"
+             >previous</a> |
+          <a href="1758-2946-3-44.html" title="CML: Evolution and design"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-43.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

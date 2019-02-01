@@ -1,0 +1,714 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mining chemical information from open patents &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="OSCAR4: a flexible architecture for chemical text-mining" href="1758-2946-3-41.html" />
+    <link rel="prev" title="CMLLite: a design philosophy for CML" href="1758-2946-3-39.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-39.html" title="CMLLite: a design philosophy for CML"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-41.html" title="OSCAR4: a flexible architecture for chemical text-mining"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mining-chemical-information-from-open-patents">
+<h1>Mining chemical information from open patents<a class="headerlink" href="#mining-chemical-information-from-open-patents" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>Linked Open Data presents an opportunity to vastly improve the quality of science in all fields by increasing the availability and usability of the data upon which it is based. In the chemical field, there is a huge amount of information available in the published literature, the vast majority of which is not available in machine-understandable formats. PatentEye, a prototype system for the extraction and semantification of chemical reactions from the patent literature has been implemented and is discussed. A total of 4444 reactions were extracted from 667 patent documents that comprised 10 weeks&#8217; worth of publications from the European Patent Office (EPO), with a precision of 78% and recall of 64% with regards to determining the identity and amount of reactants employed and an accuracy of 92% with regards to product identification. NMR spectra reported as product characterisation data are additionally captured.</p>
+</div>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>The enormous increase in the output of scientific data in recent times now requires radical changes in the way in which it is handled. The CAplus database <a class="footnote-reference" href="#b1" id="id1">[1]</a> holds more than 32 million references to patents and journal articles and indexes more than 1500 current journals on a weekly basis, while the CAS REGISTRY <a class="footnote-reference" href="#b2" id="id2">[2]</a> holds more than 54 million chemical compounds and the CASREACT <a class="footnote-reference" href="#b3" id="id3">[3]</a> database more than 39 million single and multi-step reactions. Such resources are created by a labour-intensive process of manual curation with the consequence that a researcher must pay to access them, and the data themselves become a valuable commercial entity. By necessity, this is <em>closed data</em>.</p>
+<p>The availability of data is vital for data-driven science such as spectra prediction and Quantitative Structure-Activity Relationship (QSAR) modelling, which has become increasingly important to the pharmaceutical industry as it seeks to control the spiralling costs of drug development. <em>Open data</em> - data that is freely available to the community-supports and enables such work. The more the culture of Open data spreads, the more such work becomes viable.</p>
+<p>This use of Open data for research, though powerful, is not the end of the story. Tim Berners-Lee first described the concept of the Semantic Web <a class="footnote-reference" href="#b4" id="id4">[4]</a>. The idea is simple-the World Wide Web comprises a vast collection of information, but information that is largely meaningless to a computer. If it were to be made machine-understandable, then software agents could be developed that would be able use this information as a basis for reasoning and to make decisions. This concept, tied to that of Open data, would allow for computerised scientists conducting their own data-driven research and reporting their conclusions back to humans. The concept of a machine performing research is not one for the world of science fiction-indeed, the robot scientist Adam has conducted its own hypothesis-driven research, reaching conclusions that were later validated by human researchers <a class="footnote-reference" href="#b5" id="id5">[5]</a>.</p>
+<p>In order to make our information machine-understandable, it is necessary to formalise the semantics of the medium in which it is stored. For the semantic web, such formalisation is typically performed by encoding the data using eXtensible Markup Language (XML). The <em>de facto</em> standard XML dialect for chemistry is Chemical Markup Language (CML) <a class="footnote-reference" href="#b6" id="id6">[6]</a><a class="footnote-reference" href="#b7" id="id7">[7]</a><a class="footnote-reference" href="#b8" id="id8">[8]</a><a class="footnote-reference" href="#b9" id="id9">[9]</a><a class="footnote-reference" href="#b10" id="id10">[10]</a>. By rendering chemical information machine-understandable, CML allows for the creation of systems that integrate data of a variety of types and from a variety of sources to perform novel research-a semantic web for chemistry. Datuments <a class="footnote-reference" href="#b11" id="id11">[11]</a><a class="footnote-reference" href="#b12" id="id12">[12]</a>, hyperdocuments for transmitting &#8216;complete&#8217; information including content and behavior, can record and reproduce experiments and act as a lossless way of publishing science. Conventional publication paths discourage the full publication of the scientific record-the process itself militates against datuments. Although there is no technical reason for the separation of &#8216;full-text&#8217; and &#8216;supporting information&#8217;, the author is required to recast their information into models that conform to the publisher&#8217;s technology and business model. A common feature of all mainstream science publication is the universal destruction of high-quality information. Spectra, graphs, <em>etc</em>., are semantically rich but are either never published or must be reduced to an emasculated chunk of linear text to fit the paper model. But now we have the technology to address this. Machine-understandability requires both ontological (meaning) and semantic (behaviour) support, and XML is now mature enough that this is possible. Many information components in a datument can be recast as context-free XML and integrated with XML text and XML graphics. Some publishers are actively embracing enhancements to journal articles (see <em>e.g</em>. the RSC&#8217;s Project Prospect <a class="footnote-reference" href="#b13" id="id13">[13]</a><a class="footnote-reference" href="#b14" id="id14">[14]</a><a class="footnote-reference" href="#b15" id="id15">[15]</a>), and the Chemistry Add-in for Microsoft Word (sometimes referred to as Chem4Word) <a class="footnote-reference" href="#b16" id="id16">[16]</a> supports the authoring of chemical datuments using one of the world&#8217;s most popular word processing packages. The evolution of &#8216;(hyper)activated&#8217; journal articles is discussed in a further article in this issue <a class="footnote-reference" href="#b17" id="id17">[17]</a>.</p>
+<p>In the absence of author or publisher-led markup, one way in which semantic data collections can be created is through the application of text mining software to the available literature. Chemistry-specific text mining software has been under continuous development at the Unilever Centre over the past decade. A suite of tools have been developed and released, including the named entity recognition tool OSCAR <a class="footnote-reference" href="#b18" id="id18">[18]</a><a class="footnote-reference" href="#b19" id="id19">[19]</a><a class="footnote-reference" href="#b20" id="id20">[20]</a>, the syntactic analysis tool ChemicalTagger <a class="footnote-reference" href="#b21" id="id21">[21]</a><a class="footnote-reference" href="#b22" id="id22">[22]</a> and the name-to-structure conversion tool OPSIN <a class="footnote-reference" href="#b23" id="id23">[23]</a><a class="footnote-reference" href="#b24" id="id24">[24]</a>. The availability of these mature, Open packages allow for the large-scale extraction of chemical data from the published literature.</p>
+<p>During this work, we have particularly concentrated on chemical texts which share a common style and vocabulary. The most frequently published chemical &#8220;chunks&#8221; occur in records of chemical synthesis in journal articles, lab books, theses, reports and chemical patents. Of these, legal and contractual restrictions forbid our text-mining of most scientific articles, while lab books and theses are disorganised and difficult to find, even in institutional repositories. We have therefore developed our chemical reaction text mining on the corpus of public patent data. It is a built-in feature of the patent process that the contents of a patent must be published and Openly available after the appropriate period, so in this sense it is an excellent corpus.</p>
+<p>A project at the Chemical Abstracts Service (CAS) in the 1980s aimed to produce a system capable of automating or partially automating the indexing process by application of Natural Language Processing (NLP) technologies <a class="footnote-reference" href="#b25" id="id25">[25]</a><a class="footnote-reference" href="#b26" id="id26">[26]</a><a class="footnote-reference" href="#b27" id="id27">[27]</a>. This system was claimed to &#8220;satisfactorily&#8221; process 36 out of 40 synthetic paragraphs from the Journal of Organic Chemistry <a class="footnote-reference" href="#b24" id="id28">[24]</a> and to produce &#8220;usable results&#8221; for 80-90% of simple synthesis paragraphs and 60-70% of complex paragraphs <a class="footnote-reference" href="#b26" id="id29">[26]</a>, where complex paragraphs are defined as describing general procedures, instances of general procedures, analogous syntheses and parallel syntheses. The size of the corpus used to produce this second set of results was not given, nor in either case was the procedure used for corpus creation. Accordingly, it is not possible to regard this area as a solved problem.</p>
+<p>The era in which the aforementioned technology was developed was very different. As a division of the American Chemical Society, CAS was in the privileged position of having access to a large body of published work in an electronic format. The situation today is different-the ubiquity of electronic publication and explosion of the scale of publication has granted such access far more widely, though publishers may very well supply the works subject to restrictive terms of use. The chemical patents used in the current work, however, are subject to no such restrictions and so the time for a re-examination of the subject of automated extraction of chemical reactions has come.</p>
+<p>The automated extraction of reaction information from the literature will prove highly useful to, for example, the EPSRC&#8217;s &#8220;Dial-a-Molecule&#8221; grand challenge, which aims to make the synthesis of a novel compound a quick and efficient process that can be completed in days, not years. The automated prediction of synthetic pathways will require an appropriate reaction database which is not currently available. We estimate that around 10 million syntheses per year are currently published in the literature, and so text-mining is an obvious means by which such information can be obtained.</p>
+<p>The approach applied here is similar to that of CrystalEye <a class="footnote-reference" href="#b28" id="id30">[28]</a>, where we have built tools that retrieve and extract crystallographic data from public sources. This activity has now generated about 250,000 datasets and runs essentially automatically every night. There is no technical reason why an Open patent service should not run in the same way, downloading the incremental updates on the sites at appropriate intervals according to the publishing schedule of the patent organisation in question. The main difference between these activities is that the crystallographic data is already in quasi-semantic form (<em>i.e</em>. CIF) and the process is completely algorithmic. With patents there is a variability due to the different styles of natural language and approaches to document layout taken by applicants, and the different technologies used to create the patent itself. However, in practice, most chemical patents have a very closely-defined structure and style of presentation.</p>
+</div>
+<div class="section" id="current-systems-for-automatic-analysis-of-patents">
+<h2>Current systems for automatic analysis of patents<a class="headerlink" href="#current-systems-for-automatic-analysis-of-patents" title="Permalink to this headline">¶</a></h2>
+<p>Referees have asked us to comment on the current approaches of Chemical Abstracts and other commercial organizations. Since this is a competitive area it is likely that precise methodology is a trade secret. When one of us (PM-R) heard CAS present at ACS in 2009, the presentation showed that patent analysis was through experts annotating patents with handwriting. PM-R asked about machine methods and was not given a public indication that they were significant. The major semi-public organization is the Fraunhofer Institute which develops its own in-house methodology (which includes OPSIN and OSCAR3 <a class="footnote-reference" href="#b29" id="id31">[29]</a>) and publishes accounts of some of its work.</p>
+<p>The motivation of the current work is to explore the semantic structure of patents and parts of the semantic chemical information. We have deliberately not used information which would require OCR of text and to this extent we are likely to show an improvement over the documents published in the last century. We have also not addressed Markush structures as there are other publications describing these and some early commercial applications <a class="footnote-reference" href="#b30" id="id32">[30]</a><a class="footnote-reference" href="#b31" id="id33">[31]</a>. The primary emphasis has been to show that chemical reactions can be turned into semantic form with an acceptable success rate. This article outlines the steps and likely success of others wishing to enter this area.</p>
+</div>
+<div class="section" id="patenteye">
+<h2>PatentEye<a class="headerlink" href="#patenteye" title="Permalink to this headline">¶</a></h2>
+<p>The liberation of scientific data and its conversion to machine-understandable forms holds great promise. A key part of the chemical sciences are the reactions that chemists perform and report in great number, and the goal of PatentEye is to demonstrate the potential to create an automated system capable of extracting reactions from the literature, creating machine-understandable representations using CML and sharing them as Open Data. This system is presented as a proof-of-concept, not as a sustainable resource. To increase the reliability of the extracted syntheses, PatentEye attempts to validate the identified product molecules. This validation is achieved by comparison of a candidate product molecule with any accompanying structure diagram using the package OSRA <a class="footnote-reference" href="#b32" id="id34">[32]</a><a class="footnote-reference" href="#b33" id="id35">[33]</a><a class="footnote-reference" href="#b34" id="id36">[34]</a><a class="footnote-reference" href="#b35" id="id37">[35]</a> for image interpretation and with any accompanying NMR and mass spectra, using the OSCAR3 data recognition functionality. The identified NMR spectra are considered to be valuable data in their own right and are extracted and retained for use in later works.</p>
+<div class="section" id="patent-documents">
+<h3>Patent documents<a class="headerlink" href="#patent-documents" title="Permalink to this headline">¶</a></h3>
+<p>Patents are made available on the World Wide Web by a number of patent offices. For legal reasons, they are frequently published as image-based facsimile reproduction of the original document, and are commonly also available as recovered, free-text documents. While the World Intellectual Property Organisation (WIPO) publishes such documents in HTML with minimal markup indicating the position of document sections and headings, both the European Patent Office (EPO) and United States Patent and Trademark Office (USPTO) employ XML formats in which major sections and heading titles are explicitly delimited. The XML formats used by the USPTO and EPO are similar though not identical, and reflect the structure of a patent as agreed by the Common Application Format (CAF) <a class="footnote-reference" href="#b36" id="id38">[36]</a>. While only EPO documents were used in the current work, much of the methodology employed is applicable to alternative document sources. In particular, USPTO documents are available for bulk download via Google patents <a class="footnote-reference" href="#b37" id="id39">[37]</a> and present an attractive target for text mining. At the time of writing the documents available for download date from 1976 to the present day, and are claimed to number approximately 7 million, across all subjects.</p>
+<p>CAF, agreed in 2007 by the EPO, USPTO and Japan Patent Office (JPO), is intended to &#8220;simplify and streamline application filing requirements in each Office to allow applicants to prepare a single application in the common application format for acceptance in each of the three Offices&#8221; <a class="footnote-reference" href="#b32" id="id40">[32]</a>. It mandates the section titles, and their ordering, that are to be used in patent applications. These are shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, in which those titles shown in bold indicate titles that must be included, and those shown in both bold and parentheses must be included where corresponding information is present.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-40-1.jpg" src="../_images/1758-2946-3-40-1.jpg" />
+<p class="caption">Figure 1. The standardised patent heading titles, as mandated by the Common Application Format</p>
+<div class="legend">
+<strong>The standardised patent heading titles, as mandated by the Common Application Format</strong>.</div>
+</div>
+<div class="section" id="anatomy-of-a-patent-and-tractability-for-linguistic-tools">
+<h4>Anatomy of a patent and tractability for linguistic tools<a class="headerlink" href="#anatomy-of-a-patent-and-tractability-for-linguistic-tools" title="Permalink to this headline">¶</a></h4>
+<p>Patents are generally large documents, often running to several hundred pages in length. For that reason automated analysis tools are potentially extremely valuable in rapidly exploring their content. Chemical patents are remarkable in that they not only form a large subject domain within the patent literature, but also in that certain sections exhibit a high degree of similarity across the field, particularly for those that discuss the synthesis and properties of organic molecules. This homogeneity makes them very tractable to linguistic analysis.</p>
+<p>The &#8216;Summary of Invention&#8217; section is often very long and formulaic. In chemical patents, the subjects of the invention are generally presented in the form of Markush structures, generic chemical structures typically defined by a specific scaffold bearing a number of variable substituent groups, such as that shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>. At present, this is too complex for analysis, except for localised sections where OSCAR and OPSIN can recognise catalogues of substituent groups.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-40-2.jpg" src="../_images/1758-2946-3-40-2.jpg" />
+<p class="caption">Figure 2. Typical usage of Markush structures in chemical patents</p>
+<div class="legend">
+<strong>Typical usage of Markush structures in chemical patents</strong> <a class="footnote-reference" href="#b45" id="id41">[45]</a>. Definitions of pseudoatoms (<em>e.g</em>. &#8220;R1&#8221; are frequently several pages in length and are commonly iterative.</div>
+</div>
+<p>The examples of the invention that are required to be presented in the description section typically consist of reports of the synthesis of specific compounds that correspond to one of these Markush structures. Such reports appear very much as they would in other parts of the chemical literature such as journal articles and theses, and sometimes, though not always, are accompanied by chemical structure diagrams or characterisation data. An example of such a report is shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>. For many patents, these reports can be automatically interpreted with a high degree of precision and recall, and this task represents the major body of work reported in this paper.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-40-3.jpg" src="../_images/1758-2946-3-40-3.jpg" />
+<p class="caption">Figure 3. Typical synthesis report <a class="footnote-reference" href="#b34" id="id42">[34]</a></p>
+<div class="legend">
+<strong>Typical synthesis report</strong> <a class="footnote-reference" href="#b34" id="id43">[34]</a>. The numbers in square brackets indicate sequential numbering of each of the paragraphs in the document.</div>
+</div>
+<p>Many reactions are described as small variants on a common theme, and so full detail is omitted from the patent document. Typical formulations used for this purpose include &#8220;following the procedure for...&#8221; or &#8220;prepared as in example X...&#8221;. The challenges to automatically interpreting such examples are to identify the archetypal reaction from the linguistic form and to determine which components of the reaction have been changed in the synthesis. We have made significant progress in interpreter and resolver for this type of language, and in a limited number of cases we have shown that it is possible to not only follow the back-references but replace the chemical structures in context. The process involves a large number of steps and the technology is currently insufficiently mature to be considered a production system.</p>
+<p>It is worth noting that identifying sections of the document is not trivial because different applicants use different terminology and often do not announce major sections with the accepted phraseology. Therefore we rely heavily on linguistic processing to determine where sections in the patent begin and end. The patent is also relatively &#8216;flat&#8217; in that the humans marking up the patent are only required to identify paragraphs and not subject sections, though some of the high-level document structure illustrated in is explicitly defined in the EPO&#8217;s XML patent documents. The content of these files is governed by a Document Type Definition (DTD) file that can be downloaded from the EPO website <a class="footnote-reference" href="#b38" id="id44">[38]</a>. The root element of the XML documents is <em>e.g</em>. patent search reports.</p>
+<p>The abstract element can be composed either of an</p>
+<p>The Sub-DOcument for BIbliographic (SDOBI) data uses proprietary tags to encode a wealth of metadata related to the patent, <em>e.g</em>. the tag</p>
+<p>By convention, each document contains three</p>
+<p>The</p>
+<p>The <em>e.g</em>.</p>
+<p>The XML patent documents are available for download from the EPO website as part of a ZIP package that also contains the PDF facsimile representation and individual TIFF image files that contain the individual figures from the document. The names of these files are numbered sequentially to give identifiers that are referenced in the XML patent document, to indicate which figure occurs at which position in the document.</p>
+</div>
+</div>
+<div class="section" id="patenteye-workflow">
+<h3>PatentEye workflow<a class="headerlink" href="#patenteye-workflow" title="Permalink to this headline">¶</a></h3>
+<p>The implemented system is automated to the degree that it is capable of operating with minimal user interaction, and consequently the PatentEye workflow consists of a number of stages of processing. First, chemical patents are identified within the online archive of the European Patent Office (EPO) and are downloaded. The XML documents supplied by the EPO are then semantically enhanced so as to delimit sections and subsections of the text and to introduce additional metadata such as SMILES strings representing the content of structure diagrams and OSCAR3 data markup to describe identified spectra. Finally, reactions are extracted from these semantically enhanced documents using ChemicalTagger and are converted to CML. The overall workflow is depicted in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>.</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-40-4.jpg" src="../_images/1758-2946-3-40-4.jpg" />
+<p class="caption">Figure 4. Schematic workflow for extraction and interpretation of chemical reactions in patents</p>
+<div class="legend">
+<strong>Schematic workflow for extraction and interpretation of chemical reactions in patents</strong>. Stage 1 -the patent is identified and downloaded. Stage 2-the document is deflattened and segmented. Stage 3-various tools (OPSIN, OSRA, OSCAR3) are used to identify key elements in the reaction and convert them to semantic form. Stage 4-ChemicalTagger is applied to the language of the chemical reaction to determine the roles and processes. Where successful, the extracted information is converted to reactions expressed in CML.</div>
+</div>
+</div>
+<div class="section" id="automated-identification-and-download-of-patents">
+<h3>Automated identification and download of patents<a class="headerlink" href="#automated-identification-and-download-of-patents" title="Permalink to this headline">¶</a></h3>
+<p>The European Patent Office (EPO) publishes patent documents through the European Publication Server, hosted at <a class="reference external" href="https://data.epo.org/publication-server/">https://data.epo.org/publication-server/</a>. An interactive search using various parameters (a patent ID, a date range within which to search and a list of document kinds) may be performed; alternatively, a weekly digest of patent index files is also provided <a class="reference external" href="https://data.epo.org/publication-server/data-coverage">https://data.epo.org/publication-server/data-coverage</a>. These summaries include the International Patent Classification (IPC) codes assigned to each document. The IPC is a subject-based, hierarchical classification scheme describing the topics covered in a patent. This allows automatic identification of documents relevant to the current work, as listed in Table <em class="xref std std-ref">1</em>.</p>
+<p>Once a list of relevant documents has been determined, PatentEye uses functionality provided by the CrystalEye webcrawler to interact with the EPO search interface. Where full-text XML is available for a relevant patent document, the corresponding ZIP file is retrieved. This is notably absent in the case of patents that have been published under the Patent Cooperation Treaty (PCT) instead of filed directly with the EPO.</p>
+<p>In order to create a corpus for the current work, chemical patents from the EPO website for the ten weeks dated from 2009-05-06 to 2009-07-08 were downloaded. Duplicate patent documents were deleted such that only one document remained for each patent ID within the corpus, which then totalled 690 zipfiles. Of these 690 files, it was found that 23 did not contain the XML version of the patent under the expected file name. The subsequent work using the downloaded patent corpus is therefore based on a reduced corpus of 667 unique, full-text patent documents where the XML files are used as input.</p>
+</div>
+<div class="section" id="enhancement-of-document-semantics">
+<h3>Enhancement of document semantics<a class="headerlink" href="#enhancement-of-document-semantics" title="Permalink to this headline">¶</a></h3>
+<p>As discussed previously, the different sections of the XML-formatted patent documents are not always clearly defined. The content of the <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>.</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-40-5.jpg" src="../_images/1758-2946-3-40-5.jpg" />
+<p class="caption">Figure 5. Flat document structure as received from the EPO</p>
+<div class="legend">
+<strong>Flat document structure as received from the EPO</strong>.</div>
+</div>
+<p>To a human reader, it is a simple task to realise that the headings 1.1 and 1.2 are subsections of Heading 1, and that the each of the paragraphs belongs to a section of the document that begins with the preceding heading. Since this is not made explicit in the structure of the XML, however, it is not trivially obvious to a machine that the document should be read in such a way. For this reason it is desirable to deflatten the XML-to rewrite the document such that as much of the implicit structure is made explicit as possible. This rewritten document is then saved to disk in order to prevent unnecessary repetition of the task.</p>
+<p>A number of other semantic enhancements are performed on the patent documents at this stage. These tasks include the application of OSCAR3 data recognition to identify spectral data within the text, the application of OSRA to add SMILES representations of the chemical structure images contained within the documents, the recognition and annotation of references in the text to other sections of the document, <em>e.g</em>. &#8220;the reaction was performed as in example 12&#8221; and the identification and labelling of the paragraphs in the text that form part of an experimental section.</p>
+<div class="section" id="paragraph-deflattening">
+<h4>Paragraph Deflattening<a class="headerlink" href="#paragraph-deflattening" title="Permalink to this headline">¶</a></h4>
+<p>In this step, the <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-40-6.jpg" src="../_images/1758-2946-3-40-6.jpg" />
+<p class="caption">Figure 6. Reordered document showing explicit structure</p>
+<div class="legend">
+<strong>Reordered document showing explicit structure</strong>.</div>
+</div>
+<p>Before this reformatting, the <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>.</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-40-7.jpg" src="../_images/1758-2946-3-40-7.jpg" />
+<p class="caption">Figure 7. Reordered document showing explicit structure and avoiding mixed content</p>
+<div class="legend">
+<strong>Reordered document showing explicit structure and avoiding mixed content</strong>.</div>
+</div>
+</div>
+<div class="section" id="document-segmentation">
+<h4>Document Segmentation<a class="headerlink" href="#document-segmentation" title="Permalink to this headline">¶</a></h4>
+<p>As previously discussed, the EPO do not attempt to explicitly demarcate in their XML the existence of sections of a patent document. Headings in the document are denoted by use of the <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a> to permit slight variation on the author&#8217;s part. These headings are renamed (<em>e.g</em>. to &#8220;disclosureOfInvention&#8221; or &#8220;summaryOfInvention&#8221;) to enable trivial location of them within the document, and the child elements of <em>e.g</em>. &#8220;example 1&#8221; and &#8220;example 2&#8221;) are identified by finding those headings that have identical text content, disregarding incrementable strings (<em>e.g</em>. &#8220;1&#8221; and &#8220;1a&#8221;) and chemical names, as identified by OSCAR. The structure of the document is then rewritten to reflect the fact that a heading that intervenes in such a list is logical a subheading of the preceding heading. This process is illustrated in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a>.</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-40-8.jpg" src="../_images/1758-2946-3-40-8.jpg" />
+<p class="caption">Figure 8. Identification of and Document Restructuring Using Consecutive Headings</p>
+<div class="legend">
+<strong>Identification of and Document Restructuring Using Consecutive Headings</strong>.</div>
+</div>
+</div>
+<div class="section" id="data-annotation">
+<h4>Data Annotation<a class="headerlink" href="#data-annotation" title="Permalink to this headline">¶</a></h4>
+<p>To facilitate its later use in the workflow, characterisation data is at this stage identified and annotated using the OSCAR3 data functionality. The text of each paragraph is passed to OSCAR3 for data recognition, which applies inline annotation to label the various parts of the spectrum. Where data is found, these annotations are inserted into the patent XML document in the appropriate places. In this way, the original text content of the patent document remains intact, and is rendered machine-understandable.</p>
+</div>
+<div class="section" id="classification-of-synthesis-sections">
+<h4>Classification of Synthesis Sections<a class="headerlink" href="#classification-of-synthesis-sections" title="Permalink to this headline">¶</a></h4>
+<p>While it is common for the experimental sections, <em>i.e</em>. those that describe the process and results of a chemical reaction, of a patent to occur as examples of the invention, it is not necessarily the case that the method of identifying document sections described previously will result in their occurrence as part of an <em>experimental</em> or <em>non-experimental</em> by use of a naïve Bayesian classifier. This classification is achieved using the third-party Java library Classifier4J <a class="footnote-reference" href="#b39" id="id45">[39]</a>, version 0.6., and allows for a greater proportion of the experimental sections within the patent corpus to be recognised as such and treated appropriately during the later stages of the workflow.</p>
+<p>A corpus was assembled by selecting 800 <em>i.e</em>. paragraphs, in the most part) from those patents that had successfully passed through the paragraph deflattening and document segmentation phases of the semantic enrichment procedure, using a random process in which each paragraph had an equal chance of selection. These paragraphs were manually inspected and determined to be <em>experimental</em>, <em>non-experimental</em> or <em>empty</em> according to the following criteria;</p>
+<p>• The paragraph is <em>empty</em> if it has no text content. Such empty paragraphs generally occur in the patent documents as containers for images.</p>
+<p>• The paragraph is <em>experimental</em> if;</p>
+<ol class="loweralpha simple">
+<li>It is an account of a reaction or a part of a reaction, including by way of reference to another section of text <em>e.g</em>. &#8220;The reaction was carried out as in example 12&#8221;.</li>
+<li>It is a report of spectral or other characterisation data.</li>
+<li>It is some combination of the above.</li>
+</ol>
+<p>• The paragraph is <em>non-experimental</em> if it is not <em>empty</em> or <em>experimental</em>.</p>
+<p>The manually-classified paragraphs may be summarised as follows (Table <em class="xref std std-ref">2</em>).</p>
+<p>In order to produce experimental and non-experimental sets of equal size, non-experimental paragraphs after the 238<sup>th</sup> occurrence were ignored for the remainder of this work. The first 119 (50% of the full set) experimental and non-experimental paragraphs were then used to train the Bayesian classifier before it was asked to predict probabilities of the remaining experimental and non-experimental paragraphs belonging to the experimental class. The predicted likelihoods may be summarised as follows (Table <em class="xref std std-ref">3</em>).</p>
+<p>Thus, when classifying paragraphs as experimental if p &lt; 0.5 and non-experimental if p &gt; 0.5, the experimental paragraphs were correctly classified at a rate of 96.6% and the non-experimental paragraphs at a rate of 89.9%. These rates were deemed high enough to continue into production.</p>
+<p>Heading elements in the patent documents are identified by use of the XPath &#8220;</p>
+</div>
+<div class="section" id="image-analysis">
+<h4>Image Analysis<a class="headerlink" href="#image-analysis" title="Permalink to this headline">¶</a></h4>
+<p>As previously discussed, the EPO patents frequently feature chemical structure diagrams that illustrate the example compounds for which syntheses are reported. These images therefore contain useful information that can be used to identify the product of a reaction. While USPTO patents supply the connection tables for such structures in the form of ChemDraw and MOL files, in the case of the EPO patents it is necessary to use image-to-structure software to interpret the supplied TIFF files. As the only such Openly available package at the time, OSRA was used for this task. As the most recent version available at the time that the work commenced, version 1.2.2 was employed. Applying OSRA to a chemical image resulted in a SMILES string, which was attached to the patent XML document as the value of an</p>
+<p>In order to validate the performance of OSRA on the patent images, a corpus of two hundred images of single chemical structures was formed by random selection from the patent corpus. The chemical structures contained within these images were manually converted to SMILES strings, chiefly by redrawing the structure using ChemDraw 12.0 and exporting the structure as SMILES or by manual conversion in the case of simple structures, which were recorded in an index of the corpus. OSRA was used to analyse each of the 200 single chemical structure images, and the results of this analysis was appended to the index.</p>
+<p>Previous authors in the field have suggested subjective metrics of success such as less than 30 seconds of human editing being required to correct errors in the structure <a class="footnote-reference" href="#b40" id="id46">[40]</a>, while Filippov and Nicklaus <a class="footnote-reference" href="#b28" id="id47">[28]</a> propose measuring success by calculating a similarity metric between the machine-produced structure and the correct structure. Such measures are of limited utility in the present work; manual correction of structures or determination of correct structures cannot be implemented within a fully automated workflow. What is desired of the image analysis process is the correct identification of the product molecules of chemical syntheses, and while a high similarity between a structure believed to be the product (the &#8220;candidate product&#8221;) and a structure produced by OSRA may be indicative that the image analysis has made a minor error and the candidate product should be accepted, it may equally indicate that the image analysis is correct and the candidate product should be rejected. As a result, there is no threshold of similarity below the two structures being identical at which the structure derived from the image analysis becomes &#8220;good enough&#8221;.</p>
+<p>The manually-generated and OSRA-generated SMILES strings for each image were thus used to generate the canonical identifier InChI using JUMBO <a class="footnote-reference" href="#b41" id="id48">[41]</a>. The performance of OSRA was measured by comparing these InChIs by string equivalence; where the two InChIs were identical, it was counted as OSRA having correctly deduced the chemical structure contained within the image and considered a match. Where the InChIs differed it was considered a non-match. In a number of cases, it was not possible to generate an InChI from the SMILES string produced by OSRA. The causes of these problems were also examined and determined to be primarily that the SMILES string contained the wildcard character, <a href="#id49"><span class="problematic" id="id50">*</span></a>, which is valid SMILES but is not supported by the JUMBO SMILES parser. In a further two cases the SMILES string returned by OSRA was found not to be valid, suggesting a bug within the OSRA program itself.</p>
+<p>The results from this work were as follows (Table <em class="xref std std-ref">4</em>).</p>
+<p>The agreement between the OSRA-produced structure and the manually-produced structure is, at 34%, significantly lower than that reported for OSRA 1.1.0 by Filippov and Nicklaus <a class="footnote-reference" href="#b42" id="id51">[42]</a>, in which the rate was reported as 26 matches out of 42 (61.9%) structures and 107 matches out of 215 (50.0%) structures on two data sets. Such rates will of course be highly dependent upon the images that form the test corpus, and the images supplied by the EPO are of highly variable quality. Many of the images that form the test corpus used in this work are severely pixelated, indistinct or contain background noise; some are only barely legible to a human skilled in the art. Such an example, together with the structure as interpreted by OSRA, is shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a>.</p>
+<div class="figure align-center" id="figure-9">
+<img alt="../_images/1758-2946-3-40-9.jpg" src="../_images/1758-2946-3-40-9.jpg" />
+<p class="caption">Figure 9. Input image (top) and unbuildable result (bottom)</p>
+<div class="legend">
+<strong>Input image (top) and unbuildable result (bottom)</strong>.</div>
+</div>
+</div>
+</div>
+<div class="section" id="extraction-of-reactions">
+<h3>Extraction of reactions<a class="headerlink" href="#extraction-of-reactions" title="Permalink to this headline">¶</a></h3>
+<p>Chemical patents are a rich source of chemical reactions due to the requirement for a patent claimant to detail examples of the invention. The reactions published in this way are routinely manually indexed and added to databases such as CASREACT. In order to devise a system for automated extraction from reported syntheses, it is important to first consider the nature and common structure of such text. Fortunately, the reporting of chemical syntheses is highly stylised. By convention, chemists report syntheses using the past tense and the agentless passive voice, which simplifies the process. Descriptions of syntheses may be conceptually divided into three parts-the <em>primary reaction</em>, in which the target compound is completely or substantially produced; the <em>work-up</em>, in which the reaction is quenched and neutralised, solvents are removed, the product purified and suchlike; and the <em>characterisation</em>, in which spectral data is afforded to demonstrate that the product of the reaction is that intended. In the description of the primary reaction, reactants (&#8220;a substance that is consumed during the course of a reaction&#8221; <a class="footnote-reference" href="#b43" id="id52">[43]</a>) are detailed by giving a name or other reference (<em>e.g</em>. &#8220;ketone 12b&#8221; or &#8220;the compound from step 2&#8221;) together with the quantity used, generally stated by mass and by molar amount. Solvents are typically detailed by giving a name and the volume used. In the description of the work-up these quantities are commonly omitted. The identity of the product of the synthesis may be specified in one of two typical ways; in the heading of the section, or by statement at the end of the description of the work-up, <em>e.g</em>. &#8220;to yield 1,6-naphthyridine-8-carboxylic acid&#8221;.</p>
+<p>The enhanced patent XML documents are read into memory, and the headings that have been classed as experimental by the ParagraphClassifier or that are descended from example headings are identified by means of XPath. The sections of the document either contained within the <a class="footnote-reference" href="#b44" id="id53">[44]</a>. The product of the reaction is identified by using OSCAR3 to identify chemical names in the heading title. The product identity is then validated by comparison with the results of the OSRA analysis of any image present, and with any <sup>1</sup>H NMR or mass spectrum that is reported. The results of these processes are combined into a CML Reaction which is saved to disk. This workflow is expanded in greater detail in the following sections and summarised graphically in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>.</p>
+<div class="figure align-center" id="figure-10">
+<img alt="../_images/1758-2946-3-40-10.jpg" src="../_images/1758-2946-3-40-10.jpg" />
+<p class="caption">Figure 10. Schematic workflow diagram illustrating the extraction of reactions from the patent content</p>
+<div class="legend">
+<strong>Schematic workflow diagram illustrating the extraction of reactions from the patent content</strong>. Text is analysed to identify the title compound (yellow), reagents (green), solvents (purple) and data (red), chemical names are used to construct connection tables and the reaction is saved as CML.</div>
+</div>
+<div class="section" id="identification-of-reagents">
+<h4>Identification of reagents<a class="headerlink" href="#identification-of-reagents" title="Permalink to this headline">¶</a></h4>
+<p>Reagents used during the primary reaction section of a chemical synthesis are, by convention, reported along with the quantity used. Such lexical patterns are easily identified using ChemicalTagger.</p>
+</div>
+<div class="section" id="identification-of-products">
+<h4>Identification of products<a class="headerlink" href="#identification-of-products" title="Permalink to this headline">¶</a></h4>
+<p>In order to identify the product of a reaction, the title text of the document section under examination is passed to OSCAR3 for named entity annotation. If OSCAR3 does not identify a single chemical name (CM) in the title text, then the process of reaction extraction fails and the ExperimentParser throws a RuntimeException. If a single CM is found in the title text, then the name is resolved to a CML Molecule, which is added to the</p>
+</div>
+<div class="section" id="attachment-of-spectral-data">
+<h4>Attachment of spectral data<a class="headerlink" href="#attachment-of-spectral-data" title="Permalink to this headline">¶</a></h4>
+<p>The most common spectra types found in the patent corpus were <sup>1</sup>H NMR, <sup>13</sup>C NMR and mass spectra. The reports of mass spectra generally report only the mass of the molecular ion, optionally plus or minus a defined offset, and so provide a useful source of information for validating a candidate product molecule but little information worth preserving. The NMR spectra, however, in addition to providing a means by which the product molecule may be verified, are themselves data of potential importance and are worth preserving for future re-use. The format in which they are preserved in the enhanced patent XML documents, using inline annotation to identify features within the original patent text, is ideal in that context as it retains the original document text. It does not, however, enable trivial machine interpretation of the spectrum since it is not valid CML and tools do not exist for its easy manipulation. The OSCAR-annotated spectrum is therefore converted into a CML Spectrum by use of the OSCAR2CMLSpectConverter class in the JUMBO-Converters library. It does not attempt to perform any further text-mining on its input, instead relying entirely on the OSCAR3 annotations to fully identify features of interest such as peaks, integrals, multiplicities and coupling constants.</p>
+</div>
+<div class="section" id="automated-verification-of-product-checking-against-embedded-images-mass-spectrum-1h-nmr">
+<h4>Automated verification of product-checking against embedded images/mass spectrum/<sup>1</sup>H-NMR<a class="headerlink" href="#automated-verification-of-product-checking-against-embedded-images-mass-spectrum-1h-nmr" title="Permalink to this headline">¶</a></h4>
+<p>It is desirable to be able to automatically verify the product in some way. This can be achieved by comparing the determined product to the extracted spectral data and, if present, any accompanying chemical images. The process of acquiring these sources of information must also be regarded as potentially inaccurate, and so it is not possible to definitively confirm or refute any candidate product. Nonetheless, these checks provide potentially useful information regarding the validity of the assigned product and of the assigned spectral data.</p>
+<p>Given the <sup>1</sup>H NMR spectrum of an unknown compound, it is possible for one skilled in the art to discount certain candidate structures. Most trivially, the proton count in the candidate structure should agree with total integral of the NMR spectrum. Each unique chemical environment in the candidate structure should give rise to a distinct peak in the NMR spectrum and it should be possible to assign for each of the chemical environments a peak that is in the correct region of the NMR spectrum. The peak multiplicities should be explained by potential couplings in the candidate molecule, and protons that couple to one another should share coupling constants. The application of these rules is subject to a large amount of subtlety, however. While each chemical environment should give rise to an individual peak, these peaks can overlap and be indistinguishable from one another, most notably in the case of aromatic protons. The determination of unique chemical environments is complicated by the need to consider three dimensional effects, such as in the case of two protons sited on inequivalent faces of a ring system. As a result of these effects, it is not possible to compute chemical environments based solely on the 2D connectivity of a molecule and confidently assert that this will equal the number of peaks reported in the molecule&#8217;s NMR spectrum. Whether there are more or fewer peaks in the NMR spectrum than predicted, the candidate molecule may be correct. Conversely, if the prediction matches the observation the candidate molecule may still be incorrect. The resolution of this problem falls outside of the scope of this project, and so the checking of structures against <sup>1</sup>H NMR spectra is limited to the first method mentioned-ensuring that that the proton count of the molecule agrees with the total integral of the spectrum. The result of this check is recorded in the automatically generated CML Reaction by adding a</p>
+<p>When the experimental section includes a chemical image it is possible to compare the connection table of the candidate product with the results from the OSRA analysis of that image. If a chemical image is found within the source experimental section, the recorded SMILES strings for the image are built into CML Molecules which are then used to generate InChIs, using the SMILESTool and InChIGeneratorTool classes from JUMBO respectively. An InChI for the candidate product molecule is similarly generated, and the InChIs are subsequently compared.</p>
+<p>Since the image included in the experimental section may be a reaction diagram it is possible for OSRA to have identified more than one molecule. Since the analysis of the often low-quality images is an error prone procedure, it is possible that the structures identified in the image may not contain the correct product. As previously discussed, when OSRA fails to correctly deduce a connection table from a drawn structure, it frequently reports a result containing the wildcard character, &#8220;*&#8221;. This character is not recognised by JUMBO&#8217;s SMILESTool, causing it to throw an Exception. As a result, the following rules are applied when checking the candidate product against embedded images:</p>
+<ol class="arabic simple">
+<li>If the InChI generated for the candidate product matches one generated for the structures identified by OSRA, the product is considered to match the image.</li>
+<li>If all of the structures identified by OSRA can be built into InChIs and the InChI for the candidate product does not match one of these, the product is considered not to match the image.</li>
+<li>If some or all of the structures identified by OSRA cannot be built into InChIs and the InChI for the candidate product is not matched by one of those generated from the chemical image, no conclusion is drawn.</li>
+</ol>
+<p>If a conclusion is drawn from this process, it is recorded in the CML Reaction by the addition of a</p>
+</div>
+</div>
+<div class="section" id="performance-of-the-reaction-extraction-process">
+<h3>Performance of the Reaction Extraction Process<a class="headerlink" href="#performance-of-the-reaction-extraction-process" title="Permalink to this headline">¶</a></h3>
+<p>Using the methods described above, 26287 input sections for the reaction extraction procedure were derived from the corpus of 667 patent documents. From these inputs, a total of 4444 CML Reactions were derived, representing around 17% of the total input. The principle causes of failure to generate a CML Reaction included the input section containing no text-containing paragraph children; the input section containing more than one text-containing paragraph children (in which case the system backs off since this may describe a single or a multi-step reaction); the failure to identify the product molecule; and the failure to identify any reagent phrases in the source text.</p>
+<p>To assess the accuracy of the semantified reactions, the output of the reaction extraction process was manually examined and compared with the source text. Each CML Reaction was assessed on a number of criteria to determine the performance of the different modules of the reaction extractions system. These criteria included the accuracy of identified products, reagents and spectra, and the performance of the systems for automated product verification was tested by comparing the results of the automated verification with those of the manual verification. The methods employed for this process and the results obtained are subsequently discussed.</p>
+<p>Since the manual inspection of each and every reaction extracted from the patent texts was not a feasible task, a subset was selected to serve as a corpus from which to derive performance metrics. From the 4444 reactions successfully extracted from the 667 unique, full-text patent documents, 100 reactions were selected at random. This reaction corpus was then used in the subsequently described validation procedures.</p>
+<p>During the manual inspection of the reaction corpus, it was discovered that two of the 100 CML Reactions were derived from multi-step syntheses that were described within a single paragraph. Since these cases did not reflect the kind of input for which the current software was designed, they were excluded from the analysis process. A further two CML Reactions in the reaction corpus were found to have been derived from examples of their respective inventions that did not describe chemical syntheses-instead describing assays. These CML Reactions were similarly excluded from the analysis process; consequently, the process is based upon a reduced corpus of 96 CML Reactions.</p>
+<p>The source from which the reaction was extracted was examined to determine whether the chemical name identified in the heading text by OSCAR3 and from which the product CML molecule was generated agreed with that stated in the heading text. Since the name to structure conversion process is not a perfect procedure, this is no guarantee that the attached connection table is also correct. However, the development of OPSIN was not a part of the current work and is reported to operate at an extremely high rate of performance <a class="footnote-reference" href="#b22" id="id54">[22]</a> and so it was not considered necessary to measure the accuracy of this process. The manual inspection of the reaction corpus showed that the correct product was identified on 88 of the 96 occasions, a success rate of around 92%. It was further noted that on each of the 8 occasions on which the correct product was not identified, the term identified as the product name could not be successfully resolved to a connection table, suggesting a means by which the errors may be automatically removed. Generally, the cause of the failure to identify the correct product was due to the product of the reaction being named in the accompanying text, and hence not being present in the section heading of the source; instead, a term from the heading was falsely identified as a chemical name, which allowed for the creation of a CML Reaction from the source.</p>
+<p>The sources from which the reaction corpus was extracted were examined, and for each the reagents employed and the amounts thereof were identified. These were then compared with those automatically extracted; instances where the same chemical name and amount were both manually identified and automatically extracted were counted as true positives, where the automatically extracted reagent list contained an instance that was not matched by both chemical name and amount in those manually identified a false positive was counted, and where a reagent was manually identified that was not automatically extracted, a false negative was counted.</p>
+<p>This work required the formalisation of the concept of a reagent to a sufficient degree that any subjectivity in determining what did and did not constitute a reagent could as far as possible be minimised. The IUPAC definition, &#8220;a test substance that is added to a system in order to bring about a reaction or to see whether a reaction occurs&#8221; <a class="footnote-reference" href="#b38" id="id55">[38]</a>, does not match the common usage of the term which further includes the chemical species involved in a reaction, <em>i.e</em>. reactants, solvents, catalysts, <em>etc</em>. It is this wider definition that fits the goal of the current work-to automatically determine how a reaction is carried out.</p>
+<p>It was observed when considering this task that the chemical literature frequently underspecifies the work-up stage of a reaction. That is to say, the reagents employed may be stated without reference to their amounts, such as in;</p>
+<p><em>&#8220;The reaction mixture was stirred at 25|nonascii_5|C for 4 days and then diluted with ethyl acetate. The mixture was then washed with a dilute aqueous hydrochloric acid solution. At this time, methanol was added to the organic layer. A precipitate formed and was removed by filtration. The organics were further washed with a saturated aqueous sodium chloride solution, dried over magnesium sulfate, filtered, and concentrated in vacuo. The resulting solid was triturated with diethyl ether. The solid was collected by filtration and washed again with diethyl ether to afford...&#8221;</em> <a class="footnote-reference" href="#b34" id="id56">[34]</a></p>
+<p>While the work-up is an undeniably important phase of a reaction, the techniques used in the current work are reliant on the specification of amounts in order to identify reagents. This technique is well-suited to identification of primary reagents but not those used in work-up, and so in order to produce a metric that indicates the performance of the software in the role for which it was designed it was decided to entirely omit reagents mentioned in the work-up phase, and inert atmospheres under which reactions were performed, from the current analysis.</p>
+<p>The manual inspection of the reaction corpus identified 249 true positives, 71 false positives and 139 false negatives-the system having a precision of around 78% and recall of around 64%. When considering these results, it should be remembered that the requirement for an identified reagent to be considered a true positive-that not only the chemical name but also the amounts employed in the reaction be identical to those described in the source text-is a rigorous standard. It was commonly the case during the analysis that the system identified the correct chemical name as a reagent but failed to correctly add one or more amounts, creating both a false positive and a false negative. These situations occurred where one or more of the amounts in the source text were not recognised by ChemicalTagger. Frequently these situations were caused by the patent author employing a structure that may be considered incorrect, <em>e.g</em>. &#8220;triphenylphosphine (3.08 g., 11.78 mmol)&#8221; or &#8220;1-Phenylpiperazine (16.2 g, 0.10 mole)&#8221;. The non-standard full stop indicating the abbreviation of &#8220;grams&#8221; in the first example and the failure to contract the unit &#8220;mole&#8221; to its standard symbol &#8220;mol&#8221; in the second result in the failure to recognise and convert these amounts to CML. The data gathered in the current exercise permit the improvement of the ChemicalTagger grammar to recognise a greater variety of the reporting formats used by authors and thereby improve the precision and recall for the identification of reagents as measured by the current methods.</p>
+<p>These improvements, however, are not sufficient on their own to produce a system that operates at the level of a human operator. The current system requires further development before the data it produces are of sufficient quality to be considered reliable by the community at large.</p>
+<p>The extracted reactions contain, where identified and successfully converted to CML, the <sup>13</sup>C and <sup>1</sup>H NMR spectra of the products. In the patents used for this work, <sup>1</sup>H NMR spectra are far more common than <sup>13</sup>C-indeed, the manually examined subset of the reaction corpus was found to contain only two <sup>13</sup>C NMR spectra. Consequently, only the validity of the attached <sup>1</sup>H NMR spectra in the reaction corpus was considered. Where these spectra were present, the content was compared to the reported spectra in the original sources. In order to be considered correct, the attached spectra were required to fully describe the original spectra in terms of the shifts, integrals, multiplicities and coupling constants of each peak-any deviation from what was reported in the original text resulted in the attached spectrum being judged to be incorrect.</p>
+<p>The manual inspection identified 25 occasions on which the <sup>1</sup>H NMR spectrum attached to a product molecule precisely replicated the information presented in the source text and 8 occasions on which it did not, <em>i.e</em>. a success rate of around 76%. The primary causes of the inclusion of incorrect <sup>1</sup>H NMR spectra were the failure to fully convert peak metadata, <em>e.g</em>. multiplicities, as identified by OSCAR3 to CML and the conversion to CML spectra of sections of input text that did not indicate <sup>1</sup>H NMR spectra, <em>i.e</em>. false positives in the data recognition procedure. The first of these issues indicates a bug in JUMBO-Converters that could be relatively trivially identified and fixed while it is expected that the second issue should produce <sup>1</sup>H NMR that could be automatically distinguished from a genuine NMR spectrum in a majority of cases, since false positives will rarely contain expected peak metadata such as integrals and multiplicities. Though the <sup>1</sup>H NMR spectra validation is based on a small set of data, it is believed that the spectra identified by PatentEye are of nearly sufficient quality that they constitute a resource of value to the community.</p>
+</div>
+</div>
+<div class="section" id="the-green-chain-reaction-are-chemical-reactions-in-the-literature-getting-greener">
+<h2>The Green Chain Reaction: are chemical reactions in the literature getting greener?<a class="headerlink" href="#the-green-chain-reaction-are-chemical-reactions-in-the-literature-getting-greener" title="Permalink to this headline">¶</a></h2>
+<p>The development of an automatable patent extraction and interpretation system gave us an opportunity to include the scientific community in an <em>ad hoc</em> public project. ScienceOnline (2010) was a gathering of bloggers, information specialists, information providers, publishers and funders related to the communication of science. We set up a one month project dedicated to providing &#8220;a scientific result&#8221; by the time of the meeting. This highly ambitious idea relied on a critical mass of collaborators in a virtual community installing programs, running them to collect chemical information and aggregating it for presentation at the meeting.</p>
+<p>The focus of the experiment was to see if a well-defined question could be answered by extracting information from the patent literature, using PatentEye.</p>
+<p>As the basis of the project, named &#8220;The Green Chain Reaction&#8221; (GCR), we chose to focus on the use of solvents in chemical reactions to determining the &#8220;greenness&#8221; of chemical reactions in manufacturing and research. Traditional methods of chemical synthesis are becoming increasingly unacceptable because the processes are hazardous (explosion, toxicity), they consume scarce resources (metals, petrochemicals, <em>etc</em>.), the by-products (unwanted materials, which are often discharged to the environment) are hazardous (toxic, <em>etc</em>.) and they are energy-intensive. Both machines and humans were employed to collect and systematize chemical syntheses and to analyse the results.</p>
+<p>The Green Chain Reaction was &#8220;Open Notebook Science&#8221; in that all discussions, code and results were publically viewable on the web at all stages. Moreover, anyone could volunteer to participate in the project. The planned methodology was:</p>
+<ol class="arabic simple">
+<li>A volunteer downloads the GCR software and installs it on their machine.</li>
+<li>They run it against a given week of patent data from the 500 weeks available on the EPO website.</li>
+<li>The software analyses the occurrence of solvents in the patents and records each instance of a particular solvent.</li>
+<li>The software provides an aggregation and uploads this to a common site (an Open server at Cambridge).</li>
+<li>The Cambridge software makes a further aggregation and presents the results.</li>
+</ol>
+<p>In one sense this is a human analogy of a map-reduced project where a given task is farmed out to a large number of &#8220;computers&#8221; and the results are aggregated. In practice, we found a number of problems in distributing the software. The OSCAR package did not run &#8220;out-of-the-box&#8221; on all architectures, and it was some time before we discovered the cause of this (OSCAR&#8217;s workspace). For this reason some volunteers were not able to participate in the complete project. As we discovered bugs, new releases were made, sometimes on a daily basis. Nevertheless, we were ultimately able to analyse about 100,000 patents and to tabulate the results.</p>
+<p>The GCR PatentEye workflow is as follows:</p>
+<p>• Analyses a weekly patent index and downloads all the chemical patents</p>
+<p>• Trawls through the patents to see which contain experimental sections</p>
+<p>• Analyses the text to extract mentions of solvents, including chemical formula and amount (where given)</p>
+<p>• Aggregates all the solvent data from a single patent into a summary file (</p>
+<p>• Uploads the summary file to the GreenChainReaction website <a class="reference external" href="http://greenchain.ch.cam.ac.uk/patents/results/">http://greenchain.ch.cam.ac.uk/patents/results/</a></p>
+<p>The results were communicated onto the Cambridge server using a RESTful process. The solvents were identified by their linguistic context (using ChemicalTagger), and validated against Wikipedia pages of the same name. Thus, for example, ethyl acetate would have been determined as a solvent because of its linguistic environment (<em>e.g</em>. &#8220;dissolved in ethyl acetate&#8221; or &#8220;in 50 ml of EtOAc&#8221;). Sometimes the solvents were given as textual names (<em>e.g</em>. dichloromethane), and sometimes as compositional formulae (<em>e.g</em>. CH<sub>2</sub>Cl<sub>2</sub>). The first observation is that the extraction of solvents is extremely high precision <em>i.e</em>. there are very few entities retrieved which are not solvents. We have no information about the recall but it is clear that a large amount of data has been extracted. The solvents were then listed on the server with their aggregate counts and the chemical structure diagram retrieved from Wikipedia. Note that there needs to be a further disambiguation of names, so that there are entries for both dichloromethane and CH<sub>2</sub>Cl<sub>2</sub>, which should be summed, but in the time available for the project and with the given volunteers it was not possible to include this stage. The precision would appear to be &gt; 99.9%.</p>
+<p>We had hoped that there might be a large change in solvent usage over a decade. However, the most commonly used solvents (THF, dichloromethane) have remained at approximately the same frequency. These solvents are not completely green being a) potentially explosive and b) containing toxic C-Cl bonds, so there is no particular evidence in increasing greenness. However we caution this interpretation as there are many dates associated with the patent, and we cannot be sure how these relate to the actual dates on which the syntheses were carried out. Moreover there is a considerable lag between the actual synthesis and the publication of the patent so that recent changes in use have probably not been picked up.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>DMJ wrote the manuscript, developed the PatentEye software and carried out the analysis of its performance.</p>
+<p>SEA provided structure analysis routines, helped develop the Green Chain Reaction software, advised on software architecture and helped write the manuscript.</p>
+<p>PMR developed OSCAR and CML, organised and ran the Green Chain Reaction experiment and wrote the manuscript.</p>
+</div>
+<div class="section" id="acknowledgements-and-funding">
+<h2>Acknowledgements and funding<a class="headerlink" href="#acknowledgements-and-funding" title="Permalink to this headline">¶</a></h2>
+<p>The invaluable assistance of Dr. Charlotte Bolton in the production of this manuscript is acknowledged.</p>
+<p>We also thank Unilever (DMJ&#8217;s PhD studentship) and the EPSRC (Pathways to Impact Award) for funding.</p>
+<p>Green Chain Reaction contributors: Jean-Claude Bradley, Dan Hagon, Bob Hanson, Cameron Neylon, Heather Piwowar, Diego Riaño, Alberto Sicilia, Mat Todd, Anita de Waard, Richard West, Mark Woodbridge; Henry Rzepa for suggesting the &#8216;green&#8217; focus.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>CAS Databases-CAPlus, Journal and Patent References</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>CAS REGISTRY-The gold standard for substance information</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>CAS Databases-CASREACT, Chemical Reactions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>The Semantic Web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>The Automation of Science</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td>Chemical Markup, XML, and the Worldwide Web. 1. Basic Principles</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[7]</a></td><td>Chemical Markup, XML, and the World-Wide Web. 2. Information Objects and the CMLDOM</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[8]</a></td><td>Chemical Markup, XML, and the World-Wide Web. 3. Towards a Signed Semantic Chemical Web of Trust</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[9]</a></td><td>Chemical Markup, XML, and the Worldwide Web. 4. CML Schema</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[10]</a></td><td>Chemical Markup, XML, and the World Wide Web. 5. Applications of Chemical Metadata in RSS Aggregators</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[11]</a></td><td>The Next Big Thing: From Hypermedia to Datuments</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[12]</a></td><td>(Hyper)activating the chemistry journal</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[13]</a></td><td>Computers learn chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[14]</a></td><td>Project Prospect</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[15]</a></td><td>Semantic enrichment of journal articles using chemical named entity recognition</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[16]</a></td><td>Chemistry Add-in for Word</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[17]</a></td><td>The past, present and future of scientific discourse</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[18]</a></td><td>High-Throughput Identification of Chemistry in Life Science Texts</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[19]</a></td><td>Cascaded classifiers for confidence-based chemical named entity recognition</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[20]</a></td><td>OSCAR4: a flexible architecture for chemical text-mining</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[21]</a></td><td>ChemicalTagger: A tool for semantic text-mining in chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[22]</td><td><em>(<a class="fn-backref" href="#id22">1</a>, <a class="fn-backref" href="#id54">2</a>)</em> ChemicalTagger Demonstration</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[23]</a></td><td>Chemical name to structure: OPSIN, an open source solution</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[24]</td><td><em>(<a class="fn-backref" href="#id24">1</a>, <a class="fn-backref" href="#id28">2</a>)</em> OPSIN: Open Parser for Systematic IUPAC Nomenclature</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[25]</a></td><td>Extraction of Chemical Reaction Information from Primary Journal Text Using Computational Linguistics Techniques. 1. Lexical and Syntantic Phases</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[26]</td><td><em>(<a class="fn-backref" href="#id26">1</a>, <a class="fn-backref" href="#id29">2</a>)</em> Extraction of Chemical Reaction Information from Primary Journal Text Using Computational Linguistics Techniques. 2. Semantic Phase</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id27">[27]</a></td><td>Extraction of Chemical Reaction Information from Primary Journal Text</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[28]</td><td><em>(<a class="fn-backref" href="#id30">1</a>, <a class="fn-backref" href="#id47">2</a>)</em> CrystalEye</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id31">[29]</a></td><td>OSCAR3</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[30]</a></td><td>InfoChem, ChemProspector</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id33">[31]</a></td><td>Markush structure reconstruction: A prototype for their reconstruction from image and text into a searchable, context sensitive grammar based extension of SMILES</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[32]</td><td><em>(<a class="fn-backref" href="#id34">1</a>, <a class="fn-backref" href="#id40">2</a>)</em> Optical Structure Recognition Software To Recover Chemical Information: OSRA, An Open Source Solution</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[33]</a></td><td>Extracting Chemical Structure Information: Optical Structure Recognition Application</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b34" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[34]</td><td><em>(<a class="fn-backref" href="#id36">1</a>, <a class="fn-backref" href="#id42">2</a>, <a class="fn-backref" href="#id43">3</a>, <a class="fn-backref" href="#id56">4</a>)</em> Improvements in Optical Structure Recognition Application. In Ninth IAPR International Workshop on</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b35" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id37">[35]</a></td><td>OSRA: Optical Structure Recognition Application</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b36" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id38">[36]</a></td><td>Common Application Format, United States Patent and Trademark Office</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b37" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id39">[37]</a></td><td>USPTO Bulk Downloads: Patent Grant Full Text</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b38" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[38]</td><td><em>(<a class="fn-backref" href="#id44">1</a>, <a class="fn-backref" href="#id55">2</a>)</em> EBD ST.36 (XML) DATA INFORMATION</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b39" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id45">[39]</a></td><td>Classifier4J</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b40" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id46">[40]</a></td><td>Kekulé: OCR-Optical Chemical (Structure) Recognition</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b41" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id48">[41]</a></td><td>JUMBO6</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b42" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id51">[42]</a></td><td>Optical Structure Recognition Software To Recover Chemical Information: OSRA, An Open Source Solution</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b43" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id52">[43]</a></td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b44" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id53">[44]</a></td><td>JUMBO-Converters</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b45" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id41">[45]</a></td><td>Amide Substituted Xanthine Derivatives With Gluconeogenesis Modulating Activity</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Mining chemical information from open patents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#current-systems-for-automatic-analysis-of-patents">Current systems for automatic analysis of patents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#patenteye">PatentEye</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#patent-documents">Patent documents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#anatomy-of-a-patent-and-tractability-for-linguistic-tools">Anatomy of a patent and tractability for linguistic tools</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#patenteye-workflow">PatentEye workflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automated-identification-and-download-of-patents">Automated identification and download of patents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#enhancement-of-document-semantics">Enhancement of document semantics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#paragraph-deflattening">Paragraph Deflattening</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#document-segmentation">Document Segmentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-annotation">Data Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#classification-of-synthesis-sections">Classification of Synthesis Sections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#image-analysis">Image Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#extraction-of-reactions">Extraction of reactions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#identification-of-reagents">Identification of reagents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#identification-of-products">Identification of products</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#attachment-of-spectral-data">Attachment of spectral data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automated-verification-of-product-checking-against-embedded-images-mass-spectrum-1h-nmr">Automated verification of product-checking against embedded images/mass spectrum/<sup>1</sup>H-NMR</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#performance-of-the-reaction-extraction-process">Performance of the Reaction Extraction Process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#the-green-chain-reaction-are-chemical-reactions-in-the-literature-getting-greener">The Green Chain Reaction: are chemical reactions in the literature getting greener?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements-and-funding">Acknowledgements and funding</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-39.html" title="CMLLite: a design philosophy for CML"
+             >previous</a> |
+          <a href="1758-2946-3-41.html" title="OSCAR4: a flexible architecture for chemical text-mining"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-40.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

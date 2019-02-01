@@ -1,0 +1,414 @@
+Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain
+=============================================================================================
+
+Abstract
+********
+
+Background
+^^^^^^^^^^
+
+The Elk-1 transcription factor is a member of a group of proteins called ternary complex factors, which serve as a paradigm for gene regulation in response to extracellular signals. Its deregulation has been linked to multiple human diseases including the development of tumours. The work herein aims to inform the design of potential peptidomimetic compounds that can inhibit the formation of the Elk-1 dimer, which is key to Elk-1 stability. We have conducted molecular dynamics simulations of the Elk-1 ETS domain followed by virtual screening.
+
+Results
+^^^^^^^
+
+We show the ETS dimerisation site undergoes conformational reorganisation at the *\ |nonascii_1|\ *1*\ |nonascii_2|\ *1 loop. Through exhaustive screening of di- and tri-peptide libraries against a collection of ETS domain conformations representing the dynamics of the loop, we identified a series of potential binders for the Elk-1 dimer interface. The di-peptides showed no particular preference toward the binding site; however, the tri-peptides made specific interactions with residues: Glu17, Gln18 and Arg49 that are pivotal to the dimer interface.
+
+Conclusions
+^^^^^^^^^^^
+
+We have shown molecular dynamics simulations can be combined with virtual peptide screening to obtain an exhaustive docking protocol that incorporates dynamic fluctuations in a receptor. Based on our findings, we suggest experimental binding studies to be performed on the 12 SILE ranked tri-peptides as possible compounds for the design of inhibitors of Elk-1 dimerisation. It would also be reasonable to consider the score-ranked tri-peptides as a comparative test to establish whether peptide size is a determinant factor of binding to the ETS domain.
+
+Background
+**********
+
+Regulation of gene expression is essential for the development of all living organisms through processes such as cell proliferation, differentiation and morphogenesis. Key to these processes are mitogen activated protein kinases (MAPK), which target nuclear transcription factors, in response to extracellular signals, to elicit the required genetic response. One such transcription factor is Elk-1. Elk-1 (Ets-like protein 1) is a member of a group of proteins called ternary complex factors (TCF), which are targeted by MAPKs for phosphorylation \ [#B1]_\ [#B2]_\ [#B3]_ to regulate the transcription of immediate early genes (IEG) \ [#B4]_\ [#B5]_. This event involves the formation of a ternary complex, induced by the cooperative binding of TCFs with serum response factor (SRF) dimers \ [#B6]_ on serum response elements found in IEG promoters \ [#B7]_\ [#B8]_\ [#B9]_. TCFs are a subfamily of ETS (\ [#B10]_ that binds to a 10-bp ETS binding site containing a 5*'*-GGA-3*'* core sequence. Since ETS domains are highly conserved across ETS proteins, ETS binding sites are differentiated by the cooperation of other transcription factors \ [#B7]_\ [#B11]_\ [#B12]_ combined with base-specific interaction with variable bases flanking the central core sequence. Whilst TCFs naturally form a complex with SRF, they are also able to bind to DNA containing high-affinity, autonomous ETS binding motifs independent of a SRF \ [#B6]_\ [#B13]_. ETS domain proteins are involved in cellular development, growth and differentiation \ [#B14]_\ [#B15]_\ [#B16]_. Their deregulation has been linked to multiple human diseases \ [#B17]_.
+
+The current X-ray crystal structure of the Elk-1 ETS domain is that of a dimer, with each unit bound to an autonomous 13-bp DNA double helix (PDB code \ [#B18]_ composed of a high affinity ETS binding site motif. Like other ETS domain proteins, the structure reveals three *\ |nonascii_3|\ *-helices packed against four anti-parallel *\ |nonascii_4|\ *-strands, giving an *\ |nonascii_5|\ \ |nonascii_6|\ \ |nonascii_7|\ \ |nonascii_8|\ \ |nonascii_9|\ \ |nonascii_10|\ \ |nonascii_11|\ * secondary structure (Figure \ :ref:`1<figure_1>`). The *\ |nonascii_12|\ *3 helix forms the recognition helix, which slots into the major groove of the DNA target with a GGA core (Figure \ :ref:`2a<figure_2a>`). The dimer interface involves the carboxy-end of *\ |nonascii_13|\ *1 and the *\ |nonascii_14|\ *1*\ |nonascii_15|\ *1 loop (Figure \ :ref:`2b<figure_2b>`). Contrary to the aforementioned structure, unequivocal experimental evidence has indicated that ETS dimers exist only in solution, \ [#B19]_\ [#B20]_ whilst monomers occur predominantly in the nucleus, where they target DNA \ [#B21]_\ [#B22]_. To date, the structure of an unbound ETS domain is yet to be reported. However, Saven *et al*. \ [#B23]_ performed molecular dynamics (MD) simulations of a single Elk-1 ETS domain taken from the dimeric structure. They discerned regions within the simulated monomeric structure which showed large structural deviation with respect to the structure of the domain in the dimeric conformation. These regions include residues at the *\ |nonascii_16|\ *1*\ |nonascii_17|\ *1 loop involved in the ETS dimer interface and residues at the *\ |nonascii_18|\ *2*\ |nonascii_19|\ *3 loop involved in protein-DNA contacts.
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-49-1.jpg
+   :align: center
+
+   Figure 1. ETS domain secondary structure
+
+   **ETS domain secondary structure**. Amino acid sequence of the Elk-1 ETS domain, showing the locations of *\ |nonascii_20|\ *-helices and *\ |nonascii_21|\ *-strands.
+
+
+.. _figure_2:
+
+.. figure:: ../_static/1758-2946-3-49-2.jpg
+   :align: center
+
+   Figure 2. ETS domain DNA and dimer complexes
+
+   **ETS domain DNA and dimer complexes**. (a) An Elk-1 ETS domain bound to its DNA recognition sequence. *\ |nonascii_22|\ *-helices are in purple and *\ |nonascii_23|\ *-strands in yellow. (b) An Elk-1 ETS domain dimer complex, showing the *\ |nonascii_24|\ *1*\ |nonascii_25|\ *1 loops providing the interface. The images were generated using VMD \ [#B63]_ and PovRay (`<http://www.povray.org/>`_), using coordinates taken from the 1DUX crystal structure \ [#B18]_.
+
+
+Thus far, work on characterising the mechanism for protein-DNA recognition in TCFs has been abundant \ [#B18]_\ [#B23]_\ [#B24]_\ [#B25]_\ [#B26]_\ [#B27]_. However, there has been little on understanding the basis of Elk-1 dimerisation for transcriptional activity. Shaw and colleagues \ [#B21]_ have identified a region of the Elk-1 ETS domain encompassing the *\ |nonascii_26|\ *1*\ |nonascii_27|\ *1 loop which distinctly contributes to Elk-1 stability in the cytoplasm by directing Elk-1 dimer formation. Also, dimerisation in the cytoplasm appears to prevent rapid degradation and plays a role in translocation of the protein to the nucleus and its subsequent accumulation therein.
+
+In the current work, we identify a series of peptides that can serve as leads for the design of potential peptidomimetic inhibitors of Elk-1 dimerisation. Using a docking-based approach, we screened entire libraries of all possible di- and tri-peptides against the Elk-1 ETS domain, targeting the stability region of the domain identified by Shaw *et al* \ [#B21]_. Given the findings of Saven *et al*., \ [#B23]_ it was essential to consider possible structural deviations or fluctuations in the *\ |nonascii_28|\ *1*\ |nonascii_29|\ *1 loop region that may affect binding of such inhibitors. Therefore, we performed MD simulations for an Elk-1 ETS monomer, to generate an ensemble of monomeric ETS conformations to use as docking targets. Herein, we show that tri-peptides appear to be good candidates for the design of inhibitors/binders of the Elk-1 dimer interface, based on size and binding specificity; di-peptides, on the other hand, appeared to behave as generic protein surface binders. We have also identified a set of tri-peptides, which may bind competitively to the ETS dimer interface.
+
+Computational Methods
+*********************
+
+Molecular Dynamics Simulations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+All stages of the MD simulations were carried out using CHARMM version 34b1 \ [#B28]_\ [#B29]_ with the all-atom CHARMM22 force field \ [#B30]_ and CMAP extensions \ [#B31]_\ [#B32]_\ [#B33]_. Our initial structure of a representative ETS domain monomer was chain C from the 1DUX crystal structure \ [#B18]_. For residues with alternative positions, the pose with the highest occupancy was retained. Hydrogen atoms were assigned using the HBUILD module \ [#B34]_. The system underwent three rounds of energy minimisation using the conjugated gradient method to remove any unphysical contacts until the system had converged. During the minimization all non-hydrogen atoms were harmonically restrained with a force constant of 30 kcal mol\ :sup:`-1`\  \ |nonascii_30|\ \ :sup:`-1`\ , which was reduced by 10 kcal mol\ :sup:`-1`\  \ |nonascii_31|\ \ :sup:`-1`\  at each successive round. The system was solvated in a cubic solvation box (62.2 \ |nonascii_32|\  \ |nonascii_33|\  62.2 \ |nonascii_34|\  \ |nonascii_35|\  62.2 \ |nonascii_36|\ ), containing 7460 TIP3P water molecules, \ [#B35]_ using periodic boundary conditions. The fully solvated system was minimised using the conjugated gradient method. First, the protein was fixed to allow the water molecules to minimise and then harmonically restrained with a force constant of 30 kcal mol\ :sup:`-1`\  \ |nonascii_37|\ \ :sup:`-1`\ . A switched cut-off was used at an atom-pair distance of 10 \ |nonascii_38|\  for calculations of non-bonded interactions with a 2.0 \ |nonascii_39|\  switching region. The Particle Mesh Ewald algorithm was used for calculating long-range electrostatic interactions \ [#B36]_. The system was gradually heated from 0 K to 300 K and allowed to equilibrate for 100 ps. The SHAKE algorithm \ [#B37]_ was applied to constrain all hydrogen-heavy atom bonds to remove the need to sample the high frequency vibrations. Simulations were performed with a 1 fs timestep with the Leapfrog integrator. Following equilibration, the simulation continued for a further 4 ns in the isobaric-isothermal (constant pressure and temperature, NPT) ensemble for the production run. During this phase, structural coordinates of the system were taken at 0.1 ps intervals to build a trajectory of the system dynamics. Time-dependent properties were calculated from the production trajectory. In preparation for this, the C\ :sub:`\ |nonascii_40|\ `\  atoms from each frame of the trajectory were aligned using least-squares fitting to the coordinates of the starting conformation. The root mean square deviation (RMSD) from the initial conformation and radius of gyration were calculated to survey any structural fluctuations over the time-series. To evaluate local structural deviations between the simulated ETS monomer conformations and the initial dimmer conformation, a residue-specific RMSD of main-chain atoms (N, C\ :sub:`\ |nonascii_41|\ `\ , C, O) was calculated, averaged for the entire conformational ensemble. To complement this, we examined the changes in the backbone dihedral angles for structural fluctuations at residues around the *\ |nonascii_42|\ *1*\ |nonascii_43|\ *1 loop region (16-23).
+
+Several snapshots were extracted from the trajectory to represent the various conformations for an Elk-1 ETS monomer. This was done by clustering the trajectory using backbone dihedral angles for residues 20-22 and selecting the conformation closest to the centre of each cluster as a representative conformation. The threshold defining the size of each cluster was the average of the standard deviation for the six chosen angles, over the time-series.
+
+Automated Peptide Docking
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Libraries of all possible di-and tri-peptide were built using all 20 standard, genetically encoded amino acids (400 di-peptides and 8,000 tri-peptides). The first step was to generate a SMILES string \ [#B38]_ from the raw peptide sequences, using ChemAxon's MolConverter program \ [#B39]_. For each peptide, tautomers at physiological pH (7.4) were produced using ChemAxon's Calculator Plugins \ [#B40]_. Any unreasonable peptide structures were removed from each library, including any structures with protonated carbonyl groups, de-protonated amines, structures without formally charged termini, and structures with anionic amides. Each peptide library was docked to the ETS monomer conformations obtained from the clustering. The dockings were carried out using OpenEye's docking program FRED, \ [#B41]_ a rigid docking algorithm, which requires a pre-computed conformer ensemble for screening the conformational space of the ligands. The conformer ensembles were created using Omega version 2.3.2 (OpenEye Scientific Software) \ [#B42]_. A maximum of 500 low energy conformers were constructed for each peptide, *in vacuo*, using the MMFF94s force field \ [#B43]_\ [#B44]_. The Coulombic and attractive part of the van der Waals terms were excluded from the force field, to reduce the effects of strong intermolecular interactions (e.g. hydrogen bonds) that can result in folded (peptide) conformations. Conformers with an energy difference greater than 25 kcal mol\ :sup:`-1`\  from the lowest energy conformer were rejected and conformers in the final ensemble were required to have a heavy atom RMSD greater than the duplicate removal threshold (0.4 \ |nonascii_44|\ ). These settings were in line with the "high quality screening" settings of Kirchmair *et al* \ [#B45]_. All remaining parameters were the default values.
+
+The docking site for each receptor was delineated by a grid box encasing residues at the Elk-1 dimer interface site. A protein contact constraint, which all successful dockings were require to satisfy, was defined on Leu45, which is a key pharmacophoric contact for the dimer interface. The di- and tri-peptide libraries (with conformers) were separately docked, using FRED version 2.2.5, to each of the Elk-1 ETS domain conformations. Each multi-conformer peptide-ligand was exhaustively docked to a receptor using default step-sizes and the ChemGauss2 scoring function (a propriety function of OpenEye) \ [#B41]_.
+
+ChemGauss2 is a chemically aware shape-fitting scoring function, which uses Gaussian functions to describe the shape and chemistry of molecules. The best scoring poses for each compound were optimised in their docked state by half a rotation and translation step in each direction using the OEChemScore scoring function. OEChemscore is an OpenEye variant of the Chemscore \ [#B46]_ scoring function, but lacks a component for an entropy penalty upon complex formation.
+
+On completion of the docking simulations, the single highest-scoring tautomeric state of each peptide was taken to give 400 unique di-peptides and 8,000 unique tri-peptides. Results from both libraries were analysed similarly but separately. The peptides were initially ranked by docking score, where rank 1 corresponded to the highest scoring peptide. Due to the variability in the size of peptides in both libraries, where size is a simple heavy atom count (HAC), and a systematic bias in the scoring functions (including OEChemscore), \ [#B47]_\ [#B48]_ we employed a simple size-independent metric to rank peptides and select the best binders. We used the size-independent ligand efficiency (SILE) metric \ [#B49]_:
+
+
+
+where *affinity* can be any binding measurement, in our case the docking score; *x* is derived by fitting the maximal ligand efficiency (LE\ :sub:`max`\ ) values from all 12 docking screens against HAC, to a logarithmic function of the form:
+
+
+
+Docking data from the di- and tri-peptide sets were fitted and examined separately.
+
+Docked complexes between the highest-ranked peptides and the 12 protein conformations were analysed using HBPLUS, using default parameters \ [#B50]_. Only hydrogen bonds between protein and peptide ligands were considered. The number of ETS residues participating in interactions with the top SILE-ranked peptide in each complex was counted. This count was also dissected into the number of specific contacts made, where specificity is defined as interactions between peptide side-chains and ETS residues.
+
+Results and Discussion
+**********************
+
+Analysis of Elk-1 dimer interface
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In order to aid the identification of possible peptide binders for the Elk-1 dimer interface, it was important to identify structural features contributing the dimerisation. Interactions between two Elk-1 ETS domains were calculated using the LIGPLOT program \ [#B51]_. The minimum and maximum interatomic bond distances for non-bonded contacts were 2.90 \ |nonascii_45|\  and 3.90 \ |nonascii_46|\ , respectively, and for hydrogen bonds: 2.70 \ |nonascii_47|\  and 3.35 \ |nonascii_48|\ . The LIGPLOT diagram for chains C and F from the X-ray crystal structure of the ETS dimer (Figure \ :ref:`3<figure_3>`) reveals a homodimeric interaction between the two ETS domains. Key to the interface were residues 17, 18 and 49, where Gln18 and Arg49 of one domain donate three hydrogen bonds to Glu17 of the partnering domain. Accompanying these hydrogen bond interactions, several residues make large steric contributions to the interface; these are listed in Table \ :ref:`1<table_1>` together with a percentage accessible surface area of the interface, calculated using NACCESS \ [#B52]_. The schematic depicting the secondary structure of the ETS domain in Figure \ :ref:`1<figure_1>` shows the relative positions of these residues in the domain.
+
+.. _figure_3:
+
+.. figure:: ../_static/1758-2946-3-49-3.jpg
+   :align: center
+
+   Figure 3. ETS domain dimer interface
+
+   **ETS domain dimer interface**. LIGPLOT representation of intermolecular interactions between two Elk-1 ETS domains according to the X-ray crystal structure (1DUX) of the dimer complex. Non-bonded interactions are indicated by spokes and hydrogen bonds by dashed green lines, with lengths given in \ |nonascii_49|\ . Residues from chain C are shown with purple bonds and chain F in orange.
+
+
+MD simulations of an Elk-1 ETS domain
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Over the course of the MD simulation, the radius of gyration (RoG) and the RMSD of the backbone atoms relative to the minimised (initial) structure of each frame in the trajectory remained stable. The mean values for the RMSD and the RoG were 1.64 \ |nonascii_50|\  0.24 \ |nonascii_51|\  and 12.17 \ |nonascii_52|\  0.08 \ |nonascii_53|\ , respectively. The latter was, in fact, identical to the RoG of the initial structure. This indicated that the overall shape and size (packing) of both the monomeric and dimeric conformation of the Elk-1 ETS domain is conserved. To focus on localised structural deviations, we calculated the time-averaged RMSD for each residue, with respect to the main-chain atoms of the initial conformation. This revealed substantial structural deviations for residues 20-22 compared to the dimeric conformation (Figure \ :ref:`4<figure_4>`). These residues are situated at the centre of the *\ |nonascii_54|\ *1*\ |nonascii_55|\ *1 loop, which was identified by Shaw *et al*. \ [#B21]_ as the region accountable for Elk-1 stability. We also measured the backbone dihedral angles for residues in the loop across the entire trajectory. Residues 16 to 19 and residue 23 showed dihedral angle fluctuations within range of typical thermal fluctuations for proteins, with an average standard deviation about the mean of \ |nonascii_56|\ 19\ |nonascii_57|\  across the trajectory for the 10 angles; fluctuations of the backbone dihedrals for residues 21 and 22 were considerably larger, with the lowest standard deviation value of \ |nonascii_58|\ 59\ |nonascii_59|\  and the highest of \ |nonascii_60|\ 88\ |nonascii_61|\ . The high fluctuation of residues 21 and 22 are consistent with the high RMSD values seen in Figure \ :ref:`4<figure_4>`.
+
+.. _figure_4:
+
+.. figure:: ../_static/1758-2946-3-49-4.jpg
+   :align: center
+
+   Figure 4. Residue specific ETS monomer fluctuations
+
+   **Residue specific ETS monomer fluctuations**. Time-averaged RMSD for the main-chain atoms of each residue over 4 ns of simulation of an Elk-1 ETS domain. The bars signify fluctuations about the mean and correspond to one standard deviation.
+
+
+Since the structure fluctuates in the region coinciding with the *\ |nonascii_62|\ *1*\ |nonascii_63|\ *1 loop, which was our proposed docking binding site, it would have been unreasonable to dock to the single domain conformation taken from the crystal structure of the dimer, or to dock to the averaged structure of the MD trajectory. Instead, we clustered the trajectory, based on the backbone dihedral angles of residues 20-22, to extract several conformations representative of an Elk-1 ETS domain monomer. Using a clustering threshold of 49.2\ |nonascii_64|\ , which was the average of the standard deviations of the six angles, 12 clusters were obtained. From each cluster, a single conformation was taken (Table \ :ref:`2<table_2>`) and used for the docking study. (see Additional file 
+
+Additional file 1
+
+**Superposition of ETS target structures and derivation of maximal ligand efficiency**. Document contains: 1) figures showing alignment of the 12 ETS target structures with the minimised structure and 2) plots showing the maximal ligand efficiency values for the docked di- and tri-peptides.
+
+Click here for file
+
+Peptide Docking
+^^^^^^^^^^^^^^^
+
+Peptide screening
+-----------------
+
+Libraries of all possible di- and tri-peptides, together with possible tautomers of each peptide were constructed. The final libraries (including protonation and tautomeric states) were made up of 1,128 di-peptides and 33,367 tri-peptides. The two peptide libraries were individually screened against the 12 monomer conformations of the Elk-1 ETS domain. Each multi-conformer peptide-ligand was exhaustively docked to the receptors, i.e., all rigid-body translations and rotations of a conformer were enumerated within the docking site, centred on residues for the Elk-1 dimer interface. Although with different affinities, all peptides bound to the docking site with favourable scores.
+
+The docked peptide-ligands for each library were ranked according to docking score, retaining only the highest scoring tautomer of each peptide. Using this simple ranking scheme, particularly for the di-peptides, peptide-ligands with a larger heavy atom count (HAC) were ranked higher than those with a smaller one. Although this effect is apparent in experimental ligand binding data, \ [#B53]_ unfortunately it is unduly amplified in computational docking studies. The problem stems from the additive nature of scoring functions. The scoring function tends to favour larger ligands, as they contribute towards a greater number of intermolecular interactions with the target. This phenomenon is inherent to several docking scoring functions, including OEChemscore, which lack other terms in the function, such as a desolvation penalty term, that can counter-balance the favoured interaction terms. For our peptide ligands, the effect is seen in Figures \ :ref:`5a<figure_5a>` and \ :ref:`5b<figure_5b>` for the highest scoring di- and tri-peptides, respectively, taken at each HAC from the 12 docking screens.
+
+.. _figure_5:
+
+.. figure:: ../_static/1758-2946-3-49-5.jpg
+   :align: center
+
+   Figure 5. Highest scoring peptides by size
+
+   **Highest scoring peptides by size**. Highest scoring (a) di-peptides and (b) tri-peptides taken at each HAC from all 12 docking screens. Docking scores have been plotted as non-negative values for convenience.
+
+
+Because the bias towards larger ligands is counter to the rules for drug bioavailability, \ [#B54]_ a simple metric, called ligand efficiency has been developed to assess the binding of a compound, with respect to the number of atoms, and its potential for lead optimisation \ [#B53]_\ [#B55]_. Ligand efficiency (LE) is the binding affinity (potency) divided by a measure of the size of a ligand, often the HAC, as defined by Kuntz *et al* \ [#B53]_. Compounds that can provide the desired binding affinity with fewer atoms are considered efficient. However, in large screening studies of ligands spanning a wide range of molecular sizes, ligand efficiency is non-linearly related to HAC, and appears to fall as size increases \ [#B56]_\ [#B57]_. This trend can be illustrated by plotting the LE versus HAC (Figure \ :ref:`6<figure_6>`), for the peptides used in Figure \ :ref:`5<figure_5>`. The trend may be related to the increased complexity of larger compounds. More complex compounds can bind a target with a less than optimal geometry, due to binding constraints and structural compromises \ [#B58]_. They also offer a smaller surface area per atom to make favourable interactions compared to smaller, less complex compounds \ [#B56]_. LE over-corrects for the size dependence in docking scores. Therefore, a size-normalised efficiency scale was needed. We used the size-independent ligand efficiency (SILE) \ [#B49]_ scale to rank peptides in the docked libraries. In order to apply a SILE metric for our data, a value for *x*, for Equation (1), was obtained by fitting the maximal LE (LE\ :sub:`max`\ ) values taken from Figure \ :ref:`6<figure_6>` to the function in Equation (2) (see Additional file \ :sub:`max`\  is the highest LE value at each HAC. The *x* values for di- and tri-peptides were 0.649 and 0.665, respectively, which were close to the generic value of 0.7 suggested by Nissink \ [#B49]_.
+
+.. _figure_6:
+
+.. figure:: ../_static/1758-2946-3-49-6.jpg
+   :align: center
+
+   Figure 6. Peptide binding efficiencies by size
+
+   **Peptide binding efficiencies by size**. Highest ligand efficiency values for (a) di-peptides and (b) tri-peptides taken at each HAC from all 12 docking screens.
+
+
+By mapping the two sequence positions for ranked di-peptides on to a 20 \ |nonascii_65|\  20 matrix, where each square is graded according to the associated rank, we can see the difference in size-dependence between score- and SILE-ranked results (Figures \ :ref:`7a<figure_7a>` and \ :ref:`7b<figure_7b>`). Score-ranked matrices clearly show peptides consisting of heavier amino acid residues such as tryptophan and tyrosine ranked higher, whilst those of smaller residues such as alanine and glycine ranked lower. The SILE-ranked matrices reduce this bias (Figure \ :ref:`7b<figure_7b>`). Similarly, plots of the distribution of LE and SILE values for the di- and tri-peptide dockings as a function of HAC reveal a reduced size-dependency for SILE values compared to LE values (compare Figure \ :ref:`8b<figure_8b>` with \ :ref:`8a<figure_8a>` and \ :ref:`8d<figure_8d>` with \ :ref:`8c<figure_8c>`). However, the SILE values for di-peptides maintain some size dependence (Figure \ :ref:`8b<figure_8b>`) compared to the tri-peptides (Figure \ :ref:`8d<figure_8d>`). It may be that the binding site readily accommodates the di-peptides, due to their smaller size and low structural complexity, and thus the size bias remains dominant. Therefore, di-peptides with a lower HAC bind and fit the binding site more completely, where a greater number of atoms participate equally in protein-peptide interactions compared to tri-peptides and di-peptides with a higher HAC. A similar result was observed in a peptide docking study to the Fv fragment of a monoclonal IgM cryoglobulin \ [#B59]_. In that study, docking results were skewed towards di-peptides composed of larger residues. It was suggested that the di-peptides were too small to discriminate between different binding cavities, which is consistent to the hypothesis of 'a small ball in a large hole'. Thus, the size-independent metric is less effective for compounds of lower complexity. This also suggests that di-peptides are fairly promiscuous protein surface binders and may not offer a specific binding preference for the dimer interface site had the docking site definition been larger.
+
+.. _figure_7:
+
+.. figure:: ../_static/1758-2946-3-49-7.jpg
+   :align: center
+
+   Figure 7. Docked di-peptide ranking maps
+
+   **Docked di-peptide ranking maps**. 2D-maps representing the peptide rank by (a) docking score and (b) SILE values according to the positions occupied by each residue for di-peptides docked to ETS conformation 9 (ETS9). The ranks are represented as squares shaded from black (highest rank) to white (lowest rank).
+
+
+.. _figure_8:
+
+.. figure:: ../_static/1758-2946-3-49-8.jpg
+   :align: center
+
+   Figure 8. Peptide efficiency distribution
+
+   **Peptide efficiency distribution**. Distribution of LE ((a) and (c)) and SILE ((b) and (d)) values for docked di- and tri-peptides as a function of the number of heavy atoms. (a) LE and (b) SILE values for di-peptides; (c) LE and (d) SILE values for tri-peptides.
+
+
+Tables \ :ref:`3<table_3>` and \ :ref:`4<table_4>` list the highest score- and SILE-ranked di- and tri-peptides, respectively. These tables again reveal the preference for peptides consisting of large aromatic residues for the score-ranked results, particularly for the di-peptides. In addition to the factors discussed above, it is possible such residues may behave as anchors to aid the binding of the complete peptides. However, given that a minority (38%) of residues in the dimer interface are non-polar, it is perhaps unlikely that these hydrophobic residues, especially tryptophan and tyrosine, would show particular affinity for the binding site in experimental assays.
+
+Structural analysis of docked complexes
+---------------------------------------
+
+Interactions between the top SILE-ranked peptide-protein complexes were calculated for each Elk-1 ETS domain conformation. Given the systematic bias in the score-ranked results, they were not considered for interaction analysis. Overall, both sets of peptides interact with residues in the dimer interface, namely the regions at sequence positions 10-20 and 40-50. To investigate the specificity of binding, the number of ETS domain residues hydrogen bonded with a peptide were counted for each of the docked complexes. On average, di-peptide ligands interacted with fewer ETS domain residues compared to tri-peptides (column 2, Tables \ :ref:`5<table_5>` and \ :ref:`6<table_6>`), although some of these interactions did include those made to ETS domain residues Glu17, Gln18 and Arg49, which were identified as key hydrogen-bond contacts at the dimer interface (see Figure \ :ref:`3<figure_3>`). In addition, the highest SILE-ranked tri-peptides make more specific contacts to the protein compared to the highest-ranked di-peptides (column 3, Tables \ :ref:`5<table_5>` and \ :ref:`6<table_6>`). Here, we measure specificity as interactions between peptide side-chains and ETS residues. Figure \ :ref:`9<figure_9>` shows an "Interaction fingerprint" of the hydrogen bonds between the highest SILE-ranked peptide and the corresponding ETS conformations. The Elk-1 ETS domain dimer fingerprint is given at the top of the figure as a reference.
+
+.. _figure_9:
+
+.. figure:: ../_static/1758-2946-3-49-9.jpg
+   :align: center
+
+   Figure 9. Peptide hydrogen bond fingerprints
+
+   **Peptide hydrogen bond fingerprints**. Hydrogen bond "Interaction fingerprints" for docked complexes between Elk-1 ETS domain conformations and highest SILE-ranked (a) di- and (b) tri-peptides. Specific contacts, as described in the main text, are given in red and peptide main-chain contacts in blue.
+
+
+Perhaps naively we may have expected a peptide corresponding to a contiguous sequence of residues involved in the Elk-1 dimer interface would have been ranked high in the docking simulation, but this was not the case. The most obvious such peptides were, the tri-peptide Arg-Glu-Gln, which corresponds to residues 16-18 in the ETS domain, and the di-peptide Glu-Gln corresponding to residues 17-18 (as seen in Figure \ :ref:`3<figure_3>`). The best SILE-ranked Glu-Gln di-peptide was ranked 52 out of 400 in complex with ETS7 and had an average ranking of 133 for all 12 docked complexes. Whilst the best SILE-ranked Arg-Glu-Gln tri-peptide was ranked 1423 out of 8000 in complex with ETS8 and an average ranking of 3729 (Table \ :ref:`7<table_7>`). This is largely because these peptides, although capable of providing some of the hydrogen bond interactions found at the dimer interface, are unable to mimic the interactions of other residues involved in dimer interface (see Table \ :ref:`1<table_1>` and Figure \ :ref:`3<figure_3>`), particularly van der Waals contacts. This has been recognised in other efforts to discover small molecules that disrupt protein-protein interactions \ [#B60]_. For this reason, the binding of the two aforementioned peptides may be weaker than the higher ranked peptides, which satisfy more of the pharmacophoric constraints of the dimer.
+
+Conclusions
+***********
+
+It is well-established that TCFs, such as Elk-1, play a critical role in transcriptional activation in response to extracellular signals and a consequent role in the growth and development of cells. Using MD simulations we have identified possible conformations for an Elk-1 ETS domain monomer and observed a structural variation from the dimeric form at the *\ |nonascii_66|\ *1*\ |nonascii_67|\ *1 loop, where two Elk-1 proteins dimerise. Against these monomeric conformations we screened all possible di- and tri-peptides and have identified several peptides with potential to mimic and possibly inhibit Elk-1 dimerisation. The size and binding specificity of the tri-peptides make them ideal candidates for the design of peptidomimetics of the Elk-1 dimer interface. The di-peptides, on the other hand, appear to be a generic set of protein surface binders and are unlikely to produce experimental binding affinity for the ETS dimer interface site that would correlate with the docking data. The notion of using tri-peptides as potential candidates for peptidomimetic design has also been supported in a recent review by Ung and Winkler \ [#B61]_.
+
+Since docking scoring functions are based on a number of simplifications and assumptions, their predictions for binding free energies for a protein-ligand complex are not quantitative. This also makes it very difficult to discriminate between strong/weak binders and non-binders, particularly for a relatively at and exposed binding site, as investigated here. Although this is a major limitation in a docking protocol, the exhaustive search algorithm of docking programs has been successful in predicting correct binding geometries of known hits \ [#B48]_. As with all docking protocols, true validation can only be achieved through experimental binding measurements correlating with the docking results. For an experimental binding study, it would be reasonable to test the binding affinity of the top SILE-ranked tri-peptides listed in Table \ :ref:`4<table_4>`. The score-ranked tri-peptides may also be worth considering as a comparative test to establish whether size of the peptide is a determinant factor of binding to the ETS domain or if it is, indeed, just an artefact of docking. Binding data for the Arg-Glu-Gln peptide may also be useful in explaining the poor predicted binding by the docking simulations.
+
+It is quite clear that complex formation of a protein and ligand is a dynamic mechanism. Here we have shown a combination of MD and docking simulations can be used to provide an understanding of the effects on ligand binding to a dynamic representation of the receptor, which a single configuration crystal structure would fail to reveal. Thus, computer simulations on protein-ligand complexes can enhance crystal structure data in this respect. We plan to extend the current work by performing all-atom MD simulations of selected peptides complexed with an Elk-1 ETS domain to assess the stability of the complexes, whilst incorporating any induced fitting of the peptides and obtain accurate binding data for use in designing future docking studies of optimised peptides. We also plan to apply free energy perturbation methods \ [#B62]_ to a set of the best peptides to calculate relative binding free energy of alchemic transformations of the peptides in complex with the Elk-1 ETS domain. This may also go as far as identifying tetra-peptides with potentially superior binding affinities compared to the tri-peptides we have considered here.
+
+Competing interests
+*******************
+
+The authors declare that they have no competing interests.
+
+Authors' contributions
+**********************
+
+PES and JDH together conceived the study. AH and JDH devised the strategy and analyses undertaken. AH performed the calculations, analysis and drafted the manuscript. JDH supervised the study and with PES participated in the discussion of the results. All authors have read and approved the final manuscript.
+
+Acknowledgements
+****************
+
+We thank OpenEye Scientific Software for provision of academic licences for FRED and Omega. We also thank ChemAxon for providing a licence for Marvin, which was used to build the peptide libraries.
+
+.. [#B1]  ERK phosphorylation potentiates Elk-1-mediated ternary complex formation and transactivation
+
+.. [#B2]  Activation of ternary complex factor Elk-1 by MAP kinases
+
+.. [#B3]  Activation of the Sap-1a transcription factor by the c-Jun N-terminal kinase (JNK) mitogen-activated protein kinase
+
+.. [#B4]  Ets ternary complex transcription factors
+
+.. [#B5]  Ternary complex factors: prime nuclear targets for mitogen-activated protein kinases
+
+.. [#B6]  Elk-1 protein domains required for direct and SRF-assisted DNA-binding
+
+.. [#B7]  Signalling pathways: Jack of all cascades
+
+.. [#B8]  The ability of a ternary complex to form over the serum response element correlates with serum inducibility of the human c-fos promoter
+
+.. [#B9]  Ternary complex factors: growth factor regulated transcriptional activators
+
+.. [#B10]  The winged-helix DNA-binding motif: Another helix-turn-helix takeoff
+
+.. [#B11]  When Ets transcription factors meet their partners
+
+.. [#B12]  junB promoter regulation: Ras mediated transactivation by c-Ets-1 and c-Ets-2
+
+.. [#B13]  ERK2/p42 MAP kinase stimulates both autonomous and SRF-dependent DNA binding by Elk-1
+
+.. [#B14]  Molecular biology of the Ets family of transcription factors
+
+.. [#B15]  The ETS-domain transcription factor family
+
+.. [#B16]  The Ets family of transcription factors
+
+.. [#B17]  Ets transcription factors and human disease
+
+.. [#B18]  Structure of the Elk-1-DNA complex reveals how DNA-distal residues affect ETS domain recognition of DNA
+
+.. [#B19]  Erg proteins, transcription factors of the Ets family, form homo, heterodimers and ternary complexes via two distinct domains
+
+.. [#B20]  Dimer formation by ternary complex factor ELK-1
+
+.. [#B21]  Dimer formation and conformational flexibility ensure cytoplasmic stability and nuclear accumulation of Elk-1
+
+.. [#B22]  Functional dissection of the transcription factor Elk-1
+
+.. [#B23]  Modulating the DNA affinity of Elk-1 with computationally selected mutations
+
+.. [#B24]  Characterization of the Elk-1 ETS DNA-binding domain
+
+.. [#B25]  DNA binding specificity studies of four ETS proteins support an indirect read-out mechanism of protein-DNA recognition
+
+.. [#B26]  Determinants of DNA-binding specificity of ETS-domain transcription factors
+
+.. [#B27]  Structures of SAP-1 bound to DNA targets from the E74 and c-fos promoters: Insights into DNA sequence discrimination by Ets proteins
+
+.. [#B28]  CHARMM: The biomolecular simulation program
+
+.. [#B29]  CHARMM: A program for macromolecular energy, minimization, and dynamics calculations
+
+.. [#B30]  All-Atom Empirical Potential for Molecular Modeling and Dynamics Studies of Proteins
+
+.. [#B31]  Importance of the CMAP correction to the CHARMM22 protein force field: Dynamics of hen lysozyme
+
+.. [#B32]  Extending the treatment of backbone energetics in protein force fields: Limitations of gas-phase quantum mechanics in reproducing protein conformational distributions in molecular dynamics simulations
+
+.. [#B33]  Improved treatment of the protein backbone in empirical force fields
+
+.. [#B34]  Polar hydrogen positions in proteins: empirical energy placement and neutron diffraction comparison
+
+.. [#B35]  Comparison of simple potential functions for simulating liquid water
+
+.. [#B36]  A smooth particle mesh Ewald method
+
+.. [#B37]  Numerical integration of the cartesian equations of motion of a system with constraints: molecular dynamics of n-alkanes
+
+.. [#B38]  SMILES, a chemical language and information system. 1. Introduction to methodology and encoding rules
+
+.. [#B39]  MolConverter was used for converting peptide sequences to SMILES strings
+
+.. [#B40]  Calculator Plugins were used for tautomer and protonation state calculations
+
+.. [#B41]  OpenEye Scientific Software Inc
+
+.. [#B42]  OpenEye Scientific Software Inc
+
+.. [#B43]  MMFF VI. MMFF94s option for energy minimization studies
+
+.. [#B44]  MMFF VII. Characterization of MMFF94, MMFF94s, and other widely available force fields for conformational energies and for intermolecular-interaction energies and geometries
+
+.. [#B45]  Comparative performance assessment of the conformational model generators Omega and Catalyst: a large-scale survey on the retrieval of protein-bound ligand conformations
+
+.. [#B46]  Empirical scoring functions: I. The development of a fast empirical scoring function to estimate the binding affinity of ligands in receptor complexes
+
+.. [#B47]  Docking and scoring in virtual screening for drug discovery: methods and applications
+
+.. [#B48]  Protein-ligand docking: Current status and future challenges
+
+.. [#B49]  Simple size-independent measure of ligand efficiency
+
+.. [#B50]  Satisfying hydrogen bonding potential in proteins
+
+.. [#B51]  LIGPLOT: A program to generate schematic diagrams of protein-ligand interactions
+
+.. [#B52]  NOTITLE!
+
+.. [#B53]  The maximal affinity of ligands
+
+.. [#B54]  Experimental and computational approaches to estimate solubility and permeability in drug discovery and development settings
+
+.. [#B55]  Ligand efficiency: a useful metric for lead selection
+
+.. [#B56]  Ligand binding efficiency: Trends, physical basis, and implications
+
+.. [#B57]  The role of molecular size in ligand efficiency
+
+.. [#B58]  Molecular complexity and its impact on the probability of finding leads for drug discovery
+
+.. [#B59]  Docking of combinatorial peptide libraries into a broadly cross-reactive human IgM
+
+.. [#B60]  Reaching for high-hanging fruit in drug discovery at protein-protein interfaces
+
+.. [#B61]  Tripeptide motifs in biology: Targets for peptidomimetic design
+
+.. [#B62]  Free energy calculations: Applications to chemical and biochemical phenomena
+
+.. [#B63]  VMD: Visual molecular dynamics
+
+.. |nonascii_1| unicode:: 0x3b1
+.. |nonascii_2| unicode:: 0x3b2
+.. |nonascii_3| unicode:: 0x3b1
+.. |nonascii_4| unicode:: 0x3b2
+.. |nonascii_5| unicode:: 0x3b1
+.. |nonascii_6| unicode:: 0x3b2
+.. |nonascii_7| unicode:: 0x3b2
+.. |nonascii_8| unicode:: 0x3b1
+.. |nonascii_9| unicode:: 0x3b1
+.. |nonascii_10| unicode:: 0x3b2
+.. |nonascii_11| unicode:: 0x3b2
+.. |nonascii_12| unicode:: 0x3b1
+.. |nonascii_13| unicode:: 0x3b1
+.. |nonascii_14| unicode:: 0x3b1
+.. |nonascii_15| unicode:: 0x3b2
+.. |nonascii_16| unicode:: 0x3b1
+.. |nonascii_17| unicode:: 0x3b2
+.. |nonascii_18| unicode:: 0x3b1
+.. |nonascii_19| unicode:: 0x3b1
+.. |nonascii_20| unicode:: 0x3b1
+.. |nonascii_21| unicode:: 0x3b2
+.. |nonascii_22| unicode:: 0x3b1
+.. |nonascii_23| unicode:: 0x3b2
+.. |nonascii_24| unicode:: 0x3b1
+.. |nonascii_25| unicode:: 0x3b2
+.. |nonascii_26| unicode:: 0x3b1
+.. |nonascii_27| unicode:: 0x3b2
+.. |nonascii_28| unicode:: 0x3b1
+.. |nonascii_29| unicode:: 0x3b2
+.. |nonascii_30| unicode:: 0xc5
+.. |nonascii_31| unicode:: 0xc5
+.. |nonascii_32| unicode:: 0xc5
+.. |nonascii_33| unicode:: 0xd7
+.. |nonascii_34| unicode:: 0xc5
+.. |nonascii_35| unicode:: 0xd7
+.. |nonascii_36| unicode:: 0xc5
+.. |nonascii_37| unicode:: 0xc5
+.. |nonascii_38| unicode:: 0xc5
+.. |nonascii_39| unicode:: 0xc5
+.. |nonascii_40| unicode:: 0x3b1
+.. |nonascii_41| unicode:: 0x3b1
+.. |nonascii_42| unicode:: 0x3b1
+.. |nonascii_43| unicode:: 0x3b2
+.. |nonascii_44| unicode:: 0xc5
+.. |nonascii_45| unicode:: 0xc5
+.. |nonascii_46| unicode:: 0xc5
+.. |nonascii_47| unicode:: 0xc5
+.. |nonascii_48| unicode:: 0xc5
+.. |nonascii_49| unicode:: 0xc5
+.. |nonascii_50| unicode:: 0xb1
+.. |nonascii_51| unicode:: 0xc5
+.. |nonascii_52| unicode:: 0xb1
+.. |nonascii_53| unicode:: 0xc5
+.. |nonascii_54| unicode:: 0x3b1
+.. |nonascii_55| unicode:: 0x3b2
+.. |nonascii_56| unicode:: 0xb1
+.. |nonascii_57| unicode:: 0xb0
+.. |nonascii_58| unicode:: 0xb1
+.. |nonascii_59| unicode:: 0xb0
+.. |nonascii_60| unicode:: 0xb1
+.. |nonascii_61| unicode:: 0xb0
+.. |nonascii_62| unicode:: 0x3b1
+.. |nonascii_63| unicode:: 0x3b2
+.. |nonascii_64| unicode:: 0xb0
+.. |nonascii_65| unicode:: 0xd7
+.. |nonascii_66| unicode:: 0x3b1
+.. |nonascii_67| unicode:: 0x3b2

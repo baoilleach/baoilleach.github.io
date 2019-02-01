@@ -1,0 +1,691 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Modular Chemical Descriptor Language (MCDL): Stereochemical modules &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="FlaME: Flash Molecular Editor - a 2D structure input tool for the web" href="1758-2946-3-6.html" />
+    <link rel="prev" title="PubChem3D: Conformer generation" href="1758-2946-3-4.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-4.html" title="PubChem3D: Conformer generation"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-6.html" title="FlaME: Flash Molecular Editor - a 2D structure input tool for the web"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="modular-chemical-descriptor-language-mcdl-stereochemical-modules">
+<h1>Modular Chemical Descriptor Language (MCDL): Stereochemical modules<a class="headerlink" href="#modular-chemical-descriptor-language-mcdl-stereochemical-modules" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>In our previous papers we introduced the Modular Chemical Descriptor Language (MCDL) for providing a linear representation of chemical information. A subsequent development was the MCDL Java Chemical Structure Editor which is capable of drawing chemical structures from linear representations and generating MCDL descriptors from structures.</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>In this paper we present MCDL modules and accompanying software that incorporate unique representation of molecular stereochemistry based on Cahn-Ingold-Prelog and Fischer ideas in constructing stereoisomer descriptors. The paper also contains additional discussions regarding canonical representation of stereochemical isomers, and brief algorithm descriptions of the open source LINDES, Java applet, and Open Babel MCDL processing module software packages.</p>
+</div>
+<div class="section" id="conclusions">
+<h3>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h3>
+<p>Testing of the upgraded MCDL Java Chemical Structure Editor on compounds taken from several large and diverse chemical databases demonstrated satisfactory performance for storage and processing of stereochemical information in MCDL format.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>In our previous paper we introduced the Modular Chemical Descriptor Language (MCDL) for providing a linear representation of structural and other chemical information <a class="footnote-reference" href="#b1" id="id2">[1]</a>. All MCDL descriptors have two unique modules that describe the composition and the connectivity of a molecule. Optional supplementary modules, which may or may not be unique, contain additional information about a compound (such as spectra, physical-chemical data, atomic coordinates, references, <em>etc.</em>). The MCDL rules were implemented in the LINDES computer program, which was designed to generate MCDL linear descriptors from files containing molecular structural information in the form of a connectivity matrix.</p>
+<p>A subsequent development was the MCDL Java Chemical Structure Editor which is capable of drawing chemical structures from linear representations and generating MCDL descriptors from structures <a class="footnote-reference" href="#b2" id="id3">[2]</a>. Since the module containing atomic coordinates is an optional feature of MCDL descriptors, it was necessary for the Java applet to be capable of restoring these coordinates to draw a structure. As a result, the current applet algorithm that was developed to process MCDL descriptors can also be used for processing of other coordinate-less structure representations, such as SMILES <a class="footnote-reference" href="#b3" id="id4">[3]</a><a class="footnote-reference" href="#b4" id="id5">[4]</a> and InChI <a class="footnote-reference" href="#b5" id="id6">[5]</a>.</p>
+<p>The initial MCDL concept <a class="footnote-reference" href="#b1" id="id7">[1]</a> had one serious drawback - it did not support stereochemistry. In this paper we present optional MCDL modules and accompanying software that incorporate unique representation of molecular stereochemistry. The paper also contains some additional discussions regarding canonical representation of stereochemical isomers in MCDL format, and brief algorithm descriptions of the open source LINDES, Java applet, and Open Babel MCDL processing module software packages. The results of software testing are presented in the last section of the paper.</p>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>Results and Discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mcdl-stereochemistry-descriptors-theory">
+<h3>MCDL stereochemistry descriptors - theory<a class="headerlink" href="#mcdl-stereochemistry-descriptors-theory" title="Permalink to this headline">¶</a></h3>
+<p>As noted previously <a class="footnote-reference" href="#b1" id="id8">[1]</a>, all MCDL linear descriptors include two primary modules that uniquely describe the basic molecular structure: the composition and the connectivity modules. The connectivity module is based on molecular topology, which adequately describes the sequence of bonds that connect atoms in the molecule. However, the topology-based connectivity module is inadequate for describing the three-dimensional arrangement of those atoms, which is the distinguishing characteristic in the structures of stereoisomers [see Appendix 1]. Refinement in the molecular structure representation in the MCDL can be achieved by employing a set of supplemental stereochemistry descriptors. The task is complicated by the existence of many types of stereoisomers <a class="footnote-reference" href="#b6" id="id9">[6]</a><a class="footnote-reference" href="#b7" id="id10">[7]</a>. The simplest are the common &#8220;optical&#8221; isomers of compounds with asymmetric atoms and the <em>cis</em>-<em>trans</em> isomers of compounds with double bonds. Less-common types of stereoisomers with more complex stereogenic units include &#8220;phase&#8221; isomers found in gear-like molecules <a class="footnote-reference" href="#b8" id="id11">[8]</a><a class="footnote-reference" href="#b9" id="id12">[9]</a> and chiral molecular knots <a class="footnote-reference" href="#b10" id="id13">[10]</a><a class="footnote-reference" href="#b11" id="id14">[11]</a>. In addition, a combination of different stereochemical types within a molecule makes comprehensive stereochemical analysis convoluted and often ambiguous. As a result, complete and unique representation of molecular stereochemistry is a compelling challenge.</p>
+<p>Due to the complexity of underlying phenomena, specification of stereochemical information in the MCDL is currently limited to the two most common types - stereochemistry of a chiral atom in the {SA:} module and stereochemistry of a double bond in the {SB:} module. Within each type, a canonicalization procedure (described below) has been developed to generate unique stereodescriptors.</p>
+<p>Systematic nomenclature of stereoisomers dates back to the pioneering works of Fischer <a class="footnote-reference" href="#b12" id="id15">[12]</a><a class="footnote-reference" href="#b13" id="id16">[13]</a> and Cahn-Ingold-Prelog (CIP) <a class="footnote-reference" href="#b14" id="id17">[14]</a><a class="footnote-reference" href="#b15" id="id18">[15]</a>, all utilizing various schemes for a unique (canonical) prioritization of substituents attached to either an atomic center or to the two atoms connected by a double bond. The latter, and the most developed, CIP scheme uses atomic numbers as the basis for substituent priority ranking and requires sophisticated multi-level priority algorithms in the case of substituents with identical atomic numbers. CIP rules are known to produce ambiguous results due to the non-unique ranking of substituents in some complicated cases and have been under development during the last decades <a class="footnote-reference" href="#b16" id="id19">[16]</a><a class="footnote-reference" href="#b17" id="id20">[17]</a>. Nevertheless, the rules work relatively well for the majority of simple organic molecules.</p>
+<p>The MCDL employs both CIP and Fischer ideas in constructing stereoisomer descriptors. Similar to CIP, the MCDL stereochemistry descriptors are based on prioritization of substituents, but unlike CIP, the MCDL algorithm uses planes, not axes, to specify the configuration of an atomic center (Fischer&#8217;s approach). Although the algorithm rules are close to the CIP rules (priority ranking) <a class="footnote-reference" href="#b14" id="id21">[14]</a><a class="footnote-reference" href="#b15" id="id22">[15]</a>, the resulting MCDL descriptors are not identical to the <em>R</em>-<em>S</em> and <em>E</em>-<em>Z</em> naming conventions due in large part to the differences in the underlying prioritization approaches.</p>
+<p>Stereoisomer descriptors are expected to be unique in all cases where canonical numbering can be implemented. It is important to note that in cases where two or more constitutionally equivalent numbering schemes can be derived, all must be taken into consideration for the selection of the unique stereochemistry descriptor. This approach is currently the only reliable method for establishing the unique (canonical) descriptors and is very similar to one that has been developed previously for the unique MCDL connectivity modules <a class="footnote-reference" href="#b1" id="id23">[1]</a>.</p>
+</div>
+<div class="section" id="atom-stereochemistry-chiral-centers">
+<h3>Atom stereochemistry (chiral centers)<a class="headerlink" href="#atom-stereochemistry-chiral-centers" title="Permalink to this headline">¶</a></h3>
+<p>Atom stereochemistry takes into consideration the three-dimensional arrangement of substituents around an atomic chiral center. In the majority of cases it is a four-coordinated atom (such as a carbon atom), but there is a substantial number of stereoisomers having chiral centers with three substituents. Notable examples include chiral sulfoxides.</p>
+<p>The priorities of the substituents attached to a chiral center are the MCDL priorities (based on ASCII codes) of the attached fragments and terminal atoms, if any (see below). Once these are known, a Fischer projection of the configuration at the chiral atom is drawn. A Fischer projection is a planar representation of a molecule that preserves information about chirality. With the chiral atom at its center, a horizontal line represents two bonds bending forward toward the viewer, and a vertical line represents two bonds bending back away from the viewer. In the projection, the highest MCDL priority substituent on the chiral atom is placed at the top and the second highest at the bottom. The other two substituents appear at the left and right and are positioned to preserve the configuration of the chiral atom. Once oriented in this way, the atom stereochemistry is specified in the MCDL linear descriptor as {SA:chiral fragment,top,bottom,left,right} where the four positions refer to the positions in the Fischer projection.</p>
+<div class="section" id="one-chiral-center">
+<h4>One chiral center<a class="headerlink" href="#one-chiral-center" title="Permalink to this headline">¶</a></h4>
+<p>As an example, consider 2-hydroxy-2-methylbutanoic acid shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>. The α-carbon is chiral, and thus this molecule has two mirror-image structures. The MCDL composition and connectivity modules for both of these are C;CHH;2CHHH;CO;2OH[2,3,5,6;4;;;7]. The chiral atom is fragment 1 in the descriptor. Its substituents and their priorities are CHH (2), CHHH (3), CO (5), and OH (6). Three-dimensional representations of this compound&#8217;s enantiomers are shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a> with the priorities of the substituents indicated.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-5-1.jpg" src="../_images/1758-2946-3-5-1.jpg" />
+<p class="caption">Figure 1. Structural formula of 2-hydroxy-2-methylbutanoic acid</p>
+<div class="legend">
+<strong>Structural formula of 2-hydroxy-2-methylbutanoic acid</strong>.</div>
+</div>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-5-2.jpg" src="../_images/1758-2946-3-5-2.jpg" />
+<p class="caption">Figure 2. Three-dimensional representations of 2-hydroxy-2-methylbutanoic acid&#8217;s enantiomers with the MCDL priorities of the substituents on the chiral atom indicated</p>
+<div class="legend">
+<strong>Three-dimensional representations of 2-hydroxy-2-methylbutanoic acid&#8217;s enantiomers with the MCDL priorities of the substituents on the chiral atom indicated</strong>.</div>
+</div>
+<p>The two structures are redrawn as Fischer projection formulas in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>. The four substituents have been placed on the projection so the fragment having the highest priority is at the top and the next highest at the bottom. Thus, the stereochemistry for the left structure is specified in the MCDL as {SA:1,2,3,5,6} and as {SA:1,2,3,6,5} for the right structure.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-5-3.jpg" src="../_images/1758-2946-3-5-3.jpg" />
+<p class="caption">Figure 3. Fischer projections of 2-hydroxy-2-methylbutanoic acid&#8217;s enantiomers</p>
+<div class="legend">
+<strong>Fischer projections of 2-hydroxy-2-methylbutanoic acid&#8217;s enantiomers</strong>.</div>
+</div>
+<p>The example of D-lactic acid (<em>R</em>-lactic acid), shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>, brings up a new issue to consider. The MCDL composition module of lactic acid is CH;CHHH;CO;2OH, and the chiral carbon is part of the first fragment. The attached fragments and their MCDL priorities are CHHH (2), CO (3), and OH (4). The fourth substituent on the chiral carbon, H, is actually part of fragment 1, but it must be considered on its own in order to specify the stereochemistry in the linear descriptor. To handle this situation, a new rule is added to the MCDL: Structural fragments have higher priorities than terminal atoms (numbers have lower ASCII codes than letters). Thus, of the four substituents attached to the chiral atom in lactic acid, the terminal atom H has the lowest priority. Orienting the <em>R</em> configuration as the Fischer projection in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a> gives the MCDL descriptor {SA:1,2,3,4,H}.</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-5-4.jpg" src="../_images/1758-2946-3-5-4.jpg" />
+<p class="caption">Figure 4. Three-dimensional representation and Fischer projection of D-(<em>R</em>-)lactic acid</p>
+<div class="legend">
+<strong>RThree-dimensional representation and Fischer projection of D-(</strong>.</div>
+</div>
+</div>
+<div class="section" id="multiple-chiral-centers">
+<h4>Multiple chiral centers<a class="headerlink" href="#multiple-chiral-centers" title="Permalink to this headline">¶</a></h4>
+<p>The MCDL representation of multiple chiral centers in a molecule consists of a sequence of atomic configuration descriptors (one for each of the chiral centers), listed in descending priority order of the chiral fragments (smallest ASCII value first) and separated by semicolons. While treatment of structures with multiple chiral centers in the MCDL is straightforward in many cases, the presence of multiple chiral centers in certain quasi-symmetrical structures may lead to complications due to the fact that the unique part of the MCDL linear descriptor is generated without consideration of stereochemistry. As a result, constitutionally, but not stereochemically, equivalent chiral centers may receive arbitrarily selected fragment numbers.</p>
+<p>Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a> shows the 3-dimensional structure of <em>meso</em>-tartaric acid having two constitutionally identical, but stereochemically different, chiral centers (opposite configurations). Because of the topological symmetry of the molecule, two MCDL numbering schemes are possible. (If the chiral centers had the same configuration, the two numbering schemes would be identical.) The difference can be seen in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a> in which either structural fragment 1 has the <em>R</em> configuration (left structure) or fragment 2 is <em>R</em> (right structure).</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-5-5.jpg" src="../_images/1758-2946-3-5-5.jpg" />
+<p class="caption">Figure 5. Two possible MCDL numbering schemes for <em>meso</em>-tartaric acid</p>
+<div class="legend">
+<strong>mesoTwo possible MCDL numbering schemes for</strong> .</div>
+</div>
+<p>Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a> shows the Fischer projections centered at fragments 1 and 2, respectively, of the left structure in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>. The MCDL stereochemistry descriptor for this numbering scheme is {SA:1,2,3,5,H;2,1,4,H,6}.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-5-6.jpg" src="../_images/1758-2946-3-5-6.jpg" />
+<p class="caption">Figure 6. The Fischer projections centered at fragments 1 and 2, respectively, of the left structure in Figure 5.</p>
+<div class="legend">
+<strong>The Fischer projections centered at fragments 1 and 2, respectively, of the left structure in Figure 5</strong>.</div>
+</div>
+<p>Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a> corresponds to the right structure in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>, giving the MCDL descriptor {SA:1,2,3,H,5;2,1,4,6,H}.</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-5-7.jpg" src="../_images/1758-2946-3-5-7.jpg" />
+<p class="caption">Figure 7. The Fischer projections centered at fragments 1 and 2, respectively, of the right structure in Figure 5.</p>
+<div class="legend">
+<strong>The Fischer projections centered at fragments 1 and 2, respectively, of the right structure in Figure 5</strong>.</div>
+</div>
+<p>To choose the correct and unique stereodescriptor in cases like this, the two possible descriptors are compared position-by-position starting at the left. In this instance ({SA:1,2,3,5,H;2,1,4,H,6} vs. {SA:1,2,3,H,5;2,1,4,6,H}), the first difference occurs in the fourth position where one has a 5 and the other has an H. Since 5 is a higher priority than H, this difference allows us to choose {SA:1,2,3,5,H;2,1,4,H,6} as the MCDL stereochemistry descriptor for <em>meso</em>-tartaric acid. As a general rule, for quasi-symmetrical structures where multiple equivalent numbering schemes are possible, all must be explored for selection of the canonical (the lowest ASCII code sequence) stereochemistry descriptor. An alternative approach entails the use of hash variables for constitutionally equivalent stereogenic fragments (see <em>Generation of atomic MCDL stereodescriptors from structure diagrams</em> section below).</p>
+</div>
+<div class="section" id="three-substituent-chiral-centers">
+<h4>Three-substituent chiral centers<a class="headerlink" href="#three-substituent-chiral-centers" title="Permalink to this headline">¶</a></h4>
+<p>The MCDL can also specify chirality of atomic centers with only three substituents in those cases where the fourth substituent position is occupied by an electron pair. In this case, the electron pair is treated as a &#8220;dummy&#8221; substituent positioned at the point of maximum distance from the three &#8220;real&#8221; substituents on a sphere of unit radius centered at the chiral atom. The priority of the electron pair is defined in the MCDL as 0 (zero), giving it, maybe surprisingly, higher priority than structural fragments and terminal atoms. For example, the chirality descriptors of ethyl(fluoromethyl)sulfoxide (CFHH;CHH;CHHH;SO[4;3,4]), shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a>, are {SA:4,,1,2,O} for the left structure and {SA:4,,1,O,2} for the right structure. Note that the &#8220;dummy&#8221; 0-numbered substituent is not included in the descriptor.</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-5-8.jpg" src="../_images/1758-2946-3-5-8.jpg" />
+<p class="caption">Figure 8. Three-dimensional representations of ethyl(fluoromethyl)sulfoxide&#8217;s enantiomers</p>
+<div class="legend">
+<strong>Three-dimensional representations of ethyl(fluoromethyl)sulfoxide&#8217;s enantiomers</strong>. The &#8220;dummy&#8221; substituent is numbered as 0.</div>
+</div>
+</div>
+</div>
+<div class="section" id="double-bond-stereochemistry">
+<h3>Double bond stereochemistry<a class="headerlink" href="#double-bond-stereochemistry" title="Permalink to this headline">¶</a></h3>
+<p>The configuration of a double bond can be specified after the priorities of the structural fragments making up the molecule are known. Four items of information are needed:</p>
+<p>• the priority numbers of the two fragments containing the double-bonded atoms - (<strong>x****1</strong>:sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">**x****2**\</span> <span class="pre">:sub:</span></tt>, <em>x**1</em> :sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">&lt;*x**2*\</span> <span class="pre">:sub:</span></tt>)</p>
+<p>• the higher priority connection to the higher priority fragment of the double bond, <em>x**1</em> :sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">-</span> <span class="pre">(**n****1**\</span> <span class="pre">:sub:</span></tt>)</p>
+<p>• the connection to the lower priority fragment of the double bond, <em>x**2</em>:sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">that</span> <span class="pre">lies</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">*same</span> <span class="pre">side*</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">double</span> <span class="pre">bond</span> <span class="pre">as</span> <span class="pre">*n**1*</span> <span class="pre">\</span> <span class="pre">:sub:</span></tt>- (<strong>n****2</strong>:sub:<a href="#id24"><span class="problematic" id="id25">``</span></a>)</p>
+<p>The stereochemistry is specified as {SB:<em>x**1</em>:sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">d*x**2*\</span> <span class="pre">:sub:</span></tt>,*n**1*:sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,*n**2*\</span> <span class="pre">:sub:</span></tt>,*n**3*:sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,*n**4*\</span> <span class="pre">:sub:</span></tt>}, where <em>n**3</em> :sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">and</span> <span class="pre">*n**4*</span> <span class="pre">\</span> <span class="pre">:sub:</span></tt>are the remaining two fragments attached to <em>x**2</em> :sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">and</span> <span class="pre">*x**1*\</span> <span class="pre">:sub:</span></tt>, respectively. Multiple double bond configurations are separated by semicolons and are listed with increasing values of <em>x**1</em>:sub:<a href="#id26"><span class="problematic" id="id27">``</span></a>.</p>
+<div class="section" id="one-double-bond">
+<h4>One double bond<a class="headerlink" href="#one-double-bond" title="Permalink to this headline">¶</a></h4>
+<p>As an example, consider 3,4-dimethyl-3-heptene with the configuration shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a>. The priorities of the fragments containing the double-bonded atoms and their immediate connections are shown. In this figure the priority numbers of the two fragments containing the double-bonded atoms are 1 and 2. Of the two connections (3 and 6) to the higher priority fragment of the double bond (1), fragment 3 has the higher priority. The connection to fragment 2 that lies on the same side of the double bond as fragment 3 is fragment 7. Thus, the stereochemistry of the compound in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a> is specified as {SB:1d2,3,7,4,6}. Including the composition and connectivity modules, the MCDL linear descriptor is 2C;3CHH;4CHHH[2,3,6;4,7;5;8;9]{SB:1d2,3,7,4,6}.</p>
+<div class="figure align-center" id="figure-9">
+<img alt="../_images/1758-2946-3-5-9.jpg" src="../_images/1758-2946-3-5-9.jpg" />
+<p class="caption">Figure 9. MCDL numbering of 3,4-dimethyl-3-heptene for stereochemistry descriptor generation</p>
+<div class="legend">
+<strong>MCDL numbering of 3,4-dimethyl-3-heptene for stereochemistry descriptor generation</strong>.</div>
+</div>
+<p>In the specification, the values of <em>n**1</em>:sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">*n**2*\</span> <span class="pre">:sub:</span></tt>, <em>n**3</em> :sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">and</span> <span class="pre">*n**4*</span> <span class="pre">\</span> <span class="pre">:sub:</span></tt>are not necessarily structural fragment numbers. This can occur when connections to the double-bonded atoms are terminal atoms rather than structural fragments. Consider 1,2-dibromopropene in the configuration shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>.</p>
+<div class="figure align-center" id="figure-10">
+<img alt="../_images/1758-2946-3-5-10.jpg" src="../_images/1758-2946-3-5-10.jpg" />
+<p class="caption">Figure 10. MCDL numbering of 1,2-dibromopropene for stereochemistry descriptor generation</p>
+<div class="legend">
+<strong>MCDL numbering of 1,2-dibromopropene for stereochemistry descriptor generation</strong>.</div>
+</div>
+<p>This compound consists of three structural fragments: CBr, CBrH, and CHHH. These have the MCDL priorities shown in the Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>. The priority numbers of the two fragments containing the double-bonded atoms are 1 and 2. Of the two connections (3 and Br) to the higher priority fragment of the double bond (1), fragment 3 has the higher priority. The connection to fragment 2 that lies on the same side of the double bond as fragment 3 is terminal atom H. The stereochemistry is thus specified {SB:1d2,3,H,Br,Br}. The complete MCLD descriptor is CBr;CBrH;CHHH<a class="footnote-reference" href="#b2" id="id28">[2]</a>[#B3]_{SB:1d2,3,H,Br,Br}.</p>
+</div>
+<div class="section" id="multiple-double-bonds">
+<h4>Multiple double bonds<a class="headerlink" href="#multiple-double-bonds" title="Permalink to this headline">¶</a></h4>
+<p>The MCDL representation of multiple double bonds in a molecule consists of a sequence of double bond configuration descriptors (one for each of the double bonds), listed in descending priority order of the higher priority member of the double bond (smallest ASCII value first) and separated by semicolons. As in the case of compounds with multiple chiral centers, the generation of a unique double bond descriptor for compounds with multiple double bonds having certain symmetry elements can be complicated. For example, consider hexa-2,4-diene. The unique portion of this diene&#8217;s linear descriptor is 4CH;2CHHH[2,3;4;5;6] regardless of the configurations of the double bonds. The <em>trans</em>,*trans* diene (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-11"><em>11</em></a>) has only one possible numbering scheme, and its stereochemistry module is {SB:1d3,2,H,5,H;2d4,1,H,6,H}.</p>
+<div class="figure align-center" id="figure-11">
+<img alt="../_images/1758-2946-3-5-11.jpg" src="../_images/1758-2946-3-5-11.jpg" />
+<p class="caption">Figure 11. <em>Trans</em>,*trans*-hexa-2,4-diene</p>
+<div class="legend">
+<strong>Transtrans</strong>.</div>
+</div>
+<p>In contrast, the fragment priorities of <em>cis</em>,*trans*-hexa-2,4-diene can be assigned in two ways as shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-12"><em>12</em></a>. In the left drawing, the <em>trans</em> configuration occurs on the double bond between fragments 1 and 3 while in the right drawing the <em>trans</em> double bond is between fragments 2 and 4.</p>
+<div class="figure align-center" id="figure-12">
+<img alt="../_images/1758-2946-3-5-12.jpg" src="../_images/1758-2946-3-5-12.jpg" />
+<p class="caption">Figure 12. Two alternative MCDL numbering schemes for <em>cis</em>,*trans*-hexa-2,4-diene</p>
+<div class="legend">
+<strong>cistransTwo alternative MCDL numbering schemes for</strong> .</div>
+</div>
+<p>The two different numbering schemes give rise to stereochemistry specifications of {SB:1d3,2,H,5,H;2d4,1,6,H,H} and {SB:1d3,2,5,H,H;2d4,1,H,6,H}, respectively. To determine the correct descriptor, the <em>x</em> and <em>n</em> values of the two candidates are compared to each other beginning at the left. At the first point of difference, the descriptor having the higher priority <em>x</em> or <em>n</em> value is the correct one. The first difference in the two descriptors occurs at the third position where one has a structural fragment with priority value 5 and the other has the terminal atom H. As stated earlier, the structural fragment has a higher priority than the terminal atom. Thus, the correct stereochemistry descriptor is {SB:1d3,2,5,H,H;2d4,1,H,6,H}.</p>
+</div>
+<div class="section" id="two-or-three-substituent-double-bonds">
+<h4>Two- or three-substituent double bonds<a class="headerlink" href="#two-or-three-substituent-double-bonds" title="Permalink to this headline">¶</a></h4>
+<p>Similar to atomic stereochemistry, MCDL double bond stereochemistry descriptors can be used for compounds containing three or two substituents attached to a double bond. In this case, absent substituents are replaced by &#8220;dummy&#8221; substituents having highest priority (0). Figure <a class="reference internal" href="1758-2946-3-39.html#figure-13"><em>13</em></a> provides the examples of <em>cis</em>- and <em>trans</em>-diaza-2-butene. The stereochemistry descriptor for <em>cis</em>-diaza-2-butene is {SB:3d4,,,2,1}, and for <em>trans</em>-diaza-2-butene it is {SB:3d4,,2,,1}. Again note the absence of the digits for &#8220;dummy&#8221; substituents.</p>
+<div class="figure align-center" id="figure-13">
+<img alt="../_images/1758-2946-3-5-13.jpg" src="../_images/1758-2946-3-5-13.jpg" />
+<p class="caption">Figure 13. MCDL numbering of <em>cis</em>- and <em>trans</em>-diaza-2-butene for stereochemistry descriptor generation. &#8220;Dummy&#8221; substituents have the highest priority (0)</p>
+<div class="legend">
+<strong>cistransMCDL numbering of</strong> .</div>
+</div>
+</div>
+</div>
+<div class="section" id="mixed-stereogenic-units-atoms-and-bonds">
+<h3>Mixed stereogenic units (atoms and bonds)<a class="headerlink" href="#mixed-stereogenic-units-atoms-and-bonds" title="Permalink to this headline">¶</a></h3>
+<p>Molecules containing both stereogenic atoms and stereogenic bonds represent a special case for the MCDL. To ensure the uniqueness of the stereochemical descriptor in this case, the following rule has been added: atoms have higher priority than bonds. A similar approach has been implemented in the recently introduced InChI chemical descriptors <a class="footnote-reference" href="#b18" id="id29">[18]</a>. Therefore, when multiple MCDL numbering schemes are possible for these compounds, first consideration should be given to schemes that provide the highest priorities to atomic chiral centers after which the priorities of atoms in double bonds are considered. All possible numbering schemes should be considered during this iterative process (see above).</p>
+<p>In general, the same principle applies for molecules containing more complex stereogenic units (e.g., a double bond stereogenic unit with two atoms is higher priority than an allene-type stereogenic unit with three atoms - see additional file</p>
+<p>Additional file 1</p>
+<p><strong>mcdl_allene</strong>. Stereochemical modules for allenes (2 pages).</p>
+<p>Click here for file</p>
+</div>
+<div class="section" id="software-implementation">
+<h3>Software implementation<a class="headerlink" href="#software-implementation" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="lindes-2-8">
+<h4>LINDES 2.8<a class="headerlink" href="#lindes-2-8" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="stereochemistry-algorithm">
+<h5>Stereochemistry algorithm<a class="headerlink" href="#stereochemistry-algorithm" title="Permalink to this headline">¶</a></h5>
+<p>The major addition in the new release of the MCDL accompanying software, LINDES (version 2.8, see additional file</p>
+<p>Additional file 2</p>
+<p><strong>lindes28</strong>. The source code of the C program &#8220;LINDES&#8221; (version 2.8, 47 pages).</p>
+<p>Click here for file</p>
+<p>The software can determine the stereochemistry of a chiral atom in a molecule if the input consists of a MOLFILE having 3D coordinates or else 2D coordinates with <em>up</em> and <em>down</em> bond designations for the chiral atom(s) <a class="footnote-reference" href="#b19" id="id30">[19]</a>. The algorithm first orients the molecule so the substituents on the stereogenic atom are positioned as they would appear in a Fischer projection. This is accomplished by rotating the molecule (fragment) until one substituent on the chiral atom is aligned with the +*y* axis and a second lies in the <em>yz</em> plane and has a negative <em>z</em> coordinate. The positions of the remaining two substituents are then identified by the signs of their <em>x</em> coordinates. This process is demonstrated in Figure <a class="reference internal" href="1758-2946-3-51.html#figure-14"><em>14</em></a>, where the stereoisomer of CHBrClF shown at the left is rotated twice to give the orientation from which a Fischer projection can be drawn.</p>
+<div class="figure align-center" id="figure-14">
+<img alt="../_images/1758-2946-3-5-14.jpg" src="../_images/1758-2946-3-5-14.jpg" />
+<p class="caption">Figure 14. Rotation of CHBrClF stereoisomer to give Fischer projection orientation</p>
+<div class="legend">
+<strong>Rotation of CHBrClF stereoisomer to give Fischer projection orientation</strong>.</div>
+</div>
+<p>To determine the MCDL stereochemistry, the highest priority atom or fragment must be up, and the second highest must be down. In the present case, this can be accomplished by switching the positions of the Cl and Br. However, to maintain the same configuration as in the original Fischer projection, an EVEN number of switches is required. Thus, the H and F must also be switched (Figure <a class="reference internal" href="#figure-15"><em>15</em></a>). The final descriptor for this stereoisomer is {SA:1,Br,Cl,F,H}.</p>
+<div class="figure align-center" id="figure-15">
+<img alt="../_images/1758-2946-3-5-15.jpg" src="../_images/1758-2946-3-5-15.jpg" />
+<p class="caption">Figure 15. Atom switches in Fischer projection of CHBrClF stereoisomer to maintain configuration</p>
+<div class="legend">
+<strong>Atom switches in Fischer projection of CHBrClF stereoisomer to maintain configuration</strong>.</div>
+</div>
+<p>The software algorithm for determination of double bond stereochemistry works similarly to that described for chiral centers. The coordinates of the two double bonded atoms are needed along with the coordinates of one substituent on each of these. The double bond is oriented along the <em>y</em> axis and rotated to bring one of the substituents into the <em>xy</em> plane. The relative positions of the two substituents are identified by the signs of their <em>x</em> coordinates.</p>
+</div>
+<div class="section" id="software-limitations">
+<h5>Software limitations<a class="headerlink" href="#software-limitations" title="Permalink to this headline">¶</a></h5>
+<p>Version 2.8 of LINDES is designed to handle molecules with &#8220;simple&#8221; stereochemistry: one or more stereocenters, one or more double bonds, or a combination of these. To avoid problems associated with molecular symmetry, the current implementation requires the four atoms and/or MCDL fragments <strong>directly</strong> attached to the chiral atom or double bond to differ (i.e., the difference can not occur in a substituent at a point removed from the stereogenic center). For example, the substituents CH<sub>2</sub>Br (MCDL fragment CBrHH) and CH<sub>2</sub>Cl (MCDL fragment CClHH) are recognized as different while CH<sub>2</sub>CH<sub>3</sub> and CH<sub>2</sub>CH<sub>2</sub>CH<sub>3</sub> are not since the MCDL fragment at the point of attachment is CHH in both cases. An exception is made for molecules containing chiral CH fragments (such as sugars). The stereochemistry of double bonds within rings is ignored. LINDES 2.8 does not determine the stereochemistry of chiral centers or double bonds with fewer than four substituents. In specific cases, stereochemistry descriptors can be generated with LINDES by adding &#8220;dummy&#8221; substituents (see discussion above).</p>
+<p>As stated earlier, for symmetrical and quasi-symmetrical structures where multiple constitutionally equivalent MCDL numbering schemes are possible, all must be explored for selection of the unique (the lowest ASCII code sequence) stereochemistry descriptor. LINDES 2.8 does not perform this exhaustive search.</p>
+<p>LINDES 2.8 is not designed to handle the disjointed structures of mixtures (e.g., salts). To create the MCDL descriptors of salts and other mixtures, each component must be drawn and processed independently [see Appendix 2], and the resulting component descriptors have to be combined according to MCDL rules. Also, LINDES software does not process MOLFILEs that have no bond block.</p>
+</div>
+</div>
+</div>
+<div class="section" id="mcdl-java-chemical-structure-editor">
+<h3>MCDL Java Chemical Structure Editor<a class="headerlink" href="#mcdl-java-chemical-structure-editor" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="generation-of-structure-diagrams-from-atomic-mcdl-stereodescriptors">
+<h4>Generation of structure diagrams from atomic MCDL stereodescriptors<a class="headerlink" href="#generation-of-structure-diagrams-from-atomic-mcdl-stereodescriptors" title="Permalink to this headline">¶</a></h4>
+<p>If the stereoconfiguration of an atom is present in an MCDL descriptor, then it is reflected in the structure diagram using <em>up</em> and <em>down</em> bonds. The placement of these bonds is based on the criteria of simplicity, ease of understanding, and neat appearance of the resulting structure diagrams. The following rules have been developed to facilitate this task:</p>
+<ol class="arabic simple">
+<li>The maximum number of stereobonds attached to any particular atom should not exceed two. Stereobonds take a lot of space on the structure diagram, and it can become &#8220;overloaded&#8221; if more than two bonds are used to describe a chiral center (Figure <em class="xref std std-ref">16, A</em>).</li>
+</ol>
+<div class="figure align-center" id="figure-16">
+<img alt="../_images/1758-2946-3-5-16.jpg" src="../_images/1758-2946-3-5-16.jpg" />
+<p class="caption">Figure 16. Different depictions of the stereochemistry in an alicyclic molecule with chiral centers</p>
+<div class="legend">
+<strong>Different depictions of the stereochemistry in an alicyclic molecule with chiral centers</strong>.</div>
+</div>
+<ol class="arabic simple" start="2">
+<li>If the chiral atom is a part of a ring, a bond outside the ring is chosen to receive the <em>up</em> or <em>down</em> attribute, if possible (Figure <em class="xref std std-ref">16, B</em> and <em class="xref std std-ref">16C</em>). If there are no exocyclic bonds, then a bond within the ring is chosen. It is also desirable to choose a cyclic bond that has the minimal number of substituents (Figure <em class="xref std std-ref">16, C</em>).</li>
+</ol>
+<p>Once a bond is selected for stereo representation, it is then necessary to determine whether the <em>up</em> or <em>down</em> attribute reflects the proper stereoconfiguration provided in the MCDL stereodescriptor. To solve this problem, the algorithm initially selects <em>up</em> for the attribute and then re-creates the MCDL stereodescriptor of the particular chiral center. If the re-created descriptor is different from the original, the attribute is changed to <em>down</em>.</p>
+<p>The MCDL Java applet does not explicitly draw the positions of hydrogen atoms in its structure diagrams. However, in many cases <em>up</em> and <em>down</em> stereobonds terminated by hydrogen atoms are used to display the stereoconfiguration of a chiral atom. These situations require transfer of the stereochemical information from the bond terminating in hydrogen to another bond on the chiral atom. First, the applet algorithm performs a search for <em>up</em> and <em>down</em> bonds terminated by hydrogen. If any are found, the algorithm then performs a search for another single bond to this stereocenter with minimal angle to the stereobond terminated by the hydrogen atom. This new bond replaces the hydrogen-terminated bond as the stereobond.</p>
+</div>
+<div class="section" id="generation-of-structure-diagrams-from-double-bond-mcdl-stereodescriptors">
+<h4>Generation of structure diagrams from double bond MCDL stereodescriptors<a class="headerlink" href="#generation-of-structure-diagrams-from-double-bond-mcdl-stereodescriptors" title="Permalink to this headline">¶</a></h4>
+<p>Similar to the atomic MCDL stereodescriptors, if the stereoconfiguration of a double bond is present in an MCDL descriptor, the specified stereoisomer is reflected in the structure diagram. In the original algorithm for structure diagram generation <a class="footnote-reference" href="#b2" id="id31">[2]</a>, after generation of the initial 2D atomic coordinates, bond rotations were performed to remove overlapping. In the new algorithm, prior to any bond rotation, the 2D coordinates are used to calculate MCDL double bonds stereodescriptors, which are compared with the initial ones. If the descriptors are different, a 180-degree rotation around the double bond is performed. After the correct configurations of all the stereo double bonds are established, their relative coordinates are held fixed while other bonds are allowed to rotate to remove overlap of atoms and bonds. The lack of hydrogen atoms in the structure diagrams does not cause any problems since stereoconfiguration of a double can be determined using the positions of other substituents.</p>
+</div>
+<div class="section" id="generation-of-atomic-mcdl-stereodescriptors-from-structure-diagrams">
+<h4>Generation of atomic MCDL stereodescriptors from structure diagrams<a class="headerlink" href="#generation-of-atomic-mcdl-stereodescriptors-from-structure-diagrams" title="Permalink to this headline">¶</a></h4>
+<p>The Java applet algorithm employs a fast, simplified procedure for identification of stereogenic atoms. The procedure is based on hash 8-byte variables <a class="footnote-reference" href="#b20" id="id32">[20]</a> for stereogenic fragments, and is designed to generate canonical descriptors except for very rare complex cases involving multiple constitutionally equivalent fragments. This is demonstrated for the two structures shown in Figure <a class="reference internal" href="#figure-17"><em>17</em></a>. For structure A, in which all the chiral centers are part of symmetrical rings, the applet gives the canonical stereodescriptor {SA:2,7,10,12,H;3,8,10,H,13;4,11,14,16,H;5,11,15,H,17}. In contrast, for the acyclic structure of B, the applet gives a valid, but non-canonical stereodescriptor {SA:1,2,3,H,6;2,1,4,H,7;3,1,5,8,H}, where the canonical descriptor is {SA:1,2,3,6,H;2,1,4,7,H;3,1,5,H,8}. Identification of the specific cases where the simplified procedures produce non-canonical stereodescriptors is a difficult task beyond the scope of this article.</p>
+<div class="figure align-center" id="figure-17">
+<img alt="../_images/1758-2946-3-5-17.jpg" src="../_images/1758-2946-3-5-17.jpg" />
+<p class="caption">Figure 17. The test structures containing multiple stereocenters</p>
+<div class="legend">
+<strong>The test structures containing multiple stereocenters</strong>.</div>
+</div>
+</div>
+<div class="section" id="generation-of-double-bond-mcdl-stereodescriptors-from-structure-diagrams">
+<h4>Generation of double bond MCDL stereodescriptors from structure diagrams<a class="headerlink" href="#generation-of-double-bond-mcdl-stereodescriptors-from-structure-diagrams" title="Permalink to this headline">¶</a></h4>
+<p>To define the stereoconfiguration of a double bond, it is necessary to analyze the spatial arrangement of its four substituents (atoms or fragments). Stereodescriptors are not generated for cyclic double bonds. For acyclic double bonds, the algorithm checks for two identical terminal groups or atoms connected to either end of the double bond using atom-centered topological indexes <a class="footnote-reference" href="#b20" id="id33">[20]</a>. If these indexes are the same, the stereodescriptor is not generated. If the indexes are different on both ends of the double bond and a specific configuration is present in the diagram, the algorithm generates the stereodescriptor.</p>
+</div>
+</div>
+<div class="section" id="new-mcdl-file-support-in-the-open-babel-software-package">
+<h3>New MCDL file support in the Open Babel software package<a class="headerlink" href="#new-mcdl-file-support-in-the-open-babel-software-package" title="Permalink to this headline">¶</a></h3>
+<p>Open Babel is a popular software package for conversion of chemical structure files from one format into others and as a C++ chemical toolkit <a class="footnote-reference" href="#b21" id="id34">[21]</a>. The current version supports over 80 different chemical structure formats. Open Babel uses the SMARTS <a class="footnote-reference" href="#b22" id="id35">[22]</a> language (SMILES <a class="footnote-reference" href="#b3" id="id36">[3]</a> extension) for search and filtration of molecular structures. There are interfaces to other programming languages such as Perl and Python, which expand the applicability of Open Babel to other software development projects. Open Babel libraries are currently being used in more than 30 associated projects <a class="footnote-reference" href="#b23" id="id37">[23]</a>. Therefore, support for the MCDL format in Open Babel provides a valuable opportunity to expand the usage of the MCDL.</p>
+<p>Addition of the MCDL to Open Babel required the creation of new software modules. For example, chemical bond orders and atomic coordinates are not stored in many MCDL descriptors since this information is considered to be supplemental <a class="footnote-reference" href="#b1" id="id38">[1]</a>. These structural parameters must be calculated during the format conversion process and molecular image generation since the majority of other chemical formats require them. Also, the existing C++ libraries of the Open Babel project did not contain modules for acyclic bond order reconstruction (<em>kekule.cpp</em> module is designed to handle aromatic bonds) and structure image generation. The required basic algorithms for bond order reconstruction and chemical structure image generation were taken from our previous effort <a class="footnote-reference" href="#b2" id="id39">[2]</a> with appropriate modifications to fit the Open Babel specifications. The conversion capabilities to and from MCDL appear in Open Babel v2.3.0.</p>
+<p>Methods for the generation of 2D coordinates derived from the Structure Editor significantly expand the utility of the Open Babel package. For example, structure image generation is now possible from other coordinate-less chemical structure formats, such as SMILES <a class="footnote-reference" href="#b3" id="id40">[3]</a><a class="footnote-reference" href="#b4" id="id41">[4]</a> and InChI <a class="footnote-reference" href="#b5" id="id42">[5]</a>. In addition, new methods have been created (1) to check for overlapped atoms and bonds in a molecule; and, if found, to rotate the affected fragments 180 degrees around an acyclic bond or to increase the length of this acyclic bond in cases where the rotation does not work; (2) to generate the list of topologically equivalent atoms necessary to accelerate the overlapped fragment adjustment process; (3) to create the simplest image of chain structures, cycles, and condensed cycles; and (4) to calculate chiral characteristics of an atom <a class="footnote-reference" href="#b24" id="id43">[24]</a>.</p>
+<p>All the new classes and methods developed for MCDL inclusion in Open Babel have been written to comply with the Open Babel documentation <a class="footnote-reference" href="#b25" id="id44">[25]</a> and are compiled in a separate plugin module to facilitate their use in Open Babel applications. The LINDES <a class="footnote-reference" href="#b1" id="id45">[1]</a> program code (with the minor modifications such as using object-oriented methods, bond order reconstruction, and structure diagram generation procedures) is used in this module to execute the required MCDL format support functions.</p>
+</div>
+</div>
+<div class="section" id="id46">
+<h2>Conclusions<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="software-testing">
+<h3>Software testing<a class="headerlink" href="#software-testing" title="Permalink to this headline">¶</a></h3>
+<p>To facilitate testing of the MCDL Java Chemical Structure Editor using large databases, we developed a standalone utility <em>JAmodule</em> that can be used to process the data in batch mode. This module allows conversion of an SDF batch file into an MCDL batch file and vice versa. The original non-stereo Java algorithm <a class="footnote-reference" href="#b2" id="id47">[2]</a> was tested by performing conversions of structure files from MOLFILE format into MCDL format and back. If everything worked correctly, the final output should match the original input. The same procedure was used for testing the stereo Java algorithms presented in this paper.</p>
+<p>The following differences were found in non-stereo testing of 20,000-records in the ChemDiv database <a class="footnote-reference" href="#b26" id="id48">[26]</a>:</p>
+<ol class="arabic simple">
+<li>Porphyrines. Differences were found for 2 compounds from the set of 3 in the database. It was mentioned previously <a class="footnote-reference" href="#b2" id="id49">[2]</a> that adequate representation of cyclooctatetraene-type structures capable of valence isomerism and valence tautomerism requires additional MCDL descriptors with information regarding specific bond order distribution in a molecule. The porphyrines belong to this class of compounds.</li>
+<li>Differences for two other compounds were caused by erroneous structures. Both molecules contained atoms with illegal valences.</li>
+</ol>
+<p>The structure diagram quality tests were performed using the Knovel database <a class="footnote-reference" href="#b27" id="id50">[27]</a>, which contains a diverse set of organic compounds with applications in many different areas. To improve the graphic performance of the Java applet, we expanded the database of pre-defined templates <a class="footnote-reference" href="#b2" id="id51">[2]</a> from 105 to 145. There was no overlapping in any of the structure diagrams. Visual observation showed that more than 90% of the structure drawings were of typographic quality.</p>
+<p>Finally, we used the public domain NSC database <a class="footnote-reference" href="#b28" id="id52">[28]</a> to test the accuracy of the Java MCDL stereodescriptor algorithm. Of the 42,247 records in the database, 5,188 structures contain <em>up</em> and <em>down</em> bonds and were initially selected for testing. However, manual checks found that many of these structures did not actually contain stereo elements, i.e., structures containing <em>up</em> and <em>down</em> bonds attached to non-chiral centers. These structures were removed to yield the final data set comprised of 2,418 records.</p>
+<p>After repeated conversions of MOLFILE formats into MCDL formats and back, 16 structures had differences in stereo configurations. In most of these, the major problem was the poor quality of the initial drawing. For example, an almost linear configuration of bonds around sp<sup>2</sup> atoms leads to ambiguity in determination of the <em>Z</em>/<em>E</em> configuration (Figure <em class="xref std std-ref">18, 1</em>). Sometimes the stereo notations <em>up</em> and <em>down</em> were used for illustrative purposes in symmetrical, non-chiral structures (Figure <em class="xref std std-ref">18, 2</em>). The Java algorithm recognition settings were developed with the assumption that the angles between the bonds of sp<sup>2</sup> atoms would be approximately 120 degrees, and the bond distances would be nearly equivalent. It should be noted that the comparison of initial and final structures was examined by a modified CheD program <a class="footnote-reference" href="#b29" id="id53">[29]</a> that uses somewhat different algorithms of structure drawing analysis compared to the Java applet.</p>
+<div class="figure align-center" id="figure-18">
+<img alt="../_images/1758-2946-3-5-18.jpg" src="../_images/1758-2946-3-5-18.jpg" />
+<p class="caption">Figure 18. The graphical representation of chemical structures in the NSC database <a class="footnote-reference" href="#b28" id="id54">[28]</a> for which determinations of stereo configurations of double bonds (1) and atoms (2) were difficult to accomplish</p>
+<div class="legend">
+<strong>The graphical representation of chemical structures in the NSC database</strong> [#B28]_**for which determinations of stereo configurations of double bonds (1) and atoms (2) were difficult to accomplish**.</div>
+</div>
+<p>The latest versions of MCDL Java Chemical Structure Editor public domain source codes and executables are deposited on SourceForge <a class="footnote-reference" href="#b30" id="id55">[30]</a>.</p>
+</div>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>AAG participated in design and coordination of the study including development of MCDL concept, and edited the manuscript for publication. MNB developed MCDL concept, designed LINDES and PREPROCESS software, and took part in preparation of the manuscript. SVT and AVY developed and tested MCDL Java Chemical Structure Editor and MCDL Open Babel software, and took part in preparation of the manuscript. All authors have read and approved the final manuscript.</p>
+</div>
+<div class="section" id="appendixes">
+<h2>Appendixes<a class="headerlink" href="#appendixes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="appendix-1">
+<h3>Appendix 1<a class="headerlink" href="#appendix-1" title="Permalink to this headline">¶</a></h3>
+<p>Basic molecular topology does not represent 3D features of molecular objects, so distinctively different 3D molecular objects may have identical MCDL composition and connectivity modules (e.g., conformers and stereoisomers). Unlike conformers, stereoisomers do not undergo inter-conversion in normal conditions due to restricted internal motion. For example, the high-energy barrier of rotation around double bonds leads to &#8220;cis/trans (E/Z)&#8221; isomerism. Similarly, the high-energy barrier of inversion of four-coordinated carbon atom leads to &#8220;L/D (R/S)&#8221; isomerism. Typically, this inter-conversion barrier should be at least 20-30 Kcal/mole for stereoisomers to exist as separable compounds at room temperatures. There are many examples where these energy barriers may be lower or higher depending on environment variables (solvents, pH). In addition, compounds within the same structural group may have a wide range of inter-conversion barriers so some of them can be considered as stereoisomers, and others - as conformers (see Table one in reference <a class="footnote-reference" href="#b8" id="id56">[8]</a> as an example).</p>
+</div>
+<div class="section" id="appendix-2">
+<h3>Appendix 2<a class="headerlink" href="#appendix-2" title="Permalink to this headline">¶</a></h3>
+<p>An auxiliary program PREPROCESS (see additional file</p>
+<p>Additional file 3</p>
+<p><strong>preprocess</strong>. The source code of the C program &#8220;PREPROCESS&#8221; (version 1.0, 6 pages).</p>
+<p>Click here for file</p>
+</div>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>This research was sponsored by the IPP program. Oak Ridge National Laboratory is managed and operated by UT-Battelle, LLC, under contract DE-AC05-00OR22725. The research at the Institute of Physiologically Active Compounds was performed under master contract DE-AC01-00N40184 with Kurchatov Institute for the U.S. Department of Energy. The authors gratefully acknowledge the efforts that contributed to the preparation of this paper, especially the valuable comments of Chris Morley and other members of Open Babel team. This paper is a contribution from the Discovery Chemistry Project.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id7">2</a>, <a class="fn-backref" href="#id8">3</a>, <a class="fn-backref" href="#id23">4</a>, <a class="fn-backref" href="#id38">5</a>, <a class="fn-backref" href="#id45">6</a>)</em> Modular Chemical Descriptor Language (MCDL): Composition, Connectivity, and Supplementary Modules</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id28">2</a>, <a class="fn-backref" href="#id31">3</a>, <a class="fn-backref" href="#id39">4</a>, <a class="fn-backref" href="#id47">5</a>, <a class="fn-backref" href="#id49">6</a>, <a class="fn-backref" href="#id51">7</a>)</em> A Java Chemical Structure Editor Supporting the Modular Chemical Descriptor Language (MCDL)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id36">2</a>, <a class="fn-backref" href="#id40">3</a>)</em> SMILES a Chemical language and Information System. 1. Introduction to Methodology and Encoding Rules</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[4]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id41">2</a>)</em> SMILES 2. Algorithm for Generation of Unique SMILES Notation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[5]</td><td><em>(<a class="fn-backref" href="#id6">1</a>, <a class="fn-backref" href="#id42">2</a>)</em> An Open Standard for Chemical Structure Representation: The IUPAC Chemical Identifier</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[6]</a></td><td>International Union of Pure and Applied Chemistry (IUPAC). Nomenclature of Organic Chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[7]</a></td><td>Basic Terminology of Stereochemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[8]</td><td><em>(<a class="fn-backref" href="#id11">1</a>, <a class="fn-backref" href="#id56">2</a>)</em> Molecular Gearing Systems</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[9]</a></td><td>Stereochemical Consequences of Dynamic Gearing</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[10]</a></td><td>Resolution of Topologically Chiral Molecular Objects</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[11]</a></td><td>Topological Features of Protein Structures: Knots and Links</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[12]</a></td><td>Ueber die Configuration des Traubenzuckers und seiner Isomeren</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[13]</a></td><td>Ueber die Configuration des Traubenzuckers und seiner Isomeren. II</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[14]</td><td><em>(<a class="fn-backref" href="#id17">1</a>, <a class="fn-backref" href="#id21">2</a>)</em> Specification of Molecular Chirality</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[15]</td><td><em>(<a class="fn-backref" href="#id18">1</a>, <a class="fn-backref" href="#id22">2</a>)</em> Basic principals of the CIP-System and Proposals for a Revision</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[16]</a></td><td>A New Effective Algorithm for the Unambiguous Identification of the Stereochemical Characteristics of Compounds During Their Registration in Databases</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[17]</a></td><td>A Computer-Oriented Linear Canonical Notational System for the Representation of Organic Structures with Stereochemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[18]</a></td><td>The IUPAC International Chemical Identifier (InChI™)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[19]</a></td><td>Description of several chemical structure file formats used by computer program developed at Molecular Design Limited</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[20]</td><td><em>(<a class="fn-backref" href="#id32">1</a>, <a class="fn-backref" href="#id33">2</a>)</em> WinDat: An NMR Database Compilation Tool, User Interface and Spectrum Libraries for Personal Computers</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[21]</a></td><td>Open Babel: The Open Source Chemistry Toolbox</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[22]</a></td><td>SMARTS - A Language for Describing Molecular Patterns</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id37">[23]</a></td><td>Related Projects - Open Babel</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id43">[24]</a></td><td>Atomic Chirality, a Quantitative Measure of the Chirality of the Enviroment of an Atom</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id44">[25]</a></td><td>Open Babel</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id48">[26]</a></td><td>ChemDiv</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id50">[27]</a></td><td>Knovel - Technical Engineering Reference Information</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[28]</td><td><em>(<a class="fn-backref" href="#id52">1</a>, <a class="fn-backref" href="#id54">2</a>)</em> DTP - Human Tumor Cell Line Screen</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id53">[29]</a></td><td>CheD: Chemical Database Compilation Tool, Internet Server, and Client for SQL Servers</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id55">[30]</a></td><td>MCDL</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">Results and Discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mcdl-stereochemistry-descriptors-theory">MCDL stereochemistry descriptors - theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#atom-stereochemistry-chiral-centers">Atom stereochemistry (chiral centers)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#one-chiral-center">One chiral center</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-chiral-centers">Multiple chiral centers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#three-substituent-chiral-centers">Three-substituent chiral centers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#double-bond-stereochemistry">Double bond stereochemistry</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#one-double-bond">One double bond</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-double-bonds">Multiple double bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#two-or-three-substituent-double-bonds">Two- or three-substituent double bonds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#mixed-stereogenic-units-atoms-and-bonds">Mixed stereogenic units (atoms and bonds)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#software-implementation">Software implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lindes-2-8">LINDES 2.8</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#stereochemistry-algorithm">Stereochemistry algorithm</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#software-limitations">Software limitations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#mcdl-java-chemical-structure-editor">MCDL Java Chemical Structure Editor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#generation-of-structure-diagrams-from-atomic-mcdl-stereodescriptors">Generation of structure diagrams from atomic MCDL stereodescriptors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation-of-structure-diagrams-from-double-bond-mcdl-stereodescriptors">Generation of structure diagrams from double bond MCDL stereodescriptors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation-of-atomic-mcdl-stereodescriptors-from-structure-diagrams">Generation of atomic MCDL stereodescriptors from structure diagrams</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation-of-double-bond-mcdl-stereodescriptors-from-structure-diagrams">Generation of double bond MCDL stereodescriptors from structure diagrams</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#new-mcdl-file-support-in-the-open-babel-software-package">New MCDL file support in the Open Babel software package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id46">Conclusions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#software-testing">Software testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#appendixes">Appendixes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#appendix-1">Appendix 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#appendix-2">Appendix 2</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-4.html" title="PubChem3D: Conformer generation"
+             >previous</a> |
+          <a href="1758-2946-3-6.html" title="FlaME: Flash Molecular Editor - a 2D structure input tool for the web"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-5.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

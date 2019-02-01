@@ -1,0 +1,321 @@
+2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope
+===================================================================================================================
+
+Abstract
+********
+
+Background
+^^^^^^^^^^
+
+Quantitative structure-activity relationships (QSAR) analysis of peptides is helpful for designing various types of drugs such as kinase inhibitor or antigen. Capturing various properties of peptides is essential for analyzing two-dimensional QSAR. A descriptor of peptides is an important element for capturing properties. The atom pair holographic (APH) code is designed for the description of peptides and it represents peptides as the combination of thirty-six types of key atoms and their intermediate binding between two key atoms.
+
+Results
+^^^^^^^
+
+The substructure pair descriptor (SPAD) represents peptides as the combination of forty-nine types of key substructures and the sequence of amino acid residues between two substructures. The size of the key substructures is larger and the length of the sequence is longer than traditional descriptors. Similarity searches on C5a inhibitor data set and kinase inhibitor data set showed that order of inhibitors become three times higher by representing peptides with SPAD, respectively. Comparing scope of each descriptor shows that SPAD captures different properties from APH.
+
+Conclusion
+^^^^^^^^^^
+
+QSAR/QSPR for peptides is helpful for designing various types of drugs such as kinase inhibitor and antigen. SPAD is a novel and powerful descriptor for various types of peptides. Accuracy of QSAR/QSPR becomes higher by describing peptides with SPAD.
+
+Background
+**********
+
+Research on the classification of small molecules using computers was popular in the 1990s \ [#B1]_\ [#B2]_\ [#B3]_\ [#B4]_\ [#B5]_, with similarity analysis of compounds being a major objective. At the time, there were mainly two methods for similarity analysis: the fingerprint description approach \ [#B4]_\ [#B6]_ and the inductive logic programming approach \ [#B7]_\ [#B8]_\ [#B9]_. In the fingerprint description approach, a molecule is described as a sequence of bits, each of which corresponds to the existence of a chemical substructure. Atom-pair descriptor \ [#B4]_ or substructure type fingerprints are popular descriptors.
+
+Research on the classification of peptides became popular in the year 2000 \ [#B10]_\ [#B11]_\ [#B12]_. The hidden Markov model (HMM) approach \ [#B12]_ and physical data description of peptide approach \ [#B11]_ were the major approaches. The main subject of these papers is the natural twenty amino acids, such as isoleucine, valine, and so on. For example, the subject of immunity concerns peptides whose components are one of 20 natural amino acids. In traditional research for the classification of peptides, an amino acid residue was described as an alphabet or a set of physical or chemical values \ [#B11]_.
+
+However, in practical virtual screening, describing other amino acid inductions such as cyclohexyl alanine or F5 phenylalanine is necessary. The traditional description of peptides is not sufficiently powerful because the common characteristics among amino acid residues cannot be described sufficiently. For example, tyrosine and phenylalanine have an aromatic ring substructure in common. In the alphabetic description, tyrosine and phenylalanine are described as 'Y' and 'F' respectively. However, understanding that symbols 'Y' and 'F' have a common substructure on a machine learning algorithm is impossible. Research of two-dimensional QSAR has been undertaken for various types of peptides. In the atom-pair holographic code (APH) \ [#B13]_, each peptide is described with the method similar to atom-pair descriptor \ [#B3]_. Our novel descriptor, substructure-pair descriptor (SPAD), captures different characteristics of peptides from APH and has greater descriptive power than APH. The combination of APH and SPAD may lead to better QSAR for peptides with many types of amino acid inductions \ [#B14]_.
+
+Tanimoto coefficient \ [#B15]_ is a popular indicator for measuring similarity between two compounds \ [#B16]_. In binary case, Tanimoto coefficient *T*(*X*, *Y* ) between vectors *X* and *Y* is defined as following expression.
+
+
+
+Tanimoto coefficient becomes large when two vectors have more similar bit-pattern. When the structure of two compounds is similar, Tanimoto coefficient is also high.
+
+In machine learning, excessive features degrade the performance of machine learning algorithms due to over-fitting problems \ [#B17]_. Under excessive feature space, predictive models lose robustness. Feature selection is necessary for building more accurate predictive models. Kohavia proposed the relevance of features instead of maximizing accuracy of an algorithm \ [#B18]_. Discussions about relevance of features are popular in various types of algorithm \ [#B19]_. Relevance is defined as the difference between probability density function *P*(*Y* = *y*) and conditional probability density function *P*(*Y* = *y*|\ :sub:`i`\  X= \ :sub:`i`\ x). When *P*(*Y* = \ :sub:`i`\  y|X= \ :sub:`i`\ x) \ |nonascii_1|\  *P*(*Y* = *y*), \ :sub:`i`\  Xis relevant. Otherwise, \ :sub:`i`\  Xis irrelevant.
+
+In information theory \ [#B20]_, entropy is an indicator for measuring the amount of information. We denote probability of \ :sub:`i`\  xas *P*(\ :sub:`i`\ x). Entropy *E* is defined as next function.
+
+
+
+Methods
+*******
+
+Definition of several terms
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In this paper, we define several terms as follows.
+
+\ |nonascii_2|\  Substructure: a part of structure of peptides
+
+\ |nonascii_3|\  Descriptor: The function for mapping a structure of amino acid residues or peptides to a bit according to substructure.
+
+\ |nonascii_4|\  Feature: A bit as the result of a descriptor.
+
+A target protein binds some amino acid residues of peptides by some kinds of chemical or physical interactions. For example, hydrogen bonds and hydrophobic effect are representative interactions. In our QSAR approach, we describe the two-dimensional structure of peptides with a sequence of bits and analyze the relationship between peptides structure and its activity statistically. When we analyze this relationship with a data mining algorithm, QSAR rules are extracted automatically from dataset annotated with peptides' activity. From a chemical viewpoint, describing various types of amino acid inductions properly is important for improving QSAR analysis.
+
+From a statistical viewpoint, features which maximize the accuracy of an algorithm for analyzing QSAR are the best. Kohavi proposed the relevance of features instead of maximizing accuracy of an algorithm. Discussions about relevance of features are popular in various types of algorithm \ [#B19]_. Relevance is defined as the difference between probability density function *P*(*Y* = *y*) and conditional probability density function *P*(*Y* = *y*|\ :sub:`i`\  X= \ :sub:`i`\ x). When *P*(*Y* = *y*|\ :sub:`i`\  X= \ :sub:`i`\ x) \ |nonascii_5|\  *P*(*Y* = *y*), \ :sub:`i`\  Xis relevant. Otherwise, \ :sub:`i`\  Xis irrelevant.
+
+We define each symbol as Figure \ :ref:`1<figure_1>`. The SPAD is defined with these symbols.
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-50-1.jpg
+   :align: center
+
+   Figure 1. Definition of symbols
+
+   **Definition of symbols**.
+
+
+Definition of the base substructure set for amino acid inductions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The aim of defining the base substructure (Figure \ :ref:`2<figure_2>`) set is the description of important interactions between a target protein and a peptide such as hydrogen bonds, the hydrophobic effect, and so on. However statistically redundant or specific descriptor may degrade the accuracy of an algorithm for QSAR analysis. We defined the base substructure set under next three conditions.
+
+.. _figure_2:
+
+.. figure:: ../_static/1758-2946-3-50-2.jpg
+   :align: center
+
+   Figure 2. Definition of a set of base substructures in SPAD, which roughly has three categories, i
+
+   **Definition of a set of base substructures in SPAD, which roughly has three categories, i**.e., number of atoms, substructures (above), and peptide properties (below). Number of atoms includes 'Cl', 'F', 'N', 'O', 'C', 'C in aromatic ring', 'S', 'N in aromatic ring' and 'Sum of left atoms'.
+
+
+\ |nonascii_6|\  Describe potential factors for interactions such as hydrogen bond acceptor.
+
+\ |nonascii_7|\  Features of amino acid residues should be weak relevant to each other mathematically. This is the condition for avoiding strong relevant features. Abandon features with strong relevance.
+
+\ |nonascii_8|\  A feature should have high entropy (in information theory) after mapping structures of 450 types amino acids to a sequence of bits. This is the condition for avoiding too specific descriptor. Abandon descriptors with low entropy.
+
+The first item is essential for QSAR analysis because key substructures such as hydrogen bond acceptor may cause the activity of peptide for target protein. Under the condition lack of description of them, most of algorithms analyzing QSAR become powerless. The second and third items are necessary for efficient analysis from a statistical viewpoint. The second item prohibits the redundancy of features. Even if the structures of two amino acid inductions are chemically different, two features may be relevant to each other. Then, these two features are redundant statistically. The third item is necessary for generating robust QSAR rules. Features with low entropy (in information theory) lose generality.
+
+The set of substructures *Z* includes the forty-nine substructures shown in Figure \ :ref:`2<figure_2>`. These substructures are roughly categorized into three parts. Three categories are "the number of atoms", "Substructures" and "Properties". The number of atoms indicates how many atoms there are in an amino acid residue. "Substructures" indicates whether an amino acid residue has a specific substructure or not. "Properties" indicates whether an amino acid residue has some character from a viewpoint. For example, the first item of "Properties" describes the structure that is the methylene group and a hydrogen bond acceptor are connected via any atom.
+
+An element *z* \ |nonascii_9|\  *Z* denotes each substructure shown in Figure \ :ref:`2<figure_2>`. Then, we can define any substructures except *z* as *z**. In other word, each element *z** is defined corresponding to each *z*. The substructure *z** is complement of the substructure of *z* because *z* \ |nonascii_10|\  *z** = *\ |nonascii_11|\ *, *z* \ |nonascii_12|\  *z** = *All*. Then, we define the set *Z** as all elements *z**. Finally, we define the base substructure set *X* as *X* = *Z* \ |nonascii_13|\  *Z**.
+
+Definition of a set of intermediate bindings between any two base substructures
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The activity of a peptide is determined not only by the structure of each amino acid residue but also by the relationship among amino acid residues. Here, we define an intermediate binding between two amino acid inductions as the distance between any two base substructures.
+
+The definition of intermediate bindings among base substructures is arbitrary. For example, we can define an intermediate binding among three base substructures. When we describe the relationship among *m* substructures, the number of combinations is *O*(\ :sup:`m`\ n). Here, *n* is the number of substructures. The number of combinations increases by exponential order. To avoid the exponential order, we limited the number of substructures to 2.
+
+Structures of peptides are more flexible than small compounds because peptides have many rotatable bonds. Descriptors for peptides should have a potential for describing the flexibility to obtain high accuracy.
+
+We defined the intermediate bindings shown in Figure \ :ref:`3<figure_3>`. To increase flexibility of descriptors, we added a set of bindings within some length to the definition. In Figure \ :ref:`3<figure_3>`, '*' denotes an amino acid residue and '~' denotes a peptide binding. '{}' denotes 'or ' condition. For example, '{~, ~ *~, ~*~*~}' represents the peptide consisting of amino acid residues from 0 to 2. We represent a set of intermediate bindings as set *Y*.
+
+.. _figure_3:
+
+.. figure:: ../_static/1758-2946-3-50-3.jpg
+   :align: center
+
+   Figure 3. Definition of a set of intermediate bindings in SPAD
+
+   **Definition of a set of intermediate bindings in SPAD**. Intermediate bindings between two substructures are shown.
+
+
+Definition of substructure-pair descriptor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Then, SPAD is defined as next function. We suppose that the number of *X* is *N* and that the number of *Y* is *M*.
+
+
+
+When \ :sub:`i`\ x, \ :sub:`j`\  xand \ :sub:`k`\  yare given, a peptide \ :sub:`a`\  pis converted to a bit with function *F* (\ :sub:`i`\ x, \ :sub:`k`\ y, \ :sub:`j`\ x, \ :sub:`a`\ p). Here, we denotes the suffix set (i, j, k) as *b*. Then, we obtained the matrix (\ :sub:`ab`\ M) = (*F* (\ :sub:`i`\ x, \ :sub:`k`\ y, \ :sub:`j`\ x, \ :sub:`a`\ p)) for the input of QSAR analysis algorithm. The vector (*M**a*1\ :sub:``\ , *M**a*2\ :sub:``\ , \ |nonascii_14|\ ) is corresponding to the features of the peptide \ :sub:`a`\ p.
+
+Results and Discussion
+**********************
+
+Definition of Datasets
+^^^^^^^^^^^^^^^^^^^^^^
+
+We use two types of datasets for evaluation of the proposed descriptors. One is C5a inhibitors \ [#B21]_ and the other is kinase inhibitors \ [#B22]_. Positive data are defined as peptides with high inhibitory potential, and negative data are defined as other peptides and peptides with random arrays. Content of dataset is as follows.
+
+\ |nonascii_15|\  C5a Inhibitors:
+
+- The number of positive peptides: 116
+
+- The number of negative peptides: 451
+
+\ |nonascii_16|\  kinase inhibitors:
+
+- The number of positive peptides: 24
+
+- The number of negative peptides: 325
+
+Difference between SPAD and APH definition
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+SPAD is different from APH in defining whether any two substructures are connected directly to an intermediate binding. For example, when the main chain is connected to an aromatic ring of a side chain via a carbon chain and two amino acid residues have carbon chains which are different to each other in its length, APH classifies two amino acid residues. However, SPAD does not. The structures of amino acid residues are very similar so it is natural to consider that their properties are approximately similar. In this case, the descriptor that ignores the difference is better. The second different point between SPAD and APH is whether the information about properties is included in descriptors. It may be unnecessary to distinguish amino acid residues from a viewpoint of some property.
+
+Comparison of descriptors correlated highly with peptides' activity
+-------------------------------------------------------------------
+
+By comparing each descriptor, we know that the range of the substructures of SPAD (Figure \ :ref:`4<figure_4>`) is wider than that of APH (Figure \ :ref:`5<figure_5>`). The range of APH is from 3 to 7 atoms. On the other hand, the range of SPAD is from 3 to 6 amino acid residues, which usually comprises 6-12 atoms. SPAD captures a wider range of characteristics than APH. Therefore, the range of SPAD is more appropriate for capturing properties of peptides than that of APH.
+
+.. _figure_4:
+
+.. figure:: ../_static/1758-2946-3-50-4.jpg
+   :align: center
+
+   Figure 4. Descriptors with high correlation to peptides' activity in SPAD
+
+   **Descriptors with high correlation to peptides' activity in SPAD**. The range of them is from 3 to 6 amino acids.
+
+
+.. _figure_5:
+
+.. figure:: ../_static/1758-2946-3-50-5.jpg
+   :align: center
+
+   Figure 5. Descriptors with high correlation to peptides' activity in APH
+
+   **Descriptors with high correlation to peptides' activity in APH**. The range of them is from 3 to 6 atoms. Its length is shorter than that of SPAD.
+
+
+Capturing Area of APH and SPAD in active peptides
+-------------------------------------------------
+
+In the case of SPAD (curve in Figure \ :ref:`6<figure_6>`), *x* \ |nonascii_17|\  *Z* or *x* \ |nonascii_18|\  *Z** where *x* denotes a substructure. We show substructures *x* \ |nonascii_19|\  *Z* with high correlation to peptides' activity. In case of APH (dotted curve in Figure \ :ref:`6<figure_6>`), we show substructures with high correlation to peptides' activity. There are few overwrapped regions between SPAD and APH. SPAD and APH capture different regions complementarily. APH inclines to capturing a component of a peptide. On the other hand, SPAD descriptor inclines to capturing a relationship of side chains between two amino acid residues.
+
+.. _figure_6:
+
+.. figure:: ../_static/1758-2946-3-50-6.jpg
+   :align: center
+
+   Figure 6. Mapping of representative descriptors with high entropy of SPAD and APH to C5a active peptide
+
+   **Mapping of representative descriptors with high entropy of SPAD and APH to C5a active peptide**. Curve indicates SPAD and dotted curve indicates APH. There are few overwrapped regions between two descriptors.
+
+
+Definition of dataset for similarity search with Tanimoto coefficient
+---------------------------------------------------------------------
+
+Peptides are classified in three categories:
+
+\ |nonascii_20|\  non-active: negative peptides.
+
+\ |nonascii_21|\  active reference: positive peptides which are the basis of similarity search with Tanimoto coefficient.
+
+\ |nonascii_22|\  active: positive peptides except for active reference.
+
+All peptides were ordered by descendent ordering with Tanimoto coefficient.
+
+Comparison of the performance of SPAD with APH
+----------------------------------------------
+
+When the structure of two peptides is similar and a descriptor captures a whole structure or property of peptides, these two features have similar sequences of bits. As a result, Tanimoto coefficient between these peptides becomes large. Structures of active peptides for a target protein are usually similar to each other because the pocket of target protein is same. When we describe peptides with a descriptor capturing whole peptides' structures or properties, Tanimoto coefficient between any two active peptides is larger.
+
+Oppositely, Tanimoto coefficient between an active peptide and a non-active peptide is smaller because these two features are different to each other. However, if we describe peptides with a poor descriptor, we cannot always measure the similarity of peptides with Tanimoto coefficient. Poor descriptors break the similarity of structures at mapping to features. Therefore, Tanimoto coefficient is an indicator of the descriptor's performance.
+
+All peptides are ordered by descendent ordering with Tanimoto coefficient. Then, we count the number of active peptides with this ordering. Figure \ :ref:`7<figure_7>` shows the enrichment factor with Tanimoto coefficient. The horizontal-axis and the vertical-axis is defined as follows.
+
+.. _figure_7:
+
+.. figure:: ../_static/1758-2946-3-50-7.jpg
+   :align: center
+
+   Figure 7. Enrichment factor with Tanimoto coefficient
+
+   **Enrichment factor with Tanimoto coefficient**. C5a case (Left) and kinase inhibitor case (Right). The horizontal axis indicates the percentage of peptides ordered by descendent ordering with Tanimoto coefficient. The vertical axis indicates the percentage of active peptides in this ordering. The random line (diagonal line) indicates theoretically obtained curve in case of random ordering. 'x' dotted line shows the performance of SPAD and '+' dotted line shows the performance of APH. In both case, the enrichment factor of SPAD is much higher than that of APH.
+
+
+\ |nonascii_23|\  The horizontal-axis
+
+
+
+\ |nonascii_24|\  The vertical-axis
+
+
+
+The graph increases more rapidly as active peptides have larger Tanimoto coefficient than non-active peptides.
+
+In both cases, C5a (left figure at Figure \ :ref:`7<figure_7>`) and kinase inhibitors (right figure in Figure \ :ref:`7<figure_7>`), the graph in case of SPAD is higher than the graph in case of APH. The enrichment factor with the SPAD is higher than with APH at any percentage of active peptides. Therefore, the SPAD translates similar structures to similar features more precisely than the APH. This fact means that the performance of the SPAD is higher than the performance of APH in the case of analyzing peptides' activity.
+
+Conclusions
+***********
+
+It is necessary for two-dimensional QSAR of peptides that are sequences of 450 types of amino acid inductions to capture various properties with descriptors. The atom pair holographic code and substructure pair descriptor that we proposed are such descriptors. APH captures internal characters of an amino acid induction. On the other hand, SPAD captures the relationship between two amino acid inductions. SPAD captures much more information for QSAR of peptides than APH and distinguishes active peptides from non-active peptides more accurately.
+
+Competing interests
+*******************
+
+The authors declare that they have no competing interests.
+
+Authors' contributions
+**********************
+
+TO conceived the method, evaluated this method and described this manuscript. SM discussed the results and commented on the manuscript. All authors read and approved the final manuscript.
+
+.. [#B1]  Compass: A shape-based machine learning tool for drug design
+
+.. [#B2]  Machine learning approaches for the prediction of signal peptides and other protein sorting signals
+
+.. [#B3]  Atom pairs as molecular features in structure-activity studies: definition and applications
+
+.. [#B4]  Chemical Similarity Using Geometric Atom Pair Descriptors
+
+.. [#B5]  Topological torsion: a new molecular descriptor for SAR applications. Comparison with other descriptors
+
+.. [#B6]  Applications of 2D Descriptors in Drug Design: A DRAGON Tale
+
+.. [#B7]  Structure-activity relationships derived by machine learning: The use of atoms and their bond connectivities to predict mutagenicity by inductive logic programming
+
+.. [#B8]  Prediction of rodent carcinogenicity bioassays from molecular structure using inductive logic programming
+
+.. [#B9]  Pharmacophore Discovery Using the Inductive Logic Programming System PROGOL
+
+.. [#B10]  Predicting Protein-Peptide Binding Affinity by Learning Peptide-Peptide Distance Functions
+
+.. [#B11]  Prediction of MHC Class I Binding Peptides Using an Ensemble Learning Approach
+
+.. [#B12]  Prediction of MHC Class I Binding Peptides by a Query Learning Algorithm Based on Hidden Markov Models
+
+.. [#B13]  A novel atom-pair hologram (APH) and its application in peptide QSARs
+
+.. [#B14]  Design and Evaluation of Bonded Atom Pair Descriptors
+
+.. [#B15]  A Computer Program for Classifying Plants
+
+.. [#B16]  Similarity-based virtual screening using 2D fingerprints
+
+.. [#B17]  Information theory and an extension of the maximum likelihood principle
+
+.. [#B18]  Wrappers for feature subset selection
+
+.. [#B19]  Spectral feature selection for supervised and unsupervised learning
+
+.. [#B20]  A mathematical theory of communication
+
+.. [#B21]  C5a inhibitors [WO/2006/074964]
+
+.. [#B22]  Kinase inhibitors [WO/2003/059942]
+
+.. |nonascii_1| unicode:: 0x2260
+.. |nonascii_2| unicode:: 0x2022
+.. |nonascii_3| unicode:: 0x2022
+.. |nonascii_4| unicode:: 0x2022
+.. |nonascii_5| unicode:: 0x2260
+.. |nonascii_6| unicode:: 0x2022
+.. |nonascii_7| unicode:: 0x2022
+.. |nonascii_8| unicode:: 0x2022
+.. |nonascii_9| unicode:: 0x2208
+.. |nonascii_10| unicode:: 0x2229
+.. |nonascii_11| unicode:: 0x3d5
+.. |nonascii_12| unicode:: 0x222a
+.. |nonascii_13| unicode:: 0x222a
+.. |nonascii_14| unicode:: 0x22ef
+.. |nonascii_15| unicode:: 0x2022
+.. |nonascii_16| unicode:: 0x2022
+.. |nonascii_17| unicode:: 0x2208
+.. |nonascii_18| unicode:: 0x2208
+.. |nonascii_19| unicode:: 0x2208
+.. |nonascii_20| unicode:: 0x2022
+.. |nonascii_21| unicode:: 0x2022
+.. |nonascii_22| unicode:: 0x2022
+.. |nonascii_23| unicode:: 0x2022
+.. |nonascii_24| unicode:: 0x2022

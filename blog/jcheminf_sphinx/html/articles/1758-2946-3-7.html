@@ -1,0 +1,457 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Confab - Systematic generation of diverse low-energy conformers" href="1758-2946-3-8.html" />
+    <link rel="prev" title="FlaME: Flash Molecular Editor - a 2D structure input tool for the web" href="1758-2946-3-6.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-6.html" title="FlaME: Flash Molecular Editor - a 2D structure input tool for the web"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-8.html" title="Confab - Systematic generation of diverse low-energy conformers"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="use-of-structure-activity-landscape-index-curves-and-curve-integrals-to-evaluate-the-performance-of-multiple-machine-learning-prediction-models">
+<h1>Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models<a class="headerlink" href="#use-of-structure-activity-landscape-index-curves-and-curve-integrals-to-evaluate-the-performance-of-multiple-machine-learning-prediction-models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>Standard approaches to address the performance of predictive models that used common statistical measurements for the entire data set provide an overview of the average performance of the models across the entire predictive space, but give little insight into applicability of the model across the prediction space. Guha and Van Drie recently proposed the use of structure-activity landscape index (SALI) curves via the SALI curve integral (SCI) as a means to map the predictive power of computational models within the predictive space. This approach evaluates model performance by assessing the accuracy of pairwise predictions, comparing compound pairs in a manner similar to that done by medicinal chemists.</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>The SALI approach was used to evaluate the performance of continuous prediction models for MDR1-MDCK <em>in vitro</em> efflux potential. Efflux models were built with ADMET Predictor neural net, support vector machine, kernel partial least squares, and multiple linear regression engines, as well as SIMCA-P+ partial least squares, and random forest from Pipeline Pilot as implemented by AstraZeneca, using molecular descriptors from <em>SimulationsPlus</em> and AstraZeneca.</p>
+</div>
+<div class="section" id="conclusion">
+<h3>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h3>
+<p>The results indicate that the choice of training sets used to build the prediction models is of great importance in the resulting model quality and that the SCI values calculated for these models were very similar to their Kendall τ values, leading to our suggestion of an approach to use this SALI/SCI paradigm to evaluate predictive model performance that will allow more informed decisions regarding model utility. The use of SALI graphs and curves provides an additional level of quality assessment for predictive models.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>1. Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>The use of biological property predictions has increased in recent years, due to improvements in computer technology, the rising costs of drug discovery, and a desire by regulatory agencies to better understand, predict and improve drug safety <a class="footnote-reference" href="#b1" id="id2">[1]</a><a class="footnote-reference" href="#b2" id="id3">[2]</a><a class="footnote-reference" href="#b3" id="id4">[3]</a><a class="footnote-reference" href="#b4" id="id5">[4]</a><a class="footnote-reference" href="#b5" id="id6">[5]</a><a class="footnote-reference" href="#b6" id="id7">[6]</a><a class="footnote-reference" href="#b7" id="id8">[7]</a>. The increase in computer processing speed has allowed very complex and computationally intensive models to be developed and run on desktop computers. Model building is becoming more of a routine practice, and will likely continue to grow in importance. However, the pace of proliferation of models and model building tools has not been matched by development of approaches and tools to rigorously assess their performance.</p>
+<p>In a recent set of papers, Guha and Van Drie have proposed the Structure Activity Landscape Index (SALI) <a class="footnote-reference" href="#b8" id="id9">[8]</a><a class="footnote-reference" href="#b9" id="id10">[9]</a> as an approach to better assess biochemical structure-activity relationship (SAR) model performance. The concept is derived from the observation that activities based on specific interactions (as in receptor binding) do not change linearly with linear changes in properties. For example, while building an SAR, increasing the length of an alkyl substituent may result in a 0.3 log increase in potency per carbon, when one to three carbons are added; however, addition of the fourth carbon may increase the potency by 1 log unit, constituting what Guha and Van Drie have referred to as an &#8220;activity cliff&#8221;. By identifying these activity cliffs within an SAR set the SALI procedure can improve the understanding of where the model is more or less accurate.</p>
+<p>Quantification of the structure activity cliffs is carried out by pairwise comparisons of compounds and their related measured and predicted activities, an approach similar to that routinely taken by medicinal chemists in the generation of SAR. In practice, the activity differentials are normalized by their structural similarity measures (for example, Tanimoto similarities). A small SALI value is indicative of a smooth activity transition, whereas a large SALI value indicates the presence of an activity cliff. The SALI graph of the dataset is a representation of its SAR as a connected graph, with molecules as the nodes and the SALI<sub>ij</sub> values as edges. Plotting the sum of the nodes normalized by the edges versus the normalized threshold for edge detection generates a SALI curve. The value of the curve at X = 0 (S(0)) provides the ability of the model to capture all of the edges while the value at X = 1 (S(1)) is the ability of the model to correctly identify the most significant activity cliffs.</p>
+<p>Because of the recognized importance of transporters in drug absorption, distribution and elimination <a class="footnote-reference" href="#b10" id="id11">[10]</a>[#B11]_*in vitro* and <em>in silico</em> models to predict transporter involvement have been established. The MDCK-MDR1 <em>in vitro</em> model uses an immortalized mammalian cell line that stably expresses the transfected human MDR1 gene product (P-glycoprotein (P-gp)) to assess the potential for P-gp mediated efflux of compounds.</p>
+<p>MDR1 efflux is dependent on specific structural features of the transported molecule, a key requirement for the application of the SALI/SCI approach. The general features of this interaction have been described by Anna Seelig <a class="footnote-reference" href="#b12" id="id12">[12]</a>. Seelig determined that the likelihood of a molecule to bind to and to be an efflux substrate is based on the presence and the intermolecular distance between 2 hydrogen bond acceptors. Theoretically, incorporation of these 3D descriptors should increase the accuracy of efflux predictions.</p>
+<p><em>SimulationsPlus</em> ADMET Predictor software enables models to be built using neural networks (ANNE), support vector machine (SVM), multiple linear regression (MLR) and Kernel Partial Least Squares (KPLS) approaches. In addition, <em>Umetrics</em> SIMCA-P+ provides a partial least squares (PLS) prediction using principal component analysis (PCA). Finally, AstraZeneca has implemented the <em>Accelrys</em> Pipeline Pilot random forest (RF) model builder.</p>
+<p>The results of SALI, S(0), S(1), Kendall τ, and MAE assessments of various model building approaches for their utility in predicting MDR1 mediated efflux as measured in an <em>in vitro</em> assay using a training set derived from the same <em>in vitro</em> data set are compared here.</p>
+</div>
+<div class="section" id="experimental">
+<h2>2. Experimental<a class="headerlink" href="#experimental" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="datasets">
+<h3>Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline">¶</a></h3>
+<p>MDR1-MDCK efflux data were generated from compounds synthesized and tested in support of drug discovery projects at AstraZeneca (Wilmington DE) using an MDCK-MDR1 transwell assay. All chemicals used in the assay were of at least reagent grade. The assay was conducted using MDR1-MDCK cells seeded at a density of 60,000 cells/well in DMEM medium with Glutamax into Millipore 96 well plates, to final volumes of 100 μL on the apical side and 310 μL on the basolateral side. Cells were grown for 3 to 5 days at 37°C in a humidified 5% CO2 atmosphere, with daily medium changes including a final medium change two hours prior to running the assay. At the initiation of the efflux assay, the media on both the apical and the basolateral sides was replaced with the same volume of warmed Hank&#8217;s Balanced Salts Solution with or without 1 μM test compound. The cells were incubated at 37°C for 2.5 h, and then the concentrations of compound in the apical and basolateral side were quantitated by LC/MS/MS using standard analytical methods. Cell layers were tested for integrity by addition of 100 μM Lucifer Yellow in Hank&#8217;s Balanced Salts Solution to the transwell chamber corresponding to the apical side of the cell monolayer. The fluorescence in the basolateral chamber was quantified after incubation for 1 hour at 37°C. Only data from wells with Lucifer Yellow readings demonstrating less than 0.5% cell leakage were reported. Experimental runs were accepted based on the performance of standards with known efflux ratios.</p>
+<p>The following criteria were used to select the compounds in the training and test set: successful generation of SMILES by the SMILES generation algorithm; absence of non-organic elements (a prerequisite of the ADMET Predictor); efflux ratio ≥0.7; coefficient of variation for replicates ≤50% and elimination of censored data. Prediction models were initially generated using ANNE and RF. The structures of the compounds and measured efflux values of outliers from both models were subsequently examined for potential inconsistencies; those compounds with suspect data based on assay irregularities were then removed from the data set. The outcome of this process was a set of 818 compounds with efflux ratios between 0.7 and 119. The distribution of the efflux values in the final dataset is shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-7-1.jpg" src="../_images/1758-2946-3-7-1.jpg" />
+<p class="caption">Figure 1. Distribution of Efflux Values used for Training Prediction Models</p>
+<div class="legend">
+<strong>Distribution of Efflux Values used for Training Prediction Models</strong>. Count of SALI values per bin versus SALI value</div>
+</div>
+<p>The dataset was separated into training and test sets using two different approaches. The <em>ADMET Predictor</em> software uses Kohonen mapping <a class="footnote-reference" href="#b13" id="id13">[13]</a><a class="footnote-reference" href="#b14" id="id14">[14]</a> to assign compounds to training and test sets. <em>ADMET Predictor</em> uses the same descriptors for generation of the Kohonen map and for the model building. Alternatively, compounds were assigned random numbers between 0 and 1 using the Excel &#8220;RAND&#8221; function. The data were sorted descending on the random numbers; the top thirty percent (245) of compounds were selected as test compounds, while the remaining 513 compounds were assigned as the training set. In this case, the maximum and minimum measured efflux values were included in the training set to eliminate prediction mod el extrapolation.</p>
+<p>To test the different modeling approaches, models were built using the same training/test set data. A Kohonen map was constructed and used for all 2D or 3D models. The file listing the Kohonen map of the compounds was opened using Excel, and the listing of compounds along with their status as training/verify/test was used to define the training (Kohonen training/verify) and test (Kohonen test) values for the RF and PLS models.</p>
+</div>
+<div class="section" id="model-building">
+<h3>Model Building<a class="headerlink" href="#model-building" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="d-descriptors">
+<h4>2D descriptors<a class="headerlink" href="#d-descriptors" title="Permalink to this headline">¶</a></h4>
+<p>Using ADMET Predictor descriptors and Kohonen map, ANNE, SVM, MLR, KPLS, RF and PLS models were built. In all cases, the same compounds (based on the Kohonen map) were used for test and training/(verify) sets. The ADMET descriptors (325) consisted of molecular weight, number of rings (total, aromatic, aliphatic), numbers of specific functional groups, geometric descriptors (moments of inertia, radii of gyration, surface areas), atomic partial charges, number of heteroatoms, fraction of bonds (single, double, triple), charge, hydrogen bonding descriptors, molecular ionization. The ADMET descriptors did not contain Formula, N_Nonorgn, N_Metal, N_Kekule, S_unknown, <a href="#id26"><span class="problematic" id="id27">Unknown_</span></a>, AcidAtoms, or BaseAtoms, and therefore these descriptors were not included in the descriptors used for RF and PLS models. The <em>ADMET Predictor</em> application automatically removed highly-correlated descriptors, resulting in a final descriptor set of 134 descriptors actually used in ADMET model building. Feature selection was manually performed in by PCA analysis for SIMCA P+ PLS models.</p>
+<p>Alternatively, a set of 196 molecular and electronic descriptors utilized within AstraZeneca (AZ descriptors, ANNE AZ) were used. These descriptors consisted of lipophilicity, hydrogen bonding, size and shape, charge, polarity, atom counts, topology and druggability. The ADMET Predictor model building software automatically performed feature selection, resulting in a final descriptor set of 76 descriptors. Feature selection was manually performed in by PCA analysis for SIMCA P+ PLS models.</p>
+</div>
+<div class="section" id="id15">
+<h4>3D descriptors<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h4>
+<p>Using 3D sd files mgenerated by VIDA3 (OpenEye), 3D descriptors were calculated using <em>ADMET Predictor</em>. The notable additional 3D descriptors were principal moments of inertia, second order static moments, solvent accessible areas, and those described by Seelig for identification of compounds that interact with the MDR1 transporter. Seelig&#8217;s descriptors are: Type I units containing two electron donor groups with a spatial separation of 2.5 ± 0.3 Å or Type II units consisting of two electron donor groups with a spatial separation of 4.5 ± 0.6 Å or three electron donor groups with a spatial separation of 4.5 ± 0.6 Å between the outer groups. After feature selection, a descriptor set consisting of 149 descriptors was used to build models in ADMET Predictor; all descriptors were used for RF and PLS. Feature selection was manually performed in by PCA analysis for SIMCA P+ PLS models.</p>
+</div>
+</div>
+<div class="section" id="prospective-model-verification">
+<h3>Prospective model verification<a class="headerlink" href="#prospective-model-verification" title="Permalink to this headline">¶</a></h3>
+<p>To more fully evaluate the performance of the models, a set of 96 compounds was tested prospectively in the MDR1-MDCK efflux assay. This set consisted of AZ compounds that were not in the projects used for the training/test set and which met the same selection criteria as described above for the test/training compounds.</p>
+<p>The 96 compounds were evaluated using the both 2D and the 3D descriptor sets. All models, with the exception of the random forest model, provided an assessment as to when compounds did not fall within the prediction space of the model. Only those compounds that fell within the prediction space of the respective prediction model were used for the final evaluations of model performance. The final number of compounds varied from 80 to 93, depending on the prediction model. The Pipeline Pilot RF model as implemented at AstraZeneca does not provide a flag for results not within the prediction space of the model; therefore, the RF model was not tabulated in the final analysis of the prospective data set.</p>
+<p>After predictions, the parameters MAE, Kendall τ, SCI, S(0) and S(1) were calculated as described below.</p>
+</div>
+</div>
+<div class="section" id="methods">
+<h2>3. Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<p>Mean Absolute Error (MAE) and Kendall τ were calculated using JMP 7. SALI curves and SCI values were calculated as described in Guha and Van Drie <a class="footnote-reference" href="#b8" id="id16">[8]</a><a class="footnote-reference" href="#b9" id="id17">[9]</a>, using Daylight Type Fingerprints to generate Tanimoto similarity scores, and Excel VBA programming to generate the SALI graphs, SCI and S(X) values and SALI curves.</p>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>4. Results and Discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="comparison-of-admet-predictor-in-house-rf-and-simca-plus-pls-using-2d-descriptors">
+<h3>Comparison of ADMET Predictor, in house RF and SIMCA PLUS PLS using 2D descriptors<a class="headerlink" href="#comparison-of-admet-predictor-in-house-rf-and-simca-plus-pls-using-2d-descriptors" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="training-sets">
+<h4>Training sets<a class="headerlink" href="#training-sets" title="Permalink to this headline">¶</a></h4>
+<p>The distribution of the calculated SALI values are shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>. All models with the exception of RF had similar MAE, Kendall τ and S(0) values (Table <em class="xref std std-ref">1</em>). The results from the RF model suggested that both its accuracy (MAE) and rank ordering (Kendall τ, S(0), SCI) properties were better than the other models tested. Using SCI as an indicator of model performance revealed marked differences between the models. MLR and RF had high SCI values approaching 1, suggesting that they could accurately rank order compounds across most of the edges of the SALI graph. ANNE, SVM, KPLS, PLS and ANNE AZ had SCI values between 0.1 and 0.5, indicating that these models would predict the edges accurately mo re often than inaccurately. Notably, ANNE with the random training/test set had a negative SCI value suggesting that it mispredicted more frequently than it predicted correctly. All S(1) values, except that for ANNE Random, were 1, indicating that all of the models were able to correctly rank order compounds with large SALI values (that is large activity changes with small structural changes) except ANNE Random.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-7-2.jpg" src="../_images/1758-2946-3-7-2.jpg" />
+<p class="caption">Figure 2. Distribution of SALI Values Calculated for 2D Training Sets</p>
+<div class="legend">
+<strong>Distribution of SALI Values Calculated for 2D Training Sets</strong>. Count of efflux value per bin versus efflux value</div>
+</div>
+<p>Examination of the SALI curves clarified the reason for these results (Figure <em class="xref std std-ref">3a</em>). All models performed similarly at X &lt; ~0.1. Thus, in those instances where changes in structure resulted in activity changes of a proportional magnitude, all of the models performed equally well. At X values greater than 0.3, MLR and RF could accurately order compound pairs across edges. The other models performed less well. Importantly, at X = 0.65, the S(X) for ANNE Random became negative, indicating that this model performed poorly at larger X values, completely mispredicting the nodes.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-7-3.jpg" src="../_images/1758-2946-3-7-3.jpg" />
+<p class="caption">Figure 3. SALI Curves for Efflux Prediction Data Generated using 2D Descriptors</p>
+<div class="legend">
+<strong>SALI Curves for Efflux Prediction Data Generated using 2D Descriptors</strong>. 1a, Training Set; 1b, Test Set; 1c, Prospective Set.</div>
+</div>
+</div>
+<div class="section" id="test-sets">
+<h4>Test sets<a class="headerlink" href="#test-sets" title="Permalink to this headline">¶</a></h4>
+<p>The test set results, based on compounds within the same chemical space as the training set data, suggested that the model performances were roughly similar. The MAE, Kendall τ and S(0) values were comparable in all models, including the three ANNE models. Examination of the SCI revealed three groups of values: RF, ANNE AZ, SVM, MLR and KPLS all had SCI values greater than 0.9; PLS and ANNE had SCI values between 0.7 and 0.9 while ANNE Random had a negative SCI value. Again, these results were explained by examination of the SALI curves (Figure <em class="xref std std-ref">3b</em>). It is clear that the different models predicted the order across the SALI edges with varying degrees of accuracy, depending on the X value. Of particular note is the observation that ANNE Random again had a negative S(X) value, crossing S(X) = 0 at an X of 0.2; thus, over most of the prediction space this model mispredicted the rank ordering.</p>
+<p>Based on these results, there was no <em>a priori</em> link between the training and test set values. This may be somewhat expected, since the training sets predicted themselves, whereas the test sets represented unknowns. Thus, the training set performance would present a biased view of the model performance.</p>
+<p>Also note that the S(0) and Kendall τ values presented essentially the same measure of the model&#8217;s ability to properly rank order compounds (S(0) vs. Kendall τ, slope = 0.98, R2 = 0.97, data not shown). Kendall τ, by definition, measures the strength of the relationship between two variables <a class="footnote-reference" href="#b15" id="id18">[15]</a>. In addition, since the interpretation of Kendall&#8217;s τ in terms of the probabilities of observing the agreeable (concordant) and non agreeable (discordant) pairs is very direct, S(0) would yield similar results if it also has that property.</p>
+</div>
+<div class="section" id="prospective-sets">
+<h4>Prospective sets<a class="headerlink" href="#prospective-sets" title="Permalink to this headline">¶</a></h4>
+<p>In order to better assess the model quality, a prospective set of compounds which were not in the chemical space (that is, they were marketed drugs and drugs being developed within AstraZeneca for different targets and based on different scaffolds than the compounds used in the training set) of the training/test set compounds was tested in the MDR1-MDCK assay, and was also evaluated in each of the predictive models. Though these compounds were not in the same chemical space as those used in the training and test sets, their Tanimoto distances from the training set were similar to the Tanimoto distances of the test set compounds (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>). Because the RF model as implemented with AstraZeneca does no t identify prediction outliers, it was not used in this evaluation. With the prospective set, the Kendall τ and S(0) values were generally around 0.35 with the exception of MLR, where the values were approximately 0.15. Thus, the models&#8217; abilities to rank order compounds overall were moderate, with the exception of MLR which was poor. The MAE values, on the other hand, showed larger differences. KPLS had the lowest MAE value of 0.19, suggesting that on average the KPLS will accurately predict the efflux value within a factor of 5% for this data set. MLR mean prediction error (0.52) was within a factor of 3, while the remaining models had mean errors (~0.3) of approximately a factor of 2. Efforts to correlate training set SCI values with any of the prospective set quality measurements were unsuccessful (data not shown).</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-7-4.jpg" src="../_images/1758-2946-3-7-4.jpg" />
+<p class="caption">Figure 4. Box Plots of Daylight FP Scores of Training, Test and Prospective Sets</p>
+<div class="legend">
+<strong>Box Plots of Daylight FP Scores of Training, Test and Prospective Sets</strong>. Solid line, median Tanimoto score; dashed line, average Tanimoto score. Box shows Q1-Q3. Dots are outliers (greater than upper quartile + 1.5 times interquartile range)</div>
+</div>
+<p>As with the training and test set results, the SCI values told a different story (Figure <em class="xref std std-ref">3c</em>). Here, ANNE, SVM, PLS and ANNE Random were very good at accurately ordering compound pairs across nodes. MLR, KPLS and ANNE AZ had similar albeit somewhat lower ability to correctly order compounds. Again, examination of the SALI curves explained the SCI values. At all X values larger than approximately 0.1, the four best models had a prediction ordering accuracy o f 100%. MLR, KPLS and ANNE AZ had S(X) values &lt; 0 between X = 0.1 and 0.25. These data suggested that, for accurately predicting efflux values, KPLS would be the model of choice. O n the other hand, to more accurately rank order compounds, ANNE, SVM, PLS and ANNE Random would be the better choices.</p>
+</div>
+</div>
+<div class="section" id="comparison-of-admet-predictor-in-house-random-forest-and-simca-plus-pls-using-3d-descriptors">
+<h3>Comparison of ADMET Predictor, in house Random Forest and SIMCA PLUS PLS using 3D descriptors<a class="headerlink" href="#comparison-of-admet-predictor-in-house-random-forest-and-simca-plus-pls-using-3d-descriptors" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id19">
+<h4>Training sets<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h4>
+<p>The results of these studies are summarized in Table <em class="xref std std-ref">2</em> All models with the exception of RF had MAE values of approximately 0.2, and Kendall τ and S(0) values approximating 0.6. Similar to the results with 2D descriptors, the RF model had a lower MAE and higher Kendall τ and S(0) values.</p>
+<p>Examination of the SCI values shows that RF had a value of 0.99, suggesting that this model was excellent at predicting edges. All other models had SCI values between 0.65 and 0.9 with the exception of PLS with a value of 0.13. Examination of the SALI curves (Figure <em class="xref std std-ref">5a</em>) reveals a qualitative difference in the curves models tested 2D vs. 3D descriptors. Whereas the curves from models with 2D descriptors differed across the entire range of X values, the models based on 3D descriptors showed large differences at X values between 0 and 0.4, then reached S(X) = 1 at larger values of X. This suggests that the ADMET Predictor 3D descriptors significantly improve the predictability of models across the entire range of X, particularly at large SALI values and in the case of efflux, should be included when possible.</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-7-5.jpg" src="../_images/1758-2946-3-7-5.jpg" />
+<p class="caption">Figure 5. SALI Curves for Efflux Prediction Data Generated using 3D Descriptors</p>
+<div class="legend">
+<strong>SALI Curves for Efflux Prediction Data Generated using 3D Descriptors</strong>. 1a, Training Set; 1b, Test Set; 1c, Prospective Set.</div>
+</div>
+</div>
+<div class="section" id="id20">
+<h4>Test sets<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h4>
+<p>Based on MAE, all models were generally similar, with KPLS showing a slightly greater inaccuracy. Kendall τ values suggested that ANNE and RF had slightly better performance, while KPLS performance was somewhat less optimal. As with all of the data sets, the S(0) values agreed with the Kendall τ values. In contrast to the statistical and S(0) values, the SCI results showed a wide range of values. Thus, ANNE, SVM and MLR appear to be superior to all of the other models; PLS had a somewhat lower quality, while RF and K PLS were poor in their quality. Examination of the SALI curves (Figure <em class="xref std std-ref">5b</em>) demonstrated the reason for the differences in model quality. All models reached S(X) = 0 at an X of approximately 0.1. ANNE, SVM and MLR increased to S(X) = 1 as X increased to 0.25, while PLS S(X) reached 1 at X = 0.35. However, at an X of 0.15, both RF and KPLS were at or below 0 (random ordering of compound pairs across the SALI edges) and attained -1 by X = 0.3. Thus, over most of the SAL I space, both RF and KPLS mispredicted the order across the edges.</p>
+</div>
+<div class="section" id="id21">
+<h4>Prospective sets<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h4>
+<p>The same prospective compound set used to evaluate the 2D model performance was used as a benchmark for the 3D models. These results indicate that all models with the exception of MLR had comparable performance base d on MAE, Kendall τ and S(0) values. In fact, these values were almost identical across the models. In contrast, MLR had markedly worse performance for these parameters. The MAE value was about twice that of the other models. The SCI curves (Figure <em class="xref std std-ref">5c</em>) indicated that all models reached an S(X) = 0 at some point; only KPLS returned to positive S(X) values and reached 1 at X = 0.4. All other models had negative S(X) values across most of the X range. These results indicate that only KPLS was capable of correctly rank ordering compounds in this prospective data set; the other models mispredicted the order.</p>
+<p>Standard approaches to the evaluation of prediction model quality entail the examination of overall statistical properties, such as RMSE, MAE and Kendall τ. While these approaches will provide an overall view of how the model may perform across the entire span of chemical space, they do little to define the quality of the model within the predictive space being examined. As a consequence, one&#8217;s decision regarding the best model to use will be based on incomplete information about how and where best to use the model. In particular, one will have no knowledge as to whether the model works only in the &#8220;linear&#8221; range of the prediction space or will be able to effectively extrapolate out to more &#8220;nonlinear&#8221; regions when activity cliffs are present. Using the SALI approach, one obtains both a qualitative (graphical) and quantitative (SCI, S(0), S(1)) assessment of the model performance enabling better utilization and confidence in the predictive power of the models.</p>
+<p>Based on standard statistical measures (MAE, Kendall τ), the performance of various prediction approaches (with the exception of RF) on the training sets with 2D descriptors was largely similar. Thus, to predict exact values, any of the models would suffice. However, The SCI revealed marked differences in performance when the goal is rank ordering of compound pairs, a very useful comparison when predicting in novel chemical space to instruct drug discovery. Because MLR and RF showed very high SCI values, either of these two models would be expected to be useful for predicting efflux. At the other extreme, the neural net model built using a random selection method for the training and test sets would not be expected to be useful, since this model was unable to accurately rank order compounds across the SALI edges. In addition, these results suggest that the selection of the training and test sets significantly impacts the quality of the resultant prediction model as would be anticipated from general predictive modeling experience.</p>
+<p>When evaluating prediction models, test set data are typically used to assess model performance with unknowns. The test set standard statistical results had similar though slightly lower quality results that those ob served with the training sets. Based on these results, choosing which model performed better would be difficult, since all seem to have similar prediction accuracy. However, the SCI clearly differentiates the model performance. ANNE Random is expected to be significantly inferior to all other models, in agreement with the results seen with the training sets. ANNE and PLS, while acceptable, are of lower quality than the remaining models. Based on the combined training and test set results, it can be concluded that MLR and RF would be expected to perform best within this prediction space.</p>
+<p>One weakness in the particular data used for model building was that the training set and test set compounds generally came from the same chemical series. Ideally one would want compounds from outside of the chemical space than that used to build the model to better assess model performance. In an effort to address this concern, compounds from different chemical series were chosen as a prospective test set. In this case, exclusion of compounds which were identified by the prediction software as outside of the prediction space was found to result in an improvement in the calculated model performance values, indicating that the prediction software accurately identified the limits of its predictive ranges. With the 2D descriptors, the standard statistical measures did demonstrate differences in model performance. KPLS had the best overall accuracy while MLR had the worst with all others being similar. The Kendall τ and S(0) values were approximately 0.35 for all models except MLR, where they were about 0.15. However, this was not the case with rank ordering. Neither KPLS, MLR nor neural nets with AZ descriptors was effective at rank ordering compounds while neural nets with ADMET descriptors, SVM and PLS were effective.</p>
+<p>In agreement with previous studies, the selection of training set and test set compounds used for the model building is critical <a class="footnote-reference" href="#b16" id="id22">[16]</a>. <em>SimulationsPlus</em> used Kohonen mapping to select the training and test sets, a methodology which seeks to effectively map the property space delineated by the proscribed descriptors. This approach was found to be more effective than randomly selecting the training and test sets. This was evident from the difference in SCI and S(1) values observed with the neural net models built using <em>ADMET Predictor</em> using the Kohonen map vs. random selection. The model with randomly selected sets generated the lowest values in both the training set, where model performance should be &#8220;the best&#8221; and in the test set.</p>
+<p>Generally, there was not a large difference in model performance for prediction of efflux in the prospective data set when using 2D vs. 3D descriptors as determined by MAE, Kendall τ, or S(0). There was, however, a large difference in the SCI values in the training sets. The training set results, though they predict themselves, provide a picture of the best possible outcomes. The observation that the SCI values in the training sets using 3D descriptors for efflux when building prediction models are larger than those built using 2D descriptors suggests that the 3 D descriptors will allow more accurate mapping of the SALI landscape, which should translate into higher quality models.</p>
+<p>It is important to point out that the SALI range for the data sets varied according to the particular data set. The maximum SALI value for the training, test, and prospective data sets were approximately 200, 200 and 75, respectively, even though the prospective set had a slightly greater spread of Tanimoto values (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>) Thus, the SALI summary values (SCI, S(0), S(1)) represent the SALI landscape covered by that data set only. This is very important in model evaluation especially in the context of one project or chemical series. However, it would be less useful for generalizing the model quality over the entire SALI landscape covered by the training set since one is only looking at a portion of the entire prediction range and may be presenting a biased view of the model quality. A better representation of the model performance overall is provided by an appropriately chosen test set which more accurately reflects the SALI landscape.</p>
+<p>Calculation and evaluation of SALI and SCI values could be incorporated into any model building paradigm. One such approach to the use of these parameters would be as follows. Various prediction models would be built using the desired descriptors, training sets, and calculation engines. The SALI values for the resultant test and training sets should be calculated, and the models with the largest SCI, S(0), and S(1) values would be chosen for continued evaluation and implementation. As one generates measured and predicted data on compounds within a project, one would use the SALI approach to continuously monitor the performance of the model for predicting the desired property. When the SCI, S(0), and/or S(1) values fall below some critical threshold, the model should be updated with the new data to improve the model performance. This will allow one to continually have knowledge of th e applicability of the model in the desired chemical space.</p>
+<p>There is still limited knowledge of the applicability of SCI to prediction model evaluation. The limitations of this approach have been summarized previously (Guha and Van Drie <a class="footnote-reference" href="#b9" id="id23">[9]</a>). First and foremost is the requirement for a property driven by specific molecular interactions. Also, standard physical chemical properties (solubility, logD) are not readily amenable to SCI evaluation as they are not likely to have activity cliffs. Finally, more work needs to be done to identify the optimal comparison paradigm for assessment of SALI. In the present report, the SALI and SCI values were all internal to the individual data set used, resulting in different maximal SALI values. The predictive power of this approach may be improved by comparing the performance of the test and prospective sets with those of the training sets. This would likely result in the same maximum SALI value for all data sets allowing more direct comparison s of model performance with the various data sets.</p>
+</div>
+</div>
+</div>
+<div class="section" id="conclusions">
+<h2>5. Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h2>
+<p>Regulatory and competitive changes in drug discovery are driving an increase in the use of predictive sciences to speed up the development process, reduce costs, and improve safety. Though hardware and software improvements have facilitated and spread the use of prediction models, methodologies for evaluation of the model performance have not kept pace. The recent publications by Guha and Van Drie <a class="footnote-reference" href="#b8" id="id24">[8]</a><a class="footnote-reference" href="#b9" id="id25">[9]</a> have presented a novel approach to model performance evaluation in the context of SAR.</p>
+<p>We have applied the SALI approach to evaluate several models for predicting efflux in MDR1-MDCK cells. The results presented here support the utility of this approach in the evaluation of model performance. Several observations here were identified as being important. First, use of SALI identified models which were better at predicting the relative order of compounds across SALI edges for small and large SALI values. This information, coupled with the SALI curves, allows evaluation of the utility of the model for correctly identifying large activity cliffs, a common occurrence in biochemical SARs. This contrasts to standard statistical approaches which will merely produce one overall number that does not discriminate large and small activity cliffs and, therefore, provides no guidance in model performance for &#8216;nonlinear&#8217; processes.</p>
+<p>Second, the aggregate SCI value was observed to be different from and complementary to accuracy measures such as MAE. Thus, one could potentially end up with models that would more accurately predict values, but would not necessarily do as good a job at identifying activity cliffs or at correctly ordering compounds across SALI edges. While the former property is certainly valuable, the latter property would be more generally utile when expanding into unknown chemical space where knowledge of the absolute value of a property may be less important than knowledge of &#8220;is this better or worse&#8221;.</p>
+<p>The use of structure-activity landscape indices (SALI) and the SALI curve integral (SCI) was found to be very powerful in the evaluation of performance models, particularly with respect to rank ordering of compound pairs. In particular, this approach allows one to evaluate a model&#8217;s utility in the detection of large activity cliffs, a common occurrence within drug discovery. It is the recommendation of these authors that this approach be incorporated as a quantitative and qualitative step in the evaluation of prediction models.</p>
+</div>
+<div class="section" id="abbreviations">
+<h2>6. Abbreviations<a class="headerlink" href="#abbreviations" title="Permalink to this headline">¶</a></h2>
+<p>SALI: Structure-Activity Landscape Index; SCI: SALI Curve Integral; ANNE: neural net; SVM: support vector machine; KPLS: kernel partial least squares; PLS: partial least squares; RF: random forest; MDR1-MDCK: multi-drug resistance gene 1 transfected Madine-Darby canine kidney cells; MAE: mean absolute error.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>7. Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>8. Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>NCLJr collated the data, performed all calculations and results interpretations, guided the design of the VBA calculation engine; KR designed and built the VBA calculation engine; JB reviewed all efflux experimental data to verify experimental integrity; LT designed, wrote and validated the robotics procedures which enabled the execution of the efflux experiments. All authors have read and approved the final manuscript.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>9. Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>The authors would like to acknowledge Mr. Peter Prokopiw and Ms. Cindy Shen for running the MDR1-MDCK efflux experiments and Dr. Doug Burdette for reviewing the manuscript and providing valuable comments.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>Computer-aided drug discovery and development (CADDD): in silico-chemical-biological approach</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>In Silico tools streamline drug design</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>Recent advances in computational prediciton of drug absorption and permeability in drug discovery</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td>ADMET in silico modeling: Towards prediction paradise?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td>Building predictive ADMET models for early decisions in drug discovery</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[6]</a></td><td>Predicting human pharmacokinetics from preclinical data</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[7]</a></td><td>In silico prediction of drug safety: Despite progress there is abundant room for improvement</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[8]</td><td><em>(<a class="fn-backref" href="#id9">1</a>, <a class="fn-backref" href="#id16">2</a>, <a class="fn-backref" href="#id24">3</a>)</em> Assessing how well a modeling protocol captures a Structure-Activity Landscape</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[9]</td><td><em>(<a class="fn-backref" href="#id10">1</a>, <a class="fn-backref" href="#id17">2</a>, <a class="fn-backref" href="#id23">3</a>, <a class="fn-backref" href="#id25">4</a>)</em> The Structure-Activity Landscape Index: Indentifying and quantifying activity cliffs</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[10]</a></td><td>Regulation of drug-metabolizing enzymes and transporters in infection, inflammation, and cancer</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[11]</td><td>Impact of drug transporter studies on drug discovery and development</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[12]</a></td><td>A general pattern for substrate recognition by P-glycoprotein</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[13]</a></td><td>Analysis of a simple self-organizing process</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[14]</a></td><td>Self-organizing formation of topologically correct feature maps</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[15]</a></td><td>Practical Non-Parametric Statistics</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[16]</a></td><td>Generation of QSAR sets with a self-organizing map</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">1. Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#experimental">2. Experimental</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#datasets">Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#model-building">Model Building</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#d-descriptors">2D descriptors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id15">3D descriptors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#prospective-model-verification">Prospective model verification</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#methods">3. Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">4. Results and Discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#comparison-of-admet-predictor-in-house-rf-and-simca-plus-pls-using-2d-descriptors">Comparison of ADMET Predictor, in house RF and SIMCA PLUS PLS using 2D descriptors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#training-sets">Training sets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-sets">Test sets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prospective-sets">Prospective sets</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#comparison-of-admet-predictor-in-house-random-forest-and-simca-plus-pls-using-3d-descriptors">Comparison of ADMET Predictor, in house Random Forest and SIMCA PLUS PLS using 3D descriptors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id19">Training sets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id20">Test sets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id21">Prospective sets</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusions">5. Conclusions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abbreviations">6. Abbreviations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">7. Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">8. Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">9. Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-6.html" title="FlaME: Flash Molecular Editor - a 2D structure input tool for the web"
+             >previous</a> |
+          <a href="1758-2946-3-8.html" title="Confab - Systematic generation of diverse low-energy conformers"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-7.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

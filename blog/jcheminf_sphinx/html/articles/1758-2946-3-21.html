@@ -1,0 +1,465 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Consistent two-dimensional visualization of protein-ligand complex series &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Predicting a small molecule-kinase interaction map: A machine learning approach" href="1758-2946-3-22.html" />
+    <link rel="prev" title="Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration" href="1758-2946-3-20.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-20.html" title="Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-22.html" title="Predicting a small molecule-kinase interaction map: A machine learning approach"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="consistent-two-dimensional-visualization-of-protein-ligand-complex-series">
+<h1>Consistent two-dimensional visualization of protein-ligand complex series<a class="headerlink" href="#consistent-two-dimensional-visualization-of-protein-ligand-complex-series" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>The comparative two-dimensional graphical representation of protein-ligand complex series featuring different ligands bound to the same active site offers a quick insight in their binding mode differences. In comparison to arbitrary orientations of the residue molecules in the individual complex depictions a consistent placement improves the legibility and comparability within the series. The automatic generation of such consistent layouts offers the possibility to apply it to large data sets originating from computer-aided drug design methods.</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>We developed a new approach, which automatically generates a consistent layout of interacting residues for a given series of complexes. Based on the structural three-dimensional input information, a global two-dimensional layout for all residues of the complex ensemble is computed. The algorithm incorporates the three-dimensional adjacencies of the active site residues in order to find an universally valid circular arrangement of the residues around the ligand. Subsequent to a two-dimensional ligand superimposition step, a global placement for each residue is derived from the set of already placed ligands. The method generates high-quality layouts, showing mostly overlap-free solutions with molecules which are displayed as structure diagrams providing interaction information in atomic detail. Application examples document an improved legibility compared to series of diagrams whose layouts are calculated independently from each other.</p>
+</div>
+<div class="section" id="conclusions">
+<h3>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h3>
+<p>The presented method extends the field of complex series visualizations. A series of molecules binding to the same protein active site is drawn in a graphically consistent way. Compared to existing approaches these drawings substantially simplify the visual analysis of large compound series.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Many methods in structure-based drug design, like virtual screening, scaffold hopping, and docking, are dealing with series of protein-ligand complexes. They are all characterized by several poses or ligands bound to one active site, which is, except for potential conformational flexibility, non-varying for the whole set. The comparative visual inspection of the different binding patterns is facilitated by a depiction mode, which takes the constant part into account. While in the context of three-dimensional (3D) visualization the superimposition of ligands in one graphical active site representation is common practice <a class="footnote-reference" href="#b1" id="id2">[1]</a>, the orientation of two-dimensional representations is often affected by the attempt to provide a planar and aesthetically ideal arrangement of all diagram elements. This leads to a heterogeneous overall picture within a complex series and makes the comparison of the binding modes difficult.</p>
+<p>An approach for the 2D depiction of protein-ligand complex series with an automatically generated consistent layout of the residues for all diagrams was introduced in the software MOE <a class="footnote-reference" href="#b2" id="id3">[2]</a> in 2007. The built-in 2D drawer is able to deal with single proteins, which contain multiple ligands, as well as with multiple members of one protein family. Generally speaking, the layout generation is done in two steps: First, the planar ligand diagrams are aligned in their original 3D position and this alignment is transformed to the x-y-plane. In a second step, the residues are placed based on pseudo-atom positions on a grid, which are derived from the superimposed ligands. Although the method works well in practice, the protein amino acids are represented as spherical objects only such that the individual hydrogen bonding pattern cannot be derived from the figure.</p>
+<p>Also Ligplot <a class="footnote-reference" href="#b3" id="id4">[3]</a> can be used to depict series of complexes with a consistent 2D layout for all drawn residues. In this case, the layout generation is a semi-automatic process: while the initial diagram layouts are generated automatically, the user has to choose one of them as template and subsequently to align the residue centroids manually by means of certain meta-files.</p>
+<p>In this work, we will present an extension of PoseView <a class="footnote-reference" href="#b4" id="id5">[4]</a><a class="footnote-reference" href="#b5" id="id6">[5]</a><a class="footnote-reference" href="#b6" id="id7">[6]</a> that generates series of complex diagrams with a consistent receptor layout. In its previous versions, PoseView generated automatically 2D layouts for single protein-ligand complexes by means of a ligand centered algorithm. The objective of the new approach is to find a global position for each residue providing an intersection-free arrangement of directed interactions for each individual complex diagram. In contrast to the algorithm for single complexes the new methods take the 3D arrangement of the residues into account assuming that some of the 3D adjacencies can be conserved. Therefore, these adjacencies are used as basis for the initial 2D residue arrangement around the ligand.</p>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we will give an overview of the whole layout generation procedure and explain the algorithms, which differ from the layout generation algorithm for single complexes. A more detailed description of the underlying PoseView methodology can be found in <a class="footnote-reference" href="#b4" id="id8">[4]</a><a class="footnote-reference" href="#b5" id="id9">[5]</a><a class="footnote-reference" href="#b6" id="id10">[6]</a>. Below, these methods are summarized, where necessary for the understanding of our new approach. Additionally, a graphical representation of the work flow is given in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-21-1.jpg" src="../_images/1758-2946-3-21-1.jpg" />
+<p class="caption">Figure 1. PoseView work flow</p>
+<div class="legend">
+<strong>PoseView work flow</strong>. The PoseView algorithm proceeds on different graphs which is represented by the different shapes of the text boxes. Calculation steps based on the 3D complex representation are denoted by an octagon, the ones based on the topological tree representation are denoted by a hexagon and structure diagram based algorithms are denoted by rectangles. Additionally the steps are subdivided in those which address the global structure (gray background) and those which modify the individual complexes (white background).</div>
+</div>
+<p>The algorithm starts with the determination of the interactions between the different ligands and the receptor and the initialization of the individual molecules. For each individual complex, a drawing complexity score and an initial layout is calculated based on the structure diagrams of the ligand and residue molecules. Furthermore, a tree is derived from the complex&#8217; connectivity. Subsequently, the residues, which are part of any of the complexes in the series, are collected and stored in the global template. Then, a global layout is computed for the diagrams of the selected residues starting with the determination of the optimal global target sequence (circular order of amino acids around the ligand) derived from the original 3D residue adjacencies. The global target sequence is optimized by means of the individual trees which are derived from the complexes. Subsequently, the individual ligand layouts are modified and their interaction atom arrangements are adapted to the global target sequence. The global layout is computed based on the convex hull <a class="footnote-reference" href="#b7" id="id11">[7]</a> of all superimposed ligand diagrams and the resulting global interaction starting coordinates, called anchor points. This layout generation includes an initial placement of each residue diagram and a subsequent post optimization analog to the residue layout calculation for single complexes. In a last step, the global amino acid atom coordinates are assigned to the individual complexes and then they are drawn.</p>
+<p>The algorithm employs three different graphs as underlying data structures:</p>
+<p>• the local 3D graphs which are composed of the ligand and the interacting residues for each individual molecular ensemble</p>
+<p>• the corresponding 2D graphs containing the coordinate sets of the molecular structure diagrams</p>
+<p>• a tree for each complex, containing only topological information based on the connectivity of the individual molecular ensembles</p>
+<p>In Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a> the methods are labeled according to the type of graph underlying the calculation step.</p>
+<div class="section" id="terms-and-definitions-from-the-layout-generation-for-single-complexes">
+<h3>Terms and definitions from the layout generation for single complexes<a class="headerlink" href="#terms-and-definitions-from-the-layout-generation-for-single-complexes" title="Permalink to this headline">¶</a></h3>
+<p>Before starting the algorithm description, some of the basic terms, which are defined in previous papers and used in the following section, will be mentioned here:</p>
+<p>• The order of ligand interaction atoms that is generated by a circular walk around the ligand is referred to as <em>interaction atom order</em>.</p>
+<p>• A <em>good layout</em> is characterized as an arrangement of all depicted complex elements that, on the one hand, is collision free and on the other hand fulfills aesthetic and chemical structure diagram conventions. The quality of the complex diagram layout results from the combination of an intersection-free interaction atom order, the convenient geometric positioning of the single structure diagrams (SD), and the consequential arrangement of interaction lines.</p>
+<p>• Each residue in a complex has a <em>main interaction direction</em> with a defined starting point. It is the resultant from the individual optimal directions of all directed interactions which are connecting one residue with the ligand. For each molecule of the complex ensemble, the individual directions are derived from the convex hull of the 2D atom coordinates which leads to a radial orientation and avoids collisions of the structure diagram and its interaction lines. The main direction is calculated for both the ligand and the residue. The centroid of the corresponding interacting atoms is defined as the <em>main interaction direction starting point</em>. The placement of a residue is realized by superimposition of the matching ligand and residue main interaction vectors.</p>
+</div>
+<div class="section" id="initialization-of-complexes-and-interaction-determination">
+<h3>Initialization of complexes and interaction determination<a class="headerlink" href="#initialization-of-complexes-and-interaction-determination" title="Permalink to this headline">¶</a></h3>
+<p>The input and initialization of the individual complexes is performed using the chemistry model and file handling utilities implemented in FlexX <a class="footnote-reference" href="#b8" id="id12">[8]</a>. The interactions can originate from either the built-in geometry-based interaction model in PoseView <a class="footnote-reference" href="#b4" id="id13">[4]</a> or calculated by any other software. In the case of external interaction calculation, the interactions have to be defined in the comment block of an input file in mol2 format. If the interactions are determined by the PoseView model and the protein is defined in a PDB file, the separation of residues from the 3D structure is done as described previously <a class="footnote-reference" href="#b6" id="id14">[6]</a>.</p>
+</div>
+<div class="section" id="complex-score-calculation">
+<h3>Complex score calculation<a class="headerlink" href="#complex-score-calculation" title="Permalink to this headline">¶</a></h3>
+<p>Before starting the layout calculation, the complexes are scored and ordered according to their drawing complexity, which is determined mainly by the number of interacting residues and the number of residues with more than one directed interaction to the ligand. The latter ones are responsible for the need to potentially modify the initial ligand structure diagram layout in order to provide an intersection-free arrangement of interaction lines. Therefore, the complexes are ordered according to the following score <a href="#id15"><span class="problematic" id="id16">*</span></a>σ<a href="#id17"><span class="problematic" id="id18">*</span></a>:</p>
+<p>where #<sub>i</sub> interactionsis the number of directed interactions from residue <em>i</em> to the ligand.</p>
+<p>In case of greedy layout decisions in the context of the sequential calculation steps like the determination of ligand anchor point coordinates, the scoring ensures that the more complicated complexes are treated first. The subsequent ligand superimposition method as well as the calculation of the initial global residue sequence take advantage of this ordering.</p>
+</div>
+<div class="section" id="initial-complex-layout-generation">
+<h3>Initial complex layout generation<a class="headerlink" href="#initial-complex-layout-generation" title="Permalink to this headline">¶</a></h3>
+<p>For each complex of the series, the structure diagrams of all interacting ligands and residues are initially generated as basis for the following steps. At this point, no optimization procedures are performed even though collisions may occur and the interaction atom order may be suboptimal. The resulting 2D coordinates are used as starting point for the following algorithms.</p>
+</div>
+<div class="section" id="representation-of-single-complexes-as-a-tree">
+<h3>Representation of single complexes as a tree<a class="headerlink" href="#representation-of-single-complexes-as-a-tree" title="Permalink to this headline">¶</a></h3>
+<p>A rooted tree, in the following referred to as complex tree, is derived from the initial complex layout whose nodes represent atoms or groups of atoms like non-interacting ring systems and whose edges represent a covalent bond or interaction. This leads to a uniform representation of all complex parts - ligand atoms and bonds, interactions, residue atoms and bonds - and permits on the one hand a condensation of parts of the complex, which are irrelevant for layout decisions, and on the other hand an ordered layout processing. Both features improve the average run time in comparison to the full enumeration of possible bond modifications on the basis of the structure diagram representation. The tree is directly derived from each individual complex, reflecting the relative 2D arrangement of structure diagram elements by its edge sorting. Subsequently, it is processed in order to simplify the following layout generation process under conservation of all chemical and topological information that is needed to generate valid 2D layouts. Initially, for each atom a node is inserted and these nodes are connected by edges according to the connectivity in the original protein-ligand complex by the covalent bonds and interactions. Unlike acyclic parts of the structure diagram, rings are represented by a single central node such that circles are avoided. Additionally, for each ring atom that is starting point of a substituent or an interaction, an additional node is inserted and an edge, that connects this new node with the center node.</p>
+<p>The residue part of the complex is represented only partly in the tree: In contrast to the ligand, whose atoms are all considered in the tree generation, the residue atoms are only included if they interact with any ligand atom. Hence, all residue atom nodes are leaves of the tree. For directed interactions between ligand and residue three different layout scenarios are possible: In the first case, there is only one interaction between both molecules such that one node has to be inserted in the tree to represent the residue part. In the second case, one atom of the residue forms more than one interaction to the ligand. This leads to a representation of this one atom by multiple nodes in order to avoid circles in the graph. Such nodes get an adjacency label, that is realized by the global interaction order sequence as described in the following subsections. During the subsequent interaction order optimization, the method tries to find an order, which satisfies this adjacency demand. The third case offers two distinct atoms of the same residue interacting with the ligand. This is also solved by inserting multiple nodes and setting an adjacency label. Hybrid forms are treated the same way.</p>
+<p>The edges are labeled with modification operations depending on the related bond or interaction (for the assignment procedure of bond modifications see <a class="footnote-reference" href="#b6" id="id19">[6]</a>). Due to the nature of 2D bond rotations, which are the equivalent of 180° flips, their effect on the interaction atom order is canceled by a second rotation of any other edge that influences the order of the same interaction atom range. Therefore, subsequent edges of the tree, whose rotations cause the same layout modification, can be condensed to single edges. The number of potential modifications for ligands with long carbon chains for example can be significantly decreased: if five adjacent edges are merged, the number is decreased from 2<sup>5</sup> to 2 potential modifications. Branches, which represent non-interacting molecule parts and cannot influence the interaction atom order, are cut. Based on this condensed tree, a root is calculated by determination of the central node: Starting at each leaf node, a depth first search is performed and the nodes are labeled according to their depth in order to find the longest path in the tree. The node that lies in the middle of the longest path is selected as root node. Now, edges can be directed in root-to-leaf order and sorted according to the polar angle between the corresponding bonds and the bond representing the unique edge to the parent node. This results in a tree, whose leaf order is equal to the order of residues around the ligand in the complex. The number of leaves is equal to the number of directed interactions. A graphical example for the tree generation and layout modification is given in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-21-2.jpg" src="../_images/1758-2946-3-21-2.jpg" />
+<p class="caption">Figure 2. Complex tree generation</p>
+<div class="legend">
+<strong>Complex tree generation</strong>. a) In the initial complex tree, a node is inserted for each acyclic atom, for each ring center, for each ring atom that is either an interacting atom or a substituent starting atom, and for each amino acid interaction atom. Subtrees which lie not on a path between interaction atoms are denoted by gray edges. b) After edge condensation and removing subtrees which are not needed the resulting tree contains only one rotatable edge which is highlighted in green. The root node is colored red and the leaves are colored accordingly to the amino acid they belong to. c) The derived complex tree has a suboptimal leaf order, which is optimized by rotation d) such that the yellow nodes are adjacent. e) The tree modifications are applied to the ligand structure diagram.</div>
+</div>
+</div>
+<div class="section" id="collection-of-complex-ensemble-residues">
+<h3>Collection of complex ensemble residues<a class="headerlink" href="#collection-of-complex-ensemble-residues" title="Permalink to this headline">¶</a></h3>
+<p>Beyond the optimal individual layout, a good global layout that compromises with all individual optimal layouts has to be computed. The generation of such a layout starts with the collection of all different interacting residues based on the individual complexes. For all single complexes the interacting residues are enumerated and, if not already found in a previous complex, a 3D representation is added to the global template structure. The mapping of equal residues is realized by comparing their 3-letter code, their sequence number and chain ID. Subsequent to the collection, the structure diagrams of all residues are generated and also stored in the template.</p>
+</div>
+<div class="section" id="exploration-of-3d-adjacencies-and-global-target-sequence-calculation">
+<h3>Exploration of 3D adjacencies and global target sequence calculation<a class="headerlink" href="#exploration-of-3d-adjacencies-and-global-target-sequence-calculation" title="Permalink to this headline">¶</a></h3>
+<p>For many complexes more than one ligand structure diagram layout provides an intersection-free arrangement of diagram elements. As parts of the ligands in their bound conformation are planar or rigid because they consist of ring systems or non-rotatable bonds, 3D residue adjacencies are a good heuristic starting point to calculate the global initial interaction order, also called global target sequence. In this step, distances and adjacencies of the 3D residues are computed along the active site molecular surface <a class="footnote-reference" href="#b9" id="id20">[9]</a> in order to find an adequate circular arrangement of the residues around the ligand. Walking along the surface is necessary because at narrow points in the binding pocket the direct distance between two residues on either side of the lumen is relatively small in comparison to the path length along the surface. In this case, using the surface path as distance function is more suitable, because it takes account to the fact that the ligand lies between both residues and that they are therefore not adjacent. A surface triangulation <a class="footnote-reference" href="#b10" id="id21">[10]</a> is used as basis for the path calculation and a breadth first search <a class="footnote-reference" href="#b11" id="id22">[11]</a> is performed starting at each residue that is member of the complex ensemble. A Hamiltonian cycle of all complex ensemble residues is calculated for the resulting complete adjacency graph by using an approximation to the minimal spanning tree <a class="footnote-reference" href="#b12" id="id23">[12]</a>. The order of residues in the Hamiltonian cycle is used as initial global target sequence.</p>
+</div>
+<div class="section" id="global-target-sequence-optimization">
+<h3>Global target sequence optimization<a class="headerlink" href="#global-target-sequence-optimization" title="Permalink to this headline">¶</a></h3>
+<p>A global target sequence represents the order of all interacting residues available in the template structure whereas a local target sequence is derived from the global target sequence by deleting all residues which doesn&#8217;t take part in the formation of the currently processed complex. An optimal global target sequence is characterized by an intersection-free matching of all individual residue sequences of the different complexes. The initial global target sequence is therefore subsequently optimized under consideration of the first <em>n</em> ligands of the complex series by checking if their interaction atom order can be modified via edge modifications such that an intersection-free matching to the global target sequence is possible. The default value of <em>n</em> is set to 20. In case all complexes can be drawn with an intersection-free matching, the algorithm stops. Otherwise, the sequence of residues is changed randomly and tested again. The acceptance of a new order is controlled by a Simulated Annealing method in order to avoid getting trapped in local optima in terms of increasing numbers of intersections.</p>
+</div>
+<div class="section" id="ligand-layout-adaptation-to-the-target-sequence">
+<h3>Ligand layout adaptation to the target sequence<a class="headerlink" href="#ligand-layout-adaptation-to-the-target-sequence" title="Permalink to this headline">¶</a></h3>
+<p>As previously described, the residue sequences in the single complexes are represented by the leaf order of the complex trees and a tree can feature more than one leaf per residue. The leaf sequences are iteratively matched to the local target sequence, which are derived from the optimized global target sequence, in the order that was calculated during the complex scoring. In contrast to the ligand-centered method, which was applied in case of single complexes <a class="footnote-reference" href="#b6" id="id24">[6]</a>, the ligand has now to be fitted in a given residue arrangement. Therefore, the leaf order of the tree has to be modified by rotating or exchanging edges until it matches the residue order in the local target sequence. The matching is realized by inserting additional edges, one from each leaf node to the position of the corresponding residue in the local target sequence, see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>. In some cases, more than one edge leads to the same position in the target sequence owing to the occurrence of multiple leaves representing the same residue. As the fitting part, intersections in the matching are tried to be solved by modifying the tree applying the available modification operations. To solve a matching intersection, the common parent edge of the two appropriate leaf nodes is selected and, if possible, modified. In case of a rotation, all sub-trees containing rotatable edges have to be rotated back in order to keep the sequence valid and to affect only the relative order of the two matching edges in question. In contrast to this, exchanges of edges, which are descending from the same node, do not invert the leaf order and the sub-trees stay untouched, see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-21-3.jpg" src="../_images/1758-2946-3-21-3.jpg" />
+<p class="caption">Figure 3. Target sequence alignment</p>
+<div class="legend">
+<strong>Target sequence alignment</strong>. The global target sequence contains one entry for each residue being part of the series complex ensemble. A local target sequence is derived by deleting all entries which have no corresponding residue in the individual complex in question. After inserting the matching edges (black), they are searched for intersections. By modification of the complex tree edges (blue and green), in this case a rotation of the green edge, the intersections are removed.</div>
+</div>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-21-4.jpg" src="../_images/1758-2946-3-21-4.jpg" />
+<p class="caption">Figure 4. Tree modifications</p>
+<div class="legend">
+<strong>Tree modifications</strong>. A rotation of an edge (a) inverts the leaf order of the whole subtree. A rotation of the rotatable edges in the relevant subtree compensates this inversion. In case of exchanges (b) the leaf order in the subtrees is not changed.</div>
+</div>
+</div>
+<div class="section" id="ligand-superimposition-and-anchor-point-determination">
+<h3>Ligand superimposition and anchor point determination<a class="headerlink" href="#ligand-superimposition-and-anchor-point-determination" title="Permalink to this headline">¶</a></h3>
+<p>Beginning with the superimposition of ligands all following layout generation steps are based on the precalculated 2D structure diagram information. The placement starts with the ligands by determination of the anchor points for the different residues. The term anchor point is defined as the global coordinate for the starting point of the main interaction direction of a residue on the ligand side. Thus, the number of anchor points is equal to the number of residues in the global structure. Corresponding to the anchor point, each residue features a global residue coordinate, which defines the global starting point of the interaction main direction of all interactions starting at this particular amino acid in any of the complexes. The computation of the global residue coordinate will be described in the following paragraph. The ligand anchor points are calculated by iteratively superimposing the ligands of the single complexes according to the order that is defined by the complex scoring. The first ligand is translated such that its centroid lies in the origin. Then, for each residue that is interacting with this particular ligand, the main interaction direction starting point is calculated and stored as the anchor point. All other ligands are superimposed to the firstly placed ligand by minimizing the RMSD between the common subset of own and already placed template anchor points. If in the course of the superimposition new anchor points are placed, they are assigned to the appropriate residue in the global structure.</p>
+</div>
+<div class="section" id="initial-global-residue-arrangement">
+<h3>Initial global residue arrangement<a class="headerlink" href="#initial-global-residue-arrangement" title="Permalink to this headline">¶</a></h3>
+<p>Similar to the method for single complexes, the global positioning of the residue structure diagrams is based on a convex hull, but the underlying point set is, unlike in the case for single complexes, derived from the superimposed anchor points. The convex hull is represented as a circular path consisting of directed edges. Hence, each node has one incoming and one outgoing edge. To each anchor point, an edge of the convex hull is assigned: If the anchor point is a convex hull vertex, the edge leading to this vertex is chosen; otherwise the edge with the smallest distance to the anchor point in question is selected. From all interaction main directions of the individual complexes calculated in the initial complex layout generation, the overall main direction is chosen to be the median when sorting their directions by the polar angle to the corresponding edge of the convex hull. The global residue coordinate is set to a point on this straight line with a distance of five standard bond length from the anchor point. The adjustment of the residue structure diagram is done by superimposing the global main direction of the ligand and the inverted resultant direction of all individual residue interaction directions of the individual complexes.</p>
+</div>
+<div class="section" id="global-layout-post-optimization">
+<h3>Global layout post optimization<a class="headerlink" href="#global-layout-post-optimization" title="Permalink to this headline">¶</a></h3>
+<p>Analog to the generation of single complexes, the initial placement may cause collisions. These are handled with an approach that is in principle the same as described before <a class="footnote-reference" href="#b6" id="id25">[6]</a>. The major difference is that the collision detection is not performed on basis of atom and bond coordinates but by testing for overlaps between the convex hulls of the global residue structure diagrams and the convex hull of ligand anchor points respectively, because the atom-wise comparison would slow down the collision handling significantly. Additionally, intersections of interaction lines as well as intersections crossing convex hulls are detected.</p>
+</div>
+<div class="section" id="drawing-the-complexes">
+<h3>Drawing the complexes<a class="headerlink" href="#drawing-the-complexes" title="Permalink to this headline">¶</a></h3>
+<p>Subsequent to the global layout generation, the coordinates are assigned to the single complexes of the series. The ligand is drawn superimposed to the corresponding anchor points and the amino acids are drawn at their global positions. The interaction atoms of the ligand are not necessarily identical with the anchor coordinates. Thus, the interaction lines have to be adapted to the local complex coordinates. In a final step, the hydrophobic contacts are placed and drawn; they are not part of the global layout.</p>
+</div>
+</div>
+<div class="section" id="id26">
+<h2>Results<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
+<p>The new method was applied to different test sets. In the following, three examples will be presented: two of them feature different ligands bound to the same protein (PARP and UK) while the other data (ER*α<a href="#id27"><span class="problematic" id="id28">*</span></a>) is composed of different crystal structures from the PDB <a class="footnote-reference" href="#b13" id="id29">[13]</a> with an individual protein file for each of the complexes. Based on the presented application examples, the strength and weaknesses of the new approach will be discussed.</p>
+<p>Before starting the layout calculation, the complexes with only one directed interaction or without directed interactions are removed from the sets as well as duplicates. Complexes are recognized as duplicate if their ligands and the interaction patterns are identical. A prerequisite for a successful layout generation process is that all ligands are bound to the same active site and protein chain; otherwise no common residues can be found by the algorithm and the layout alignment fails. In all examples the complexes are sorted according to their score, such that the ones with the highest number of interactions come first.</p>
+<div class="section" id="poly-adp-ribose-polymerase-parp">
+<h3>Poly ADP Ribose Polymerase (PARP)<a class="headerlink" href="#poly-adp-ribose-polymerase-parp" title="Permalink to this headline">¶</a></h3>
+<p>The ligands for the PARP example (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>) were taken from the ZINC database <a class="footnote-reference" href="#b14" id="id30">[14]</a> and docked to a protein provided by the PDB (PDB code:</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-21-5.jpg" src="../_images/1758-2946-3-21-5.jpg" />
+<p class="caption">Figure 5. Aligned visualization of Poly ADP Ribose Polymerase complexes</p>
+<div class="legend">
+<strong>Aligned visualization of Poly ADP Ribose Polymerase complexes</strong>. The ligands were taken from the ZINC database <a class="footnote-reference" href="#b14" id="id31">[14]</a> and docked to a protein provided by the PDB (PDB code:</div>
+</div>
+<p>While in Figure <em class="xref std std-ref">5b</em> the order of interaction atoms is properly aligned to the target sequence, a collision is caused by the ligand layout. This could be avoided by an additional ligand layout post optimization step that searches for alternative ligand layouts, which improves the geometric arrangement of ligand interaction atoms without affecting their topological order. In this case, flipping the upper ring system and rotating the amide group would remove the collision between interaction lines and the ligand structure diagram. For all other complexes, a collision-free layout could be generated.</p>
+<p>Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a> shows the same series like Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>, and the complexes are in the same order but in contrast to the previously shown depiction the complexes are drawn independently from each other in their default orientation. In this case, the similarity is not as obvious as in the aligned visualization with a consistent residue layout.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-21-6.jpg" src="../_images/1758-2946-3-21-6.jpg" />
+<p class="caption">Figure 6. Visualization of Poly ADP Ribose Polymerase complexes with default orientation</p>
+<div class="legend">
+<strong>Visualization of Poly ADP Ribose Polymerase complexes with default orientation</strong>. The depicted complexes are identical to the protein-ligand complexes in Figure 5, but their layout is calculated independently from each other.</div>
+</div>
+</div>
+<div class="section" id="estrogen-receptor-nonascii-10-ernonascii-11">
+<h3>Estrogen Receptor α (ERα)<a class="headerlink" href="#estrogen-receptor-nonascii-10-ernonascii-11" title="Permalink to this headline">¶</a></h3>
+<p>In contrast to the former example, the ligands of ER*α* feature a more heterogeneous picture (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>). The data set is an representative collection of crystal structures from the PDB (PDB codes, ordered according to the complex scoring of PoseView: <em class="xref std std-ref">7a, b, d, e</em>, and <em class="xref std std-ref">7l</em> the carboxylate of Glu 353A is hydrogen bonded to the hydroxyl group of the ligand. Due to its conformational flexibility, the interaction switches from one to the other carboxyl oxygen between the different complexes. 7a (<a href="#id32"><span class="problematic" id="id33">*</span></a>π* stacking interaction and in the second case it is not.</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-21-7.jpg" src="../_images/1758-2946-3-21-7.jpg" />
+<p class="caption">Figure 7. Aligned visualization of Estrogen Receptor <a href="#id34"><span class="problematic" id="id35">**</span></a>α** complexes</p>
+<div class="legend">
+<a href="#id36"><span class="problematic" id="id37">**</span></a>α** complexesAligned visualization of Estrogen Receptor</div>
+</div>
+</div>
+<div class="section" id="urokinase-uk">
+<h3>Urokinase (UK)<a class="headerlink" href="#urokinase-uk" title="Permalink to this headline">¶</a></h3>
+<p>The third example consists of a randomly selected subset of the UK complex series provided by Brown and Muchmore <a class="footnote-reference" href="#b15" id="id38">[15]</a> (different ligands bound to 1OWK), Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a>. Here, the binding mode shows only minimal variations and is characterized by a salt bridge between Asp 191A and an amidinium group of the ligand. The remaining hydrogens of this amidinium group form a hydrogen bond to Gly 220A on the one side and Ser 192A on the other side of the Asp191A. Figure <em class="xref std std-ref">8o</em> shows a disadvantage of the template based orientation of the residues: contrarily to all other complexes the Gln 194A has an acceptor function but the side chain oxygen points not towards the ligand and a collision occurs. In case of flexible side chains and different possible protonation states a compromise between a consistent layout and flexibility in order to avoid collisions is necessary.</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-21-8.jpg" src="../_images/1758-2946-3-21-8.jpg" />
+<p class="caption">Figure 8. Aligned visualization of Urokinase complexes</p>
+<div class="legend">
+<strong>Aligned visualization of Urokinase complexes</strong>. The ligands are taken from a dataset provided by Brown and Muchmore <a class="footnote-reference" href="#b15" id="id39">[15]</a>. The protein file is stored in the PDB with the accession code</div>
+</div>
+</div>
+</div>
+<div class="section" id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this headline">¶</a></h2>
+<p>We have implemented an extension of the PoseView algorithm that automatically generates consistent residue layouts for series of related complexes with different ligands bound to one protein. The layout generation is performed receptor-based taking into account the 3D residue adjacencies as well as the ligand topology. If not defined, the interactions and the resulting complex ensemble can be determined during run time.</p>
+<p>All presented test sets feature a good overall layout quality that is comparable to the results of the PoseView version for single complexes. The ligand and the residues forming directed interactions are drawn in atomic detail as structure diagrams and arranged such that the visualized complexes are mainly collision free. As intended, the comparability and legibility within a complex series was considerably improved due to the consistent residue layout. While the residue orientation is fixed the ligand orientation changes over the different diagrams. An example can be found in Figure <em class="xref std std-ref">7b</em> and <em class="xref std std-ref">7i</em>. This is caused by the difference in the interaction patterns and the minimization of the deviation between the optimal interaction directions of the ligand and the real interaction directions given by the globally set amino acid positions. In contrast to known methods <a class="footnote-reference" href="#b2" id="id40">[2]</a><a class="footnote-reference" href="#b3" id="id41">[3]</a>, this approach combines a high degree of detail considering the IUPAC structure diagram conventions with the independence from any particular interaction model. An unsolved challenge is the handling of different protonation states and side chain orientations within one series. Also the depiction of residues which form no interactions to the particular ligand, for example colored light grey, would enhance the readability.</p>
+<p>In summary, the presented method extends the field of complex visualization. The aligned depiction of related complexes in atomic detail offers the possibility to get a quick insight in the differences and similarities within a series.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>KS developed, implemented and tested the presented method. KS prepared the manuscript for this publication. MR supervised and coordinated the project. Both authors have read and approved of the final manuscript.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>We thank Birte Seebeck and Nadine Schneider for their support in the test set preparation. The project was funded by the Klaus Tschira Stiftung gemeinnützige GmbH.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>Visualization of macromolecular structures</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id40">2</a>)</em> 2D depiction of protein-ligand complexes</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id41">2</a>)</em> LIGPLOT: a program to generate schematic diagrams of protein-ligand interactions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[4]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id8">2</a>, <a class="fn-backref" href="#id13">3</a>)</em> Drawing the PDB: Protein-Ligand Complexes in Two Dimensions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[5]</td><td><em>(<a class="fn-backref" href="#id6">1</a>, <a class="fn-backref" href="#id9">2</a>)</em> From modeling to medicinal chemistry: automatic generation of two-dimensional complex diagrams</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[6]</td><td><em>(<a class="fn-backref" href="#id7">1</a>, <a class="fn-backref" href="#id10">2</a>, <a class="fn-backref" href="#id14">3</a>, <a class="fn-backref" href="#id19">4</a>, <a class="fn-backref" href="#id24">5</a>, <a class="fn-backref" href="#id25">6</a>)</em> Molecular complexes at a glance: automated generation of two-dimensional complex diagrams</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[7]</a></td><td>Introduction to algorithms</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[8]</a></td><td>A fast flexible docking method using an incremental construction algorithm</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[9]</a></td><td>Analytical molecular surface calculation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[10]</a></td><td>The ball-pivoting algorithm for surface reconstruction</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[11]</a></td><td>Shortest path through a maze</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[12]</a></td><td>An analysis of several heuristics for the traveling salesman problem</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[13]</a></td><td>The protein data bank</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[14]</td><td><em>(<a class="fn-backref" href="#id30">1</a>, <a class="fn-backref" href="#id31">2</a>)</em> Benchmarking sets for molecular docking</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[15]</td><td><em>(<a class="fn-backref" href="#id38">1</a>, <a class="fn-backref" href="#id39">2</a>)</em> Large-Scale Application of High-Throughput Molecular Mechanics with Poisson-Boltzmann Surface Area for Routine Physics-Based Scoring of Protein-Ligand Complexes</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Consistent two-dimensional visualization of protein-ligand complex series</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#terms-and-definitions-from-the-layout-generation-for-single-complexes">Terms and definitions from the layout generation for single complexes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initialization-of-complexes-and-interaction-determination">Initialization of complexes and interaction determination</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#complex-score-calculation">Complex score calculation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-complex-layout-generation">Initial complex layout generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#representation-of-single-complexes-as-a-tree">Representation of single complexes as a tree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#collection-of-complex-ensemble-residues">Collection of complex ensemble residues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exploration-of-3d-adjacencies-and-global-target-sequence-calculation">Exploration of 3D adjacencies and global target sequence calculation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#global-target-sequence-optimization">Global target sequence optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ligand-layout-adaptation-to-the-target-sequence">Ligand layout adaptation to the target sequence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ligand-superimposition-and-anchor-point-determination">Ligand superimposition and anchor point determination</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-global-residue-arrangement">Initial global residue arrangement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#global-layout-post-optimization">Global layout post optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#drawing-the-complexes">Drawing the complexes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id26">Results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#poly-adp-ribose-polymerase-parp">Poly ADP Ribose Polymerase (PARP)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#estrogen-receptor-nonascii-10-ernonascii-11">Estrogen Receptor α (ERα)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#urokinase-uk">Urokinase (UK)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#discussion">Discussion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-20.html" title="Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration"
+             >previous</a> |
+          <a href="1758-2946-3-22.html" title="Predicting a small molecule-kinase interaction map: A machine learning approach"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-21.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

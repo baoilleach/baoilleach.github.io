@@ -1,0 +1,658 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PubChem3D: Biologically relevant 3-D similarity &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Theoretical NMR correlations based Structure Discussion" href="1758-2946-3-27.html" />
+    <link rel="prev" title="PubChem3D: Shape compatibility filtering using molecular shape quadrupoles" href="1758-2946-3-25.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-25.html" title="PubChem3D: Shape compatibility filtering using molecular shape quadrupoles"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-27.html" title="Theoretical NMR correlations based Structure Discussion"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pubchem3d-biologically-relevant-3-d-similarity">
+<h1>PubChem3D: Biologically relevant 3-D similarity<a class="headerlink" href="#pubchem3d-biologically-relevant-3-d-similarity" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>The use of 3-D similarity techniques in the analysis of biological data and virtual screening is pervasive, but what is a biologically meaningful 3-D similarity value? Can one find statistically significant separation between &#8220;active/active&#8221; and &#8220;active/inactive&#8221; spaces? These questions are explored using 734,486 biologically tested chemical structures, 1,389 biological assay data sets, and six different 3-D similarity types utilized by PubChem analysis tools.</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>The similarity value distributions of 269.7 billion unique conformer pairs from 734,486 biologically tested compounds (all-against-all) from PubChem were utilized to help work towards an answer to the question: what is a biologically meaningful 3-D similarity score? The average and standard deviation for the six similarity measures <em>ST**ST-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">*CT**ST-opt*\</span> <span class="pre">:sup:</span></tt>, <em>ComboT**ST-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">*ST**CT-opt*\</span> <span class="pre">:sup:</span></tt>, <em>CT**CT-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">and</span> <span class="pre">*ComboT**CT-opt*</span> <span class="pre">\</span> <span class="pre">:sup:</span></tt>were 0.54 ± 0.10, 0.07 ± 0.05, 0.62 ± 0.13, 0.41 ± 0.11, 0.18 ± 0.06, and 0.59 ± 0.14, respectively. Considering that this random distribution of biologically tested compounds was constructed using a single theoretical conformer per compound (the &#8220;default&#8221; conformer provided by PubChem), further study may be necessary using multiple diverse conformers per compound; however, given the breadth of the compound set, the single conformer per compound results may still apply to the case of multi-conformer per compound 3-D similarity value distributions. As such, this work is a critical step, covering a very wide corpus of chemical structures and biological assays, creating a statistical framework to build upon.</p>
+<p>The second part of this study explored the question of whether it was possible to realize a statistically meaningful 3-D similarity value separation between reputed biological assay &#8220;inactives&#8221; and &#8220;actives&#8221;. Using the terminology of noninactive-noninactive (NN) pairs and the noninactive-inactive (NI) pairs to represent comparison of the &#8220;active/active&#8221; and &#8220;active/inactive&#8221; spaces, respectively, each of the 1,389 biological assays was examined by their 3-D similarity score differences between the NN and NI pairs and analyzed across all assays and by assay category types. While a consistent trend of separation was observed, this result was not statistically unambiguous after considering the respective standard deviations. While not all &#8220;actives&#8221; in a biological assay are amenable to this type of analysis, <em>e.g.</em>, due to different mechanisms of action or binding configurations, the ambiguous separation may also be due to employing a single conformer per compound in this study. With that said, there were a subset of biological assays where a clear separation between the NN and NI pairs found. In addition, use of combo Tanimoto (ComboT) alone, independent of superposition optimization type, appears to be the most efficient 3-D score type in identifying these cases.</p>
+</div>
+<div class="section" id="conclusion">
+<h3>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h3>
+<p>This study provides a statistical guideline for analyzing biological assay data in terms of 3-D similarity and PubChem structure-activity analysis tools. When using a single conformer per compound, a relatively small number of assays appear to be able to separate &#8220;active/active&#8221; space from &#8220;active/inactive&#8221; space.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Recent advances in combinatorial chemistry <a class="footnote-reference" href="#b1" id="id2">[1]</a><a class="footnote-reference" href="#b2" id="id3">[2]</a><a class="footnote-reference" href="#b3" id="id4">[3]</a><a class="footnote-reference" href="#b4" id="id5">[4]</a><a class="footnote-reference" href="#b5" id="id6">[5]</a><a class="footnote-reference" href="#b6" id="id7">[6]</a> and high-throughput screening technology <a class="footnote-reference" href="#b7" id="id8">[7]</a><a class="footnote-reference" href="#b8" id="id9">[8]</a><a class="footnote-reference" href="#b9" id="id10">[9]</a><a class="footnote-reference" href="#b10" id="id11">[10]</a><a class="footnote-reference" href="#b11" id="id12">[11]</a><a class="footnote-reference" href="#b12" id="id13">[12]</a><a class="footnote-reference" href="#b13" id="id14">[13]</a><a class="footnote-reference" href="#b14" id="id15">[14]</a><a class="footnote-reference" href="#b15" id="id16">[15]</a><a class="footnote-reference" href="#b16" id="id17">[16]</a><a class="footnote-reference" href="#b17" id="id18">[17]</a> have made the synthesis and screening of diverse chemical compounds easier, helping to create a demand in the biomedical research community for archives of publicly available screening data. To help satisfy this demand, the U.S. National Institutes of Health launched the PubChem project (<a class="reference external" href="http://pubchem.ncbi.nlm.nih.gov">http://pubchem.ncbi.nlm.nih.gov</a>) <a class="footnote-reference" href="#b18" id="id19">[18]</a><a class="footnote-reference" href="#b19" id="id20">[19]</a><a class="footnote-reference" href="#b20" id="id21">[20]</a><a class="footnote-reference" href="#b21" id="id22">[21]</a> as a part of its Molecular Libraries Roadmap Initiative. PubChem archives contributed biological screening data and chemical information from various data sources in academia and industry, and offers its contents free of charge to biomedical researchers, helping to facilitate scientific discovery.</p>
+<p>PubChem consists of three primary databases: Substance, Compound, and BioAssay. While the PubChem Substance database (unique identifier SID) contains information provided by individual depositors, the PubChem Compound database (unique identifier CID) contains the unique standardized chemical structure contents extracted from the PubChem Substance database. PubChem provides various analysis tools to relate chemical structures to the biological activity data stored in the PubChem BioAssay database (unique identifier AID).</p>
+<p>The PubChem3D project <a class="footnote-reference" href="#b22" id="id23">[22]</a><a class="footnote-reference" href="#b23" id="id24">[23]</a><a class="footnote-reference" href="#b24" id="id25">[24]</a><a class="footnote-reference" href="#b25" id="id26">[25]</a>, launched, in part, to help users identify useful structure-activity relationships, generates a theoretical 3-D conformer model <a class="footnote-reference" href="#b22" id="id27">[22]</a><a class="footnote-reference" href="#b23" id="id28">[23]</a> for each molecule in the PubChem Compound database, whenever it is possible. An all-against-all 3-D neighboring relationship (known as &#8220;Similar Conformers&#8221;) <a class="footnote-reference" href="#b24" id="id29">[24]</a> is pre-computed to help users to locate related data in the archive, augmenting the complementary &#8220;Similar Compounds&#8221; relationship, based on 2-D similarity of the PubChem subgraph binary fingerprint <a class="footnote-reference" href="#b26" id="id30">[26]</a>.</p>
+<p>PubChem3D uses two 3-D similarity measures: shape-Tanimoto (ST) <a class="footnote-reference" href="#b24" id="id31">[24]</a><a class="footnote-reference" href="#b27" id="id32">[27]</a><a class="footnote-reference" href="#b28" id="id33">[28]</a><a class="footnote-reference" href="#b29" id="id34">[29]</a><a class="footnote-reference" href="#b30" id="id35">[30]</a> and color-Tanimoto (CT) <a class="footnote-reference" href="#b24" id="id36">[24]</a><a class="footnote-reference" href="#b27" id="id37">[27]</a><a class="footnote-reference" href="#b28" id="id38">[28]</a>. The ST score is a measure of shape similarity, which is defined as the following:</p>
+<p>where <em>V**AA</em> :sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">and</span> <span class="pre">*V**BB*</span> <span class="pre">\</span> <span class="pre">:sub:</span></tt>are the self-overlap volume of conformers A and B and <em>V**AB</em> :sub:<a href="#id39"><span class="problematic" id="id40">``</span></a>is the common overlap volume between them. The CT score, given by <strong>Equation (2)</strong>, quantifies the similarity of 3-D orientation of functional groups used to define pharmacophores (henceforth referred to simply as &#8220;features&#8221;) between conformers by checking the overlap of fictitious &#8220;color&#8221; atoms <a class="footnote-reference" href="#b28" id="id41">[28]</a> used to represent the six functional group types: hydrogen-bond donors, hydrogen-bond acceptors, cation, anion, hydrophobes, and rings.</p>
+<p>where, the index &#8220;<em>f</em>&#8221; indicates any of the six independent fictitious feature atom types, <em>f</em> and <em>f</em>. The ST and CT scores range between 0 (for no similarity) and 1 (for identical molecules). These similarity metrics can be combined to create a Combo-Tanimoto (ComboT), as specified by <strong>Equation (3)</strong>:</p>
+<p>The ST and CT similarity metrics attempt to cover key aspects important for locating chemical structures that may have similar biological activity. ST helps to identify molecules that can adopt a particular 3-D shape, <em>e.g.</em>, of an inhibitor bound in a particular conformational orientation in a protein binding pocket. Considering that a hydrocarbon and a drug molecule could adopt the same shape, CT helps to identify molecules with similar 3-D orientation of features, <em>e.g.</em>, necessary for making binding interactions between a small molecule and protein binding pocket. This suggests that two molecules with highly similar 3-D shape and 3-D feature orientations may also have similar biological activity. It should be no small wonder that such similarity metrics have garnered widespread use in virtual screening <a class="footnote-reference" href="#b31" id="id42">[31]</a><a class="footnote-reference" href="#b32" id="id43">[32]</a>. It leads one to wonder: what is a statistically meaningful 3-D similarity score? Or, in other words, if one was to examine the 3-D similarities between biologically tested compounds, what does the distribution look like? In the case of 2-D similarity, one only needs the molecule graph to make a comparison but, in the case of 3-D similarity, molecules can potentially adopt a number of different conformations. Is it sufficient to use only a single conformer per compound and still realize a statistically meaningful difference or separation between the 3-D similarities of reputed actives and inactives from a biological test?</p>
+<p>In the present paper, two important questions concerning ST, CT, and ComboT as 3-D similarity measures are investigated. The first question is &#8220;if we randomly select any two conformers from the PubChem Compound database, what values of ST, CT, and ComboT scores will be expected on the average?&#8221; With knowledge of these values, one can evaluate a statistical significance of the similarity score between any two conformers in PubChem (<em>e.g.</em>, if their similarity score becomes greater than what one expects for a random conformer pair, it may be statistically more meaningful).</p>
+<p>The second question we seek to answer in this study is &#8220;for a given bioassay in PubChem, what is the average difference in similarity scores between the noninactive-noninactive (NN) pairs and the noninactive-inactive (NI) pairs, when a single conformer per compound is used for 3-D similarity computation?&#8221; The choice of terminology of NN and NI are necessary considering that the definition of an &#8220;active&#8221; is not always specified in PubChem. Therefore, for the purposes of this study, we consider &#8220;active space&#8221; to be anything not specified to be &#8220;inactive&#8221;, thus the term &#8220;noninactive&#8221; is used in place of &#8220;active&#8221;. This may help provide users with an idea on the separation in the 3-D shape and feature spaces between the active and inactive compounds tested in a given bioassay. An additional question we will answer is: does an optimization type affect the similarity scores? Currently, the PubChem 3-D neighboring involves a shape superposition optimization that maximizes the ST scores <a class="footnote-reference" href="#b24" id="id44">[24]</a>, but it may be possible to optimize a feature superposition that maximizes the CT score. Will the ST-optimization and CT-optimization make any changes in a 3-D similarity-based bioassay data analysis?</p>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>Results and Discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="a-notations">
+<h3>A. Notations<a class="headerlink" href="#a-notations" title="Permalink to this headline">¶</a></h3>
+<p>In the present study, we consider six different similarity measures: ST, CT, and ComboT for two different optimization types (either ST-optimized or CT-optimized). They are denoted with a superscript, which represents the optimization type (either &#8220;ST-opt&#8221; or &#8220;CT-opt&#8221;), and a subscript, which specifies the type of CID pairs (&#8220;NN&#8221; for the NN pairs and &#8220;NI&#8221; for the NI pairs). The subscript &#8220;NN-NI&#8221; is used for the similarity score difference between the NN and NI pairs. For example, <em>i.e.,</em> <em>ST, CT, and ComboT</em>), or a similarity score in a general sense.</p>
+<p>In the second part of this study, we analyze the average and standard deviation of the similarity scores <em>of CID pairs for a given AID</em>, and these per-AID average and standard deviation are denoted with Greek letters μ and σ, respectively, followed by the corresponding similarity measure in parentheses [<em>e.g.</em>,</p>
+<p>where XT is one of the six similarity measures (<em>i.e.</em>, <em>ST**ST-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">*CT**ST-opt*\</span> <span class="pre">:sup:</span></tt>, <em>ComboT**ST-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">*ST**CT-opt*\</span> <span class="pre">:sup:</span></tt>, <em>CT**CT-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">and</span> <span class="pre">*ComboT**CT-opt*\</span> <span class="pre">:sup:</span></tt>), and <em>n**NN</em> :sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">and</span> <span class="pre">*n**NI*</span> <span class="pre">\</span> <span class="pre">:sub:</span></tt>are the number of the NN pairs and NI pairs for the AID, respectively. When we refer to the average and standard deviation of the per-AID statistical parameters <em>over a set of AIDs</em>, we use additional Greek letters μ and σ, respectively, followed by the corresponding statistical parameter in brackets. For example,</p>
+</div>
+<div class="section" id="b-3-d-similarity-score-distribution-of-random-conformer-pairs">
+<h3>B. 3-D similarity score distribution of random conformer pairs<a class="headerlink" href="#b-3-d-similarity-score-distribution-of-random-conformer-pairs" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="b-1-structural-and-chemical-characteristics-of-the-biologically-tested-molecules">
+<h4>B-1. Structural and chemical characteristics of the biologically tested molecules<a class="headerlink" href="#b-1-structural-and-chemical-characteristics-of-the-biologically-tested-molecules" title="Permalink to this headline">¶</a></h4>
+<p>As of January 2010, the PubChem BioAssay database had 2,008 bioassay records, (ranging from AID 1 to AID 2310) and 734,486 molecules with a 3-D conformer model were tested in at least one of these bioassays. The structural and chemical characteristics of these biologically tested molecules are shown in Figures <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a> and <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>, and they are compared with those of the entire PubChem3D contents (26,157,365 CIDs as of September 2010) in Table <em class="xref std std-ref">1</em>. The average and standard deviation of the heavy atom count per-CID are 24.6 ± 6.4, slightly less than those across the entire PubChem3D contents (26.3 ± 7.0). The conformer monopole volume (V) and three components of the shape quadrupole moments (Q<sub>x</sub>, Q<sub>y</sub>, and Q<sub>z</sub>, which give a sense of the conformer length, width, and height dimensions, respectively) <a class="footnote-reference" href="#b25" id="id45">[25]</a> of the biologically tested molecules default conformer are also slightly less than those across the entire PubChem3D contents (474.1 ± 124.0 Å<sup>3</sup> <em>vs.</em> 509.0 ± 137.1 Å<sup>3</sup> for V, 12.6 ± 7.0 Å<sup>5</sup> <em>vs.</em> 13.6 ± 7.8 Å<sup>5</sup> for Q<sub>x</sub>, 3.3 ± 1.6 Å<sup>5</sup> <em>vs.</em> 3.6 ± 1.8 Å<sup>5</sup> for Q<sub>y</sub>, 1.3 ± 0.6 Å <em>vs.</em> 1.5 ± 0.6 Å<sup>5</sup> for Q<sub>z</sub>). As shown in Figure <em class="xref std std-ref">1(b)</em> and Table <em class="xref std std-ref">1</em>, the 734,486 biologically tested molecules have 8.1 ± 2.6 features on average, slightly less than the entire PubChem3D contents does (8.5 ± 2.7). The count for each of the six feature types of the biologically tested molecules is equal to or slightly less than those of the entire PubChem3D contents.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-26-1.jpg" src="../_images/1758-2946-3-26-1.jpg" />
+<p class="caption">Figure 1. Atom and feature count histograms of biologically tested compounds</p>
+<div class="legend">
+<strong>Atom and feature count histograms of biologically tested compounds</strong>. Frequency (blue) and percent cumulative frequency (red) of (a) heavy atom count and (b) total feature count for the 734,486 molecules tested in at least one bioassay archived in the PubChem BioAssay database.</div>
+</div>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-26-2.jpg" src="../_images/1758-2946-3-26-2.jpg" />
+<p class="caption">Figure 2. Conformer volume and quadrupole histograms of biologically tested compounds</p>
+<div class="legend">
+<strong>Conformer volume and quadrupole histograms of biologically tested compounds</strong>. Frequency (blue) and percent cumulative frequency (red) of (a) volume, (b) Q<sub>x</sub>, (c) Q<sub>y</sub>, and (d) Q<sub>z</sub> for the 734,486 molecules tested in at least one bioassay archived in the PubChem BioAssay database.</div>
+</div>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-26-3.jpg" src="../_images/1758-2946-3-26-3.jpg" />
+<p class="caption">Figure 3. Individual feature histograms of biologically tested compounds</p>
+<div class="legend">
+<strong>Individual feature histograms of biologically tested compounds</strong>. Frequency (blue) and percent cumulative frequency (red) of respective feature atom count for the 734,486 molecules tested in at least one bioassay archived in the PubChem BioAssay database: (a) hydrogen-bond donor count, (b) hydrogen-bond acceptor count, (c) anion count, (d) cation count, (e) hydrophobe count, and (f) ring count.</div>
+</div>
+</div>
+<div class="section" id="b-2-distribution-of-3-d-similarity-scores-for-biologically-tested-molecules">
+<h4>B-2. Distribution of 3-D similarity scores for biologically tested molecules<a class="headerlink" href="#b-2-distribution-of-3-d-similarity-scores-for-biologically-tested-molecules" title="Permalink to this headline">¶</a></h4>
+<p>One key question this study attempts to answer is: what are statistically meaningful 3-D similarity values for biologically tested molecules? By using the entire set of 734,486 biologically tested molecules in PubChem (as of late January 2010) and their 269,734,474,855 unique CID pairs, we believe this to be a sufficient corpus to make such a determination in a general sense. What may be questionable (to some) is the intention to use only a single conformer per compound for each of the CID pairs.</p>
+<p>The reasons for this choice are rather practical. The use of two diverse conformers per compound yields four times more unique conformer pairs and using three diverse conformers per compound makes the unique conformer pair set nine times larger and so on. In other words, the problem size scales as a square of the conformers per compound considered. We could sample the 734,486 compounds into a smaller set, to say ten percent of the original dataset and then consider three diverse conformers per compound to yield approximately the same count of conformer pairs, but are three diverse conformers per compound sufficient? If we down sampled to 1% of the biologically tested compounds and used ten diverse conformers per compound, would ten diverse conformers per compound be sufficient and would the random 1% of the compound set be sufficient to represent biologically tested compounds? For the purposes of this study, we will ignore the multiple conformer representation issue and consider a single conformer per compound to be sufficiently random to provide a useful set of statistically meaningful 3-D similarity thresholds; however, a more detailed study may be necessary to determine the full effect of using multiple conformers per compound, <em>e.g.</em>, when picking the best conformer pair per compound pair.</p>
+<p>To investigate the average values of ST, CT, and ComboT for random conformer pairs, we downloaded all 734,486 biologically tested molecules from PubChem that had a theoretical 3-D description, and the six similarity scores [<em>i.e.</em>, <em>ST**ST-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">*CT**ST-opt*\</span> <span class="pre">:sup:</span></tt>, <em>ComboT**ST-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">*ST**CT-opt*\</span> <span class="pre">:sup:</span></tt>, <em>CT**CT-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">and</span> <span class="pre">*ComboT**CT-opt*\</span> <span class="pre">:sup:</span></tt>] were computed for all 269,734,474,855 unique CID pairs arising from all possible combination of the 734,486 CIDs, using a single conformer per-CID. The distribution of these scores represents the 3-D similarity scores one would get from any two conformers randomly selected from the PubChem database. The distributions of the similarity scores, binned in 0.01 increments, are shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a> and their statistics are summarized in Table <em class="xref std std-ref">2</em>. The average and standard deviation for <em>ST**ST-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">*CT**ST-opt*\</span> <span class="pre">:sup:</span></tt>, <em>ComboT**ST-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">*ST**CT-opt*\</span> <span class="pre">:sup:</span></tt>, <em>CT**CT-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">and</span> <span class="pre">*ComboT**CT-opt*</span> <span class="pre">\</span> <span class="pre">:sup:</span></tt>were 0.54 ± 0.10, 0.07 ± 0.05, 0.62 ± 0.13, 0.41 ± 0.11, 0.18 ± 0.06, and 0.59 ± 0.14, respectively. The conformer pairs whose similarity scores are equal to or smaller than μ+σ account for 85% to 87% of the 269.7 billion CID pairs, and the corresponding fractions for the μ+2σ threshold range from 96% to 98%. This information may be used to evaluate the statistical significance of the similarity score between any two conformers. For example, if the <em>ST**ST-opt</em> :sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">value</span> <span class="pre">between</span> <span class="pre">two</span> <span class="pre">conformers</span> <span class="pre">is</span> <span class="pre">0.74,</span> <span class="pre">the</span> <span class="pre">probability</span> <span class="pre">of</span> <span class="pre">randomly</span> <span class="pre">getting</span> <span class="pre">a</span> <span class="pre">*ST**ST-opt*</span> <span class="pre">\</span> <span class="pre">:sup:</span></tt>score equal to or higher than 0.74 is only 2%, and hence, one may consider that the two conformers have statistically meaningful similarity in terms of <em>ST**ST-opt</em>:sup:<a href="#id46"><span class="problematic" id="id47">``</span></a>.</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-26-4.jpg" src="../_images/1758-2946-3-26-4.jpg" />
+<p class="caption">Figure 4. Overall 3-D similarity statistics between biologically tested compounds</p>
+<div class="legend">
+<strong>Overall 3-D similarity statistics between biologically tested compounds</strong>. Distribution of 3-D similarity scores of 269,734,474,855 conformer pairs, arising from the 734,486 molecules tested in at least one bioassay archived in the PubChem BioAssay database: (a) ST-optimized similarity scores and (b) CT-optimized similarity scores. A single conformer was used for each compound. All values binned in 0.01 increments.</div>
+</div>
+<p>Note that the PubChem &#8220;Similar Conformers&#8221; 3-D neighboring requires the <em>ST**ST-opt</em> :sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">\</span> <span class="pre">|nonascii_41|\</span>&nbsp; <span class="pre">0.8</span> <span class="pre">and</span> <span class="pre">*CT**ST-opt*</span> <span class="pre">\</span> <span class="pre">:sup:</span></tt>≥ 0.5 for two molecules to become neighbors of each other. The conformer pairs whose ST value is smaller than 0.80 correspond to 99.32% of the random ST score distribution. Similarly, the conformer pairs with <em>CT**ST-opt</em> :sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">&lt;</span> <span class="pre">0.50</span> <span class="pre">correspond</span> <span class="pre">to</span> <span class="pre">99.98%</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">random</span> <span class="pre">CT</span> <span class="pre">score</span> <span class="pre">distribution.</span> <span class="pre">Therefore,</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">*ST**ST-opt*</span> <span class="pre">\</span> <span class="pre">:sup:</span></tt>and <em>CT**ST-opt</em> :sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">scores</span> <span class="pre">are</span> <span class="pre">assumed</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">independent</span> <span class="pre">of</span> <span class="pre">each</span> <span class="pre">other,</span> <span class="pre">the</span> <span class="pre">probability</span> <span class="pre">of</span> <span class="pre">two</span> <span class="pre">conformers</span> <span class="pre">being</span> <span class="pre">identified</span> <span class="pre">as</span> <span class="pre">3-D</span> <span class="pre">&quot;Similar</span> <span class="pre">Conformers&quot;</span> <span class="pre">neighbors</span> <span class="pre">of</span> <span class="pre">each</span> <span class="pre">other</span> <span class="pre">by</span> <span class="pre">chance</span> <span class="pre">is</span> <span class="pre">(100</span> <span class="pre">-</span> <span class="pre">99.32)</span> <span class="pre">\</span> <span class="pre">|nonascii_43|\</span>&nbsp; <span class="pre">(100</span> <span class="pre">-</span> <span class="pre">99.98)</span> <span class="pre">=</span> <span class="pre">0.0136%</span> <span class="pre">(or</span> <span class="pre">1</span> <span class="pre">in</span> <span class="pre">7,353).</span> <span class="pre">Note</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">*CT**ST-opt*</span> <span class="pre">\</span> <span class="pre">:sup:</span></tt>score is not completely independent of the <em>ST**ST-opt</em> :sup:<a href="#id48"><span class="problematic" id="id49">``</span></a>score because it is evaluated at the ST-optimized alignment. Therefore, the probability of random conformers being identified as PubChem 3-D neighbors will be higher than the estimated value of 0.0136%, but it will still be smaller than 1%.</p>
+<p>Figures <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>, <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>, and <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a> show the distribution of the average and standard deviation of the 3-D similarity scores per-CID (computed from the similarity scores between one CID of the 734-K conformer set and all the other conformers in the set) for ST, CT, and ComboT for both ST-optimized and CT-optimized superpositions, representing the similarity scores that one may expect when a conformer in PubChem is compared with a randomly selected conformer. Most conformers have the average and standard deviation similar to those for the random conformers listed in Table <em class="xref std std-ref">2</em>. However, in the case of <em>ST**ST-opt</em> :sup:<a href="#id50"><span class="problematic" id="id51">``</span></a>[Figure <em class="xref std std-ref">5 (a)</em>] there is a bit of skew in the distribution of average ST value per CID towards the maximum value, peaking at 0.58, as opposed to the overall average of 0.54. Also of interest in Figure <em class="xref std std-ref">5 (a)</em>, the ST average per-CID rapidly drops off as the ST average approaches 0.65. Note that a small fraction of biologically tested CIDs in PubChem have low average similarity scores per-CID, which indicates their relative uniqueness in the 3-D shape space (<em>i.e.</em>, their 3-D shape and/or feature orientations may be very different from most biologically tested molecules in PubChem, resulting in low similarity scores on average).</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-26-5.jpg" src="../_images/1758-2946-3-26-5.jpg" />
+<p class="caption">Figure 5. Per-CID shape similarity statistics of biologically tested compounds</p>
+<div class="legend">
+<strong>Per-CID shape similarity statistics of biologically tested compounds</strong>. Distribution of the average and standard deviation of the ST scores for each of the 734,486 molecules tested in at least one bioassay archived in the PubChem BioAssay database: (a) ST-optimized ST (<em>ST**ST-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">)</span> <span class="pre">and</span> <span class="pre">(b)</span> <span class="pre">CT-optimized</span> <span class="pre">ST</span> <span class="pre">(*ST**CT-opt*\</span> <span class="pre">:sup:</span></tt>). All values binned in 0.01 increments.</div>
+</div>
+<p>Potentially surprising when looking at feature similarity statistics in Table <em class="xref std std-ref">2</em> is that standard deviation values for CT are about half that found for ST. When looking at the per-CID statistics in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>, one sees that the range of standard deviation of CT is comparable to that of ST, although with a significant population of CIDs on the lower end of the standard deviation. Why is this so? Presumably, the 3-D orientation of features is substantially more diverse than the 3-D molecular shape, keeping both the average and standard deviation values low when compared to all other biologically tested compounds.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-26-6.jpg" src="../_images/1758-2946-3-26-6.jpg" />
+<p class="caption">Figure 6. Per-CID feature similarity statistics of biologically tested compounds</p>
+<div class="legend">
+<strong>Per-CID feature similarity statistics of biologically tested compounds</strong>. Distribution of the average and standard deviation of the CT scores for each of 734,486 molecules tested in at least one bioassay archived in the PubChem BioAssay database: (a) ST-optimized CT (<em>CT**ST-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">)</span> <span class="pre">and</span> <span class="pre">(b)</span> <span class="pre">CT-optimized</span> <span class="pre">CT</span> <span class="pre">(*CT**CT-opt*\</span> <span class="pre">:sup:</span></tt>). All values binned in 0.01 increments.</div>
+</div>
+<p>An important observation is that the overall <em>ComboT**ST-opt</em> :sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">and</span> <span class="pre">*ComboT**CT-opt*</span> <span class="pre">\</span> <span class="pre">:sup:</span></tt>scores have very similar average values, as shown in Table <em class="xref std std-ref">2</em>. Whereas the <em>ST**ST-opt</em> :sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">average</span> <span class="pre">was</span> <span class="pre">greater</span> <span class="pre">by</span> <span class="pre">0.13</span> <span class="pre">than</span> <span class="pre">the</span> <span class="pre">*ST**CT-opt*</span> <span class="pre">\</span> <span class="pre">:sup:</span></tt>average, the CT-optimization results in an average <em>CT**CT-opt</em> :sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">score</span> <span class="pre">greater</span> <span class="pre">by</span> <span class="pre">0.11</span> <span class="pre">than</span> <span class="pre">that</span> <span class="pre">of</span> <span class="pre">*CT**ST-opt*\</span> <span class="pre">:sup:</span></tt>. As a result, the difference in averages between <em>ComboT**ST-opt</em> :sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">and</span> <span class="pre">*ComboT**CT-opt*</span> <span class="pre">\</span> <span class="pre">:sup:</span></tt>were only 0.03, implying that the ComboT score is not very sensitive to the type of optimization. A similar optimization-type dependency of the ST, CT, and ComboT scores was observed in Figures <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>, <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a> and <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>. That is, whereas the ST-optimization results in an increased ST and decreased CT scores, the CT-optimization gives a decreased ST and increased CT scores, resulting in the average ComboT score that is relatively constant regardless of the optimization type employed. However, as shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>, the <em>ComboT**CT-opt</em> :sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">data</span> <span class="pre">had</span> <span class="pre">a</span> <span class="pre">narrower</span> <span class="pre">range</span> <span class="pre">of</span> <span class="pre">standard</span> <span class="pre">deviation</span> <span class="pre">variation</span> <span class="pre">per-CID</span> <span class="pre">than</span> <span class="pre">*ComboT**ST-opt*</span> <span class="pre">\</span> <span class="pre">:sup:</span></tt>and the standard deviation for <em>ComboT**CT-opt</em> :sup:<a href="#id52"><span class="problematic" id="id53">``</span></a>per-CID appeared to linearly increase as a function of the per-CID average value.</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-26-7.jpg" src="../_images/1758-2946-3-26-7.jpg" />
+<p class="caption">Figure 7. Per-CID shape plus feature similarity statistics of biologically tested compounds</p>
+<div class="legend">
+<strong>Per-CID shape plus feature similarity statistics of biologically tested compounds</strong>. Distribution of the average and standard deviation of the ComboT scores for each of the 734,486 molecules tested in at least one bioassay archived in the PubChem BioAssay database: (a) ST-optimized ComboT (<em>ComboT**ST-opt</em>:sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">)</span> <span class="pre">and</span> <span class="pre">(b)</span> <span class="pre">CT-optimized</span> <span class="pre">ComboT</span> <span class="pre">(*ComboT**CT-opt*\</span> <span class="pre">:sup:</span></tt>). All values binned in 0.01 increments.</div>
+</div>
+</div>
+</div>
+<div class="section" id="c-3-d-similarity-score-differences-for-the-nn-and-ni-pairs">
+<h3>C. 3-D similarity score differences for the NN and NI pairs<a class="headerlink" href="#c-3-d-similarity-score-differences-for-the-nn-and-ni-pairs" title="Permalink to this headline">¶</a></h3>
+<p>The second part of this study examines the question: is it sufficient to only use a single conformer per compound and still realize a statistically meaningful difference or separation between the 3-D similarities of reputed actives and inactives? Or, to say this in another way, are noninactive and inactive compounds in a given bioassay well separated in 3-D shape/feature space? If so, one would expect to see some statistically significant separation in 3-D similarity scores between the partitioned noninactive-noninactive (NN) pairs and noninactive-inactive (NI) pairs. This requires 3-D similarity scores for both the NN pairs and NI pairs for each assay considered. This information is already available in the all-by-all similarity score matrices for the 734-K biologically tested molecules computed in the first part of this study. A detailed procedure for extracting the 3-D similarity scores from these matrices on the per-AID basis was described in the <strong>Materials and Methods</strong> section.</p>
+<p>It is important to note that 3-D similarity methodologies (or other analysis methodologies, for that matter) are not expected to work for all biological assay data sets. A tacit assumption of 3-D methodologies is that chemical structures with similar shape and binding features will have similar (if not the same) mode of action of &#8220;activity&#8221;, <em>e.g.</em>, of binding to a protein binding pocket in the same fashion. In reality, some assays in PubChem do not have a well-defined target, <em>e.g.</em>, being a whole cell, meaning that there could be a number of targets and a number of different mechanisms of action per target for the observed activity in a single assay. In other cases, many chemical structures are active for reasons that have little to do with binding to a protein target, being aggregators, covalent binders, cytotoxic, or some other unintended mode giving rise to the measured &#8220;activity&#8221; during the biological test (so called &#8220;false positives&#8221;). As such, 3-D methodology cannot be expected to work for false positives, as reputed &#8220;active&#8221; molecules may not have any apparent 3-D correlation to each other. This is also true of cases of molecules that would be &#8220;active&#8221; if not for solubility or some other issue during the biological experiment performed (so called &#8220;false negatives&#8221;). These issues with biological tests will be nearly completely ignored for the purpose of this analysis. Instead, by looking across a wide set of assays and assay types, there is an expectation that, if there is some effect whereby 3-D similarity averages between &#8220;actives&#8221; will be greater than the averages between &#8220;actives&#8221; and &#8220;inactives&#8221; using a single conformer per compound, a certain subpopulation of assays will show this behavior.</p>
+<div class="section" id="c-1-selection-of-aids-from-the-pubchem-bioassay-database">
+<h4>C-1. Selection of AIDs from the PubChem BioAssay database<a class="headerlink" href="#c-1-selection-of-aids-from-the-pubchem-bioassay-database" title="Permalink to this headline">¶</a></h4>
+<p>Among the 2,008 AIDs archived in the PubChem BioAssay database at the time of project initiation (January 2010), 1,744 AIDs had at least one molecule with a 3-D theoretical description. The bioassays in the PubChem BioAssay database can be classified into four categories, according to user-provided assay types (<em>i.e.</em>, screening, confirmatory, summary, and other) and the assay count for each category in the 1,744 AIDs is shown in Figure <em class="xref std std-ref">8 (a)</em>. Note that there is another category, &#8220;Unspecified&#8221;, because the assay-type attribute for these AID records are not provided. There were 523 screening assays (30%), 867 confirmatory assays (50%), 57 summary assays (3%), 192 other assays (11%), and 105 unspecified (6%).</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-26-8.jpg" src="../_images/1758-2946-3-26-8.jpg" />
+<p class="caption">Figure 8. Assay counts by category</p>
+<div class="legend">
+<strong>Assay counts by category</strong>. Assay count for each assay-type category in the PubChem BioAssay database: (a) for assays that have at least one tested molecule with 3-D information (as of January 28, 2010), (b) for assays that have at least one noninactive-noninactive (NN) pair and one noninactive-inactive (NI) pair, and (c) for assays that have at least six NN pairs and six NI pairs.</div>
+</div>
+<p>For a given AID, comparison of the 3-D similarity scores for the NN pairs with those for the NI pairs requires that the AID has at least one NN pair and one NI pair. Among the 1,744 AIDs, there were 1,441 AIDs that satisfy this condition [Figure <em class="xref std std-ref">8 (b)</em>]. Further filtering was necessary to remove AIDs in which the number of NN or NI pairs is too small, because these AIDs may yield biased results. On the contrary, we did not want to filter out more summary assays, if it could be avoided, as there were only nine summary assays at this point. [Summary assays are final stages of lead/probe screening processes and, as such, they have a significantly smaller number of molecules provided (and hence, a smaller number of the NN and NI pairs), compared to other assay types.] Among the nine summary assays in Figure <em class="xref std std-ref">8 (b)</em>, AID 1844 had the smallest number of the NN pairs, which was six, and this number was used as a threshold for further filtering (<em>i.e.</em>, AIDs with less than six NN pairs or less than six NI pairs were excluded in any subsequent analysis). After requiring an assay to have a minimum of six compound pairs for each of the NN and NI pairs (that is, 12 pairs per-AID in total), 1,389 AIDs resulted. As shown in Figure <em class="xref std std-ref">8 (c)</em>, there were 444 primary screenings (32%), 742 confirmatory screenings (53%), 9 summary assays (1%), 97 other assays (7%), and 97 unspecified (7%).</p>
+</div>
+<div class="section" id="c-2-differences-between-the-3-d-similarity-scores-of-nn-and-ni-pairs">
+<h4>C-2. Differences between the 3-D similarity scores of NN and NI pairs<a class="headerlink" href="#c-2-differences-between-the-3-d-similarity-scores-of-nn-and-ni-pairs" title="Permalink to this headline">¶</a></h4>
+<p>With the set of 1,389 AIDs decided, the average and standard deviation [<em>i.e.</em>, <em>|nonascii_44|*(*XT</em>) and <em>|nonascii_45|*(*XT</em>), respectively] of the six different similarity values were determined for the NN and NI pairs per-AID. The complete set of per-AID results is available in Additional File <em>i.e.</em>, <em>|nonascii_46|*(*XT**NN</em>:sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">)</span> <span class="pre">and</span> <span class="pre">*\</span> <span class="pre">|nonascii_47|\</span> <span class="pre">*(*XT**NI*\</span> <span class="pre">:sub:</span></tt>), respectively] across the 1,389 AIDs are shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a>. The corresponding distributions of differences between the average similarity scores for NN and NI pairs per-AID [<em>i.e.</em>, <em>|nonascii_48|*(*XT**NN-NI</em>:sub:<a href="#id54"><span class="problematic" id="id55">``</span></a>)] are provided in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>, while Table <em class="xref std std-ref">3</em> and Table <em class="xref std std-ref">4</em> summarize by similarity optimization type the per-AID statistics across all 1,389 AIDs [<em>i.e.</em>,*μ<em>[</em>μ<em>(*XT)</em>], <em>|nonascii_51|*[</em>μ<em>(*XT</em>)],*μ<em>[</em>σ<em>(*XT</em>)] and <em>|nonascii_55|*[</em>σ<em>(*XT</em>)]], with further break out by assay type category.</p>
+<p>Additional file 1</p>
+<p><strong>Similarity Scores</strong> Statistical parameters of similarity scores for each AID.</p>
+<p>Click here for file</p>
+<div class="figure align-center" id="figure-9">
+<img alt="../_images/1758-2946-3-26-9.jpg" src="../_images/1758-2946-3-26-9.jpg" />
+<p class="caption">Figure 9. <em>|nonascii_57|*(*XT</em>) per-AID similarity histogram</p>
+<div class="legend">
+<strong>|nonascii_58|XT</strong>. The distribution of the average similarity scores for noninactive-noninactive (NN) pairs and noninactive-inactive (NI) pairs of 1,389 AIDs in the PubChem BioAssay database: (a) shape-Tanimoto (ST), (b) color-Tanimoto (CT), and (c) Combo-Tanimoto (ComboT). All values binned in 0.01 increments.</div>
+</div>
+<div class="figure align-center" id="figure-10">
+<img alt="../_images/1758-2946-3-26-10.jpg" src="../_images/1758-2946-3-26-10.jpg" />
+<p class="caption">Figure 10. <em>|nonascii_59|*(*XT**NN-NI</em>:sub:<a href="#id56"><span class="problematic" id="id57">``</span></a>) per-AID similarity statistics</p>
+<div class="legend">
+<strong>|nonascii_60|XT****NN-NI</strong>:sub:<a href="#id58"><span class="problematic" id="id59">``</span></a><strong>) per-AID similarity statistics</strong>. The distribution of the difference of the average similarity scores for noninactive-noninactive (NN) pairs and noninactive-inactive (NI) pairs of 1,389 AIDs in the PubChem BioAssay database: (a) shape-Tanimoto (ST), (b) color-Tanimoto (CT), and (c) Combo-Tanimoto (ComboT). All values binned in 0.01 increments.</div>
+</div>
+<p>When looking at the distributions in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a> of the per-AID results, it is interesting to see, for a single conformer per compound anyway, that the per-AID average similarity distribution of NN pairs (primarily corresponding to the reputed &#8220;active/active&#8221; compound space) overlaps extensively with those of the NI pairs (essentially the reputed &#8220;active/inactive&#8221; compound space). The original hope was that there might be two clearly separated distributions, as this would be a clear signal that 3-D similarity using a single conformer per compound is able to distinguish between &#8220;actives&#8221; and &#8220;inactives&#8221; across all PubChem assays, but this is clearly not the case. The average and standard deviation of the <em class="xref std std-ref">3</em> were 0.58 ± 0.05 and 0.57 ± 0.04, respectively. The corresponding values for <em>not</em> be considered statistically significant, considering their standard deviations. In fact, the average of averages per-AID for the NN and NI pairs are not significantly different from the ST<sup>ST-opt</sup> and CT<sup>ST-opt</sup> values for random conformers (0.54 ± 0.10 and 0.07 ± 0.05, respectively), listed in Table <em class="xref std std-ref">2</em>. For the same reason, the <em>ComboT**ST-opt</em> :sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">differences</span> <span class="pre">between</span> <span class="pre">the</span> <span class="pre">NN</span> <span class="pre">and</span> <span class="pre">NI</span> <span class="pre">pairs</span> <span class="pre">are</span> <span class="pre">also</span> <span class="pre">not</span> <span class="pre">statistically</span> <span class="pre">significant.</span> <span class="pre">Note</span> <span class="pre">that,</span> <span class="pre">although</span> <span class="pre">the</span> <span class="pre">*not*</span> <span class="pre">be</span> <span class="pre">interpreted</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">statistically</span> <span class="pre">meaningful,</span> <span class="pre">considering</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">\</span> <span class="pre">:ref:`3&lt;table_3&gt;`-\</span> <span class="pre">:ref:`4&lt;table_4&gt;`.</span> <span class="pre">The</span> <span class="pre">optimization</span> <span class="pre">type</span> <span class="pre">(*i.e.*,</span> <span class="pre">either</span> <span class="pre">ST-</span> <span class="pre">or</span> <span class="pre">CT-optimization)</span> <span class="pre">was</span> <span class="pre">also</span> <span class="pre">found</span> <span class="pre">to</span> <span class="pre">not</span> <span class="pre">make</span> <span class="pre">significant</span> <span class="pre">difference</span> <span class="pre">in</span> <span class="pre">*\</span> <span class="pre">|nonascii_65|\</span> <span class="pre">*(*XT**NN-NI*\</span> <span class="pre">:sub:</span></tt>) values.</p>
+<p>Despite the significant overlap between the distributions for the NN and NI pairs in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a>, there are very subtle differences between them; for all six similarity scores, the NN-pair distributions, compared to the NI-pair distributions, have smaller AID counts at the peak and greater AID counts at the upper-tail region, indicating a small shift of the NN-pair distribution toward high similarity scores. This shift is also reflected in sharp, (mostly) normal distributions of <em>|nonascii_66|*(*XT**NN-NI</em>:sub:<a href="#id60"><span class="problematic" id="id61">``</span></a>), centered on the positive side just above zero in all cases (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>). This suggests that single conformer per compound 3-D similarity is showing some of the anticipated effect of the &#8220;similarity principle&#8221;, which states that structurally similar molecules are likely to have similar biological activities <a class="footnote-reference" href="#b33" id="id62">[33]</a><a class="footnote-reference" href="#b34" id="id63">[34]</a><a class="footnote-reference" href="#b35" id="id64">[35]</a><a class="footnote-reference" href="#b36" id="id65">[36]</a>, such that the &#8220;active/active&#8221; space is separated from the &#8220;active/inactive&#8221; space; however, for most assays in PubChem, this effect is simply not large enough to be unambiguous for all biological assays, as reflected in the μ[μ(XT<sub>NN-NI</sub>)] values smaller than σ[μ(XT<sub>NN-NI</sub>)] for all six similarity measures. Tables <em class="xref std std-ref">3</em> and <em class="xref std std-ref">4</em> also clearly show that, in general, there is no clear statistically meaningful separation across assays or assay category type using a single conformer per compound. For example, while there is clearly a positive average of NN-NI difference across all similarity score types for all assays and all assay categories, ranging from 0.00-0.13 for μ[μ(XT<sub>NN-NI</sub>)], the corresponding standard deviation of the average [<em>i.e.</em>, &#8220;σ[μ(XT<sub>NN-NI</sub>)]&#8221;] is consistently larger than the average value.</p>
+<p>These results lead to a number of questions. Why isn&#8217;t there a greater, unambiguous separation in the 3-D similarity scores between the NN and NI pairs? Is it that we are employing a single conformer per compound in the analysis? After all, the current PubChem3D theoretical conformer generation approach does not guarantee that the single (default) conformer used for each molecule in the NN pairs is a (or &#8220;the&#8221;) bioactive conformation. A general premise of the interpretation of 3-D similarity between a NN pair requires a &#8220;bioactive&#8221; conformation surrogate for <em>both</em> noninactive molecules. Estimating 3-D similarity between &#8220;non-bioactive&#8221; conformers of both molecules, or between a &#8220;bioactive&#8221; conformer of one molecule and a &#8220;non-bioactive&#8221; conformer of the other, is essentially identical to 3-D similarity comparison for the NI pairs. Therefore, the use of a single conformer per compound is not likely to result in enough similarity score difference between the NN and NI pairs across a wide set of assays. Using multiple conformers per compound may result in a greater separation in similarity scores between the NN and NI pairs, but performing the same analysis using multiple conformers per compound is prohibitively expensive, considering that we are dealing with 269.7 billion conformer pairs arising from 734 thousand compounds and optimizing each conformer pair by ST and then by CT (9 TB of data gzip compressed). Any increase in the count of conformers also increases the computational complexity (and data storage requirements) by the square of the number of conformers per compound considered.</p>
+<p>From a gross statistical approach, there is not sufficient separation across the averages of assays for a single conformer per compound to say definitively there is a clear separation between NN and NI pairs. It could be that, by considering multiple conformers per compound (and picking the best similarity conformer pair per compound pair), a clearer separation may occur, but this is a study for another day (and a bigger computer cluster and a bigger data storage system). There are, however, clear examples where some AIDs do show a clear separation, as shown in the tail regions of Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>, using only a single conformer per compound.</p>
+</div>
+<div class="section" id="c-3-outliers">
+<h4>C-3. Outliers<a class="headerlink" href="#c-3-outliers" title="Permalink to this headline">¶</a></h4>
+<p>Although the overall average differences in similarity scores between the NN and NI pairs were not statistically significant, some AIDs do have substantial (and statistically meaningful) NN-NI differences. These &#8220;outlier&#8221; cases correspond to the tail regions of the distribution curves in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>. For each of the six similarity measures, the AIDs that lie outside the <a class="reference internal" href="1758-2946-3-45.html#figure-11"><em>11</em></a> shows Venn diagrams detailing the outlier overlap as a function of 3-D similarity score type. To aid in discussion, the AIDs that have a statistically significant positive value of average NN-NI difference are deemed &#8220;upper-bound&#8221; cases [Figure <em class="xref std std-ref">11(b)</em> and <em class="xref std std-ref">11(d)</em>] and the AIDs that have a statistically significant negative value of average NN-NI difference are deemed &#8220;lower-bound&#8221; cases [Figure <em class="xref std std-ref">11(a)</em> and <em class="xref std std-ref">11(c)</em>].</p>
+<div class="figure align-center" id="figure-11">
+<img alt="../_images/1758-2946-3-26-11.jpg" src="../_images/1758-2946-3-26-11.jpg" />
+<p class="caption">Figure 11. Assay <em>|nonascii_75|*[</em>μ<em>(*XT**NN-NI</em>:sub:<a href="#id66"><span class="problematic" id="id67">``</span></a>)] outlier commonality by 3-D similarity type</p>
+<div class="legend">
+<strong>|nonascii_77||nonascii_78|XTAssay</strong> <strong>NN-NI</strong>:sub:<a href="#id68"><span class="problematic" id="id69">``</span></a><strong>)] outlier commonality by 3-D similarity type</strong>. The Venn diagrams show the number of AIDs whose difference of the average similarity scores for noninactive-noninactive (NN) pairs and noninactive-inactive (NI) pairs of 1,389 AIDs in the PubChem BioAssay database are out of the range of</div>
+</div>
+<p>The lower-bound cases are when the average 3-D similarity scores for &#8220;active/inactive&#8221; compound pairs are greater than for &#8220;active/active&#8221; compound pairs, a counter result to the whole notion of chemical similarity. While the opposite of what one might expect, it can readily occur from a set of chemical structures that are predominately 3-D similar, being on both sides of that subjective and (at times) arbitrary line of being &#8220;active&#8221; or &#8220;inactive&#8221;, and where most compounds in the compound series are considered &#8220;inactive&#8221;, as can be the case with well defined &#8220;activity cliffs&#8221; <a class="footnote-reference" href="#b34" id="id70">[34]</a><a class="footnote-reference" href="#b37" id="id71">[37]</a><a class="footnote-reference" href="#b38" id="id72">[38]</a><a class="footnote-reference" href="#b39" id="id73">[39]</a><a class="footnote-reference" href="#b40" id="id74">[40]</a>.</p>
+<p>Among the 109 unique, lower-bound <em class="xref std std-ref">11 (a)</em>]. A similar trend is found in the case of lower-bound <em class="xref std std-ref">11 (c)</em>]. Perhaps this should not be a surprise as shape alone (ignoring features) might not be expected to be a good discriminator of &#8220;actives&#8221; and &#8220;inactives&#8221;. On the other hand, as shown in Figure <em class="xref std std-ref">11 (b)</em>, there are relatively few unique upper-bound outlier cases solely attributable to <em class="xref std std-ref">11 (d)</em>]. This suggests, for the upper-bound AID outlier cases, use of ComboT similarity score is most efficient at finding most of the outlier cases when using a single conformer per compound.</p>
+<p>Figure <a class="reference internal" href="1758-2946-3-45.html#figure-12"><em>12</em></a> compares the</p>
+<div class="figure align-center" id="figure-12">
+<img alt="../_images/1758-2946-3-26-12.jpg" src="../_images/1758-2946-3-26-12.jpg" />
+<p class="caption">Figure 12. Assay <em>|nonascii_79|*[</em>μ<em>(*ComboT**NN-NI</em>:sub:<a href="#id75"><span class="problematic" id="id76">``</span></a>)] outlier commonality by superposition optimization type</p>
+<div class="legend">
+<strong>|nonascii_81||nonascii_82|ComboTAssay</strong> <strong>NN-NI</strong>:sub:<a href="#id77"><span class="problematic" id="id78">``</span></a><strong>)] outlier commonality by superposition optimization type</strong>. The Venn diagrams show the number of AIDs whose difference of the average ComboT similarity scores for noninactive-noninactive (NN) pairs and noninactive-inactive (NI) pairs of 1,389 AIDs in the PubChem BioAssay database that are out of the range of</div>
+</div>
+<p>Table <em class="xref std std-ref">5</em> gives the top 25% of the common <em>ComboT**NN-NI</em> :sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">upper-bound</span> <span class="pre">AID</span> <span class="pre">outliers,</span> <span class="pre">yielding</span> <span class="pre">the</span> <span class="pre">largest</span> <span class="pre">magnitude</span> <span class="pre">difference</span> <span class="pre">in</span> <span class="pre">average</span> <span class="pre">NN-NI</span> <span class="pre">separation,</span> <span class="pre">and</span> <span class="pre">Table</span> <span class="pre">\</span> <span class="pre">:ref:`6&lt;table_6&gt;`</span> <span class="pre">gives</span> <span class="pre">all</span> <span class="pre">common</span> <span class="pre">*ComboT**NN-NI*</span> <span class="pre">\</span> <span class="pre">:sub:</span></tt>lower-bound AID outliers. Table <em class="xref std std-ref">7</em> lists the count of assay outliers broken down by optimization type and similarity metric type. Exploring the top five assays in Table <em class="xref std std-ref">5</em>, the first three represent trivial examples of a compound series easily identifiable using 2-D similarity or 3-D similarity or by eye. AID 672, with the fourth largest NN-NI positive difference found, is somewhat more interesting.</p>
+<p>AID 672 is a secondary confirmatory assay with four active compounds, shown in Figure <em class="xref std std-ref">13 (a)</em>, that comprise the NN pairs. Of these four structures, three have a similar substructure but only two of the structures (CIDs 647501 and 653297) might be considered &#8220;similar&#8221; with a 0.76 2-D similarity using the PubChem subgraph fingerprint [Figure <em class="xref std std-ref">13 (b)</em>]; however, using ComboT<sup>ST-opt</sup> 3-D similarity, all four compounds have pair-wise similarity beyond random (<em>i.e.</em>, ComboT<sup>ST-opt</sup> &gt; { μ + σ } = 0.74 from Table <em class="xref std std-ref">2</em>) except for one compound pair (CIDs 66541 and 787437). An example of one of these pair-wise superpositions [Figure <em class="xref std std-ref">13 (c)</em>] shows one way these different chemical structures can be superimposed relative to their shape and feature complements. While a relatively small example, and easy to examine in detail, there readily exists much larger examples.</p>
+<div class="figure align-center" id="figure-13">
+<img alt="../_images/1758-2946-3-26-13.jpg" src="../_images/1758-2946-3-26-13.jpg" />
+<p class="caption">Figure 13. Separation between actives and inactives</p>
+<div class="legend">
+<strong>Separation between actives and inactives</strong>. An example of clear separation between</div>
+</div>
+<p>AID 2230, also a secondary confirmatory assay and fifth in the list found in Table <em class="xref std std-ref">5</em>, possesses a much larger NN set with 92 compounds. When examining these by 2-D cluster analysis using the PubChem Structure Clustering tool, as shown in Figure <a class="reference internal" href="1758-2946-3-51.html#figure-14"><em>14</em></a>, there are clearly two compound series, one with 51 compounds and the other with 31 compounds, representing the majority of the &#8220;active&#8221; chemical structures. Switching to 3-D ComboT similarity, all but four of the 92 compounds, as shown in Figure <a class="reference internal" href="1758-2946-3-5.html#figure-15"><em>15</em></a>, are inter-related at a <em>ComboT**CT-opt</em> :sup:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">value</span> <span class="pre">above</span> <span class="pre">1.04.</span> <span class="pre">As</span> <span class="pre">shown</span> <span class="pre">in</span> <span class="pre">Table</span> <span class="pre">\</span> <span class="pre">:ref:`2&lt;table_2&gt;`,</span> <span class="pre">a</span> <span class="pre">value</span> <span class="pre">of</span> <span class="pre">1.04</span> <span class="pre">is</span> <span class="pre">more</span> <span class="pre">than</span> <span class="pre">three</span> <span class="pre">standard</span> <span class="pre">deviations</span> <span class="pre">away</span> <span class="pre">from</span> <span class="pre">the</span> <span class="pre">random</span> <span class="pre">average</span> <span class="pre">of</span> <span class="pre">0.59</span> <span class="pre">for</span> <span class="pre">*ComboT**CT-opt*\</span> <span class="pre">:sup:</span></tt>. As one goes to a <em>ComboT**CT-opt</em> :sup:<a href="#id79"><span class="problematic" id="id80">``</span></a>value of 1.2, several different clusters appear with the largest containing 46 compounds and second largest containing 20 compounds. This demonstrates how 3-D similarity is able to relate chemical series distinct in 2-D similarity, as representing similar shape and feature space even with a single conformer per compound.</p>
+<div class="figure align-center" id="figure-14">
+<img alt="../_images/1758-2946-3-26-14.jpg" src="../_images/1758-2946-3-26-14.jpg" />
+<p class="caption">Figure 14. 2-D similarity isolates related chemical series</p>
+<div class="legend">
+<strong>2-D similarity isolates related chemical series</strong>. Dendrogram from the PubChem Structure Clustering tool for 88 of the 92 noninactive pairs from AID 2230 showing two primary clusters (containing 51 and 31 compounds, respectively) at 0.8 Tanimoto using 2-D similarity. Note that all but one compound is related above 0.7 Tanimoto.</div>
+</div>
+<div class="figure align-center" id="figure-15">
+<img alt="../_images/1758-2946-3-26-15.jpg" src="../_images/1758-2946-3-26-15.jpg" />
+<p class="caption">Figure 15. 3-D similarity interrelates chemical series</p>
+<div class="legend">
+<strong>3-D similarity interrelates chemical series</strong>. Dendrogram from the PubChem Structure Clustering tool for 88 of the 92 noninactive pairs from AID 2230 showing three primary clusters (containing 46, 20, and 13 compounds, respectively) at 1.2 combo Tanimoto (ComboT) using 3-D similarity, CT-optimized. All structures are interrelated at a ComboT of 1.04, more than 3.2 standard deviations beyond the random pair average of 0.59.</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id81">
+<h2>Conclusion<a class="headerlink" href="#id81" title="Permalink to this headline">¶</a></h2>
+<p>Six 3-D similarity measures (<em>ST</em><sup>ST-opt</sup>, <em>CT</em><sup>ST-opt</sup>, <em>ComboT</em><sup>ST-opt</sup>, <em>ST</em><sup>CT-opt</sup>, <em>CT</em><sup>CT-opt</sup>, and <em>ComboT</em><sup>CT-opt</sup>) in conjunction with 734,486 biologically tested compounds from PubChem were utilized to help answer the question: what is a biologically meaningful 3-D similarity score? The distribution of the six similarity measures for biologically tested compound pairs, resulting from computation of all-against-all similarity scores (269.7 billion unique conformer pairs), yielded an average and standard deviation for <em>ST</em><sup>ST-opt</sup>, <em>CT</em><sup>ST-opt</sup>, <em>ComboT</em><sup>ST-opt</sup>, <em>ST</em><sup>CT-opt</sup>, <em>CT</em><sup>CT-opt</sup>, and <em>ComboT</em><sup>CT-opt</sup> of 0.54 ± 0.10, 0.07 ± 0.05, 0.62 ± 0.13, 0.41 ± 0.11, 0.18 ± 0.06, and 0.59 ± 0.14, respectively. These values represent valuable benchmarks for the 3-D similarity values provided by PubChem and those computed by some commercial software packages. One can now know when a statistically meaningful superposition between a conformer pair occurs, potentially helping to improve their ability to analyze bioactivity information.</p>
+<p>This random distribution of biologically tested compounds was constructed using a single theoretical conformer per compound (the &#8220;default&#8221; conformer provided by PubChem). If one were to use multiple diverse conformers per compound and pick the best 3-D similarity score, the average random distribution values may well be higher (perhaps significantly so); however, if one considers the continuum of all similarity values produced in the use of multiple diverse conformers per compound to yield a similar random distribution values, the averages (and standard deviations) above may still be applicable or, perhaps, treated as a conservative lower bound result. Further study is clearly warranted using multiple diverse conformers per compound. This work is a critical first step covering a very wide corpus of chemical structures and biological assays and creating a statistical framework to build upon.</p>
+<p>The second part of this study explored the question of whether it was possible to realize a statistically meaningful 3-D similarity value separation between reputed biological assay &#8220;inactives&#8221; and &#8220;actives&#8221;. Using the terminology of noninactive-noninactive (NN) pairs and the noninactive-inactive (NI) pairs to represent comparison of the &#8220;active/active&#8221; and &#8220;active/inactive&#8221; spaces, respectively, each of the 1,389 biological assays were examined by their 3-D similarity score differences between the NN and NI pairs and analyzed across all assays and assay category types. Regardless of the optimization type employed (<em>i.e.</em>, either of ST- or CT-optimization), the overall average difference between the <em>|nonascii_91|*(*XT**NN</em>:sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">)</span> <span class="pre">and</span> <span class="pre">*\</span> <span class="pre">|nonascii_92|\</span> <span class="pre">*(*XT**NI*\</span> <span class="pre">:sub:</span></tt>) values, while consistently positive (as hoped), were not statistically unambiguous after considering their large standard deviations. Similarly, an increase in the</p>
+<p>The negligible difference in 3-D similarity between the NN and NI pairs may be due to employing a single conformer per compound in this study. Conceivably the 3-D similarity between two noninactive molecules should be evaluated using the &#8220;bioactive&#8221; conformer for each molecule, being the conformer giving rise to the observed biological activity; however, the single conformers per compound used in the present study are not guaranteed to be sufficiently similar to the bioactive conformers, and the average similarity scores per-AID for the NN pairs were not much different than those from the NI pairs. Considering the negligible difference in the 3-D similarity scores between the NN and NI pairs, it may not be appropriate to analyze bioassay data with a single conformer per compound in a general sense. With that said, there were a subset of biological assays where a clear separation between the NN and NI pairs were found. In addition, use of combo Tanimoto (ComboT) alone, independent of superposition optimization type, appears to be the most efficient 3-D score type in identifying these cases.</p>
+</div>
+<div class="section" id="materials-and-methods">
+<h2>Materials and methods<a class="headerlink" href="#materials-and-methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="datasets">
+<h3>1. Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline">¶</a></h3>
+<p>At the time of project initiation (late January of 2010), there were 2,008 bioassays (unique identifier AID) deposited in the PubChem BioAssay database, ranging from AID 1 to AID 2310. Among the chemical structures tested in these assays, those with associated PubChem Compound records (unique identifier CID) with theoretical 3-D conformer models available <a class="footnote-reference" href="#b22" id="id82">[22]</a> were considered in the present study. Note that the 3-D information is only available for CIDs that satisfy the following restrictions <a class="footnote-reference" href="#b22" id="id83">[22]</a><a class="footnote-reference" href="#b23" id="id84">[23]</a>:</p>
+<ol class="arabic simple">
+<li>is a single covalent component.</li>
+<li>contains only organic [H, C, N, O, F, P, S, Cl, Br, and I] elements</li>
+<li>possess only typical bonding situation (<em>e.g.</em>, no hyper valent situations)</li>
+<li>not too big (<em>e.g.</em>, 50 non-hydrogen atoms or less) and not too flexible (<em>e.g.</em>, 15 effective rotors or less)</li>
+<li>have five undefined stereocenters or less</li>
+</ol>
+<p>There are 734,486 CIDs satisfying the above conditions for the 2,008 AIDs. All data is accessible from the PubChem website (<a class="reference external" href="http://pubchem.ncbi.nlm.nih.gov">http://pubchem.ncbi.nlm.nih.gov</a>). Bulk download of data is also available from the PubChem FTP site (<a class="reference external" href="ftp://ftp.ncbi.nlm.nih.gov/pubchem">ftp://ftp.ncbi.nlm.nih.gov/pubchem</a>). The AIDs considered are provided in Additional File</p>
+</div>
+<div class="section" id="similarity-score-computation">
+<h3>2. Similarity Score Computation<a class="headerlink" href="#similarity-score-computation" title="Permalink to this headline">¶</a></h3>
+<p>In the first part of this study, the first diverse conformer <a class="footnote-reference" href="#b24" id="id86">[24]</a> for each of the 734,486 CIDs were downloaded. A total of six different 3-D similarity scores were computed, resulting from three different similarity metrics computed for conformer pairs superpositions optimized in two different ways. The three similarity metrics are: shape Tanimoto [ST, <strong>Equation (1)</strong>], measuring the shape similarity; color Tanimoto [CT, <strong>Equation (2)</strong>], measuring the similarity of 3-D orientation of functional groups used to defined pharmacophores (specified simply as features); and combo Tanimoto (ComboT), the simple sum of ST and CT [<strong>Equation (3)</strong>]. The two conformer superposition methods used optimize: by shape similarity (ST-optimized), where conformer shape overlap is maximized; and feature similarity (CT-optimized), where conformer feature overlap is maximized. Feature definitions and all similarities were computed using the C++ Shape toolkit <a class="footnote-reference" href="#b28" id="id87">[28]</a> from OpenEye Scientific Software, Inc.</p>
+<p>There were a total of 269,734,474,855 conformer pair similarity sets from all possible unique combinations of the 734,486 conformers. Histograms of the computed similarity scores were generated after binning all similarity scores in 0.01 increments [using the C function &#8220;rint(float)&#8221;]. Note that we used only the first diverse conformer for each compound, being the PubChem default conformer. Considering the total size of data files (9.0 TB compressed, when storing only the two conformer IDs, the two similarity scores, the 3 × 3 rotational matrix, and translation vector per conformer pair computed), employing additional conformers per compound in this study would quickly overwhelm the available computational resources and disk space to consider.</p>
+<p>Many of the compounds in the present study were biologically tested in multiple assays, and hence, a substantial fraction of conformer pairs appear in multiple assays. Therefore, since consideration is given to one assay at a time, extracting the similarity scores for the conformer pairs tested in each AID from the all-by-all similarity score matrices computed and stored in the first part of study is described in Figure <a class="reference internal" href="1758-2946-3-5.html#figure-16"><em>16</em></a>.</p>
+<div class="figure align-center" id="figure-16">
+<img alt="../_images/1758-2946-3-26-16.jpg" src="../_images/1758-2946-3-26-16.jpg" />
+<p class="caption">Figure 16. Analysis method overview</p>
+<div class="legend">
+<strong>Analysis method overview</strong>. Pseudo code that describes the process by which the average and standard deviation of the ST-optimized similarity scores for noninactive-inactive (NI) pairs for individual bioassay were computed. This process was repeated for the CT-optimized similarity scores. For the average and standard deviation of the similarity scores for the noninactive-noninactive (NN) pairs were also computed in a similar manner, except that only the cid_aid_list1 (for noninactves) was searched both for cid1 and cid2.</div>
+</div>
+</div>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>EEB computed the similarity score matrices. SK analyzed the data and wrote the first draft. SHB reviewed the final manuscript. All authors read and approved the final manuscript.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>We are grateful to the NCBI Systems staff, especially Ron Patterson, Charlie Cook, and Don Preuss, whose efforts helped make the PubChem3D project possible. This research was supported (in part) by the Intramural Research Program of the National Library of Medicine, National Institutes of Health, U.S. Department of Health and Human Services. This study utilized the high-performance computational capabilities of the Biowulf Linux cluster at the National Institutes of Health, Bethesda, MD. (<a class="reference external" href="http://biowulf.nih.gov">http://biowulf.nih.gov</a>).</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>From combinatorial chemistry to cancer-targeting peptides</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>Recent advances in combinatorial chemistry applied to development of anti-HIV drugs</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>Dynamic combinatorial chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td>The interplay between structure-based design and combinatorial chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td>The synergy between combinatorial chemistry and high-throughput screening</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[6]</a></td><td>Combinatorial chemistry: oh what a decade or two can do</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[7]</a></td><td>High-throughput electrophysiology: an emerging paradigm for ion-channel screening and physiology</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[8]</a></td><td>High-throughput screening assays for the identification of chemical probes</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[9]</a></td><td>High-throughput RNAi screening in cultured cells: a user&#8217;s guide</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[10]</a></td><td>Statistical practice in high-throughput screening data analysis</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[11]</a></td><td>Integration of virtual and high-throughput screening</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[12]</a></td><td>Enzyme assays for high-throughput screening</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[13]</a></td><td>Flow cytometry for high-throughput, high-content screening</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[14]</a></td><td>Electrospray ionization tandem mass spectrometry in high-throughput screening of homogeneous catalysts</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[15]</a></td><td>High-throughput screening: new technology for the 21st century</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[16]</a></td><td>High-throughput screening in drug metabolism and pharmacokinetic support of drug discovery</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[17]</a></td><td>High-throughput and ultra-high-throughput screening: solution- and cell-based approaches</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[18]</a></td><td>PubChem: integrated platform of small molecules and biological activities</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[19]</a></td><td>PubChem: a public information system for analyzing bioactivities of small molecules</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[20]</a></td><td>An overview of the PubChem BioAssay resource</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[21]</a></td><td>Database resources of the National Center for Biotechnology Information</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[22]</td><td><em>(<a class="fn-backref" href="#id23">1</a>, <a class="fn-backref" href="#id27">2</a>, <a class="fn-backref" href="#id82">3</a>, <a class="fn-backref" href="#id83">4</a>)</em> PubChem3D: conformer generation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[23]</td><td><em>(<a class="fn-backref" href="#id24">1</a>, <a class="fn-backref" href="#id28">2</a>, <a class="fn-backref" href="#id84">3</a>)</em> PubChem3D: diversity of shape</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[24]</td><td><em>(<a class="fn-backref" href="#id25">1</a>, <a class="fn-backref" href="#id29">2</a>, <a class="fn-backref" href="#id31">3</a>, <a class="fn-backref" href="#id36">4</a>, <a class="fn-backref" href="#id44">5</a>, <a class="fn-backref" href="#id86">6</a>)</em> PubChem3D: similar conformers</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[25]</td><td><em>(<a class="fn-backref" href="#id26">1</a>, <a class="fn-backref" href="#id45">2</a>)</em> PubChem3D: shape compatibility filtering using molecular shape quadrupoles</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[26]</a></td><td>PubChem substructure fingerprint description</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[27]</td><td><em>(<a class="fn-backref" href="#id32">1</a>, <a class="fn-backref" href="#id37">2</a>)</em> ROCS - Rapid Overlay of Chemical Structures</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[28]</td><td><em>(<a class="fn-backref" href="#id33">1</a>, <a class="fn-backref" href="#id38">2</a>, <a class="fn-backref" href="#id41">3</a>, <a class="fn-backref" href="#id87">4</a>)</em> ShapeTK-C++</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[29]</a></td><td>A fast method of molecular shape comparison: a simple application of a Gaussian description of molecular shape</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[30]</a></td><td>A shape-based 3-D scaffold hopping method and its application to a bacterial protein-protein interaction</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id42">[31]</a></td><td>Molecular shape and medicinal chemistry: a perspective</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id43">[32]</a></td><td>Comparison of topological, shape, and docking methods in virtual screening</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id62">[33]</a></td><td>Concepts and Applications of Molecular Similarity</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b34" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[34]</td><td><em>(<a class="fn-backref" href="#id63">1</a>, <a class="fn-backref" href="#id70">2</a>)</em> On outliers and activity cliffs - why QSAR often disappoints</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b35" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id64">[35]</a></td><td>Do structurally similar molecules have similar biological activity?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b36" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id65">[36]</a></td><td>Similarity methods in chemoinformatics</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b37" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id71">[37]</a></td><td>Design of multitarget activity landscapes that capture hierarchical activity cliff distributions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b38" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id72">[38]</a></td><td>Chemical substitutions that introduce activity cliffs across different compound classes and biological targets</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b39" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id73">[39]</a></td><td>Characterization of activity landscapes using 2D and 3D similarity methods: consensus activity cliffs</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b40" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id74">[40]</a></td><td>Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">PubChem3D: Biologically relevant 3-D similarity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">Results and Discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#a-notations">A. Notations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#b-3-d-similarity-score-distribution-of-random-conformer-pairs">B. 3-D similarity score distribution of random conformer pairs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#b-1-structural-and-chemical-characteristics-of-the-biologically-tested-molecules">B-1. Structural and chemical characteristics of the biologically tested molecules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#b-2-distribution-of-3-d-similarity-scores-for-biologically-tested-molecules">B-2. Distribution of 3-D similarity scores for biologically tested molecules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#c-3-d-similarity-score-differences-for-the-nn-and-ni-pairs">C. 3-D similarity score differences for the NN and NI pairs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#c-1-selection-of-aids-from-the-pubchem-bioassay-database">C-1. Selection of AIDs from the PubChem BioAssay database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-2-differences-between-the-3-d-similarity-scores-of-nn-and-ni-pairs">C-2. Differences between the 3-D similarity scores of NN and NI pairs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-3-outliers">C-3. Outliers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id81">Conclusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#materials-and-methods">Materials and methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#datasets">1. Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity-score-computation">2. Similarity Score Computation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-25.html" title="PubChem3D: Shape compatibility filtering using molecular shape quadrupoles"
+             >previous</a> |
+          <a href="1758-2946-3-27.html" title="Theoretical NMR correlations based Structure Discussion"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-26.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,647 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ChemicalTagger: A tool for semantic text-mining in chemistry &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="AMBIT RESTful web services: an implementation of the OpenTox application programming interface" href="1758-2946-3-18.html" />
+    <link rel="prev" title="Semantic Web integration of Cheminformatics resources with the SADI framework" href="1758-2946-3-16.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-16.html" title="Semantic Web integration of Cheminformatics resources with the SADI framework"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-18.html" title="AMBIT RESTful web services: an implementation of the OpenTox application programming interface"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="chemicaltagger-a-tool-for-semantic-text-mining-in-chemistry">
+<h1>ChemicalTagger: A tool for semantic text-mining in chemistry<a class="headerlink" href="#chemicaltagger-a-tool-for-semantic-text-mining-in-chemistry" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>The primary method for scientific communication is in the form of published scientific articles and theses which use natural language combined with domain-specific terminology. As such, they contain free owing unstructured text. Given the usefulness of data extraction from unstructured literature, we aim to show how this can be achieved for the discipline of chemistry. The highly formulaic style of writing most chemists adopt make their contributions well suited to high-throughput Natural Language Processing (NLP) approaches.</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>We have developed the ChemicalTagger parser as a medium-depth, phrase-based semantic NLP tool for the language of chemical experiments. Tagging is based on a modular architecture and uses a combination of OSCAR, domain-specific regex and English taggers to identify parts-of-speech. The ANTLR grammar is used to structure this into tree-based phrases. Using a metric that allows for overlapping annotations, we achieved machine-annotator agreements of 88.9% for phrase recognition and 91.9% for phrase-type identification (<em>Action</em> names).</p>
+</div>
+<div class="section" id="conclusions">
+<h3>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h3>
+<p>It is possible parse to chemical experimental text using rule-based techniques in conjunction with a formal grammar parser. ChemicalTagger has been deployed for over 10,000 patents and has identified solvents from their linguistic context with &gt;99.5% precision.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>In many scientific disciplines, the primary method of communicating scientific results is in the form of a scientific paper or thesis which uses free flowing natural language combined with domain-specific terminology and numeric phrases. As such, they contain unstructured data, which is not identifiable by machines and not easily re-usable. Information providers have built businesses around the manual abstraction of unstructured data from the literature by human domain experts. Apart from the considerable labour cost and delay after the original publication, human abstraction is also a considerable source of error and data corruption.</p>
+<p>A typical synthesis procedure taken from the organic chemistry literature, reads as follows: <a class="footnote-reference" href="#b1" id="id2">[1]</a></p>
+<p><strong>5-Cyclobutyl-2,3-dihydro-[1H]-2-benzazepine 82:</strong></p>
+<p>Potassium carbonate (0.63 g, 4.56 mmol) and thiophenol (0.19 g, 1.69 mmol) were added to the 2-nitrobenzene sulfonamide <strong>50</strong> (0.50 g, 1.302 mmol) in N, N-dimethylformamide (33 cm<sup>3</sup> ) at room temperature and the mixture was stirred for 16 h. Deionised water (50 cm<sup>3</sup> ) was added and the aqueous phase was extracted with ethyl acetate (5 × 50 cm<sup>3</sup> ). The organic extracts were dried (MgSO<sub>4</sub>) and concentrated under reduced pressure to give the title compound <strong>82</strong> (0.259 g, 1.302 mmol, ca. 100%) as an oil used without further purification.</p>
+<p>The example shown here shows highly stylized and formulaic language, which occurs in many disciplines, and is not just restricted to chemistry, and consists of:</p>
+<p><strong>|nonascii_2| Semi-structured documents</strong>: Usually delimited by typographic conventions such as newlines and bold text, rather than formal markup.</p>
+<p><strong>|nonascii_3| Domain-specific entities</strong>: Entities and terminology from different scientific domains.</p>
+<p><strong>|nonascii_4| Stock phrases</strong>: <em>&#8216;X was added to a flask...&#8217;</em>.</p>
+<p><strong>|nonascii_5| Data phrases</strong>: <em>&#8216;(0.259 g, 1.302 mmol, ca. 100%)&#8217;</em>.</p>
+<p>Therefore, scientific papers are an attractive target for the development of machine processes for automatic information extraction. Text-mining uses NLP (Natural Language Processing) tools for the automatic discovery of previously unknown information from unstructured data. The information generated through text mining can be used for:</p>
+<p><a href="#id3"><span class="problematic" id="id4">**</span></a>•** The classification of documents (information retrieval).</p>
+<p><a href="#id5"><span class="problematic" id="id6">**</span></a>•** The determination of occurrence and co-occurrence of specific terms (indexing).</p>
+<p><a href="#id7"><span class="problematic" id="id8">**</span></a>•** The extraction of simple relationships.</p>
+<p><a href="#id9"><span class="problematic" id="id10">**</span></a>•** The systematic extraction of data from related studies.</p>
+<p><a href="#id11"><span class="problematic" id="id12">**</span></a>•** The generation of &#8216;mashups&#8217; between different disciplines, such as the interactive Crystallography timemap developed by Ben O&#8217;Steen <a class="footnote-reference" href="#b2" id="id13">[2]</a>. This visualisation shows authors of papers, geo-located onto a map and organised by the date of publication.</p>
+<p>Text-mining in chemistry is not as prevalent as it is biology, and the tools are less developed. Text-mining in biology is often used for the automatic extraction of information about genes, proteins and their functional relationships from text documents <a class="footnote-reference" href="#b3" id="id14">[3]</a><a class="footnote-reference" href="#b4" id="id15">[4]</a><a class="footnote-reference" href="#b5" id="id16">[5]</a><a class="footnote-reference" href="#b6" id="id17">[6]</a>. The NLP tools in biology are also well developed, and we aim to create the equivalent in chemistry for part-of-speech taggers such as the GeniaTagger <a class="footnote-reference" href="#b7" id="id18">[7]</a><a class="footnote-reference" href="#b8" id="id19">[8]</a> as well as syntactic parsers such as Enju <a class="footnote-reference" href="#b9" id="id20">[9]</a>.</p>
+<div class="section" id="aims-and-objectives">
+<h3>Aims and Objectives<a class="headerlink" href="#aims-and-objectives" title="Permalink to this headline">¶</a></h3>
+<p>The aim of this paper is to show how text-mining has been achieved for the discipline of chemistry using our ChemicalTagger tool. Chemists not only produce a significant amount of data-rich scholarly communication artefacts, but have also adopted the highly formulaic style of writing outlined above. Consequently, these publications are an attractive target for automated data extraction. The sample paragraph quoted above will be used as an example throughout this paper, but it is stressed that the techniques reported here can be applied to much of science.</p>
+<p>Previous work has concentrated on the identification and extraction of chemical entities from scientific papers <a class="footnote-reference" href="#b10" id="id21">[10]</a><a class="footnote-reference" href="#b11" id="id22">[11]</a><a class="footnote-reference" href="#b12" id="id23">[12]</a>, but did not address the extraction of the relationships linking these entities to both each other as well as to the document object from which they were extracted. The current work aims to address these issues using novel methods to extract information such as units, mixtures, amounts of substances and roles (such as solvents, reactants and products) as well as <em>Action</em> phrases using linguistic context. ChemicalTagger was initially developed in the context of physical science and has been designed to interoperate with bioscience tools and requirements as explored and presented at Dagstuhl 2008 <a class="footnote-reference" href="#b13" id="id24">[13]</a>. The chemical literature considered in this work consists of journal articles, open-access theses and reports (<em>e.g</em>. company reports). Most of these documents have the general structure of &#8216;Introduction&#8217;, &#8216;Materials and Methods&#8217;, &#8216;Experiments&#8217;, &#8216;Results&#8217;, &#8216;Discussion&#8217; and &#8216;Summary and Conclusion&#8217;. This paper will focus on the experimental section, which usually consists of paragraphs such as the example shown above. The next section will demonstrate how relationships between entities can be extracted using our ChemicalTagger tool and stored in a machine-understandable format.</p>
+</div>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<p>ChemicalTagger is an open-source tool for tagging and parsing experimental sections in the chemistry literature. It takes a string of text as input and produces a structured XML document as output. The ChemicalTagger workflow can be divided into five main steps: text normalisation, tokenisation, tagging, phrase parsing and finally <em>Action</em> phrase identification. These steps will be described further below:</p>
+<div class="section" id="text-normalisation">
+<h3>Text Normalisation<a class="headerlink" href="#text-normalisation" title="Permalink to this headline">¶</a></h3>
+<p>Text normalisation is a preprocessing step that transforms the text into a format that is consistent for tagging. This involves removing nonprinting Unicode characters from text (these are the Unicode character set values 0 to 31, 127, 129, 141, 143, 144, and 157) and normalising the spacing between the words. To demonstrate, a sample phrase from the experimental paragraph above will be used:</p>
+<p><em>&#8216;Potassium carbonate (0.63 g, 4.56 mmol) and thiophenol (0.19 g, 1.69 mmol) were added to the 2-nitrobenzene sulfonamide&#8217;</em></p>
+<p>The text-normaliser first cleans the text of nonprinting characters such as non-breaking spaces, tabs and carriage returns. It then proceeds to formatting the spaces between alphanumeric and non-alphanumeric characters (<em>i.e</em>. commas, brackets, full stops...) within the sentence. In the sentence above, strings such as &#8216;(0.63 g,&#8217; and &#8216;(0.19 g,&#8217; could cause problems for the tagger as they are composed of four separate elements that have been combined, and consequently would be mistagged. The normaliser will break such strings down into their constituent parts <em>i.e</em> &#8216;(0.63 g,&#8217; and &#8216;(0.19 g,&#8217; respectively. Special care is taken with decimal points within numbers as well as brackets and commas within chemical names. After normalisation, the following text is produced:</p>
+<p><em>&#8216;Potassium carbonate (0.63 g, 4.56 mmol) and thiophenol (0.19 g, 1.69 mmol) were added to the 2-nitrobenzene sulfonamide&#8217;</em></p>
+</div>
+<div class="section" id="tokenisation">
+<h3>Tokenisation<a class="headerlink" href="#tokenisation" title="Permalink to this headline">¶</a></h3>
+<p>Tokenisation is the process of splitting a phrase into into a sequence of meaningful elements called tokens. A token can be made up of one or more words and is not necessarily alphanumeric (<em>e.g</em>. commas, exclamation marks, full stops etc...). Many different splitting patterns are conceivable in natural language processing and hence many different tokenisers exist, with the most common one being the whitespace tokeniser. An adapted whitespace tokeniser is used by ChemicalTagger, since chemical names, in particular, are fragile to common methods of tokenisation as they contain potential inter-token characters such as space, hyphens, brackets and commata. Running the tokeniser on the normalised sentence above produces the following tokens (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>):</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-17-1.jpg" src="../_images/1758-2946-3-17-1.jpg" />
+<p class="caption">Figure 1. Tokenisation</p>
+<div class="legend">
+<strong>Tokenisation</strong>.</div>
+</div>
+</div>
+<div class="section" id="tagging">
+<h3>Tagging<a class="headerlink" href="#tagging" title="Permalink to this headline">¶</a></h3>
+<p>Tagging is the process of assigning grammatical roles to the tokens. ChemicalTagger uses a three-step cascading tagger. The first step involves running a chemical entity recogniser (OSCAR) on the tokens. ChemicalTagger then falls back on a customised regex tagger and then a parts-of-speech tagger for the tokens which have not been identified. The taggers will be discussed further below:</p>
+<div class="section" id="oscar-tagger">
+<h4>OSCAR-Tagger<a class="headerlink" href="#oscar-tagger" title="Permalink to this headline">¶</a></h4>
+<p>OSCAR <a class="footnote-reference" href="#b11" id="id25">[11]</a> is used for the recognition of chemical entities in text. OSCAR (Open Source Chemistry Analysis Routines) is an open source extensible system for the automated annotation of chemistry in scientific articles. It can be used to identify:</p>
+<p>• Chemical names, including formulae and acronyms.</p>
+<p>• Reaction names, such as <em>hydrolysis</em> and <em>Wolff-Kishner</em>.</p>
+<p>• Ontology terms.</p>
+<p>• Enzymes.</p>
+<p>• Chemical prefixes and adjectives.</p>
+<p>In addition, where possible, any chemical names detected will be annotated with structures derived either by lookup, or name-to-structure parsing using &#8216;OPSIN&#8217; <a class="footnote-reference" href="#b14" id="id26">[14]</a> or with identifiers from the ChEBI [#B15]_(&#8216;Chemical Entities of Biological Interest&#8217;) ontology. The extracted information is stored in XML format. Identified chemical entities are marked up using the <strong>ne</strong> (named entity) tag. The tag has four attributes:</p>
+<p>• <strong>Id</strong>: The id of the token within the document.</p>
+<p>• <strong>Surface</strong>: The text that makes up the entity.</p>
+<p>• <strong>Type</strong>: The chemical entity name, which can be either a chemical compound (CM), reaction name (RN), ontology term (ONT), chemical pre × (CPR), enzymes(ASE) or chemical adjective (CJ).</p>
+<p>• <strong>Confidence</strong>: The confidence score associated with the identification of the entity, if the entity was identified using OSCAR&#8217;s MEMM machine learning algorithm <a class="footnote-reference" href="#b16" id="id27">[16]</a>.</p>
+<p>The XML output resulting from running the OSCAR parser on our sample text provides the following:</p>
+<p>&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;</p>
+<p>At this stage, the chemical tokens have been successfully marked up (tokens denoted by single box and OSCAR-tagged tokens are shown in double boxes) (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>):</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-17-2.jpg" src="../_images/1758-2946-3-17-2.jpg" />
+<p class="caption">Figure 2. OSCAR Tagging</p>
+<div class="legend">
+<strong>OSCAR Tagging</strong>.</div>
+</div>
+</div>
+<div class="section" id="regex-tagger">
+<h4>Regex-Tagger<a class="headerlink" href="#regex-tagger" title="Permalink to this headline">¶</a></h4>
+<p>The Regex-Tagger is used to mark-up <em>chemistry-related</em> terms that are not recognised by OSCAR. These include nouns such as <em>solution</em> and <em>mixture</em> and verbs such as <em>quench</em> and <em>evaporate</em> that are specific to the chemistry domain. The Regex-tagger uses regular expressions that are stored in a <em>rules</em> file together with the customised tags. <em>chemistry-related</em> terms can include the following:</p>
+<p><strong>|nonascii_96| Boldface Numbers</strong>: These numbers usually refer to a chemical in the experiment, such as the number <strong>50</strong> in our example paragraph.</p>
+<p><a href="#id28"><span class="problematic" id="id29">**</span></a>Action•** : Verbs that refer to specific <em>Actions</em> in an experiment, such as adding, removing, dissolving etc...</p>
+<p><strong>|nonascii_98| Physical States</strong>: The different aggregation states a chemical compound may have such as liquid (including oils), solid (including crystals) or gas.</p>
+<p><strong>|nonascii_99| Units</strong>: Standardised quantities such as mmol, g and mL.</p>
+<p>This information is then passed to a regular expression tagger. Running this tagger on the sample phrase yields the following (tokens are denoted by single box, OSCAR-tagged tokens are in double boxes and regex-tagged tokens are underlined) (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>):</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-17-3.jpg" src="../_images/1758-2946-3-17-3.jpg" />
+<p class="caption">Figure 3. Regex Tagging</p>
+<div class="legend">
+<strong>Regex Tagging</strong>.</div>
+</div>
+</div>
+<div class="section" id="english-parts-of-speech-tagger">
+<h4>English Parts-of-Speech Tagger<a class="headerlink" href="#english-parts-of-speech-tagger" title="Permalink to this headline">¶</a></h4>
+<p>The final step of tagging involves marking up the general English language tokens. English parts-of-speech (POS) taggers are widely available and for the purposes of this work, the Penn Treebank is used. A treebank is a parsed text corpus (i.e. annotated with syntactic structure) that is used in corpus linguistics. The Penn Treebank <a class="footnote-reference" href="#b17" id="id30">[17]</a> is commonly used for English parts-of-speech tagging and is made up of 4.5 million American English words. Typical tags include: <a class="footnote-reference" href="#b18" id="id31">[18]</a></p>
+<p><strong>|nonascii_100| NN</strong> singular or mass noun</p>
+<p><strong>|nonascii_101| NNS</strong> plural noun</p>
+<p><strong>|nonascii_102| VB</strong> verb, base form</p>
+<p><strong>|nonascii_103| VBD</strong> verb, past tense</p>
+<p><strong>|nonascii_104| CD</strong> cardinal number (one, two, 2, etc.)</p>
+<p><strong>|nonascii_105| CC</strong> Conjunctions (and, or, plus etc...)</p>
+<p>This treebank is used within a parts-of-speech tagger, provided by OpenNLP. OpenNLP <a class="footnote-reference" href="#b19" id="id32">[19]</a> is a suite of open source Java projects, data sets and tutorials supporting research and development in natural language processing. Running this tagger against the non-tagged text gives the following (tokens denoted by single box, OSCAR-tagged tokens are in double boxes, regex-tagged tokens are underlined and English POS-tagged tokens are in italics) (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>):</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-17-4.jpg" src="../_images/1758-2946-3-17-4.jpg" />
+<p class="caption">Figure 4. English POS Tagging</p>
+<div class="legend">
+<strong>English POS Tagging</strong>.</div>
+</div>
+<p>At this stage, the text has been tokenised and tagged, it is now ready for parsing.</p>
+</div>
+</div>
+<div class="section" id="phrase-parsing">
+<h3>Phrase Parsing<a class="headerlink" href="#phrase-parsing" title="Permalink to this headline">¶</a></h3>
+<p>Parsers build on tagged tokens to assign syntactical structure to text. The goal of phrase parsing in ChemicalTagger is to build the chemical equivalent of a Chomsky <a class="footnote-reference" href="#b20" id="id33">[20]</a> tree structure of a sentence. Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a> is a syntactic tree model of a simple sentence.</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-17-5.jpg" src="../_images/1758-2946-3-17-5.jpg" />
+<p class="caption">Figure 5. Basic English Syntax Tree</p>
+<div class="legend">
+<strong>Basic English Syntax Tree</strong>. <a class="reference external" href="http://en.wikipedia.org/wiki/File:Basic_english_syntax_tree.svg">http://en.wikipedia.org/wiki/File:Basic_english_syntax_tree.svg</a>.</div>
+</div>
+<p>In this tree model <strong>S</strong> is a sentence, <strong>D</strong> is a determiner, <strong>N</strong> a noun, <strong>V</strong> a verb, <strong>NP</strong> a noun phrase and <strong>VP</strong> a verb phrase.</p>
+<p>In human discourse, sentences are parsed in multiple valid ways. However, the formualic structure of the chemical domain has a high probability for only one parse to be found. Therefore, a formal approach was decided on for phrase parsing so ChemicalTagger uses ANTLR <a class="footnote-reference" href="#b21" id="id34">[21]</a>. ANTLR (ANother Tool for Language Recognition) is a parser generator that uses LL(*) parsing to automate the construction of language recognisers. It was designed to generate grammars for formal programming languages, but is applicable to any domain where an underlying implicit grammar exists. We believe that the type of language in our corpus can largely be described by a formal grammar, therefore ANTLR is used as a novel method for parsing phrases in chemical language.</p>
+<p>LL(*) parsers are recursive descent parsers; they analyse input sequences by working their way down from the topmost non-terminal symbol until they reach a terminal node. In natural language these terminal nodes are the tokens. LL(*) parsers also use leftmost derivations and the symbols at each step are consumed from Left-to-Right, the &#8216;*&#8217; in LL(*) refers to the use of arbitrary lookahead to make decisions. According to Parr <a class="footnote-reference" href="#b21" id="id35">[21]</a>:</p>
+<p>LL(*)&#8217;s arbitrary lookahead is like bringing a trained monkey along in the maze. The monkey can race ahead of you down the various paths emanating from a fork. It looks for some simple word sequences from your [...]phrase that distinguish the paths. LL(*) represents a significant step forward in recognizer technology because it dramatically increases the number of acceptable grammars without incurring a large runtime speed penalty.</p>
+<p>To demonstrate how ANTLR is used, a simplified version of ChemicalTagger&#8217;s grammar is described below. For clarity, uppercase symbols represent terminals (symbols that can not be broken down into smaller constituents) while lowercase words represent non-terminals (symbols that can be broken down into smaller constituents).</p>
+<p>The top-rule in our grammar is a <em>sentence</em> and it can be made up of a <em>nounphrase</em> and a <em>verbphrase</em>:</p>
+<p>Using left derivation, the left non-terminal token <em>nounphrase</em> is selected. A <em>nounphrase</em> can be made up of a <em>determiner, adjective(s)</em> and <em>noun(s)</em>. A <em>noun</em> can include a <em>molecule</em> which in turn consists of an OSCAR recognised moiety followed by a <em>quantity</em>. A <em>quantity</em> consists of comma-separated numbers and units contained within brackets. This set of rules can be represented in ANTLR as follows:</p>
+<p>Once recursion down the <em>nounphrase</em> tree is completed, <em>verbphrase</em> is next. A <em>verbphrase</em> could consist of an <em>adverb, verb(s)</em> followed by a <em>prepphrase</em>. A <em>prepphrase</em> is made up of a preposition followed by a <em>nounphrase</em>.</p>
+<p>Running this grammar over the sample sentence produces the following output (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>) in the form of an Abstract Syntax Tree (AST). The add-phrase shown here is only a simple example; more complex rules are defined to cover most of the grammar within the chemistry domain.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-17-6.jpg" src="../_images/1758-2946-3-17-6.jpg" />
+<p class="caption">Figure 6. AST Output of ANTLR Parse</p>
+<div class="legend">
+<strong>AST Output of ANTLR Parse</strong>.</div>
+</div>
+</div>
+<div class="section" id="action-phrase-identification">
+<h3>Action Phrase Identification<a class="headerlink" href="#action-phrase-identification" title="Permalink to this headline">¶</a></h3>
+<p>The text has now been tagged and parsed, the next step is to assign roles to the parsed phrases. The roles, in this instance, refer to <em>Actions</em> carried out during a chemical synthesis (<em>e.g</em>. adding, dissolving, evaporating <em>etc</em>.). After surveying the literature in collaboration with domain experts, 21 different types of <em>Action</em> phrases were defined. The complete list of phrases can be found in Table <em class="xref std std-ref">1</em>.</p>
+<p>A postprocessing class was used to analyse the Abstract Syntax Tree, identify the <em>Action</em> phrases and output the tree to XML. Postprocessing our sample sentence gives the following XML output:</p>
+<p>The following types of phrases can now be extracted from the preparation (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>):</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-17-7.jpg" src="../_images/1758-2946-3-17-7.jpg" />
+<p class="caption">Figure 7. <em>Action</em> Phrase Markup</p>
+<div class="legend">
+<strong>Action</strong> .</div>
+</div>
+<p>It is important to note, that the parser also extracts nested noun-phrases such as the <strong>Dissolve-Phrase</strong> found within the <strong>Add-Phrase</strong> as shown above.</p>
+<div class="section" id="role-identification">
+<h4>Role Identification<a class="headerlink" href="#role-identification" title="Permalink to this headline">¶</a></h4>
+<p>This simple approach to <em>Action</em> phrase identification can yield good results. Other inferences can be made at this stage, such as the identification of &#8216;roles&#8217;. Typical roles for chemical compounds are products, reactants and solvents. Using linguistic context such as <em>Action</em> names and their position in the text we are able to detect this. For example in the following Dissolve-Phrase:</p>
+<p><em>2-nitrobenzene sulfonamide</em> <strong>50</strong> (0.50 g, 1.302 mmol) <strong>N, N-dimethylformamide (33 cm</strong><sup>3</sup><strong>)</strong> and Wash-Phrase:</p>
+<p>the combined organic extracts were washed <strong>brine</strong></p>
+<p>it can be inferred that <em>N, N-dimethylformamide</em> and <em>brine</em> are solvents using cues such as their position after the preposition(underlined) and the type of Action phrase in which they are contained. The compound <em>2-nitrobenzene sulfonamide</em> may be classified as a reactant as a result of its location at the start of the text and the bold number <strong>50</strong> following the compound. Bold numbers are commonly used as identifiers for reactants and products in organic chemistry literature. It can also be inferred that the product of this reaction is the compound <em>5-Cyclobutyl-2,3-dihydro-[1H]-2-benzazepine</em>, because of its location in the title</p>
+<p><strong>5-Cyclobutyl-2,3-dihydro-[1H]-2-benzazepine 82:</strong></p>
+<p>and the Yield-Phrase:</p>
+<p>to give the title compound <strong>82</strong> (0.259 g, 1.302 mmol, ca. 100%) as an oil.</p>
+<p>The structure provided through ChemicalTagger facilitates these inferences (see the &#8216;Architecture and Deployment&#8217; section).</p>
+</div>
+</div>
+<div class="section" id="output-representation">
+<h3>Output Representation<a class="headerlink" href="#output-representation" title="Permalink to this headline">¶</a></h3>
+<p>The ultimate goal of ChemicalTagger is to create machine processable structured data from natural language. The parse trees and nodes need to be preserved and labelled to identify any phrase or language component within them. Output formats for this data include CML, XML and RDF. Storing information in a structured machine-processable format makes it readily available for querying and visualisation tools. For example, a query could be run to retrieve all reactions that use N, N-dimethylformamide as a solvent and 2-nitrobenzene sulfonamide as a reactant that have yields greater than 80%. This would be a useful tool for grouping together similar reactions. Structured information can also be visualised, Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a> shows one method of visualising extracted reaction paths.</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-17-8.jpg" src="../_images/1758-2946-3-17-8.jpg" />
+<p class="caption">Figure 8. Graph of Reaction Paths</p>
+<div class="legend">
+<strong>Graph of Reaction Paths</strong>.</div>
+</div>
+<p>In this figure, the numbers in the nodes refer to the products and reactants, the colours reflect the extracted information about the colour of the product and the shapes of the nodes refer to the aggregation state of the product:</p>
+<p>• Ellipses: Unknown.</p>
+<p>• 3D Boxes: Solid.</p>
+<p>• Double Circles: Oil.</p>
+<p>• Octagon: Gum.</p>
+<p>• Triple Octagon: Foam.</p>
+<p>• Diamond: Crystals or Needles.</p>
+<p>As such, this graph provides a useful summary and a highly visual map of the chemistry reported in the paper -a document summary- and further analyses of this and graphs derived from other papers will open the door to the development of novel measures of document similarity (<em>e.g</em>. in terms of the chemical transformations reported in a corpus of synthesis papers).</p>
+</div>
+<div class="section" id="architecture-and-deployment">
+<h3>Architecture and Deployment<a class="headerlink" href="#architecture-and-deployment" title="Permalink to this headline">¶</a></h3>
+<p>ChemicalTagger has been developed in a modular manner using the Java framework, making individual components such as tokenisers, vocabularies and phrase grammars easily replaceable. This facilitates the study of a wide range of chemical subdomains which vary in syntactic style, vocabulary and semantic abstraction. Moreover, it is possible to convert ChemicalTagger&#8217;s output into CML <a class="footnote-reference" href="#b22" id="id36">[22]</a> using a ChemicalTagger2CML converter. Thus, identified phrase-based chemistry such as solutions, reaction and procedures can converted into computable CML. This then allows for the construction of machine-processable synthesis information and searchable indices <a class="footnote-reference" href="#b23" id="id37">[23]</a>.</p>
+<p>ChemicalTagger has been used in an initial study to index large numbers (<em>ca</em>. 10,000) of patents from the European Patent Office. Preliminary results of this work were presented at the Science Online meeting <a class="footnote-reference" href="#b24" id="id38">[24]</a> where the methodology and deployment were demonstrated. The <strong>Dissolve</strong> phrases were extracted to determine what solvents were used. Although precise metrics were not used, the false positive rate (i.e. identification of a compound that was not a solvent) was very low (less than 0.5%) showing that ChemicalTagger greatly enhances the precision of identification of chemical compounds as well as providing the most likely role.</p>
+<p>The modular structure of ChemicalTagger allows for adaption to general formulaic scientific language. Thus phrases that refer to conditions such as temperature (<em>at a temperature of</em> 25°C), time (<em>left to equilibrate for 24 hours</em>), atmosphere (<em>under a nitrogen atmosphere</em>), and pressure (<em>caused by high pressure</em>) can be found in atmospheric or bioscience papers and we believe that ChemicalTagger will identify these phrases with high precision without further modification. We are intending to promote ChemicalTagger as an Open Source general scientific NLP tool. The source code is available at</p>
+<p><a class="reference external" href="https://bitbucket.org/lh359/chemicaltagger">https://bitbucket.org/lh359/chemicaltagger</a></p>
+<p>and further information about ChemicalTagger can be found at</p>
+<p><a class="reference external" href="http://www-ucc.ch.cam.ac.uk/products/software/chemicaltagger">http://www-ucc.ch.cam.ac.uk/products/software/chemicaltagger</a></p>
+</div>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>Results and discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<p>Evaluation was performed by preparing a corpus of experimental paragraphs from the chemical literature and conducting an inter-annotator study. The purpose of the inter-annotator agreement study is two-fold: evaluating the agreement between human annotators agree with each other and assessing the performance of ChemicalTagger against human annotators. Although chemistry is a relatively closed domain, writing styles vary and therefore such an assessment is necessary to get a clear picture of the quality of any machine extracted information.</p>
+<div class="section" id="corpus-assembly">
+<h3>Corpus Assembly<a class="headerlink" href="#corpus-assembly" title="Permalink to this headline">¶</a></h3>
+<p>The test corpus was assembled by carrying out searches for polymer synthesis related keywords in SciFinder Scholar <a class="footnote-reference" href="#b25" id="id39">[25]</a>. The keywords were &#8216;atom transfer radical polymerization&#8217;, &#8216;condensation polymerization&#8217; and &#8216;anionic polymerization&#8217; and papers were chosen at random from a variety of journals. This was done in order to accommodate different writing styles and conventions used across the literature. 50 paragraphs from the experimental sections of these papers were used to create the corpus.</p>
+</div>
+<div class="section" id="inter-annotator-study">
+<h3>Inter-Annotator Study<a class="headerlink" href="#inter-annotator-study" title="Permalink to this headline">¶</a></h3>
+<p>The study was carried out by four annotators, who are all trained chemists with formal backgrounds in different areas of chemistry. The annotators were provided with annotation guidelines, that can be found here <a class="footnote-reference" href="#b26" id="id40">[26]</a>. The guidelines specify the structure of 21 different types of phrases that commonly occur in the chemistry literature and contain examples of annotated phrases from the experimental sections. The annotation process consisted of the chemists manually annotating 50 paragraphs from the test corpus and classifying the phrases according to the annotation guidelines. A point-and-click software tool was provided to facilitate annotation. After human annotation was completed, ChemicalTagger was run over the test corpus. Table <em class="xref std std-ref">2</em> shows a the number of <em>Action</em> phrases marked up by all four annotators alongside the number of <em>Action</em> phrases marked up by ChemicalTagger.</p>
+</div>
+<div class="section" id="evaluation">
+<h3>Evaluation<a class="headerlink" href="#evaluation" title="Permalink to this headline">¶</a></h3>
+<p>Evaluation was performed by pair-wise comparison of the annotations (<em>i.e</em> Annotator A vs Annotator B); and the phrases as well as the <em>Actions</em> assigned to them were evaluated. Similarity of the annotations was measured using a Dice coefficient, a similarity matrix which is defined as:</p>
+<p><a href="#id44"><span class="problematic" id="id45">|*X*|</span></a> and <a href="#id46"><span class="problematic" id="id47">|*Y*|</span></a> represent the annotations recognised by a pair of annotators. <a href="#id48"><span class="problematic" id="id49">|*X* \ |nonascii_113|</span></a> <em>Y*| is the intersection of these annotations. The value of the similarity coefficient **s*</em> therefore is twice the shared information over the combined set.</p>
+<div class="section" id="identity-of-annotations">
+<h4>Identity of annotations<a class="headerlink" href="#identity-of-annotations" title="Permalink to this headline">¶</a></h4>
+<p>Previous work on annotations concentrated on named entities where strict rules for agreement between annotators. For example, in the sentence <em>We used sodium chloride solution</em> only the multiworded token <em>sodium chloride</em> would be allowed, while <em>sodium</em> and <em>sodium chloride solution</em> would both score negative. However, providing guidelines for measuring similarity between phrases is difficult. Conjunctions are problematic as are anaphora such as <em>Salt was dissolved in water and concentrated at</em> 80°C. In this example there are two phrases, but &#8216;and&#8217; is not part of either and its inclusion could score negatively. Alongside the identification of the extent of the phrase (which should be exact) the annotators were also asked to identify the types of phrase (in this case <em>dissolve</em> and <em>concentrate</em>). It is possible to match the extent correctly and misidentify the type, or vice versa. These considerations are critical to interpreting the performance of ChemicalTagger.</p>
+<p>The <em>Action</em> types and phrases in the test corpus were evaluated separately. A string match was used to evaluate the <em>Action</em> types and a machine-annotator agreement of 91.9% was achieved (See Table <em class="xref std std-ref">3</em>).</p>
+<p>Evaluating phrase similarity was more challenging as annotators can often get the sense of the markup without the exact extent. Exact string match produced a low inter-annotator agreement of 55.5% and machine-annotator agreement of 48.7%. For example, <em>and concentrated at</em> 80°C and <em>concentrated at</em> 80°C. do not match identically but have sufficient overlap that it is clear that the annotators were in agreement. Therefore a set of metric techniques based on string filtration were developed. The filter removed common stock words and tokens, such as preceeding adverbs and prepositions as well as &#8216;.&#8217;, &#8216;,&#8217;, &#8216;;&#8217;, &#8216;and&#8217;, &#8216;to&#8217;, &#8216;the&#8217; and &#8216;a&#8217;, from consideration. This improved the observed average Dice Coefficient considerably and achieved an inter-annotator agreement of 76.2% and a machine-annotator agreement of 60.4% (See Table <em class="xref std std-ref">4</em>).</p>
+</div>
+<div class="section" id="text-alignment">
+<h4>Text Alignment<a class="headerlink" href="#text-alignment" title="Permalink to this headline">¶</a></h4>
+<p>While filter matches improve the Dice coefficient considerably, this does not account for the ambiguity involved in defining and thus marking up the beginning and end of <em>Action</em> phrases. For example, the two <em>Action</em> phrases:</p>
+<p>A 25 ml three-necked round-bottomed flask fitted with a dean-stark trap a condenser a nitrogen inlet/outlet</p>
+<p>and</p>
+<p>To a 25 ml three-necked round-bottomed flask fitted with a dean-stark trap a condenser a nitrogen inlet/outlet and magnetic stirrer</p>
+<p>would, using the above metric, be treated as two different entities although they are essentially the same <em>Action</em> phrase. As such, a disagreement between two annotators is recorded if both have marked up slightly different beginnings and endings.</p>
+<p>To solve this problem and get a true measure of the inter-annotator agreement, we have used the Needleman-Wunsch algorithm <a class="footnote-reference" href="#b27" id="id41">[27]</a> to align and compare annotations by different annotators. The Needleman-Wunsch algorithm is a dynamic algorithm commonly used in bioinformatics to perform the global alignment of protein sequences. The algorithm aligns sequences by matching common characters and inserting spaces in unknown or non-matching locations. The alignment is performed by assigning scores for aligned characters in the form of a similarity matrix, with gaps being heavily penalised. An optimal alignment is then found. To illustrate how the algorithm works against annotations, consider the example in Table <em class="xref std std-ref">5</em>. The algorithm has detected that phrases 1 to 3 highlighted by both annotators match each other, while annotator A&#8217;s phrase 4 does not match anything marked up by annotator B (and therefore gives a value of -1). Annotator A&#8217;s fifth sentence was identified to correspond to annotator B&#8217;s fourth sentence. The following matrix is produced by the alignment algorithm:</p>
+<p>A Dice coefficient was then calculated on the results of this alignment. Using this algorithm a machine-annotator agreement of 88.9% was achieved (see Table <em class="xref std std-ref">6</em>).</p>
+</div>
+</div>
+<div class="section" id="further-work">
+<h3>Further Work<a class="headerlink" href="#further-work" title="Permalink to this headline">¶</a></h3>
+<p>Current work investigates the use of chemical treebanks for recognising parts-of-speech tags as well as phrases. As mentioned earlier, a treebank is a parsed text corpus that is used in corpus linguistics for studying syntactic phenomena. It can also be used for training and testing parsers. Once parsed, a corpus will contain evidence of both frequency (how common different grammatical structures are in use) and coverage (the discovery of new, unanticipated, grammatical phenomena).</p>
+<p>In life sciences, the Enju parser was adapted to biomedical domain by providing the GENIA treebank <a class="footnote-reference" href="#b9" id="id42">[9]</a>. We aim to create an equivalent treebank for chemistry using an open-access corpus of paragraphs taken from the experimental sections of papers from the chemistry domain. This treebank will be produced semi-automatically by first running ChemicalTagger on the corpus and then manually correcting the mistagged nodes and trees. The treebank produced by this semi-automatic curation process will then be used as input for the development of a machine-learning-based parser for ChemicalTagger. An analysis of this parser&#8217;s performance can then be carried out by evaluating its output against that of the ANTLR-based ChemicalTagger.</p>
+</div>
+</div>
+<div class="section" id="id43">
+<h2>Conclusions<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h2>
+<p>We have shown that structured scientific data can be extracted from unstructured scientific literature using ChemicalTagger. We have also demonstrated that, using text mining and natural language processing tools, we can extract both chemical entities and the relationships between those entities, and make the resulting data available in a machine-processable format. We have shown that these graphs are useful for the generation of highly informative visualisations. While machine extraction can yield good results, it nevertheless remains an act of &#8216;information archaeology&#8217; and as such necessarily imperfect. We therefore strongly urge, that the scientific community move towards an ethos where scientific data is published in semantic form and where both authors and publishers feel under an obligation to make this information openly available. Were this to happen on a significant scale, it would lead to a revolution where millions of chemical syntheses every year can be automatically analysed by machine, which in turn could lead to significant improvements in our ability to do science. Opportunities generated through the large-scale availability of semantic data include:</p>
+<p>• Formal semantic verification of published information leading to higher quality information from authors, for reviewers and for technical processing.</p>
+<p>• Greater understandability by readers (including machines).</p>
+<p>• Automatic analysis of reaction conditions and results.</p>
+<p>• Greater formal representation of chemical reactions.</p>
+<p>We hope, however, that the extraction tools demonstrated here will have only a limited lifetime before they are replaced by semantic authoring.</p>
+<div class="section" id="copyright-implications">
+<h3>Copyright Implications<a class="headerlink" href="#copyright-implications" title="Permalink to this headline">¶</a></h3>
+<p>It is important to note that these extraction tools are restricted to the copyright associated with the data. Patents and Open Access (CC-BY) papers explicitly allow data extraction. Theses may depend on the copyright or explicit rights within the thesis. Most publishers of chemistry are not universally Open Access and we have engaged with them over several years trying to find a straightforward answer. The authors have raised this issue with both specific publishers (<em>e.g</em>. Elsevier, who publish Tetrahedron) and the STM Publisher&#8217;s Association. Elsevier have referred this to their &#8216;Universal Access&#8217; department and currently cannot say whether or not this is permitted. It has been agreed with STM publishers that bibliographic data is Open (CC-BY or CC0). There is no agreement, at the moment, on what data can be extracted.</p>
+</div>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>LH co-authored the paper, developed ChemicalTagger and evaluated its performance. DJ co-authored the paper and developed ChemicalTagger. NA co-authored the paper, setup the test corpus and co-authored the annotation guidelines. PMR co-authored the paper and was the principle investigator on the project.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>The authors wish to acknowledge the following for their contributions: Daniel Lowe (University of Cambridge) for providing substantial feedback on deploying ChemicalTagger and contributing to the code base, Nicholas England (University of Cambridge) and Dr Colin Batchelor (Royal Society of Chemistry) for participating in the inter-annotator agreement study and for valuable discussions in the preparation of the annotation guidelines. This research was funded by JISC and Unilever. The authors also acknowledge the article processing charge for this article that has been partially funded by Pfizer, Inc. Pfizer, Inc. has had no input into the content of the article. The article has been independently prepared by the authors and been subject to the journal&#8217;s standard peer review process.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>Synthesis of 5-hydroxy-2,3,4,5-tetrahydro-[1H]-2-benzazepin-4-ones: selective antagonists of muscarinic (M3) receptors</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[2]</a></td><td>IUCr Crystal publication data</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[3]</a></td><td>Automatic Annotation for Biological Sequences by Extraction of Keywords from MEDLINE Abstracts: Development of a Prototype System</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[4]</a></td><td>A survey of current work in biomedical text mining</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[5]</a></td><td>Mining semantically related terms from biomedical literature</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[6]</a></td><td>Methods in Biomedical Text Mining</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[7]</a></td><td>Developing a Robust Part-of-Speech Tagger for Biomedical Text</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[8]</a></td><td>Genia Tagger</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[9]</td><td><em>(<a class="fn-backref" href="#id20">1</a>, <a class="fn-backref" href="#id42">2</a>)</em> Evaluating impact of re-training a lexical disambiguation model on domain adaptation of an HPSG parser</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[10]</a></td><td>Experimental Data Checker: Better Information for Organic Chemists</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[11]</td><td><em>(<a class="fn-backref" href="#id22">1</a>, <a class="fn-backref" href="#id25">2</a>)</em> High-Throughput Identification of Chemistry in Life Science Texts</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[12]</a></td><td>CHIC - Converting Hamburgers into Cows</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[13]</a></td><td>Ontologies and Text Mining for Life Sciences: Current Status and Future Perspectives</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id26">[14]</a></td><td>Chemical Name to Structure: OPSIN, an Open Source Solution</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[15]</td><td>ChEBI: a database and ontology for chemical entities of biological interest</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id27">[16]</a></td><td>Cascaded classifiers for confidence-based chemical named entity recognition</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[17]</a></td><td>The Penn Treebank Project</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id31">[18]</a></td><td>Penn Treebank TagSet</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[19]</a></td><td>Open NLP Website</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id33">[20]</a></td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[21]</td><td><em>(<a class="fn-backref" href="#id34">1</a>, <a class="fn-backref" href="#id35">2</a>)</em> NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id36">[22]</a></td><td>A universal approach to web-based chemistry using XML and CML</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id37">[23]</a></td><td>Chemical markup, XML, and the world wide web. 6. CMLReact, an XML vocabulary for chemical reactions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id38">[24]</a></td><td>Science Online London 2010</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id39">[25]</a></td><td>Scifinder Scholar</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id40">[26]</a></td><td>Annotation Guidelines for Marking up Chemistry Phrases</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id41">[27]</a></td><td>A general method applicable to the search for similarities in the amino acid sequence of two proteins</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">ChemicalTagger: A tool for semantic text-mining in chemistry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Background</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aims-and-objectives">Aims and Objectives</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#text-normalisation">Text Normalisation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tokenisation">Tokenisation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tagging">Tagging</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#oscar-tagger">OSCAR-Tagger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#regex-tagger">Regex-Tagger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#english-parts-of-speech-tagger">English Parts-of-Speech Tagger</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#phrase-parsing">Phrase Parsing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action-phrase-identification">Action Phrase Identification</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#role-identification">Role Identification</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#output-representation">Output Representation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#architecture-and-deployment">Architecture and Deployment</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">Results and discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corpus-assembly">Corpus Assembly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inter-annotator-study">Inter-Annotator Study</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluation">Evaluation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#identity-of-annotations">Identity of annotations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#text-alignment">Text Alignment</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#further-work">Further Work</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id43">Conclusions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#copyright-implications">Copyright Implications</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-16.html" title="Semantic Web integration of Cheminformatics resources with the SADI framework"
+             >previous</a> |
+          <a href="1758-2946-3-18.html" title="AMBIT RESTful web services: an implementation of the OpenTox application programming interface"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-17.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

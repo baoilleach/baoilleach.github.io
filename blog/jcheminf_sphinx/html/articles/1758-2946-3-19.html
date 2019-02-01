@@ -1,0 +1,469 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Linked open drug data for pharmaceutical research and development &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration" href="1758-2946-3-20.html" />
+    <link rel="prev" title="AMBIT RESTful web services: an implementation of the OpenTox application programming interface" href="1758-2946-3-18.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-18.html" title="AMBIT RESTful web services: an implementation of the OpenTox application programming interface"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-20.html" title="Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="linked-open-drug-data-for-pharmaceutical-research-and-development">
+<h1>Linked open drug data for pharmaceutical research and development<a class="headerlink" href="#linked-open-drug-data-for-pharmaceutical-research-and-development" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>There is an abundance of information about drugs available on the Web. Data sources range from medicinal chemistry results, over the impact of drugs on gene expression, to the outcomes of drugs in clinical trials. These data are typically not connected together, which reduces the ease with which insights can be gained. Linking Open Drug Data (LODD) is a task force within the World Wide Web Consortium&#8217;s (W3C) Health Care and Life Sciences Interest Group (HCLS IG). LODD has surveyed publicly available data about drugs, created Linked Data representations of the data sets, and identified interesting scientific and business questions that can be answered once the data sets are connected. The task force provides recommendations for the best practices of exposing data in a Linked Data representation. In this paper, we present past and ongoing work of LODD and discuss the growing importance of Linked Data as a foundation for pharmaceutical R&amp;D data sharing.</p>
+</div>
+<div class="section" id="findings">
+<h2>Findings<a class="headerlink" href="#findings" title="Permalink to this headline">¶</a></h2>
+<p>Pharmaceutical research has a wealth of available data sources to help elucidate the complex biological mechanisms that lead to the development of diseases. However, the heterogeneous nature of these data and their widespread distribution over journal articles, patents and numerous databases makes searching and pattern discovery a tedious and manual task. From the perspective of a pharmaceutical research scientist, the ideal data infrastructure should make it easy to link and search across open data sources in order to identify novel and meaningful correlations and mechanisms. In this paper, we present work from the Linked Open Drug Data (LODD) task force of the World Wide Web Consortium (W3C) Health Care and Life Science Interest Group (HCLS IG) that aims to address these issues by harnessing the power of new web technologies.</p>
+<p>The LODD task force works with a set of technologies and conventions that are now commonly referred to as <em>Linked Data</em>. The primary goal of the Linked Data movement is to make the World Wide Web not only useful for sharing and interlinking documents, but also for sharing and interlinking <em>data</em> at very detailed levels. The movement is driven by the hypothesis that these technologies could revolutionize global data sharing, integration and analysis, just like the classic Web revolutionized information sharing and communication over the last two decades.</p>
+<p>Linked Data is based on a set of principles and standard recommendations created by the W3C. Single data points are identified with Hypertext Transfer Protocol (HTTP, <a class="footnote-reference" href="#b1" id="id1">[1]</a>) Uniform Resource Identifiers (URIs). Similar to how a Web page can be retrieved by resolving its HTTP URI (e.g., &#8216;<a class="reference external" href="http://en.wikipedia.org/wiki/Presenilin">http://en.wikipedia.org/wiki/Presenilin</a>&#8216;), data about a single entity in the Linked Data space can be retrieved by resolving its HTTP URI (e.g. &#8216;<a class="reference external" href="http://dbpedia.org/resource/Presenilin">http://dbpedia.org/resource/Presenilin</a>&#8216;). However, instead of Web pages, the primary data model of Linked Data is the Resource Description Framework (<em>RD*F, [#B2]_). In RDF, entities, their relations and properties are described with simple subject-predicate-object *triples</em>. Out of these simple triples, sophisticated networks of interlinked data can be built, potentially spanning over several different locations on the web. Since every entity in this network can be resolved through HTTP, it is possible to navigate and aggregate the globally distributed data, enabling the important features of transparency and scalability that made the Web successful.</p>
+<p>There is a large array of other standard recommendations based on RDF. Networks of RDF data can be queried by an intuitive and powerful query language called <em>SPARQL</em> <a class="footnote-reference" href="#b3" id="id2">[3]</a>. The Web Ontology Language (<em>OWL</em>, <a class="footnote-reference" href="#b4" id="id3">[4]</a>) makes it possible to do complex logical reasoning and consistency checking of RDF/OWL resources. These reasoning capabilities can be used to harmonize heterogeneous data structures. Another related standard is <em>RDFa</em> <a class="footnote-reference" href="#b5" id="id4">[5]</a>, which makes it possible to embed RDF statements into human-readable Web pages, effectively bridging the domains of human-readable and machine-readable data. Chen at al. provide an extensive review of RDF/OWL - based projects relevant to drug discovery in a recent publication <a class="footnote-reference" href="#b6" id="id5">[6]</a>.</p>
+<p>To date, participants of the LODD project have made twelve open-access datasets relevant to pharmaceutical research and development available as Linked Data (table <em class="xref std std-ref">1</em>). These are DrugBank <a class="footnote-reference" href="#b7" id="id6">[7]</a>, ClinicalTrials.gov <a class="footnote-reference" href="#b8" id="id7">[8]</a><a class="footnote-reference" href="#b9" id="id8">[9]</a>, DailyMed <a class="footnote-reference" href="#b10" id="id9">[10]</a>, ChEMBL <a class="footnote-reference" href="#b11" id="id10">[11]</a><a class="footnote-reference" href="#b12" id="id11">[12]</a>, Diseasome <a class="footnote-reference" href="#b13" id="id12">[13]</a>, TCMGeneDIT <a class="footnote-reference" href="#b14" id="id13">[14]</a><a class="footnote-reference" href="#b15" id="id14">[15]</a>, SIDER <a class="footnote-reference" href="#b16" id="id15">[16]</a>, STITCH <a class="footnote-reference" href="#b17" id="id16">[17]</a>, the Medicare formulary and the three most recent additions, RxNorm <a class="footnote-reference" href="#b18" id="id17">[18]</a>, Unified Medical Language System (UMLS, <a class="footnote-reference" href="#b19" id="id18">[19]</a>) and the WHO Global Health Observatory <a class="footnote-reference" href="#b20" id="id19">[20]</a>. To be kept up to date, the original datasets are periodically retrieved and the Linked Data representations are refreshed. The URIs for representing entities in the linked datasets are stable and are chosen by the LODD participants.</p>
+<p>Not all of these datasets can currently be considered fully &#8216;open&#8217; as outlined by the Panton Principles <a class="footnote-reference" href="#b21" id="id20">[21]</a>. For example, some of the source have non-commercial clauses in the license agreement. The LODD project is actively exploring the exact conditions for modification and redistribution defined by the data providers, and acknowledges the limitations with respect to openness some of these datasets currently have.</p>
+<p>The LODD datasets are linked with each other, as well as with datasets provided by other Linked Data projects, such as Bio2RDF <a class="footnote-reference" href="#b22" id="id21">[22]</a> and Chem2Bio2RDF <a class="footnote-reference" href="#b23" id="id22">[23]</a>, as well as primary data providers that offer their resources in RDF, such as UniProt <a class="footnote-reference" href="#b24" id="id23">[24]</a><a class="footnote-reference" href="#b25" id="id24">[25]</a> and the Allen Brain Atlas <a class="footnote-reference" href="#b26" id="id25">[26]</a>. The links between datasets are depicted in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>. Overall, there are several dozens of biomedically relevant linked datasets available to date.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-19-1.jpg" src="../_images/1758-2946-3-19-1.jpg" />
+<p class="caption">Figure 1. A graph of some of the LODD datasets (dark grey), related biomedical datasets (light grey), related general-purpose datasets (white) and their interconnections</p>
+<div class="legend">
+<strong>A graph of some of the LODD datasets (dark grey), related biomedical datasets (light grey), related general-purpose datasets (white) and their interconnections</strong>. Line weights correspond to the number of links. The direction of an arrow indicates the dataset that contains the links, e.g., an arrow from A to B means that dataset A contains RDF triples that use identifiers from B. Bidirectional arrows usually indicate that the links are mirrored in both datasets.</div>
+</div>
+<p>While the number of linked biomedical datasets has grown significantly over the last years, there is still a marked lack of mature applications that enable end-users to explore and query these datasets. Linked data browsers such as Marbles <a class="footnote-reference" href="#b28" id="id26">[28]</a> or Sig.ma <a class="footnote-reference" href="#b29" id="id27">[29]</a><a class="footnote-reference" href="#b30" id="id28">[30]</a> are currently too generic for most end-users (although they can be very helpful for developers). These shortcomings are addressed by TripleMap (Figure <em class="xref std std-ref">2,</em><a class="footnote-reference" href="#b31" id="id29">[31]</a>), a new web-based application that can be used for the navigation, visualization and analysis of the LODD resources and other RDF datasets. To illustrate the use of TripleMap and the LODD resources, the following simple scenario could be imagined: A researcher interested in Alzheimer&#8217;s Disease decides to find out everything that they can about the disease by querying an integrated version of the Linking Open Drug Data (LODD) sets. They open TripleMap and start their search by typing &#8220;Alzheimer&#8217;s&#8221; into the Diseases search box. As they type, TripleMap provides a dynamic auto-complete list of all of the disease related entities across all LODD data sets that match the search string. The researcher selects &#8220;Alzheimer&#8217;s Disease&#8221; and drags and drops it into the TripleMap workspace. Now, the researcher can view a range of information known about the properties of the disease in the right-hand &#8220;properties panel&#8221; including links out to Pubmed, Online Mendelian Inheritance in Man (OMIM, <a class="footnote-reference" href="#b32" id="id30">[32]</a>), Uniprot <a class="footnote-reference" href="#b24" id="id31">[24]</a> and other sources. These sources provide the user with rapid access to overview information about the disease.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-19-2.jpg" src="../_images/1758-2946-3-19-2.jpg" />
+<p class="caption">Figure 2. TripleMap <a class="reference external" href="https://www.triplemap.com">https://www.triplemap.com</a> is a web-based application that provides a rich, dynamic, visual interface to integrated RDF datasets such as the LODD. On the left hand side of the application a researcher uses an icon-based menu representing biomedical entities such as compounds, diseases and assays to search for entities and view their associations</p>
+<div class="legend">
+<strong>TripleMap</strong> <a href="#id32"><span class="problematic" id="id33">`</span></a>&lt;www.triplemap.com&gt;`_** is a web-based application that provides a rich, dynamic, visual interface to integrated RDF datasets such as the LODD. On the left hand side of the application a researcher uses an icon-based menu representing biomedical entities such as compounds, diseases and assays to search for entities and view their associations**. Entities can be dragged and dropped from the icon menu into the application&#8217;s zoomable workspace. In the middle of the application the user navigates maps of entities and their associations in the zoomable workspace much like users of Google Maps are able to scan and zoom into and out of geographically based maps. On the right hand side of the application the user can view an integrated set of all of the available properties for a selected entity. As entities are added to the workspace the system automatically generates semantically tagged edges between associated entities.</div>
+</div>
+<p>The researcher is now interested in discovering entities that are associated with Alzheimer&#8217;s Disease. They select the Alzheimer&#8217;s Disease icon in the workspace and the system automatically shows them a number of associated disease genes provided by Diseasome, compounds provided by DrugBank and DailyMed, and clinical trials provided by LinkedCT. The researcher starts to explore relationships between entities by selecting two genes, presenilin (PSEN1) and amyloid precursor protein (APP), and dragging them into the workspace. In addition to finding genes related to Alzheimer&#8217;s Disease, the user is interested in compounds known to be related to the disease. The user finds several compounds and pulls them into the workspace. The user is also interested in finding out what clinical trials are currently being run for Alzheimer&#8217;s Disease and the system shows 200 such trials. With a simple click and drag action they pull all 200 trials into the workspace. As entities are added to the workspace, if there are known associations between them, those associations are also shown to the user as semantically tagged edges. This ability to show a researcher unexpected associations between entities that are related to their field of interest is at the heart of the value of an application like TripleMap and the extensive, rich, interconnected data available in the LODD data sets.</p>
+<p>Linked Data as an emerging technology is still not free from shortcomings. A major problem is the heterogeneity in how data is modeled. Even when the entities between datasets are mapped to each other, it can still be difficult to intuitively write queries that span datasets because of this heterogeneity. This problem is being addressed by another task force of the W3C HCLSIG, which aims to bridge the data in the growing number of LODD datasets with a well-engineered top-level ontology, the translational medicine ontology (TMO, <a class="footnote-reference" href="#b33" id="id34">[33]</a>). Another problem is how to efficiently query RDF in distributed SPARQL databases without requiring the aggregation of RDF data at a central location. Again, this is addressed by ongoing work on query federation by members of the W3C HCLS IG <a class="footnote-reference" href="#b34" id="id35">[34]</a>. Finally, there has been a lack of applications with good user interfaces to make Linked Data resources accessible to end-users outside the biomedical informatics community. This is addressed by several ongoing endeavors such as the European Khresmoi project <a class="footnote-reference" href="#b35" id="id36">[35]</a>.</p>
+<p>A challenge to creating linked data that is specific to the domain of chemistry is the provision of chemical identifiers. It is for this reason that W3C HCLS IG supports efforts to standardize unique identifiers for chemical compounds such as the IUPAC International Chemical Identifier (InChI, <a class="footnote-reference" href="#b36" id="id37">[36]</a>).</p>
+<p>The pharmaceutical industry is starting to embrace Linked Data with examples of projects being presented by Eli Lilly, Johnson &amp; Johnson and UCB Pharma. While the adoption of Linked Data is still not yet very widespread in individual companies, it is on the agenda of several large-scale cross-pharma projects. An European project, the Open Pharmacological Space (OPS) Open PHACTS (Pharmacological Concept Triple Store) project under the European Innovative Medicines Initiative (IMI, <a class="footnote-reference" href="#b37" id="id38">[37]</a>) wants to create an open source, open standards and open access infrastructure to enable integration of chemical and biological data to support drug discovery. The project intends to reach this goal by using Linked Data and managing the data in an RDF triple store. Collaboration across several IMI projects should also encourage the coordinated use of Linked Data to enhance data sharing. On the pre-competitive data sharing side of pharmaceutical informatics, the members of the Pistoia Alliance <a class="footnote-reference" href="#b38" id="id39">[38]</a> are developing the Semantically Enriched Scientific Literature (SESL) project. The goal of SESL is to test the feasibility of executing federated querying across full text literature and bioinformatics databases by performing SPARQL queries on a triple store of assertions from the chosen data sources. The PRISM Forum <a class="footnote-reference" href="#b39" id="id40">[39]</a> has also issued a letter recommending the adoption of Linked Data that has been supported by its membership of 15 of the top 20 pharmaceutical companies. The European OpenTox project <a class="footnote-reference" href="#b40" id="id41">[40]</a><a class="footnote-reference" href="#b41" id="id42">[41]</a> uses RDF as a standard for the exchange of predictive toxicology related data. The OpenTox framework defines algorithms, models, data sets, and chemical compounds, in a distributed data storage and computing facility.</p>
+<p>Proprietary systems for providing integrated pharmaceutical data exist. The Accelrys/Symyx products <a class="footnote-reference" href="#b42" id="id43">[42]</a> are popular examples, and can be both accessed online or installed locally. Accessing the data provided by these products often requires proprietary tools and internal installations also require ongoing work to be kept up-to-date. Furthermore, many of these products are based on individual databases that are not linked. Since the amount of data and the number of potential data sources is growing, it will become harder for single software vendors to create all-encompassing solutions. The nascent Linked Data infrastructure could help to make the creation of integrated solution more sustainable, easier to maintain and vendor-neutral.</p>
+<p>Over the next years, the LODD group will continue to work jointly with both academic and industry partners. It will aim to become an umbrella for other Linked Data providers and consumers in the pharmaceutical domain, assisting with documentation, interlinking, quality management, and compliance with standard formats and vocabularies. Another strand of work will focus on how to integrate public Linked Data with non-public, in-house datasets of biomedical research institutions and pharmaceutical companies.</p>
+<p>The LODD task force is open to new participants and interested individuals or groups are invited to get in contact with the authors of this paper.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>CB declares association with Entagen, LLC, a for-profit company that is building commercial software for semantic technologies such as TripleMap. All other authors declare no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>MS wrote major parts of the manuscript and organized the paper writing process. AJ converted several of the LODD datasets. CB developed the TripleMap software. SS organized the Linked Open Drug Data task force. All authors participated in discussions and developments of the Linked Open Drug Data task force of the W3C Health Care and Life Science Interest Group. All authors read and approved the final manuscript.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>We acknowledge the article processing charge for this article that has been partially funded by Pfizer, Inc. Pfizer, Inc. has had no input into the content of the article. The article has been independently prepared by the authors and been subject to the journal&#8217;s standard peer review process.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>HTTP Specifications and Drafts</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td>RDF - Semantic Web Standards</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[3]</a></td><td>SPARQL Query Language for RDF</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[4]</a></td><td>OWL Web Ontology Language Overview</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[5]</a></td><td>RDFa Primer</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[6]</a></td><td>The use of web ontology languages and other semantic web tools in drug discovery</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[7]</a></td><td>DrugBank: a comprehensive resource for in silico drug discovery and exploration</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[8]</a></td><td>LinkedCT: A Linked Data Space for Clinical Trials</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[9]</a></td><td>Home - ClinicalTrials.gov</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[10]</a></td><td>DailyMed: About DailyMed</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[11]</a></td><td>Role of open chemical data in aiding drug discovery and design</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[12]</a></td><td>ChEMBL</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[13]</a></td><td>The human disease network</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[14]</a></td><td>Publishing Chinese medicine knowledge as Linked Data on the Web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[15]</a></td><td>TCMGeneDIT: a database for associated traditional Chinese medicine, gene and disease information using text mining</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[16]</a></td><td>A side effect resource to capture phenotypic effects of drugs</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[17]</a></td><td>STITCH: interaction networks of chemicals and proteins</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[18]</a></td><td>RxNorm: prescription for electronic drug information exchange</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[19]</a></td><td>The Unified Medical Language System (UMLS): integrating biomedical terminology</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[20]</a></td><td>WHO | Global Health Observatory (GHO)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[21]</a></td><td>Panton Principles</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[22]</a></td><td>Bio2RDF: Towards a mashup to build bioinformatics knowledge systems</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[23]</a></td><td>Chem2Bio2RDF: a semantic framework for linking and data mining chemogenomic and systems chemical biology data</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[24]</td><td><em>(<a class="fn-backref" href="#id23">1</a>, <a class="fn-backref" href="#id31">2</a>)</em> UniProt</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[25]</a></td><td>The Universal Protein Resource (UniProt) in 2010</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[26]</a></td><td>Allen Brain Atlas: Home</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[27]</td><td>HCLSIG/LODD/Data - ESW Wiki</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id26">[28]</a></td><td>Marbles Linked Data Engine</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id27">[29]</a></td><td>Sig.ma: Live views on the Web of Data</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id28">[30]</a></td><td>sig.ma - Semantic Information MAshup</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[31]</a></td><td>TripleMap</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[32]</a></td><td>OMIM Home</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[33]</a></td><td>The Translational Medicine Ontology: Driving personalized medicine by bridging the gap from bedside to bench</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b34" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[34]</a></td><td>A journey to Semantic Web query federation in the life sciences</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b35" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id36">[35]</a></td><td>Khresmoi - Medical Information Analysis and Retrieval</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b36" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id37">[36]</a></td><td>International Union of Pure and Applied Chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b37" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id38">[37]</a></td><td>Home | IMI - Innovative Medicines Initiative</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b38" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id39">[38]</a></td><td>Pistoia Alliance | Open standards for data and technology interfaces in the life science research industry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b39" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id40">[39]</a></td><td>The PRISM Forum Association - Home</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b40" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id41">[40]</a></td><td>Collaborative development of predictive toxicology applications</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b41" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id42">[41]</a></td><td>Welcome to the OpenTox Community site &#8211; OpenTox</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b42" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id43">[42]</a></td><td>Scientific Informatics Software for Life Sciences, Materials R&amp;D | Accelrys</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Linked open drug data for pharmaceutical research and development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#findings">Findings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-18.html" title="AMBIT RESTful web services: an implementation of the OpenTox application programming interface"
+             >previous</a> |
+          <a href="1758-2946-3-20.html" title="Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-19.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

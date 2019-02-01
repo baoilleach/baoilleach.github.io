@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PubChem3D: Diversity of shape &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Interpreting linear support vector machine models with heat map molecule coloring" href="1758-2946-3-11.html" />
+    <link rel="prev" title="Confab - Systematic generation of diverse low-energy conformers" href="1758-2946-3-8.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-8.html" title="Confab - Systematic generation of diverse low-energy conformers"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-11.html" title="Interpreting linear support vector machine models with heat map molecule coloring"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pubchem3d-diversity-of-shape">
+<h1>PubChem3D: Diversity of shape<a class="headerlink" href="#pubchem3d-diversity-of-shape" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>The shape diversity of 16.4 million biologically relevant molecules from the PubChem Compound database and their 1.46 billion diverse conformers was explored as a function of molecular volume.</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>The diversity of shape space was investigated by determining the shape similarity threshold to achieve a maximum on the count of reference shapes per unit of conformer volume. The rate of growth in shape space, as represented by a decreasing shape similarity threshold, was found to be remarkably smooth as a function of volume. There was no apparent correlation between the count of conformers per unit volume and their diversity, meaning that a single reference shape can describe the shape space of many chemical structures. The ability of a volume to describe the shape space of lesser volumes was also examined. It was shown that a given volume was able to describe 40-70% of the shape diversity of lesser volumes, for the majority of the volume range considered in this study.</p>
+</div>
+<div class="section" id="conclusion">
+<h3>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h3>
+<p>The relative growth of shape diversity as a function of volume and shape similarity is surprisingly uniform. Given the distribution of chemicals in PubChem versus what is theoretically synthetically possible, the results from this analysis should be considered a conservative estimate to the true diversity of shape space.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Virtual screening of large chemical databases is now a routine practice in modern drug discovery <a class="footnote-reference" href="#b1" id="id2">[1]</a><a class="footnote-reference" href="#b2" id="id3">[2]</a><a class="footnote-reference" href="#b3" id="id4">[3]</a><a class="footnote-reference" href="#b4" id="id5">[4]</a><a class="footnote-reference" href="#b5" id="id6">[5]</a><a class="footnote-reference" href="#b6" id="id7">[6]</a><a class="footnote-reference" href="#b7" id="id8">[7]</a><a class="footnote-reference" href="#b8" id="id9">[8]</a>. One successful virtual screening approach is to compare the 3-D shape similarity of chemical structures using atom-centered Gaussian functions <a class="footnote-reference" href="#b9" id="id10">[9]</a><a class="footnote-reference" href="#b10" id="id11">[10]</a><a class="footnote-reference" href="#b11" id="id12">[11]</a>, <em>e.g</em>., as implemented in ROCS <a class="footnote-reference" href="#b12" id="id13">[12]</a>. While this Gaussian-based approach to shape can perform hundreds or even thousands of chemical structure 3-D shape superposition computations per second per Central Processing Unit (CPU) core, even faster approaches with similar efficacy would be welcomed when searching a database of millions of chemical structures and (potentially) billions of conformers.</p>
+<p>Attempts <a class="footnote-reference" href="#b13" id="id14">[13]</a><a class="footnote-reference" href="#b14" id="id15">[14]</a> have been made to use ROCS to identify reference shapes, which are then used to compute 3-D shape similarities at dramatically enhanced rates. One approach <a class="footnote-reference" href="#b13" id="id16">[13]</a> created a binary &#8220;shape fingerprint&#8221; used much like traditional 2-D molecular connectivity fingerprints, where individual bits are &#8220;turned on&#8221; whenever the reference shape has sufficient shape similarity, as defined by the Shape Tanimoto (ST) in <strong>Equation 1</strong>, to the conformer being considered. Binary shape fingerprints, as an approach, were shown as a promising technique to encode the shape of a chemical structure conformer and achieve very fast 3-D similarity computation, but with the potential downside of not providing an actual 3-D conformer superposition and with no guarantee that the shape similarity values or result lists have any correlation with those provided by ROCS.</p>
+<p>where <sub>AA</sub> Vand <sub>BB</sub> Vare the self-overlap volume of molecules A and B and <sub>AB</sub> Vis the overlap volume between them and the ST score ranges from 0 (for no shape similarity) to 1 (for identical shapes).</p>
+<p>A second 3-D similarity approach using reference shapes <a class="footnote-reference" href="#b14" id="id17">[14]</a> attempted to improve upon the first method by giving both a shape superposition and some assurance that the shape similarity ST is similar to that provided by ROCS. This was achieved by recognizing that two chemical structure conformers with similar 3-D shape align to a common reference shape in a similar fashion. By utilizing the 3 × 3 rotational matrix and XYZ translational vector that align a 3-D chemical structure conformer to a common reference shape (retained after shape fingerprint generation), one could generate a superposition between conformers for each common reference shape. Given that two similar conformers may have multiple common reference shapes, one may &#8220;replay&#8221; all the alignments to common reference shapes and pick one that yields the best shape superposition. This approach achieved a 100× fold performance improvement by avoiding any shape similarity computation when shapes were too dissimilar (<em>i.e</em>., there were no common reference shapes) and by avoiding any volume overlap maximization optimization computations. However, this methodology has its downsides. It only considered relatively small (&lt;28 non-hydrogen atoms) and inflexible (&lt;6 rotatable bonds) chemical structures and would not compute any shape similarity value when there was no common reference shape. Yet, in both studies <a class="footnote-reference" href="#b13" id="id18">[13]</a><a class="footnote-reference" href="#b14" id="id19">[14]</a>, it was shown that the use of reference shapes may provide promise to dramatically improve the throughput of shape-based alignment methodologies.</p>
+<p>The first work described above <a class="footnote-reference" href="#b13" id="id20">[13]</a> considered data sets of &#8220;drug-like&#8221; molecules with 12-32 non-hydrogen atoms and conformer counts between 50,000 and 500,000 to examine the growth of shape space as a function of ST value. This growth was linear when considering the logarithm of the count of reference shape and chemical structures, whether using a single conformer or multiple conformers per structure. The second work <a class="footnote-reference" href="#b14" id="id21">[14]</a> also considered reference shapes of &#8220;drug-like&#8221; molecules of similar size, using a much larger dataset of one million chemical structures and fifteen million conformers, but only at a single ST value, as opposed to a range of ST values. Still, both studies gave valuable insight into how shape space grows with &#8220;drug-like&#8221; molecules.</p>
+<p>In this work, we seek to expand upon these earlier two efforts by exploring in more depth the rate of growth of shape space as a function of reference shape count, conformer volume, and ST value with a much larger data set of 16.4 million biologically relevant small molecules and their 1.46 billion diverse conformers. By improving upon the understanding of the relative growth of shape space of biologically relevant molecules, new or improved &#8220;shape fingerprint&#8221;-based methodologies might be developed.</p>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>Results and Discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="conformer-generation">
+<h3>1. Conformer generation<a class="headerlink" href="#conformer-generation" title="Permalink to this headline">¶</a></h3>
+<p>Conformers were generated for chemical structures in the PubChem Compound database<a class="footnote-reference" href="#b15" id="id22">[15]</a><a class="footnote-reference" href="#b16" id="id23">[16]</a><a class="footnote-reference" href="#b17" id="id24">[17]</a>[#B18]_*Materials and Methods* section. This resulted in 16,482,382 3-D conformer ensemble models (as of February 2008) and 1,465,813,269 diverse conformers (an average of 89 conformers per compound). The distribution of the non-hydrogen atom count, rotatable bond count, sampling RMSD, and conformer volumes (rounded to nearest integers) for these are shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>. The average count and standard deviation of non-hydrogen atoms was 24.5 +/- 6.8 with a mode of 26 (with 1,033,645 compounds). The average count and standard deviation of rotatable bonds was 5.5 +/- 2.6 with a mode of 6 (with 2,432,059 compounds). The average and standard deviation of the sampling RMSD for the conformer ensembles was 0.82 +/- 0.20 Å with a mode of 0.8 Å (for 6,939,072 conformer ensembles). The average and standard deviation of the conformer volume was 297 +/- 64 Å<sup>3</sup>. The most common volume among the conformers was 307 Å<sup>3</sup> (for 10,920,699 conformers) and 99% of the conformers have a volume between 130 and 487 Å<sup>3</sup>. In further analyses, we focused on the conformers whose volumes were between 75 and 575 Å<sup>3</sup>, corresponding to 99.99% of all conformers.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-9-1.jpg" src="../_images/1758-2946-3-9-1.jpg" />
+<p class="caption">Figure 1. The distribution of non-hydrogen atom count, rotatable bond count, conformer ensemble sampling RMSD, and conformer volumes (rounded to the nearest integer) of 1,465,813,269 conformers generated from 16,482,382 molecules in the PubChem Compound database</p>
+<div class="legend">
+<strong>The distribution of non-hydrogen atom count, rotatable bond count, conformer ensemble sampling RMSD, and conformer volumes (rounded to the nearest integer) of 1,465,813,269 conformers generated from 16,482,382 molecules in the PubChem Compound database</strong>.</div>
+</div>
+</div>
+<div class="section" id="generation-of-reference-shapes-per-volume">
+<h3>2. Generation of reference shapes per volume<a class="headerlink" href="#generation-of-reference-shapes-per-volume" title="Permalink to this headline">¶</a></h3>
+<p>The shape diversity of a particular conformer volume may be ascertained by clustering conformers of that volume with a certain shape diversity threshold (<sup>thresh</sup>ST), which controls the &#8220;minimum&#8221; distance between any two clusters, and then by counting the number of reference shapes, each of which represents a cluster centroid and all conformers within <sup>thresh</sup> STto the reference shape. [Note that the <sup>thresh</sup> STis the &#8220;maximum&#8221; ST value between clusters since the ST score is a <em>similarity</em> measure, not a <em>dissimilarity</em> measure.] If the clustering is performed using the same <sup>thresh</sup> STvalue for a volume range, the shape diversity as a function of each molecular volume size may be evaluated by the growth of the number of reference shapes. However, when a constant <sup>thresh</sup> STvalue is used across a range of volumes, each increase in the molecular volume may result in a very rapid growth of the shape space, and hence, the number of reference shapes per volume. This is not completely desirable as the computational cost of clustering effectively increases as the square (or worse) of the total count of reference shapes (especially when this count is large), when considering <em>N</em> reference shapes must be compared against <em>K</em> conformers and <em>N</em> &lt;<em>K</em>, compelling one to keep the count of reference shapes to a manageable size for tractability purposes.</p>
+<p>To avoid excessive computational expense, we took an alternative approach (as described in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>), in which the clustering for a given volume was performed with a dynamic <sup>thresh</sup> STvalue such that the resulting reference shape count became less than or equal to a certain number (chosen to be 200). In this manner, the number of reference shapes per volume was kept effectively constant (as an increase of ST by 0.01 would result in reference shape count above 200), while the growth of shape space as a function of volume is manifest by a decrease in <sup>thresh</sup>ST. The detailed procedure for clustering is explained in the <em>Material and Methods</em> section and the PubChem Compound ID of the resulting reference shapes can be found on the PubChem FTP site <a class="reference external" href="ftp://ftp.ncbi.nlm.nih.gov/pubchem/Compound_3D/ReferenceShapes/">ftp://ftp.ncbi.nlm.nih.gov/pubchem/Compound_3D/ReferenceShapes/</a>.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-9-2.jpg" src="../_images/1758-2946-3-9-2.jpg" />
+<p class="caption">Figure 2. Partition-clustering scheme used for generating the reference shapes for a given volume</p>
+<div class="legend">
+<strong>Partition-clustering scheme used for generating the reference shapes for a given volume</strong>.</div>
+</div>
+<p>Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> shows the <sup>thresh</sup> STvalue and the reference shape counts as a function of the conformer volume. The <sup>thresh</sup> STscore decreases gradually and uniformly in the 75-575 Å<sup>3</sup> range from 0.92 (for V = 75 Å<sup>3</sup>) to 0.47 (for V = 558 Å<sup>3</sup>). In fact, this decrease is so smooth that one can predict the ST value in the volume range 75-575 Å<sup>3</sup> using only the conformer volume (<strong>Equation 2</strong>) with an R<sup>2</sup> value of 0.997.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-9-3.jpg" src="../_images/1758-2946-3-9-3.jpg" />
+<p class="caption">Figure 3. The Shape Tanimoto value used as a shape diversity threshold (<sup>thresh</sup>ST) and the resulting reference shape counts as a function of volume</p>
+<div class="legend">
+<strong>:sup:`thresh`STThe Shape Tanimoto value used as a shape diversity threshold (</strong>.</div>
+</div>
+<p>where <em>V</em> is the conformer volume and <sup>thresh</sup> STis the shape Tanimoto for the given volume to achieve 200 or fewer reference conformers. The slope of the <sup>thresh</sup> STcurve shows that the increase in the cluster distances becomes slower as the conformer volume increases; however, this reduction may be an artifact of the input. The reason for this is relatively simple. This study only considered chemical structures found in PubChem and was restricted to 50 or less non-hydrogen atoms. Furthermore, the distribution of this non-hydrogen atom count had a maximum of 26. Conceivably, <sup>thresh</sup> STmay decrease at a more rapid rate if the count of chemical structures in PubChem continued to increase as a function of non-hydrogen atom count across the entire range of non-hydrogen atom count, rather than hitting a maximum of 26. The net effect of this input artifact is that the <sup>thresh</sup> STcurve in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> may be more linear than actually shown. We expect the entire curve as shown may shift and appear more linear as more theoretically possible and diverse chemical structures are considered; however, we believe the trends detailed in this work should still hold true, unless noted otherwise. Irrespective of the explanation provided, one should consider the curve shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> a conservative estimate of the absolute growth of shape space.</p>
+<p>The reference shape count per volume was found to range from 83 (for V = 92 Å<sup>3</sup>) to the maximum allowed of 200 (for V = 380 Å<sup>3</sup>), and its average was 147.9. Interestingly, the <sup>thresh</sup> STcurve does not reflect the maximum found in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a> for conformer volume. In fact, the decrease in <sup>thresh</sup> STas a function of volume is very smooth, suggesting that the actual conformer count per volume, as shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, has little bearing on shape diversity, as shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>. Or, put another way, the shape space of known chemicals is not near as diverse as chemical space, with a relatively small amount of reference shapes able to represent a large number of chemical structure conformers.</p>
+<p>Another interesting observation is that a small change in <sup>thresh</sup> SThas a large effect on reference count, as reflected in the somewhat periodic growth in shape references until the maximum value of 200 reference shapes is reached, cutting the reference shape count nearly in half. This can be roughly seen in the volume range 75-210 Å<sup>3</sup>and then again between 275-375 Å<sup>3</sup>. This reflects the use of 0.01 decrements in <sup>thresh</sup> STbut also reflects anecdotal evidence seen when exploring the reference shapes, where each change in <sup>thresh</sup> STby 0.01 appeared to change the reference count by about a factor of two, much as observed by Haigh, <em>et al</em>. <a class="footnote-reference" href="#b13" id="id25">[13]</a> This is only roughly seen in the reference shape counts as two things are changing, the volume and the <sup>thresh</sup> STvalue, and volume change involves a potentially variable change in shape space.</p>
+</div>
+<div class="section" id="generation-of-unique-shapes-for-each-volume">
+<h3>3. Generation of unique shapes for each volume<a class="headerlink" href="#generation-of-unique-shapes-for-each-volume" title="Permalink to this headline">¶</a></h3>
+<p>Reference shapes generated for a given volume are guaranteed to not be closer than the corresponding <sup>thresh</sup> STvalue so that the ST similarity between any two reference shapes for that volume cannot be greater than <sup>thresh</sup>ST. However, it is still possible that two reference shapes of different volumes may be closer than <sup>thresh</sup>ST, implying that some portion of the shape space covered by reference shapes for V = V<sub>1</sub> can also be shared by reference shapes for V ≠ V<sub>1</sub>. For this reason, we introduced the concept of the &#8220;unique shapes&#8221; for a given volume, defined as a non-overlapping set of conformers that cover the shape space spanned by the conformers whose volume is <em>smaller than or equal to</em> that volume (that is, V≤V<sub>1</sub>). As illustrated in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>, the unique shapes were classified into three groups according to the shape space they cover: (1) the &#8220;large unique shapes&#8221;, which cover the shape space spanned only by the conformers of V = V<sub>1</sub>, (2) the &#8220;small unique shapes&#8221;, which cover the shape space spanned only by the conformers of V&lt;V<sub>1</sub>, and (3) the &#8220;shared unique shapes&#8221;, which cover the shape space spanned by the conformers of V = V<sub>1</sub> <em>and</em> those of V&lt;V<sub>1</sub>. When the conformer volume increases from V&lt;V<sub>1</sub> to V = V<sub>1</sub>, the &#8220;large unique shapes&#8221; for V = V<sub>1</sub> explain newly added shape space whereas the &#8220;small unique shapes&#8221; for V = V<sub>1</sub> represent the shape space not present for that volume. The unchanged portion of the shape space is explained by the &#8220;shared unique shapes&#8221; for V = V<sub>1</sub>. Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a> schematically illustrates the shape space expansion upon a successive increase in the conformer volume. Note that smaller <sup>thresh</sup> STvalues were used for clustering as the volume increases (as represented by larger circles) to maintain the number of unique shapes to a manageable size and to reflect the <sup>thresh</sup> STvalue used in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> for V<sub>1</sub>.</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-9-4.jpg" src="../_images/1758-2946-3-9-4.jpg" />
+<p class="caption">Figure 4. The concept of unique shapes for V = V<sub>1</sub>, which cover the shape space spanned by the conformers whose volumes are less than or equal to V<sub>1</sub></p>
+<div class="legend">
+<strong>:sub:`1`, which cover the shape space spanned by the conformers whose volumes are less than or equal to V:sub:`1`The concept of unique shapes for V = V</strong>.</div>
+</div>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-9-5.jpg" src="../_images/1758-2946-3-9-5.jpg" />
+<p class="caption">Figure 5. Schematic illustration of the shape space expansion upon a conformer volume increase</p>
+<div class="legend">
+<strong>Schematic illustration of the shape space expansion upon a conformer volume increase</strong>. Blue circles represent the shape space spanned by conformers of a particular volume (V), and black dots represents reference shapes (for the individual shape spaces) or unique shapes (for combined shape spaces). <sup>thresh</sup> STindicates a Shape-Tanimoto (ST) value used as a shape diversity threshold.</div>
+</div>
+<p>The &#8220;unique shapes&#8221; for each volume were computed using two different clustering strategies, the &#8220;small-then-large&#8221; approach and the &#8220;large-then-small&#8221; approach, as depicted in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>, and detailed procedures are described in the <em>Materials and Methods</em> section. In the &#8220;small-then-large&#8221; approach [Figure <em class="xref std std-ref">6(a)</em>], the shape space of the conformers of V&lt;V<sub>1</sub> was first explored at the <sup>thresh</sup> STvalue for V<sub>1</sub> to look for newly added shape space when the conformer volume increases to V<sub>1</sub>. That is, the small and shared unique shapes for V = V<sub>1</sub>, which cover the shape space spanned by conformers of V&lt;V<sub>1</sub>, were first generated by clustering all reference and basis shapes for V&lt;V<sub>1</sub>, and then the identified unique shapes were re-clustered with the reference and basis shapes for V = V<sub>1</sub> to find the large unique shapes. On the contrary, in the &#8220;large-then-small&#8221; approach [Figure <em class="xref std std-ref">6(b)</em>], the large and shared unique shapes for V = V<sub>1</sub> were determined first, by using the previously determined reference shapes for V = V<sub>1</sub>, and then the reference and basis shapes for V&lt;V<sub>1</sub> were used to re-cluster to identify the small unique shapes.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-9-6.jpg" src="../_images/1758-2946-3-9-6.jpg" />
+<p class="caption">Figure 6. Two different approaches used to generate the unique shapes between V = V<sub>1</sub> and V&lt;V<sub>1</sub>, depending on which shape space is clustered first</p>
+<div class="legend">
+<strong>:sub:`1` and V&lt;V:sub:`1`, depending on which shape space is clustered firstTwo different approaches used to generate the unique shapes between V = V</strong>.</div>
+</div>
+<p>The two methods resulted in two different sets of the unique shapes for each volume. The unique shape counts for both sets and the ratio between them are plotted in Figure <em class="xref std std-ref">7(a)</em>, as a function of the conformer volume. Because both methods deal with the identical shape space, they are expected to give a number of unique shapes similar to each other; however, since reference shapes were selected randomly without any attempt to optimally minimize or maximize their count, these counts cannot be expected to be the same. As shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>, the unique shape counts for the two sets tended to differ by 0-10%, although their ratio varied from 0.7 to 1.3 (especially for V&gt;500, where the conformer populations were not as numerous). This tendency may be explained by the fact that lesser volumes consider reference and basis shapes that may be considerably closer together due to larger <sup>thresh</sup> STvalues. This suggests that using the larger volume reference shapes first resulted in a more efficient shape space description (<em>i.e</em>., fewer reference shapes), when considering the union of the collective shape space for the volume range. Nonetheless, Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a> shows, as expected, that the total number of unique shapes gradually increases as a function of the conformer volume and its <sup>thresh</sup> STvalue, indicating an overall expansion of shape space across the volume range irrespective of the change in ST value used (<em>i.e</em>., shape space is growing faster than the decrease in ST value as a function of volume to achieve a maximum of 200 reference shapes).</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-9-7.jpg" src="../_images/1758-2946-3-9-7.jpg" />
+<p class="caption">Figure 7. Unique shape counts</p>
+<div class="legend">
+<strong>Unique shape counts</strong>. (a) The number of unique shapes generated by the &#8220;small-then-large&#8221; method and the &#8220;large-then-small&#8221; method, and (b) the ratio of &#8220;small-then-large&#8221; to &#8220;large-then-small&#8221; unique shapes as a function of conformer volume.</div>
+</div>
+<p>Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a> displays the number of large unique shapes, small unique shapes, and shared unique shapes for each volume, while Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a> shows their proportions of the total unique shapes, which were estimated using the following equations:</p>
+<p>Note that the value of <sup>thresh</sup> STaffects the counts of reference, basis, and unique shapes, because it determines the distance between clusters. However, the percentages of these counts plotted in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a> are essentially equivalent to the fractions of the shape space that the individual counts represent, and hence, they may be considered to be independent of the <sup>thresh</sup> STvalue.</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-9-8.jpg" src="../_images/1758-2946-3-9-8.jpg" />
+<p class="caption">Figure 8. The number of unique shapes, small unique shapes, and large unique shapes generated using (a) the small-then-large method and (b) the large-then-small method</p>
+<div class="legend">
+<strong>The number of unique shapes, small unique shapes, and large unique shapes generated using (a) the small-then-large method and (b) the large-then-small method</strong>.</div>
+</div>
+<div class="figure align-center" id="figure-9">
+<img alt="../_images/1758-2946-3-9-9.jpg" src="../_images/1758-2946-3-9-9.jpg" />
+<p class="caption">Figure 9. The percentages of the large unique shapes, small unique shapes, and shared unique shapes, being the percentage of space not covered by either large or small unique shapes [<em>i</em>., shared = 1.0 - (large + small)], as a function of the conformer volume</p>
+<div class="legend">
+<strong>i.eThe percentages of the large unique shapes, small unique shapes, and shared unique shapes, being the percentage of space not covered by either large or small unique shapes [</strong>.</div>
+</div>
+<p>There are a number of interesting observations one can make from these graphs. In Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a> and Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a> there is a banded behavior, indicated previously in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>, which looks like a series of lines spaced further apart as the volume increases. This is due to the steady growth in shape space as volume increases and the use of 0.01 decrements of <sup>thresh</sup>ST. Whenever the <sup>thresh</sup> STdecreases by 0.01, a corresponding significant decrease in counts occurs. When the <sup>thresh</sup> STvalue changes less, or does not change at all, the lines appear to be wider apart, reflecting just the growth in shape space due to volume.</p>
+<p>Another interesting observation in Figure <em class="xref std std-ref">8(a)</em>, one can see that the absolute count of large unique shapes stays relatively constant in the volume range, with an average count and standard deviation of 22.2 +/- 7.8 and a mode of 24. There is a shallow maximum at volume 145 Å<sup>3</sup> followed by a relatively slow overall decline over the rest of the volume range. This decline appears most evident when the volume is beyond volume 305 Å<sup>3</sup>, perhaps due to the truncation of shape space considered as represented by the rapid reduction in conformer count at larger volumes and the fact that a maximum of non-hydrogen atom count occurs at 26.</p>
+<p>Similar to the large unique shapes in Figure <em class="xref std std-ref">8(a)</em>, the large and shared unique shapes in Figure <em class="xref std std-ref">8(b)</em> show a similar banded behaviour across most of the volume range, with a reference count mean and standard deviation of 144.4 +/- 23.7 and a mode of 140. There is a barely evident maximum volume at volume 228 Å<sup>3</sup> and a slightly noticeable dip at volume 261 Å<sup>3</sup>, prior to resuming the similar narrow band of large and shared unique shapes. This may suggest that the growth of large and shared shape space is relatively constant as a function of PubChem contents.</p>
+<p>The small and shared unique shapes completely dominate in Figure <em class="xref std std-ref">8(a)</em>, being nearly the same as the total count of unique shapes across the entire volume; however, the small unique shapes in Figure <em class="xref std std-ref">8(b)</em> show a very shallow minimum at about volume 200 Å<sup>3</sup> prior to significantly increasing as a function of volume. This may suggest that the overall size of PubChem shape space slows (as a function of the rate of changing ST) after a point, with large unique shapes contributing less and less to the overall shape diversity across the full volume range as the total shape space that can be represented by larger shapes diminishes. One can see this to some extent in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a>, where the percentage of shared shape space is &#8220;Λ&#8220;-shaped, reaching a maximum of 73% at volume 217 Å<sup>3</sup> and then steadily diminishes as a function of volume as the percentage of shape space of smaller shapes dominates. Again, it is reasonable to suggest that this observation is an artifact of the PubChem contents and not representative of what one might find if significantly more larger chemical structures were considered in the range of 30-50 non-hydrogen atoms. (<em>i.e</em>., if the non-hydrogen atom count maximum was not at 26, but continued to grow until the maximum considered of 50.)</p>
+<p>To further demonstrate this, Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a> shows the ratio of the fraction of the large unique shapes to the sum of the fractions of the large and shared unique shapes, which is a measure of how much of the shape space spanned by the conformers of a particular volume is not shared by the conformers smaller than that volume. For 75 Å<sup>3</sup> ≤ V ≤ 100 Å<sup>3</sup>, the mean value of the ratio was 0.19, indicating that ~20% of the shape space spanned by the conformers of a particular volume in this range is unique to that particular volume, and that the other 80% is shared by the conformers smaller than that volume. The ratio decreases with the conformer volume, and the mean value for 550 Å<sup>3</sup> ≤ V ≤ 575 Å<sup>3</sup> was 0.11, indicating the rate of the shape space growth decreases as the conformer volume increases, relative to the PubChem chemical structure contents.</p>
+<div class="figure align-center" id="figure-10">
+<img alt="../_images/1758-2946-3-9-10.jpg" src="../_images/1758-2946-3-9-10.jpg" />
+<p class="caption">Figure 10. The ratio of the percent large unique shapes to the sum of the the percent large and shared unique shapes</p>
+<div class="legend">
+<strong>The ratio of the percent large unique shapes to the sum of the the percent large and shared unique shapes</strong>.</div>
+</div>
+</div>
+</div>
+<div class="section" id="id26">
+<h2>Conclusion<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
+<p>The shape diversity of the biologically relevant conformer space of molecules and conformers was investigated using 16.4 million molecules in the PubChem Compound database (as of January 2008), covering non-hydrogen atom counts up to 50 and effective rotors up to 15, as represented by 1.46 billion diverse conformers. After binning the conformers according to their volume, cluster analysis was performed to get a maximum count of non-redundant reference shapes, representing the shape space spanned by the conformers for a particular unit volume. The <sup>thresh</sup> STvalue, which defines the maximum shape similarity between any two reference shapes for that volume, gradually decreased as the conformer volume increased. There was no apparent correlation between the count of conformers clustered and the shape diversity found. Furthermore, an analysis was performed to examine the rate of increase of new reference shapes as a function of volume and the percentage of shape space unique to a particular volume. Generally speaking, the rate of addition of new reference shapes as a function of increasing volume was relatively constant across the range of volumes considered; however, the ability of a particular volume to explain the shape diversity spanned by lesser volumes increased up to a point and then decreased, ranging between 40-70% of all unique shapes for most of the considered volume range (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a>).</p>
+<p>Some of the results from this analysis should be considered an artifact of the contents of PubChem in that the population as a function of molecular size peaks at 26 non-hydrogen atoms and then rapidly declines. An exhaustive analysis of all &#8220;reasonable&#8221; theoretically possible molecules resulting from larger molecules may provide a different trend. As such, the results of this analysis should be considered a conservative estimate.</p>
+<p>While it is unfortunate that the PubChem shape space is truncated based on what is possible (due to the diminishing count of chemical structures with non-hydrogen atom counts greater than 26), one does see substantial evidence that shape space grows uniformly with a smoothly decreasing <sup>thresh</sup> STand increasing molecular volume. One also sees that keeping the count of reference shapes at a maximum for a given volume as an approach and analysis can allow one to achieve an understanding as to how diverse shape space is as a function of shape similarity. The apparent lack of dependence of the reference shape count with respect to the count of conformers represented by a given volume demonstrates how redundant shape space is across the volume range; however, we believe that the <sup>thresh</sup> STcurve in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> may actually be linear or approach it, if provided an exhaustive set of theoretically possible but reasonable chemical structures, as the chemical structure shape possibilities surely are more diverse than the limited population of chemical structures available in PubChem for non-hydrogen atom counts greater than thirty.</p>
+</div>
+<div class="section" id="materials-and-methods">
+<h2>Materials and methods<a class="headerlink" href="#materials-and-methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="biologically-relevant-molecules-in-the-pubchem-compound-database">
+<h3>1. Biologically relevant molecules in the PubChem Compound database<a class="headerlink" href="#biologically-relevant-molecules-in-the-pubchem-compound-database" title="Permalink to this headline">¶</a></h3>
+<p>From the PubChem Compound database <a class="footnote-reference" href="#b15" id="id27">[15]</a><a class="footnote-reference" href="#b16" id="id28">[16]</a><a class="footnote-reference" href="#b17" id="id29">[17]</a><a class="footnote-reference" href="#b18" id="id30">[18]</a></p>
+<ol class="arabic simple">
+<li>Molecules only with a single covalent component were considered, since each component of mixtures and complexes has a unique Compound ID.</li>
+<li>Salts were not included because their parent molecules are also in the PubChem database.</li>
+<li>Molecules with a non-organic element were not included because they are not compliant with the 94 s variant of the Merck molecular force-field (MMFF94s), which was used for conformer generation (without coulomb interaction terms). For the same reason, molecules with an MMFF94 s unparameterized element type (<em>e.g</em>., hyper-valent species) were removed.</li>
+<li>Molecules that are too big or too flexible cannot have their conformational space properly sampled. Therefore, the non-hydrogen atom count was limited to a maximum of 50 and the effective rotor count was limited to 15. The effective rotor count, given by the following equation, takes into account the additional flexibility due to non-aromatic rings in a molecule,</li>
+</ol>
+<p>where <sub>effective</sub> nris the number of effective rotors, <em>nr</em> is the number of rotatable bonds, and <em>nnara</em> is the number of &#8220;non-aromatic&#8221; <sup>3</sup>sp-hybridized ring atoms.</p>
+<ol class="arabic simple" start="5">
+<li>Molecules with more than 6 undefined stereocenters were also removed because they need substantial computational resources to consider.</li>
+</ol>
+</div>
+<div class="section" id="id31">
+<h3>2. Conformer generation<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
+<p>The OMEGA C++ application programming interface (API) <a class="footnote-reference" href="#b19" id="id32">[19]</a> was used to generate conformers for the molecules in PubChem and the Shape C++ API <a class="footnote-reference" href="#b12" id="id33">[12]</a> was used to compute conformer analytic volumes. In a recent study <a class="footnote-reference" href="#b20" id="id34">[20]</a>, a set of optimal values for some important OMEGA parameters was determined for PubChem 3-D conformer generation. This parameter set was employed for conformer generation in the present study. The MMFF94 s force-field without the coulomb interaction terms were used with the energy window limited to 25 kcal/mol. The number of conformers generated in the torsion search step was limited to 100,000 conformers. When undefined stereocenters were present, each stereo isomer was independently considered (maximum of 100,000 conformers each for up to 32 different SP3/SP2 stereo isomers) and all produced conformers combined. Conformers were then clustered using the root-mean-square distance [rounded to the nearest 0.2 increment (from 0.4 to 2.4)] given by the following equation <a class="footnote-reference" href="#b20" id="id35">[20]</a>:</p>
+<p>where <sub>effective</sub> nris the number of effective rotors and <sub>nha</sub> nis the number of non-hydrogen atoms in a molecule. The maximum number of conformers in a conformer model for each molecule was limited to 500. If clustering resulted in more than 500 conformers, the clustering RMSD was incremented by 0.2 and the conformers re-clustered, repeating until 500 or fewer conformers were achieved. Post processing of the conformer models was performed. This included full energy minimization of all hydrogen atom locations (all non-hydrogen atoms were kept frozen). Subsequent analysis removed any conformers with atom-atom &#8220;bumps&#8221;, being cases where the steric van der Waals interaction energy was greater than 25 kcal/mol.</p>
+</div>
+<div class="section" id="general-descriptions-of-the-partition-clustering-algorithm">
+<h3>3. General descriptions of the partition-clustering algorithm<a class="headerlink" href="#general-descriptions-of-the-partition-clustering-algorithm" title="Permalink to this headline">¶</a></h3>
+<p>Due to the rather large number of conformers involved, a &#8220;divide and conquer&#8221; approach with a multistage partition-based clustering algorithm (as shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>) was employed. In the first phase of the partition-clustering algorithm, conformers were split into manageable sets (or partitions), each containing a certain number of conformers (<em>N**setsize</em> :sup:<a href="#id36"><span class="problematic" id="id37">``</span></a>= 50,000). Conformers in each set were randomly sampled such that no two selected conformers had a ST distance closer than the shape diversity threshold (<sup>thresh</sup>ST). The selected conformers were retained for future analysis, as cluster representatives, while the others were considered redundant and discarded. If the count of selected conformers in a given partition was greater than <sup>thresh</sup> STvalue. After all conformer sets were sampled using <sup>thresh</sup>ST, all the conformers from each set were then combined and re-sampled as described above (<em>e.g</em>., divided up into partitions and sampled). When the total number of clusters became smaller than <sup>thresh</sup> STvalue. In the end, the ST scores between any two conformers in the final reference set cannot be closer than the <sup>thresh</sup> STvalue. A final step involved comparing the reference set with all conformers represented by the reference set.</p>
+<p>This procedure achieves several things. Firstly, it breaks up many millions of conformers into manageable sets. Secondly, it allows the shape diversity threshold to be dynamically decreased for individual conformer sets. Thirdly, it reduces a very large number of conformers to a manageable set of conformers that represent all possible shapes present.</p>
+<div class="section" id="partition-clustering-of-conformers-of-a-given-volume">
+<h4>3.1. Partition-clustering of conformers of a given volume<a class="headerlink" href="#partition-clustering-of-conformers-of-a-given-volume" title="Permalink to this headline">¶</a></h4>
+<p>To study the shape diversity for a given volume, the conformers of the same volumes were partition-clustered, based on the procedures outlined in the previous section.</p>
+<ol class="arabic simple">
+<li>The 1.46 billion conformers were grouped according to their volumes rounded to the nearest integers.</li>
+<li>The conformers for a given volume were partition-clustered until the total number of clusters became less than</li>
+<li>The non-partition clustering was performed with the basis shapes, decreasing <sup>thresh</sup> STvalue 0.01 at a time, until the number of cluster representatives became less than</li>
+</ol>
+</div>
+<div class="section" id="generation-of-unique-shapes">
+<h4>3.2. Generation of unique shapes<a class="headerlink" href="#generation-of-unique-shapes" title="Permalink to this headline">¶</a></h4>
+<p>To investigate the shape space redundancy between different volumes, the unique shapes (Figures <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a> and <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>) for each volume were generated using two different clustering schemes: (1) the &#8220;small-then-large&#8221; method and (2) the &#8220;large-then-small&#8221; method (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>). In the small-then-large method, the unique shapes for V = V<sub>1</sub> were generated from clustering of the reference and basis shapes for V&lt;V<sub>1</sub>, and re-clustering with the reference and basis shapes for V = V<sub>1</sub>, to locate those shapes unique only to the current volume. On the contrary, in the large-then-small method, the unique shapes were generated by pooling the reference shapes for V = V<sub>1</sub>, and re-clustering with the reference and basis shapes for V&lt;V<sub>1</sub>, to locate only those shapes that are unique to lesser volumes.</p>
+<div class="section" id="the-small-then-large-approach">
+<h5>1. The &#8220;small-then-large&#8221; approach<a class="headerlink" href="#the-small-then-large-approach" title="Permalink to this headline">¶</a></h5>
+<ol class="arabic simple">
+<li>Pool all reference shapes of V&lt;V<sub>1</sub> and partition-cluster them at</li>
+<li>Cluster the partition-clustered reference shapes [from step (1)] at</li>
+<li>Pool all basis shapes for V&lt;V<sub>1</sub> and partition-cluster them at</li>
+<li>Fill cluster holes in the clustered reference shapes [from step (2)], by re-clustering them with the partition-clustered basis shapes [from step (3)] at</li>
+<li>Fill cluster holes in the clusters from step (4) with the reference shapes for V = V<sub>1</sub>.</li>
+<li>Fill cluster holes in the clusters from step (5) with the basis shapes for V = V<sub>1</sub>.</li>
+</ol>
+</div>
+<div class="section" id="the-large-then-small-approach">
+<h5>2. The large-then-small approach<a class="headerlink" href="#the-large-then-small-approach" title="Permalink to this headline">¶</a></h5>
+<ol class="arabic simple">
+<li>Pool all reference shapes of V = V<sub>1</sub>.</li>
+<li>Pool all reference shapes of V&lt;V<sub>1</sub> and partition-cluster them at</li>
+<li>Cluster the partition-clustered reference shapes [from step (2)] at</li>
+<li>Pool all basis shapes for V&lt;V<sub>1</sub> and partition-cluster them at</li>
+<li>Fill cluster holes in the clustered reference shapes [from step (3)], by re-clustering them with the partition-clustered basis shapes [from step (4)] at</li>
+<li>Fill cluster holes in the clustered reference shapes for V = V<sub>1</sub> [from step (1)] with the clusters from step (5).</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>EEB performed most of the research. SK wrote the first draft and introduced the concept of small and large unique shapes to analyze the data. SHB reviewed the final manuscript. All authors read and approved the final manuscript.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>We are grateful to the NCBI Systems staff, especially Ron Patterson, Charlie Cook, and Don Preuss, whose efforts helped make the PubChem3D project possible. This research was supported in part by the Intramural Research Program of the National Library of Medicine, National Institutes of Health, U.S. Department of Health and Human Services. This study utilized the high-performance computational capabilities of the Biowulf Linux cluster at the National Institutes of Health, Bethesda, MD. <a class="reference external" href="http://biowulf.nih.gov">http://biowulf.nih.gov</a>.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>Challenges and advances in computational docking: 2009 in review</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>Development of anti-viral agents using molecular modeling and virtual screening techniques</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>Comprehensive comparison of ligand-based virtual screening tools against the DUD data set reveals limitations of current 3D methods</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td>Multiple protein structures and multiple ligands: effects on the apparent goodness of virtual screening results</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td>Virtual screening: an endless staircase?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[6]</a></td><td>Molecular shape and medicinal chemistry: a perspective</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[7]</a></td><td>Comparison of topological, shape, and docking methods in virtual screening</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[8]</a></td><td>Comparison of shape-matching and docking as virtual screening tools</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[9]</a></td><td>A gaussian description of molecular shape</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[10]</a></td><td>A fast method of molecular shape comparison: a simple application of a Gaussian description of molecular shape</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[11]</a></td><td>Gaussian shape methods</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[12]</td><td><em>(<a class="fn-backref" href="#id13">1</a>, <a class="fn-backref" href="#id33">2</a>)</em> ShapeTK-C++, Version 1.8.0, OpenEye Scientific Software, Inc.: Santa Fe, NM</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[13]</td><td><em>(<a class="fn-backref" href="#id14">1</a>, <a class="fn-backref" href="#id16">2</a>, <a class="fn-backref" href="#id18">3</a>, <a class="fn-backref" href="#id20">4</a>, <a class="fn-backref" href="#id25">5</a>)</em> Small molecule shape-fingerprints</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[14]</td><td><em>(<a class="fn-backref" href="#id15">1</a>, <a class="fn-backref" href="#id17">2</a>, <a class="fn-backref" href="#id19">3</a>, <a class="fn-backref" href="#id21">4</a>)</em> Fast 3D shape screening of large chemical databases through alignment-recycling</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[15]</td><td><em>(<a class="fn-backref" href="#id22">1</a>, <a class="fn-backref" href="#id27">2</a>)</em> PubChem: integrated platform of small molecules and biological activities</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[16]</td><td><em>(<a class="fn-backref" href="#id23">1</a>, <a class="fn-backref" href="#id28">2</a>)</em> Database resources of the National Center for Biotechnology Information</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[17]</td><td><em>(<a class="fn-backref" href="#id24">1</a>, <a class="fn-backref" href="#id29">2</a>)</em> PubChem: a public information system for analyzing bioactivities of small molecules</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[18]</a></td><td>An overview of the PubChem BioAssay resource</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[19]</a></td><td>OMEGA, Version 2.1, OpenEye Scientific Software, Inc.: Santa Fe, NM</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[20]</td><td><em>(<a class="fn-backref" href="#id34">1</a>, <a class="fn-backref" href="#id35">2</a>)</em> PubChem3D: conformer generation</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">PubChem3D: Diversity of shape</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">Results and Discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#conformer-generation">1. Conformer generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generation-of-reference-shapes-per-volume">2. Generation of reference shapes per volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generation-of-unique-shapes-for-each-volume">3. Generation of unique shapes for each volume</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id26">Conclusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#materials-and-methods">Materials and methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#biologically-relevant-molecules-in-the-pubchem-compound-database">1. Biologically relevant molecules in the PubChem Compound database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id31">2. Conformer generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-descriptions-of-the-partition-clustering-algorithm">3. General descriptions of the partition-clustering algorithm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#partition-clustering-of-conformers-of-a-given-volume">3.1. Partition-clustering of conformers of a given volume</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation-of-unique-shapes">3.2. Generation of unique shapes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#the-small-then-large-approach">1. The &#8220;small-then-large&#8221; approach</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#the-large-then-small-approach">2. The large-then-small approach</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-8.html" title="Confab - Systematic generation of diverse low-energy conformers"
+             >previous</a> |
+          <a href="1758-2946-3-11.html" title="Interpreting linear support vector machine models with heat map molecule coloring"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-9.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

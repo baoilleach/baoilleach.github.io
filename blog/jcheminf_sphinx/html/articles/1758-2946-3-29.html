@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Structural diversity of biologically interesting datasets: a scaffold analysis approach" href="1758-2946-3-30.html" />
+    <link rel="prev" title="AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment" href="1758-2946-3-28.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-28.html" title="AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-30.html" title="Structural diversity of biologically interesting datasets: a scaffold analysis approach"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="multiple-search-methods-for-similarity-based-virtual-screening-analysis-of-search-overlap-and-precision">
+<h1>Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision<a class="headerlink" href="#multiple-search-methods-for-similarity-based-virtual-screening-analysis-of-search-overlap-and-precision" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>Data fusion methods are widely used in virtual screening, and make the implicit assumption that the more often a molecule is retrieved in multiple similarity searches, the more likely it is to be active. This paper tests the correctness of this assumption.</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>Sets of 25 searches using either the same reference structure and 25 different similarity measures (similarity fusion) or 25 different reference structures and the same similarity measure (group fusion) show that large numbers of unique molecules are retrieved by just a single search, but that the numbers of unique molecules decrease very rapidly as more searches are considered. This rapid decrease is accompanied by a rapid increase in the fraction of those retrieved molecules that are active. There is an approximately log-log relationship between the numbers of different molecules retrieved and the number of searches carried out, and a rationale for this power-law behaviour is provided.</p>
+</div>
+<div class="section" id="conclusions">
+<h3>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h3>
+<p>Using multiple searches provides a simple way of increasing the precision of a similarity search, and thus provides a justification for the use of data fusion methods in virtual screening.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>The constantly increasing costs of drug discovery have resulted in the development of many techniques for virtual screening <a class="footnote-reference" href="#b1" id="id2">[1]</a><a class="footnote-reference" href="#b2" id="id3">[2]</a><a class="footnote-reference" href="#b3" id="id4">[3]</a><a class="footnote-reference" href="#b4" id="id5">[4]</a>. One of the simplest, and most widely used, techniques is similarity searching, in which a known bioactive reference structure is searched against a database to identify the nearest-neighbour molecules, since these are the most likely to exhibit the bioactivity of interest <a class="footnote-reference" href="#b5" id="id6">[5]</a><a class="footnote-reference" href="#b6" id="id7">[6]</a><a class="footnote-reference" href="#b7" id="id8">[7]</a><a class="footnote-reference" href="#b8" id="id9">[8]</a><a class="footnote-reference" href="#b9" id="id10">[9]</a>.</p>
+<p>A quarter of a century has passed since the first descriptions of similarity searching <a class="footnote-reference" href="#b10" id="id11">[10]</a><a class="footnote-reference" href="#b11" id="id12">[11]</a>, but it has still not proved possible to identify some single similarity method that is consistently superior (in terms of quantitative measures of screening effectiveness such as enrichment factor or cumulative recall) to the many others that have been developed over the years <a class="footnote-reference" href="#b7" id="id13">[7]</a><a class="footnote-reference" href="#b12" id="id14">[12]</a><a class="footnote-reference" href="#b13" id="id15">[13]</a>. Indeed, we would agree with Sheridan <a class="footnote-reference" href="#b6" id="id16">[6]</a> that it is unlikely that it will ever be possible to identify such an optimal solution. There has hence been much interest in the use of <em>data fusion</em> methods, in which multiple searches are carried out and the resulting database rankings combined to yield an overall ranking (in order of decreasing probability of activity) that is the final search output presented to the user. The many studies that have been carried out have suggested that the fusion of multiple search outputs can provide an effective, and robust, alternative to conventional, single-search approaches <a class="footnote-reference" href="#b14" id="id17">[14]</a>. Most of these studies have been empirical in character and have not sought to provide a theoretical rationale for the fusion procedures that have been used. There is, however, an underlying assumption that is common to all approaches to the use of data fusion for virtual screening. This assumption is that the availability of information resulting from multiple searches will increase the likelihood of detecting active molecules when compared to the use of just a single search. The assumption seems entirely reasonable but it has not, to our knowledge, been tested systematically: this article reports such a test.</p>
+<p>The starting point for our work was a paper by Spoerri that investigated the extent to which the assumption applies when a query is matched against a database of textual documents using multiple search engines <a class="footnote-reference" href="#b15" id="id18">[15]</a>. In brief, Spoerri showed that a given document was more likely to be relevant to a user&#8217;s query the more search engines retrieved that document, with this likelihood increasing very rapidly as the number of search engines retrieving it increased. Spoerri called this phenomenon the Authority Effect: here, we seek to determine whether the Effect also applies in the context of similarity-based virtual screening systems, since this would provide a firm basis for the use of fusion methods.</p>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>Results and Discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<p>We have considered both of the two principal types of data fusion that have been used for virtual screening: <em>similarity fusion</em> and <em>group fusion</em> (which we refer to subsequently as SF and GF, respectively) <a class="footnote-reference" href="#b14" id="id19">[14]</a>. SF involves searching a single reference structure against a database using multiple different similarity measures, and the output is obtained by combining the rankings resulting from these different measures. GF involves searching multiple reference structures against a database using a single similarity measure, and the output is obtained by combining the rankings resulting from these different reference structures. The reader should note that while we refer in this paper to the SF experiments and the GF experiments, real data fusion using either of the two approaches requires a procedure to combine the multiple ranked search outputs to give the final ranking that is presented to the searcher. Here, we have merely considered the molecules retrieved in the top-1% or top-5% of the rankings (see Experimental Methods), with no attempt being made to produce a final output ranking from the top-ranked subset of the database.</p>
+<p>We consider first the results of the SF searches. Figure <em class="xref std std-ref">1(a)</em> shows the overlap plot for the WOMBAT database with a top-1% cut-off. It will be seen that the same basic pattern of behaviour is obtained for all of the activity classes, <em>viz</em> a very large number of molecules that are retrieved by just a single search, and then rapidly decreasing numbers of molecules as more searches are considered. For example, if we consider the COX-2 searches, then there were (averaged over the ten different reference structures for this activity class) 2195 different molecules retrieved once in the 25 searches, 1749 different molecules retrieved twice, 1345 different molecules retrieved thrice etc. Entirely comparable plots are obtained with the top-1% cut-off for the MDDR activity classes (Figure <em class="xref std std-ref">1(b)</em>) and for the top-5% searches for both datasets (data not shown). For comparison with these data, selecting WOMBAT molecules completely at random with a probability of 0.01 (for top-1% searches) in the Binomial Distribution would yield 27,128 molecules that were retrieved once; however, the numbers then drop off very rapidly so that only a single molecule would be expected to be retrieved five times and no molecules at all for greater numbers of similarity searches.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-29-1.jpg" src="../_images/1758-2946-3-29-1.jpg" />
+<p class="caption">Figure 1. Search overlap using similarity fusion</p>
+<div class="legend">
+<strong>Search overlap using similarity fusion</strong>. Plots of the mean numbers of molecules retrieved in a given number of similarity searches for: (a) WOMBAT top-1% searches; (b) MDDR top-1% searches.</div>
+</div>
+<p>The skewed nature of the data in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a> suggests that there may a power law relationship between the overlap and the number of searches, with a few observations (i.e., molecules being retrieved in the present context) occurring very frequently and the great majority occurring only once. Such relationships have been widely discussed in library and information science, where the Bradford, Lotka and Zipf distributions have been used for many years to discuss the dispersion of the scholarly literature, author productivity and word-usage frequencies respectively <a class="footnote-reference" href="#b16" id="id20">[16]</a><a class="footnote-reference" href="#b17" id="id21">[17]</a>. However, such relationships have been observed across the physical and social sciences: published applications include phenomena as diverse as the populations of cities, casualty figures in wars, and the sizes of lunar craters <em>inter alia</em> <a class="footnote-reference" href="#b18" id="id22">[18]</a>, with Benz <em>et al.</em> reviewing applications in chemoinformatics <a class="footnote-reference" href="#b19" id="id23">[19]</a>.</p>
+<p>A power law relationship in the current context has the general form</p>
+<p>where <em>O</em> is the overlap (see Experimental Methods), <em>n</em> is the number of similarity searches and <em>a</em> and <em>b</em> are constants. Plotting log(<em>O</em>) against log(<em>n</em>) should then give a straight line with a slope of -<em>b</em>, and this has been tested in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a> for the top-1% searches, where the overlap figures have been averaged over all of the activity classes for simplicity and ease of viewing. There are clear deviations from straight line behavior in both plots, especially at the largest and smallest numbers of searches. This is not unexpected since inspection of the log-log plots that comprise Figure four of the review by Newman <a class="footnote-reference" href="#b18" id="id24">[18]</a> shows that the twelve highly disparate datasets considered there all exhibit at least some degree of curvature analogous to that observed in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>. The slopes (<em>b</em>) and the <em>r</em><sup>2</sup> values for the WOMBAT and MDDR datasets (both top-12% and top-5%) are listed in the upper part of Table <em class="xref std std-ref">1</em> in the column headed &#8216;Molecules&#8217;. It will be seen that the slopes range from -1.75 (WOMBAT top-5%) to -2.17 (MDDR top-1%) and thus cluster around the value of -2 that characterizes a classical Lotka plot <a class="footnote-reference" href="#b20" id="id25">[20]</a>. Mitzenmacher has noted that log-linear plots often give results that are comparable to log-log plots in power-law studies <a class="footnote-reference" href="#b21" id="id26">[21]</a>. For the SF searches in Table <em class="xref std std-ref">1</em>, the log-linear plots gave better <em>r</em><sup>2</sup> values for the two top-5% results and worse values for the two top-1% values. Similarly inconsistent sets of values were obtained when the scaffold overlap and GF results were considered (<em>vide infra</em>).</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-29-2.jpg" src="../_images/1758-2946-3-29-2.jpg" />
+<p class="caption">Figure 2. Search overlap using similarity fusion</p>
+<div class="legend">
+<strong>Search overlap using similarity fusion</strong>. Log-log plots of the mean numbers of molecules retrieved in a given number of similarity searches for: (a) WOMBAT top-1% searches; (b) MDDR top-1% searches.</div>
+</div>
+<p>Figures <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a> and <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a> consider the overlap of individual molecules. Comparable analyses were conducted in which we counted the overlap of individual ring systems, specifically the Murcko scaffolds identified by the Pipeline Pilot software. Very similar results to those above were obtained, with the numbers of distinct scaffolds again dropping off very quickly with an increase in the number of searches. The <em>b</em> and <em>r</em><sup>2</sup> values for the scaffold log-log plots are included in the upper part of Table <em class="xref std std-ref">1</em>.</p>
+<p>When applied to virtual screening, the Authority Effect would suggest that a given molecule is more likely to be active the more searches that retrieve it. From the results presented thus far, it is clear that multiple searches retrieve decreasingly small numbers of molecules; if the Effect holds then these decreasingly small numbers will contain increasingly large percentages of actives. That this enrichment occurs in practice is clearly demonstrated in Figures <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> and <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>. There are often marked differences between the various activity classes comprising a dataset but the plots are at one in showing that the precision (see Experimental section) is very low for molecules retrieved by just a few searches but that it then increases very rapidly as the number of searches moves towards the maximum. As in the overlap experiments, the skewed nature of the data suggests that a power law relationship may be appropriate to describe the relationship. Averaging over all of the activity classes, the precision figures are shown as log-log plots in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>. The plots all curve upwards to the right: fitting the log-log data to power and exponential trends, the former always gave the better fit, with the continuous curves in the figures representing a cubic relationship. Comparable results to those shown in Figures <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>, <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>, <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a> were again obtained when we considered the active molecules&#8217; scaffolds that were retrieved, rather than the active molecules that were retrieved.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-29-3.jpg" src="../_images/1758-2946-3-29-3.jpg" />
+<p class="caption">Figure 3. Search precision using similarity fusion</p>
+<div class="legend">
+<strong>Search precision using similarity fusion</strong>. Plots of the percentage of the molecules retrieved in a given number of similarity searches that were active for: (a) WOMBAT top-1% searches; (b) WOMBAT top-5% searches.</div>
+</div>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-29-4.jpg" src="../_images/1758-2946-3-29-4.jpg" />
+<p class="caption">Figure 4. Search precision using similarity fusion</p>
+<div class="legend">
+<strong>Search precision using similarity fusion</strong>. Plots of the percentage of the molecules retrieved in a given number of similarity searches that were active for: (a) MDDR top-1% searches; (b) MDDR top-5% searches.</div>
+</div>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-29-5.jpg" src="../_images/1758-2946-3-29-5.jpg" />
+<p class="caption">Figure 5. Search precision using similarity fusion</p>
+<div class="legend">
+<strong>Search precision using similarity fusion</strong>. Log-log plots of the percentage of the molecules retrieved in a given number of similarity searches that were active for: (a) WOMBAT top-1% searches; (b) WOMBAT top-5% searches; (c) MDDR top-1% searches; (d) MDDR top-5% searches.</div>
+</div>
+<p>We hence conclude that a molecule is more likely to be active the more frequently it is retrieved when multiple similarity measures are available for carrying out a similarity search for a bioactive reference structure. The Authority Effect would thus appear to hold, at least for the datasets and similarity measures used here.</p>
+<p>Turning now to the GF searches, the overlap plots that were obtained are very similar in form to those shown in Figures <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a> and <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>, and we have hence included just the top-1% log-log plots in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>. The <em>b</em> and <em>r</em><sup>2</sup> values for these plots are included in the lower part of Table <em class="xref std std-ref">1</em>, and it will be seen that the magnitudes of the slopes are larger than in the upper part of this table, i.e., the numbers of molecules retrieved drops off more rapidly than in the similarity fusion searches. However, this drop-off is from a much larger starting point, as can be seen by comparing the intercepts on the <em>y</em>-axis in, e.g., Figures <em class="xref std std-ref">2(a)</em> and <em class="xref std std-ref">6(a)</em>, i.e., the single similarity measure and 25 reference structures in the GF search identify a notably larger number of molecules than the 25 similarity measures and single reference structure in the SF search. This behaviour is detailed in Table <em class="xref std std-ref">2</em>, which shows the mean numbers of common molecules and common scaffolds for SF and GF searches using 1, 5, 10, 15, 20 and 25 similarity searches.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-29-6.jpg" src="../_images/1758-2946-3-29-6.jpg" />
+<p class="caption">Figure 6. Search overlap using group fusion</p>
+<div class="legend">
+<strong>Search overlap using group fusion</strong>. Log-log plots of the mean numbers of molecules retrieved in a given number of similarity searches for: (a) WOMBAT top-1% searches; (b) MDDR top-1% searches.</div>
+</div>
+<p>We believe that there are two factors that may explain the observed difference between SF and GF. First, the very different natures of the two types of search. In an SF search, the same reference structure is used in all 25 searches. Now, the substructures present within that structure are encoded in different ways by the five different fingerprints, and those encodings are processed in different ways by the five different similarity coefficients; however, it is the same basic structural information that is being used in each and every search. In the GF searches, conversely, a totally different reference structure (and hence different structural information) is used in each search. Second, some of the similarity measure components are quite closely related to each other; thus the Tanimoto and cosine coefficients are known to give very similar (though not monotonic) rankings <a class="footnote-reference" href="#b22" id="id27">[22]</a>, and the Unity and Daylight fingerprints use a similar fragment encoding scheme. Thus, not only is the same basic structural information being used for all the SF searches, but in some cases this information is being processed in a similar manner. Taking these two effects together, the top-ranked molecules resulting from the SF searches hence have a greater degree of commonality than the top-ranked molecules from the GF searches, making it relatively easier for a molecule to be retrieved multiple times using SF (and relatively more difficult using GF). In like vein, a still more steeply angled plot (albeit one that is not based on a log-log relationship) is obtained when searching is simulated by drawing molecules at random using the Binomial Distribution, resulting in sets of molecules having minimal structural commonality.</p>
+<p>The differences between the two types of fusion are still more marked when we consider the precision of the GF searches, as can be seen by comparing the results in Figures <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a> and <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a> with those in Figures <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> and <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>. The general GF trend is for the precision to rise steeply (as in the SF searches) but then to fall rapidly away, giving an inverted bell-shape rather than the constantly increasing plots observed previously (see also the log-log plot for the MDDR top-1% data in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a>). The low precision values observed towards the right-hand parts of the Figures <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a> and <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a> plots follow naturally from the discussion above since if the 25 reference structures in a GF search are quite disparate then it is unlikely that many, or even any, molecules will be retrieved by large numbers of these reference structures. The precision (when averaged over the ten sets of GF searches for each activity class) is hence expected to be low, and there is some evidence to support this view from consideration of the individual activity classes. Specifically, there is a tendency for the more homogeneous activity classes (such as the renin inhibitors) to exhibit their maximum precision at larger numbers of searches than for the less homogeneous (i.e., more heterogeneous) activity classes, where we approximate the homogeneity of an activity class by the mean pair-wise similarity when averaged across all the pairs of molecules in that class. For example, consider the MDDR top-1% GF searches. We have ranked the eleven activity classes in order of decreasing mean pair-wise similarity and noted for each such class the number of similarity searches (in brackets) that gives the maximum precision. The resulting order is: Renin (23) &gt; HIVP (12) &gt; Thrombin (16) &gt; AT1 (11) &gt; SubP (11) &gt; 5HT3 (12) &gt; 5HTReuptake (9) &gt; D2 (8) &gt; 5HT1A (11) &gt; PKC (11) &gt; COX (6). Thus the differences in behavior between the GF and SF searches tend to increase the more diverse the activity class that is being sought, i.e., the more disparate the reference structures that are used for the searches. Support for this view comes from previous studies by Hert <em>et al.</em> <a class="footnote-reference" href="#b23" id="id28">[23]</a> and by Whittle <em>et al.</em> <a class="footnote-reference" href="#b24" id="id29">[24]</a>, who showed that GF, using the MAX and SUM fusion rules respectively, gave comparable levels of screening effectiveness to conventional similarity searching (and hence, by implication, to similarity fusion) when structurally homogeneous activity classes were searched; however, there were noticeable differences in screening effectiveness (with GF the superior approach) when more heterogeneous classes were searched.</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-29-7.jpg" src="../_images/1758-2946-3-29-7.jpg" />
+<p class="caption">Figure 7. Search precision using group fusion</p>
+<div class="legend">
+<strong>Search precision using group fusion</strong>. Plots of the percentage of the molecules retrieved in a given number of similarity searches that were active for: (a) WOMBAT top-1% searches; (b) WOMBAT top-5% searches.</div>
+</div>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-29-8.jpg" src="../_images/1758-2946-3-29-8.jpg" />
+<p class="caption">Figure 8. Search precision using group fusion</p>
+<div class="legend">
+<strong>Search precision using group fusion</strong>. Plots of the percentage of the molecules retrieved in a given number of similarity searches that were active for: (a) MDDR top-1% searches; (b) MDDR top-5% searches.</div>
+</div>
+<div class="figure align-center" id="figure-9">
+<img alt="../_images/1758-2946-3-29-9.jpg" src="../_images/1758-2946-3-29-9.jpg" />
+<p class="caption">Figure 9. Search precision using group fusion</p>
+<div class="legend">
+<strong>Search precision using group fusion</strong>. Log-log plot of the percentage of the molecules retrieved in a given number of similarity searches that were active for MDDR top-1% searches.</div>
+</div>
+<p>We hence conclude that the Authority Effect applies to GF searches when the reference structures are structurally quite similar; when this is not the case, it is applicable when relatively small numbers of reference structures are used, i.e., when meaningful numbers of molecules are being retrieved in all of the searches. It should be emphasized that this does not mean that GF is in some way inferior to SF as a technique for ligand-based virtual screening. First, the discussion here has focussed on the numbers of active molecules that are retrieved, without consideration of their diversity, and the previous studies mentioned above demonstrated the applicability of GF when structurally diverse molecules are sought <a class="footnote-reference" href="#b23" id="id30">[23]</a><a class="footnote-reference" href="#b24" id="id31">[24]</a>. Second, it must be remembered that whilst we refer to SF and GF, practical implementations of these techniques entail a subsequent step in which a fusion rule combines the sets of nearest neighbours from the individual searches. Finally, if 25 different, active reference structures were available, one should probably be using a more sophisticated, machine learning method <a class="footnote-reference" href="#b25" id="id32">[25]</a> for database screening, e.g., a naive Bayesian classifier or a support vector machine, rather than simple, similarity-based approaches.</p>
+<p>The results above show that Spoerri&#8217;s Authority Effect holds - to some extent - for the chemical datasets and biological activity classes considered here. Specifically, a molecule is more likely to be active the more frequently it is retrieved in multiple similarity searches using a single reference structure or in multiple similarity searches using structurally similar multiple reference structures. This observation hence provides a justification for the use of data fusion methods in ligand-based virtual screening. In saying that, we must emphasise that our experiments have been conducted specifically to investigate the Authority Effect, and that rather different procedures are normally applied when data fusion procedures are used in operational virtual screening systems. For example, a common approach to GF is to use the MAX (or 1-NN) fusion rule, where the similarity for a database structure is taken to be the maximum of the similarities between that structure and each of the reference structures. Whittle <em>et al.</em> have shown that the numbers of retrieved actives increase approximately monotonically with the number of GF reference structures even when many of them are employed (see Figure six in Ref. <a class="footnote-reference" href="#b24" id="id33">[24]</a>). Again, if one were to use SF in practice, one would choose similarity measures that differed in character, as exemplified by the work of Muchmore <em>et al.</em> on belief theory <a class="footnote-reference" href="#b26" id="id34">[26]</a>, rather than the similar 2D fingerprint measures used here. Thus, while the results that we have presented provide a basis for the use of data fusion methods in principle, they do not provide a guide as to the effectiveness of any specific fusion method in practice.</p>
+<p>It would clearly be desirable if we could not only demonstrate, but also rationalize, the frequency plots that we have presented. There has recently been interest in the underlying mathematical models that could generate power law distributions (see, e.g., <a class="footnote-reference" href="#b18" id="id35">[18]</a><a class="footnote-reference" href="#b21" id="id36">[21]</a>). Mitzenmacher has identified five broad types of generative model, and applied them to the analysis of both log-log and log-normal distributions <a class="footnote-reference" href="#b21" id="id37">[21]</a>. In what follows, we apply a modification of one of his types - which he refers to as &#8216;preferential attachment&#8217; - to the analysis of our virtual screening data.</p>
+<p>Assume that there are <em>n</em> similarity search methods available, each of which models the possible activity of a molecule in a similar manner. Without loss of generality, assume also that the search methods for a given query (i.e., a single reference structure in similarity fusion or a set of reference structures in group fusion) are run sequentially. At each time step, a search is conducted of the <em>M</em> molecules in a database and a set of <em>m</em> possibly active molecules is returned (e.g., those in the top-5% of the ranking resulting from that search method). Thus, at time step 1, the first search is run and a set of <em>m</em> potentially active molecules is returned; at time step 2, a second search is run and another set of <em>m</em> possibly active molecules is returned, and so on. We now make the following assumption: that the second search returns the molecules that have been already returned by the first search with some probability proportional to γ (γ &lt;1) while the rest of the molecules are returned with a probability proportional to (1- γ). Then, when the third search is conducted, a molecule is retrieved with probability proportional to the number of searches that have already returned that molecule. We are using here retrieval methods that are basically very similar (e.g., all using the same basic 2D substructural components and closely related association coefficients in a similarity fusion search), and it is hence not unreasonable to assume that a molecule satisfying the search criterion for one method is also likely to satisfy the criteria for other, related methods. If the different search methods are all equally similar to each other then a single γ is able to capture this similarity independently of the order of the methods used for searching the database. This is the strongest assumption we make here.</p>
+<p>At the end of all the <em>n</em> searches, a total of <em>n*m</em> molecules will have been retrieved (though some of these will have been retrieved more than once). Let <sub>s</sub> Odenote the fraction of molecules returned by exactly <em>s</em> searches (i.e. the overlap between <em>s</em> similarity searches): we now demonstrate that <sub>s</sub> Ofollows a power-law distribution. However, before providing a mathematical derivation of the distribution, we shall illustrate the approach using the example of four searches each retrieving three molecules as shown in Table <em class="xref std std-ref">3</em>. The set of molecules returned by three searches is {C}, while the set of molecules returned by two searches is {A, B, D}. If the current search (Search 5) returns any of A, B or D then the size of the set of molecules returned by three searches will increase by one. The chances of one of the three molecules being selected by Search 5 is γ<em>(2*3/12), since out of the 12 molecules already returned there are 2*3 = 6 instances of molecules already returned twice. If the current search returns C then the size of the set of molecules returned by exactly three searches will decrease by one since C now belongs to the set of molecules returned by exactly four searches. The chance that the molecule C is returned is |nonascii_6|*(3*1/12) since out of the 12 molecules already returned there are 3*1 = 3 instances of molecules already returned thrice. If the growth of the set of molecules returned *s</em> times can be expressed mathematically then we shall be able to model the distribution of the fraction <sub>s</sub>O, as we now demonstrate. In saying that, the reader should note that the following derivation excludes the special case of <em>s</em> = 1: this is not only to simplify the explanation but also because <em>s</em> = 1 is the extreme end of the distribution, corresponding to molecules retrieved just once in any of the <em>n</em> searches and thus unlikely to be of practical interest in a screening context. The full derivation is presented by Mitzenmacher <a class="footnote-reference" href="#b21" id="id38">[21]</a>.</p>
+<p>Let <sub>s</sub>X(<em>t</em>) be a random variable describing the number of molecules returned by <em>s</em> searches at time step <em>t</em>. Then for <em>s</em> ≥ 2 the increase in <sub>s</sub>X(<em>t</em>) is described by the following formula</p>
+<p>This is the probability that the current search returns one of the molecules retrieved in <em>s</em>-1 of the previous searches. The denominator <em>m*t</em> is the total number of all retrieved molecules up to time step <em>t</em>, (<em>s</em>-1)**X**s*-1 :sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">total</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">instances</span> <span class="pre">already</span> <span class="pre">retrieved</span> <span class="pre">*s*-1</span> <span class="pre">times,</span> <span class="pre">and</span> <span class="pre">thus</span> <span class="pre">(*s*-1)**X**s*-1\</span> <span class="pre">:sub:</span></tt>/<em>m*t</em> is the fraction of the complete set of retrieved molecules that has been previously retrieved by <em>s</em> searches. Since the current search returns <em>m</em> molecules, the probability that a molecule is retrieved given that it has already been retrieved <em>s</em>-1 times is hence</p>
+<p>and</p>
+<p>The decrease of <sub>s</sub>X(<em>t</em>) is described by the following formula</p>
+<p>hence it is equal to the probability that the current search returns one of the molecules previously retrieved by <em>s</em> searches. Here, <em>s*</em><sub>s</sub> Xis the total number of molecules already retrieved by <em>s</em> searches, and thus <em>s*</em><sub>s</sub>X/<em>m*t</em> is the fraction of the complete set of retrieved molecules that has been previously retrieved by <em>s</em> searches. The probability that a molecule is retrieved given that it has already been retrieved <em>s</em> times is hence</p>
+<p>The growth of <sub>s</sub> Xis hence given approximately by</p>
+<p>After all <em>n</em> searches have been executed <sub>s</sub>X(<em>t</em>) = <sub>s</sub><em>m*tO, i.e., the molecules retrieved by *s</em> searches constitute a fraction <sub>s</sub> Oof all the molecules retrieved. In the general case (for <em>s</em> ≥ 2)</p>
+<p>Solving for the fraction of molecules returned by <em>s</em> searches gives</p>
+<p>For large <em>s</em>, <em>|nonascii_9|*s+1 ~ |nonascii_10|*s</em> and thus,</p>
+<p>Asymptotically, for the above to hold, we have <em>a</em>, giving a power law distribution for the fraction <sub>s</sub> Oand hence a rationale for the behavior observed in the MDDR and WOMBAT searches (see Figures <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a> and <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>).</p>
+<p>The reader should note that <em>b*= -(1+1/</em>γ<em>) can only give rise to exponents (slopes) that are less than -2, i.e. *b</em> = -(1+1/<em>|nonascii_12|*) |nonascii_13| -2, for 0 &lt;</em>γ* ≤ 1, so that some of the exponents (slopes) shown in the upper part of Table <em class="xref std std-ref">1</em> cannot be explained by the proposed model. These are the slopes empirically derived from the data for the molecules and scaffolds using similarity fusion, regarding which we make two comments. First, the goodness of fit, as measured by <em>r</em><sup>2</sup>, is not as high as the goodness of fit for the rest of the empirical data, suggesting that the slope <em>b</em> may not be accurate enough. Second, the number of searches may not be large enough for accurate use of the approximation <em>|nonascii_16|*s*+1 ~ *|nonascii_17|*s</em> in the derivation. In particular, using the formula before this approximation and simulating the overlaps for different values of <em>|nonascii_18|* based on the formulae above we obtain: for *|nonascii_19|* = 0.9, *b</em> = -1.923&gt;-2, while for <em>|nonascii_20|* = 0.99, *b</em> = -1.845&gt;-2. This can explain most of the slopes in Table <em class="xref std std-ref">1</em> with the exception of those for WOMBAT top-5%.</p>
+<p>It must be emphasized that this derivation considers only the overlap of the search outputs and says nothing about the precision of the searches. There is, however, an analogy that suggests one way in which the precision distributions might be modeled in future work. The overlap plots show that there is a distinct lack of consistency, i.e., that the different search methods generally retrieve very different sets of molecules. This situation has also been shown to pertain in many analogous retrieval contexts, such as the assignment of indexing terms <a class="footnote-reference" href="#b27" id="id39">[27]</a>, the creation of links in hypertext systems <a class="footnote-reference" href="#b28" id="id40">[28]</a> and the selection of search strategies [#B29]_*inter alia*. In particular, it has been suggested that while indexers often differ considerably as to which indexing terms should be assigned to documents, where there is a high degree of consistency then this should result in enhanced search effectiveness. Whilst generally dubious of the correctness of this suggestion in practice, Cooper has shown, using a highly simplified model of the retrieval process, that effectiveness gains are obtainable in principle <a class="footnote-reference" href="#b30" id="id41">[30]</a>, and it may be that analogous procedures could be applied to the modeling of the search results in Figures <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>, <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>, <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a> and <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a>.</p>
+</div>
+<div class="section" id="id42">
+<h2>Conclusions<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h2>
+<p>Data fusion, or consensus, methods are being increasingly used to combine the rankings that result from multiple virtual screening searches, with the hope that the combined ranking will contain a greater number of active molecules than will the original rankings. Our experiments with the MDDR and WOMBAT datasets demonstrate that different ranking methods result in markedly different sets of retrieved molecules, with the numbers of retrieved molecules common across a set of search outputs dropping off rapidly as the number of searches is increased. Specifically, we find an inverse log-log relationship between the numbers of searches carried out and the numbers of molecules common to those searches, with this power-law relationship being obtained when both similarity fusion and group fusion consensus approaches are used. However, whilst the numbers of retrieved molecules in common drop away very rapidly as more searches are carried out, the fraction of those that are active increases in the case of similarity fusion, or increases to a maximum before falling away in the case of group fusion. We also describe a generative model for the overlap between different screening searches, which provides a quantitative basis for the observed power-law behaviour. Thus, while the work presented here does not immediately suggest any new way of carrying out virtual screening, it does provide a rationale, both empirical and theoretical, for the use of a practice that is widely used in virtual screening, i.e. data fusion.</p>
+</div>
+<div class="section" id="experimental-methods">
+<h2>Experimental Methods<a class="headerlink" href="#experimental-methods" title="Permalink to this headline">¶</a></h2>
+<p>Testing the applicability of Spoerri&#8217;s Authority Effect to virtual screening requires test datasets containing molecules of known (in)activity in one or more bioassays, and a range of different measures that can be used to carry out similarity searches on those datasets. Two separate datasets were used, these being the MDL Drug Data Report (MDDR) and World of Molecular Bioactivity (WOMBAT) databases. The versions used here were those that we have employed in many previous studies of virtual screening in this laboratory and that are described in detail by Arif <em>et al.</em> <a class="footnote-reference" href="#b31" id="id43">[31]</a>. In brief, the MDDR file contained 102,535 molecules, with searches being carried out for 11 activity classes; and the WOMBAT file contained 138,127 molecules, with searches being carried out for 14 activity classes. The databases were searched using the two types of data fusion: similarity fusion (SF) and group fusion (GF).</p>
+<p>In the SF experiments, ten compounds were randomly selected from each of the chosen activity classes to act as the reference structure for a similarity search, with each reference structure being searched using a total of 25 different similarity measures. These were obtained by combining five different 2D binary fingerprints with five different similarity coefficients. The 2D fingerprints used for describing the reference structure and the database structures were 166-bit MDL Keys, 1052-bit BCI bit-strings, 2048-bit Daylight fingerprints, 998-bit Unity fingerprints, and 1024-bit Pipeline Pilot ECFP_4 fingerprints. The similarity coefficients used to measure the similarity between the reference structure&#8217;s fingerprint and the database structures&#8217; fingerprints were the Cosine, Forbes, Russell-Rao, Simple Match and Tanimoto coefficients <a class="footnote-reference" href="#b32" id="id44">[32]</a>. In the GF experiments, 25 compounds were randomly selected from each of the chosen activity classes to act as the reference structures, and these were then searched using ECFP_4 fingerprints and the Tanimoto coefficient; ten such sets of 25 compounds were used for each activity class.</p>
+<p>Given a specific reference structure, a similarity search was carried out using each of the different similarity measures in turn, yielding a total of 25 rankings (SF) or a similarity search was carried out using the ECFP_4/Tanimoto measure for each of the 25 reference structures (GF). A threshold was then applied to each of the resulting database rankings to obtain the nearest neighbours of the reference structure, i.e., the top-ranked database structures. The thresholds here were the top-1% and the top-5% of the rankings. For each of the molecules in a database, a note was made as to the number of times that it was identified as a nearest neighbour, so that each database structure had an associated integer value between 0 (meaning that it was retrieved in none of the searches) and 25 (meaning that it was retrieved in all of the searches). The resulting sets of integers, which are independent of the order in which the searches were carried out, were then processed to identify the <em>search overlap</em> and the <em>search precision</em>: the overlap measures the extent of the overlap between the search outputs, in terms of the numbers of molecules retrieved by some specific number of different searches; and the precision measures the percentage of the molecules retrieved by some specific number of different searches that are active. The nearest-neighbour data was collected for each reference structure in turn, and the results for each activity class were obtained by averaging over the set of ten searches for that class (and some of the results that are discussed are averaged over the set of 11 (for MDDR) or 14 (for WOMBAT) activity classes).</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>NM carried out all of the virtual screening experiments with assistance from JH. EK carried out the mathematical power-law analysis. PW conceived the study, participated in its design and coordination, and drafted the manuscript with assistance from JH, NK and NM. All authors read and approved the final manuscript.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>We thank the following: the Government of Malaysia for funding Nurul Malim; the European Union Seventh Framework Programme for funding Evangelos Kanoulas under the grant agreement FP7-PEOPLE-2009-IFF-254562. Dr S. Joshua Swamidass for suggesting the use of generative models; and Accelrys Inc., Daylight Chemical Information Systems Inc., Digital Chemistry Limited, the Royal Society, Tripos Inc. and the Wolfson Foundation for data, software and laboratory support.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>Integrating virtual screening in lead discovery</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>Virtual Screening in Drug Discovery</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>Quo vadis, virtual screening? A comprehensive survey of prospective applications</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td>Virtual screening: an endless staircase?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td>Molecular similarity analysis in virtual screening: foundations, limitation and novel approaches</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[6]</td><td><em>(<a class="fn-backref" href="#id7">1</a>, <a class="fn-backref" href="#id16">2</a>)</em> Chemical similarity searches: when is complexity justified?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[7]</td><td><em>(<a class="fn-backref" href="#id8">1</a>, <a class="fn-backref" href="#id13">2</a>)</em> Similarity methods in chemoinformatics</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[8]</a></td><td>Molecular similarity measures</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[9]</a></td><td>How similar are those molecules after all? Use two descriptors and you will have three different answers</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[10]</a></td><td>Atom pairs as molecular-features in structure activity studies - definition and applications</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[11]</a></td><td>Implementation of nearest-neighbour searching in an online chemical structure search system</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[12]</a></td><td>Why do we need so many chemical similarity search methods?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[13]</a></td><td>Similarity metrics and descriptor spaces - which combinations to choose?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[14]</td><td><em>(<a class="fn-backref" href="#id17">1</a>, <a class="fn-backref" href="#id19">2</a>)</em> Data fusion in ligand-based virtual screening</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[15]</a></td><td>Authority and ranking effects in data fusion</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[16]</a></td><td>Empirical hyperbolic distributions (Bradford-Zipf-Mandelbrot) for bibliometric description and prediction</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[17]</a></td><td>Informetrics</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[18]</td><td><em>(<a class="fn-backref" href="#id22">1</a>, <a class="fn-backref" href="#id24">2</a>, <a class="fn-backref" href="#id35">3</a>)</em> Power laws, Pareto distributions and Zipf&#8217;s law</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[19]</a></td><td>Discovery of power-laws in chemical space</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[20]</a></td><td>An empirical examination of Lotka&#8217;s Law</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[21]</td><td><em>(<a class="fn-backref" href="#id26">1</a>, <a class="fn-backref" href="#id36">2</a>, <a class="fn-backref" href="#id37">3</a>, <a class="fn-backref" href="#id38">4</a>)</em> A brief history of generative models for power law and lognormal distributions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id27">[22]</a></td><td>A fast algorithm for selecting sets of dissimilar molecules from large chemical databases</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[23]</td><td><em>(<a class="fn-backref" href="#id28">1</a>, <a class="fn-backref" href="#id30">2</a>)</em> New methods for ligand-based virtual screening: use of data-fusion and machine-learning techniques to enhance the effectiveness of similarity searching</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[24]</td><td><em>(<a class="fn-backref" href="#id29">1</a>, <a class="fn-backref" href="#id31">2</a>, <a class="fn-backref" href="#id33">3</a>)</em> Enhancing the effectiveness of virtual screening by fusing nearest-neighbour lists: A comparison of similarity coefficients</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[25]</a></td><td>Machine learning in computational chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[26]</a></td><td>Application of belief theory to similarity data fusion for use in analog searching and lead hopping</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id39">[27]</a></td><td>Inter-indexer consistency tests</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id40">[28]</a></td><td>On the creation of hypertext links in full-text documents: measurement of inter-linker consistency</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[29]</td><td>Consistency in the selection of search concepts and search terms</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id41">[30]</a></td><td>Is interindexer consistency a hobgoblin?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id43">[31]</a></td><td>Analysis and use of fragment occurrence data in similarity-based virtual screening</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id44">[32]</a></td><td>Grouping of coefficients for the calculation of inter-molecular similarity and dissimilarity using 2D fragment bit-strings</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">Results and Discussion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id42">Conclusions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#experimental-methods">Experimental Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-28.html" title="AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment"
+             >previous</a> |
+          <a href="1758-2946-3-30.html" title="Structural diversity of biologically interesting datasets: a scaffold analysis approach"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-29.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

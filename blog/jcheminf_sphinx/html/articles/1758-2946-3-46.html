@@ -1,0 +1,540 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The past, present and future of Scientific discourse &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Open Bibliography for Science, Technology, and Medicine" href="1758-2946-3-47.html" />
+    <link rel="prev" title="Ami - The chemist’s amanuensis" href="1758-2946-3-45.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-45.html" title="Ami - The chemist’s amanuensis"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-47.html" title="Open Bibliography for Science, Technology, and Medicine"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-past-present-and-future-of-scientific-discourse">
+<h1>The past, present and future of Scientific discourse<a class="headerlink" href="#the-past-present-and-future-of-scientific-discourse" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>The science journal is 346 years old in 2011, having evolved continuously but largely incrementally over that period. Its reinvention for an online presence has largely preserved its previously printed nature, in the sense that much of the increased functionality which is potentially offered by this new medium has yet to be exploited. In the present article an attempt is made to discuss two previously published papers, one in 1953 and the other in 2010, and to illustrate how additional functionality can be implemented in the form of accessible data sourced from quantum mechanical calculation and how subsequent discourse in the form of blogs may add to the process. In this sense, the reader of this article is invited to try for themselves whether these enhancements improve their scientific understanding, and whether such enhanced journals are good models for the future evolution of the genre.</p>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The first journal devoted exclusively to science is generally accepted to have first appeared in 1665 as the Philosophical Transactions (of the Royal Society). The inaugural issue <a class="footnote-reference" href="#b1" id="id1">[1]</a>, which famously carries an account by Robert Boyle of &#8220;a very odd monstrous calf&#8221;, is perhaps not science as we know it nowadays, but it does remind one rather of what one might find in a personal blog, a similarity I will return to later. The structure of the scientific journal and the articles published by this means evolved constantly and mostly incrementally during the next 330 years. One of the more significant, but nevertheless still incremental changes was adding an online presence during the late 1990s. Indeed, some journals founded in the late 1990s offered only an online version <a class="footnote-reference" href="#b2" id="id2">[2]</a> and there are signs that some older journals may be preparing to abandon the (relatively expensive) printed form. Access to the online versions in 2011 is predominantly <em>via</em> a format which is perhaps best described as digital paper (PDF), although most journals also offer the articles in an alternative hypertext (HTML) format. There is no journal yet that has adopted a format increasingly used for books, the epub/epub3 standard <a class="footnote-reference" href="#b3" id="id3">[3]</a>. On the horizon is also the fifth major evolution of hypertext markup language known as HTML5 <a class="footnote-reference" href="#b4" id="id4">[4]</a><a class="footnote-reference" href="#b5" id="id5">[5]</a>, which strives to offer a richer interactive medium to the reader. Certainly machines (<em>e.g</em>. such as those working on behalf of search engines such as Google) now also automatically process the articles published in the modern journal, indexing the full-textual content, adding rich metadata on the topics therein described, and noting (but largely incapable of truly indexing the context of) the images and figures. Software can also usefully replace the old processes of binding the printed journal and the storage of volumes on shelves in a library or an office, a process delightfully described (by biologists, not chemists) as <em>defrosting the digital library</em><a class="footnote-reference" href="#b6" id="id6">[6]</a>. These processes largely address only the bibliographic issues (<em>via</em> rich metadata harvesting) rather than attempting to defrost the scientific or chemical content itself. It is the issues involved in defrosting the latter type of information and data that the present article addresses.</p>
+<p>Data has always been the &#8220;elephant in the room&#8221; of scientific publishing. Because the costs of printing and distributing paper are still significant to this day, print was never really been considered a viable mechanism for distributing the (often very large amounts of) data, whether raw, or partially processed, on which almost all scientific models, theories and their interpretations are based. Instead, starting in the early 1990s and coincident with the first introduction of the Internet, many science journals offered an annex to the main journal in the form of supporting or supplemental information. This was provided in final form by the authors themselves, and the journal itself added little extra value such as indexing to this (often purely visual) content. It was very much up to an interested reader to add their own value to any (visual, textual or numerical) supporting data that might be associated with an article.</p>
+<p>The long view over a 350 year period is that these evolutions of the journal could be regarded as largely relating to the production and delivery processes of journals, and arguably have not been matched by similar advances in how scientists <em>consume</em> or use journals. In this essay, I will analyze two chemical articles, published in respectively 1953 and 2010, from the point of view of how the original journal presented the scientific discourse, what the limitations of that presentation might have been, and the prospects of how it could evolve into a step-change rather than incremental change in that discourse.</p>
+</div>
+<div class="section" id="the-relationship-between-a-journal-article-and-data">
+<h2>The relationship between a journal article and data<a class="headerlink" href="#the-relationship-between-a-journal-article-and-data" title="Permalink to this headline">¶</a></h2>
+<p>I start the analysis with article that contains (<em>inter alia</em>) what has been described as the most famous scientific diagram of the 20th Century, the representation <a class="footnote-reference" href="#b7" id="id7">[7]</a> of the double helical structure of the DNA molecule by Watson and Crick (Figure <a class="reference internal" href="#figure-1"><em>1</em></a>).</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-46-1.jpg" src="../_images/1758-2946-3-46-1.jpg" />
+<p class="caption">Figure 1. The DNA double helix (reproduced with permission), showing a right handed or B-helix</p>
+<div class="legend">
+<strong>The DNA double helix (reproduced with permission</strong> [#B8]_**), showing a right handed or B-helix**.</div>
+</div>
+<p>Indeed, this diagram is the <strong>only</strong> one that actually appears in the article, and one would seek in vain any diagrammatic elaboration of what the molecular structure of DNA is (although components such as deoxyribose or guanine are named as such in the text). Anyone seeking to repeat Watson and Crick&#8217;s model building would certainly have to acquire additional molecular data from another sources. Some of that missing information is shown here in Figure <a class="reference internal" href="#figure-2"><em>2</em></a>, although this only describes the connectivity of the various atoms in a single strand of DNA, and not the two or three dimensional relationships of the (125 in this example) individual atoms. Note also that this diagram is presented here for visual consumption by a human, who still has to recover additional semantics such as the stereochemistry at the three stereogenic ribose centres, and note carefully that the unit represented must be accompanied by positively charged counter-ions.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-46-2.jpg" src="../_images/1758-2946-3-46-2.jpg" />
+<p class="caption">Figure 2. The molecular basis of one strand of DNA, based on the CG bases</p>
+<div class="legend">
+<strong>The molecular basis of one strand of DNA, based on the CG bases</strong>.</div>
+</div>
+<p>Armed only with the one diagram actually published, curiosity might lead one to pose a scientific question such as &#8220;How did Watson and Crick assign the helix as right rather than left handed&#8221;? In other words, on what data did they base that conclusion? This does matter! For example, some 733 articles have appeared in the science literature over the last 20 years or so where DNA is represented as having left-handed helicity, in most cases certainly erroneously <a class="footnote-reference" href="#b8" id="id8">[8]</a>. Coincidentally, similar issues of left or right-handedness were to be found when Pauling presented his α-helix models of proteins. In fact, almost all protein helices exhibit right-handedness <a class="footnote-reference" href="#b9" id="id9">[9]</a>. A partial answer to that question is actually given in what is called the <em>full version</em> <a class="footnote-reference" href="#b10" id="id10">[10]</a> of the preliminary article <a class="footnote-reference" href="#b7" id="id11">[7]</a> (published as it happens by the Royal Society). Here we are told the following:</p>
+<p>• that both chains follow right handed helices ...</p>
+<p>• because left handed helices can only be constructed by violating permissible van der Waals contacts.</p>
+<p>• We are informed that such permissible contacts include the approach of any two hydrogen atoms in the molecule to a distance of <strong>no less</strong> than 2.1Å.</p>
+<p>• We are not however informed what the violations might be in a left handed helix that excludes this model. In other words, just how close can two hydrogen atoms separated (for intramolecular contacts) by at least four bonds approach? In fact, distances of ~1.85Å or less have been observed <a class="footnote-reference" href="#b11" id="id12">[11]</a>.</p>
+<p>In this same full article by Watson and Crick <a class="footnote-reference" href="#b10" id="id13">[10]</a>, we are given a table of numerical (polar) coordinates describing the positions of twelve key atoms, but it would have taken a very determined scientist to have used only this combination of information to easily confirm the assertion that a left-handed helix is excluded. Perhaps the lack of a model with which the reader could experiment might account for the relatively slow recognition of the importance of this article in the immediate years following its publication, and the observation that whilst a physical model of DNA had of course been built, it was only available for viewing (but not modifying) by visiting Cambridge!</p>
+<p>One tool that modern chemistry now has at its disposal (which Watson and Crick did not have) are accurate molecular models based on quantum mechanical calculations. Such a molecule is quite a challenge to model, since the computation has to take into account subtle interactions such as dispersion (long range correlation) effects, which are more or less equivalent to the van der Waals contacts referred to by Watson and Crick, the ionic phosphate groups, the planar bases and how they stack, so-called anomeric effects at the base-sugar connecting C-N bond, hydrogen bonds between both the obvious NH...N and NH...O atoms and less obvious ones such as C-H...O, and not least the capacity to deal self-consistently and accurately with the optimal positions of (at least) 250-254 atoms. In reality, such models have only very recently become available <a class="footnote-reference" href="#b12" id="id14">[12]</a>. To illustrate how this famous article from 1953 <a class="footnote-reference" href="#b2" id="id15">[2]</a> could now be published in a journal in 2011, I have taken the liberty of updating the original diagram with the one shown in Figure <a class="reference internal" href="#figure-3"><em>3</em></a> (see additional file <a class="footnote-reference" href="#b6" id="id16">[6]</a>. The additional information is made available <em>via</em> the figure caption and in Table <em class="xref std std-ref">1</em> to conform to established practice in more conventional articles.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-46-3.jpg" src="../_images/1758-2946-3-46-3.jpg" />
+<p class="caption">Figure 3. A model of the Z-d(CGCG)<sub>2</sub> DNA duplex with a geometry optimized at the ωB97XD/6-311G(d, p) level and embedded in a continuum solvent field for water</p>
+<div class="legend">
+<strong>:sub:`2` DNA duplex with a geometry optimized at the |nonascii_9|B97XD/6-311G(d, p) level and embedded in a continuum solvent field for waterA model of the Z-d(CGCG)</strong>. (a) Load</div>
+</div>
+<p>Additional file 1</p>
+<p><strong>Interactive Jmol-enhanced version of Figure</strong> <a class="reference internal" href="#figure-3"><em>3</em></a>.</p>
+<p>Click here for file</p>
+<p>This is a model of a DNA duplex tetramer, built using only the bases CGCG or ATAT in this example, with inclusion of three phosphate groups and calculated for both the left- and right-handed helical form. The first of these was the one deprecated by Watson and Crick on the basis that the model violates permissible van der Waals contacts. The geometry is optimized to high convergence using a recent density functional formalism (ωB97XD) <a class="footnote-reference" href="#b13" id="id17">[13]</a> which incorporates a correction for the attractive dispersion component of the van der Waals interactions. Justification for the use of this functional in describing hydrogen bonding has recently been published <a class="footnote-reference" href="#b14" id="id18">[14]</a>. A 6-311G(d,p) basis set results in the wavefunction being described by up to 3468 basis functions, close to the practical limit using standard computing resources available in 2010. The ionic nature of the system, deriving from the phosphate groups, was treated using a self-consistent-reaction-field continuum solvent (water) <a class="footnote-reference" href="#b15" id="id19">[15]</a><a class="footnote-reference" href="#b16" id="id20">[16]</a> as implemented in the Gaussian09 package, revisions A.02 and B.01. 12. In such a model, duplex formation by combining two tri-anionic chains is nevertheless exothermic in the computed free energy (Table <em class="xref std std-ref">1</em>), which suggests the model is not physically unrealistic. Although in principle a full ion-pair resulting from inclusion of a solvated positive counterion (typically Na<sup>+</sup> or NH<sub>4</sub><sup>+</sup> with additional water molecules) could also be treated using this method <a class="footnote-reference" href="#b17" id="id21">[17]</a>, the resulting model is too large and complex for the current available computational resources.</p>
+<p>The resulting model is presented in this article using suitable software (Jmol in this instance <a class="footnote-reference" href="#b18" id="id22">[18]</a>) which itself reads the optimized coordinates of all 250-254 atoms and renders these in suitable form for the reader. Annotation with identified close contacts between pairs of hydrogen atoms or other close contacts can be easily scripted in, and in principle a rich variety of actions and analyses can be built into the figure which are all based on a combination of the underlying data and algorithms implemented by the (Jmol) software. Importantly, the original data used for generating the model can be extracted from the model (the process is described here <a class="footnote-reference" href="#b19" id="id23">[19]</a>) and can then be re-applied using alternative software which might provide further analysis, or indeed alternative technologies such as stereoscopic processing. These processes now turn the journal from merely a visual information source into an active scientific instrument. We may also speculate at this point on other forms of rendering data. Jmol was written in Java, and requires the browser to support a Java virtual environment. New generations of mobile information devices, which are primarily designed for long battery life, may not continue with this approach. Instead, one favoured alternative is to interface the browser directly to the graphical hardware using e.g. WebGL, and to implement the functionality of something like Jmol using the emerging HTML5 standard and appropriate scripts <a class="footnote-reference" href="#b20" id="id24">[20]</a><a class="footnote-reference" href="#b21" id="id25">[21]</a>. The native ability of a browser to provide such enhanced processing is already apparent in support for SVG, a markup language for vector graphics (examples of which are included in Figure <a class="reference internal" href="#figure-4"><em>4</em></a> [see additional file</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-46-4.jpg" src="../_images/1758-2946-3-46-4.jpg" />
+<p class="caption">Figure 4. Calculated chiro-optical properties for DNA tetramers</p>
+<div class="legend">
+<strong>Calculated chiro-optical properties for DNA tetramers</strong>. <sup>a</sup>Computed at geometries optimised at the ωB97XD/6-31G(d) level with with application of a SCRF solvent continuum field for water. Chiro-optical properties computed at the CAM-B3LYP/6-31G(d,p) level with application of a SCRF solvent continuum field for water. ECD spectra computed at the TD-DFT level, using Nstates = 25 and a linewidth of 0.14 with application of a SCRF solvent continuum field for water. Click on image to expand the view of the ECD spectrum. Click on expanded view of spectrum to access the digital repository entry for that spectrum. <sup>b</sup>ECD spectra are presented as scalable-vector-graphical diagrams (SVG). To view, use an SVG-capable browser.</div>
+</div>
+<p>Additional file 2</p>
+<p><strong>Enhanced version of Figure</strong> :ref:<a href="#id26"><span class="problematic" id="id27">`</span></a>4&lt;figure_4&gt;`**containing additional hyper links** (This figure should be viewed with a web browser capable of SVG display, such as  Chrome,  FireFox, Safari or  IE 9).</p>
+<p>Please note: The figure is not currently displayed as intended by the author due to technical issues with the BMC site. This will be resolved as soon as possible.</p>
+<p>Click here for file</p>
+<p>The reader is invited to load the Z-d(CGCG)<sub>2</sub> coordinates in Figure <a class="reference internal" href="#figure-3"><em>3</em></a>. The lengths of the van der Waals H...H attractions and the nucleophilic O...C attractions from the ribose ether oxygen to the electrophilic carbons on the guanine base have been enumerated. Because of the complex 3D nature of this molecule, they can only be truly perceived if the structure itself can be viewed from any desired angle (something clearly not possible in a conventional journal diagram). It also allows successive layers to be viewed, each perhaps concentrating on a particular aspect, without destroying or overwhelming the initial simple elegance of the overall concept (of a double helix). The identified ~2.8Å O...C interactions to the guanine are unique to the Z or left handed helical form, and since the sum of the vdW radii <a class="footnote-reference" href="#b22" id="id28">[22]</a> of these two contact atoms is ~3.22Å, these are presumed to be (electrostatically) attractive. The alternative B-d(CGCG) <sub>2</sub> stereoisomer reveals these O...C contacts are absent, being instead replaced by hydrogen bonds (~1.9-2.1Å) between the ribose ether-oxygen and the NH<sub>2</sub> hydrogens of the guanine. The sum of the O and H vdW radii is ~2.64Å, which suggests these are significantly attractive hydrogen bonds. There are additional C-H...O-P hydrogen bonded contacts of ~2.1-2.2Å. A similar divergence of attractive interactions emerges for chains built of AT bases. The Z-d(ATAT)<sub>2</sub> duplex has only one ~2.8Å O...C interaction to the adenine, with three others having rather longer lengths (~3.0-3.1Å). The B-d(ATAT)<sub>2</sub> duplex instead displays C-H...O contacts of ~2.4-2.5Å.</p>
+<p>These differences can be more succinctly summarized as:</p>
+<ol class="arabic simple">
+<li>Z-d(CGCG)<sub>2</sub> is stabilized (<em>inter alia</em>) by a short contact between a carbon on the guanine and the ribose ether oxygen, of which there are four per four base pairs.</li>
+<li>These contacts are replaced in B-d(CGCG)<sub>2</sub> by NH hydrogen bonded contacts to the ribose ether oxygen.</li>
+<li>In Z-d(ATAT)<sub>2</sub>, the O-contacts to the adenine are much longer, which</li>
+<li>in B-d(ATAT)<sub>2</sub>, are replaced by short CH...O contacts.</li>
+</ol>
+<p>By embedding access to accurate coordinate data within Figure <a class="reference internal" href="#figure-3"><em>3</em></a>, the reader can select whatever level of detail they desire from the diagram. Part of the origins of the relative stability the Z- and B- helical forms is not simply due to the presence (or in this case absence) of &#8220;violation of permissible van der Waals contacts&#8221;, but also to several types of less common but nevertheless attractive interactions which may not have been inferred by building physical models alone. Such additional insights may in turn impact upon <em>e</em>. <em>g</em>. modeling one remarkable property of the DNA polymer, its ability to be stretched to almost twice its normal length without breaking <a class="footnote-reference" href="#b23" id="id29">[23]</a>.</p>
+<p>It is of course the accumulation of these effects that determines the overall stability of the structure (Table <em class="xref std std-ref">1</em>). The thermodynamic quantities are computed with inclusion of thermal energies, obtained by solving the appropriate partition functions using calculated vibrational frequencies. Since these require second derivatives of energy with respect to coordinates, a smaller basis set 6-31G(d) was used for the purpose (a calculation time of ~4 days on a 12-core processor is typical). The dispersion corrections were obtained at the slightly higher 6-311G(d,p) basis set level to allow interactions to H to be modelled more realistically.</p>
+<p>These energies reveal some surprises. Firstly, the free energy for forming the duplex from the separated chains is significantly exothermic, despite the electrostatic repulsions resulting from each chain carrying a 3- charge. For the resulting helix, the B-d(CGCG)<sub>2</sub> form is 11.9 kcal/mol <strong>less</strong> stable in terms of total free energy than the Z-isomer, but is 4.2 kcal/mol <strong>more</strong> stable for the dispersion/van der Waals term, the criterion suggested by Watson and Crick as generally discriminating against the Z-form (although without a specification of the base type used for the model). The greater stability of the Z-form arises from a contribution of 3.9 from the entropy and 8.0 kcal/mol from the (zero-point energy corrected) enthalpy, which dominates the less favourable dispersion term.</p>
+<p>The formation of a B-d(ATAT)<sub>2</sub> duplex is less exothermic than that of the CG duplex. It is now favoured by 5.2 kcal/mol over the Z-isomer in terms of free energy and by 12.8 kcal/mol in terms of dispersion contributions. The assertion often made <a class="footnote-reference" href="#b24" id="id30">[24]</a> that the Z-helix is favoured by CG rich oligomers and the B-helix by AT-rich forms is thus confirmed by these calculations.</p>
+<p><sup>a</sup>Thermochemistry computed at geometries optimised at the ωB97XD/6-31G(d) level with application of a SCRF solvent continuum field for water, with thermal corrections derived from computed vibrational frequencies. The dispersion corrections are computed for geometries optimized at the ωB97XD/6-311G(d, p) level with application of a SCRF solvent continuum field for water. The display coordinates are those obtained at this level. <sup>a</sup>Free energy for the dimerisation of a single strand to a duplex.</p>
+<p>Armed with optimized coordinates which include the weaker interactions between atoms one can annotate the basic models revealed in Figure <a class="reference internal" href="#figure-3"><em>3</em></a> with other (computed) properties. For example the optical rotation [α]<sub>589</sub> has the value +62° for Z-d(CGCG)<sub>2</sub> and -137° for the B-diastereomer, perhaps surprisingly small values for such an apparently asymmetric molecule. Also surprisingly, the corresponding experimental measurement does not appear to have been reported. Optical rotations are known to be rather fragile, being sensitive to small variations in conformation and solvation, but the electronic circular dichroism spectrum is regarded as rather more robust. Unlike other forms of spectroscopy such as NMR or IR, which can be used to infer structure from simple rules based on the functional groups present (in other words, local properties), these chiro-optical properties tend to be more characteristic of the global features of the molecule. As a result, they can be very difficult to interpret without a reasonably accurate model based on these global properties. A quantum mechanical computation of the molecular wavefunction is one such model, and it is now increasingly routinely used to help interpret optical rotations, electronic (and vibrational) circular dichroism spectra. Theory can now handle molecules containing ~250-254 atoms, such as the DNA tetramers modelled here. Annotation of the models with the calculated ECD spectra is included here in the hope they might prove useful for the interpretation of the experimental spectra.</p>
+<p>This example has illustrated how access to accurate data can help provide additional insights into the factors controlling the stability of molecular structures. In this case, the factors controlling the helical stability of DNA duplexes can be teased out. By incorporating these models directly into the journal article (and providing links to digital repositories where a more complete dataset can be acquired if needed) the readers of the journal have an opportunity to discover their own insights within their own spheres of interest.</p>
+</div>
+<div class="section" id="the-crystal-structure-of-1-3-dimethylcyclobutadiene">
+<h2>The crystal structure of 1,3-dimethylcyclobutadiene<a class="headerlink" href="#the-crystal-structure-of-1-3-dimethylcyclobutadiene" title="Permalink to this headline">¶</a></h2>
+<p>The second example chosen for discussion is a more contemporary one. In July 2010, a article appeared <a class="footnote-reference" href="#b25" id="id31">[25]</a> reporting the single-crystal X-ray structure of 1,3-dimethylcyclobutadiene achieved by confinement in a crystalline matrix (Figure <a class="reference internal" href="#figure-5"><em>5</em></a> [see additional file <em>Mona Lisa of molecules</em>, and its very instability means that conventional experiments on it are very challenging. The article was however conventional in the sense of being made available in (more or less equivalent) HTML and PDF versions.</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-46-5.jpg" src="../_images/1758-2946-3-46-5.jpg" />
+<p class="caption">Figure 5. The reaction leading to 1,3-dimethylcyclobutadiene <a class="footnote-reference" href="#b25" id="id32">[25]</a></p>
+<div class="legend">
+<strong>The reaction leading to 1,3-dimethylcyclobutadiene</strong> <a class="footnote-reference" href="#b25" id="id33">[25]</a>. The numbering shown for 4 corresponds to that for the published coordinates. Load coordinates for host-guest structure and just the guest only.</div>
+</div>
+<p>Additional file 3</p>
+<p><strong>Interactive Jmol-enhanced version of Figure</strong> <a class="reference internal" href="#figure-5"><em>5</em></a>.</p>
+<p>Click here for file</p>
+<p>Much of the scientific insight was carried in the form of four colour figures, all presented conventionally as single layered graphics with the viewpoint selected by the authors. Information on acquisition of the data on which these figures were based was given as citation 28 in that article, which lists deposition numbers (CCDC 764864-764868) and a URL that would enable a CIF file for each entry to be downloaded. Whilst this retrieval process is not entirely automatic, it does take only a few minutes to acquire the data. The usefulness of the file is of course predicated on the reader also having access to appropriate software for analysis of a file in this format. It is also important to note that a CIF file allows inspection only of the refined crystallographic model presented in the article and the statistics associated with that model; it does not allow the user access to the underlying (<em>hkl</em>) diffraction data which would allow other models to be refined and assessed.</p>
+<p>The reaction scheme reported <a class="footnote-reference" href="#b25" id="id34">[25]</a> for photochemical generation of trapped 1,3-dimethylcyclobutadiene is shown below in Figure <a class="reference internal" href="#figure-5"><em>5</em></a>. It differs from the original in showing a thermally activated reaction arrow connecting the 1,3-dimethylcyclobutadiene <strong>4</strong> to <strong>2</strong>. This last possibility is not explicitly discussed in the original report <a class="footnote-reference" href="#b25" id="id35">[25]</a>, although there is there an implicit assumption that this process is slow at the temperature of the experiment, 175K. The original article therefore seeks to persuade the reader on the basis of crystallographic evidence that the structure of <strong>3</strong> or <strong>4</strong> has been established, with the aid of the four colour figures included in the article, and (optionally for the reader) with acquisition of the CIF files.</p>
+<p>The theme of the present article is to ask how a reader&#8217;s experience and perception of a scientific article might be enhanced or simply altered by adopting new forms of presentation. In Figure <a class="reference internal" href="#figure-5"><em>5</em></a>, the relevant CIF file can be loaded as a second layer into the reaction diagram. Because of the relatively large number of host atoms involved, the effect can be somewhat overwhelming when this is done and the interpretation may also be made more complex by the presence of disorder in the guest. A further layer of interpretation can be added by annotating the diagram with selected atom-atom distances; the reader can use the display software to added further such annotations of their own if they wish. There are many other actions the reader can perform at this point <a class="footnote-reference" href="#b19" id="id36">[19]</a>. A further, this time smaller, alternative layer that contains only the kernel of the scientific problem (as perceived by the present author, which may or may not correspond to the perception of the original <a class="footnote-reference" href="#b25" id="id37">[25]</a> authors) has been added here, and again four key measurement annotations made, together with selected bonds highlighted in a different colour.</p>
+<p>The scientific problem can now be stated in the form of the following questions.</p>
+<ol class="arabic simple">
+<li>What are the kinetics of the reverse reaction of <strong>4</strong> to give <strong>2</strong> at 175K?</li>
+<li>Does the crystallographic evidence convince that the guest is best described as 1,3-dimethylcyclobutadiene in close proximity to a detached molecule of carbon dioxide?</li>
+<li>More specifically, how should the interaction between the labelled atoms C2 and C3 be interpreted? Should it be considered a strong van der Waals contact, as suggested by the original authors <a class="footnote-reference" href="#b25" id="id38">[25]</a> or as a covalent bond? The same question might apply to another atom pair, O1 and C6 also connecting carbon dioxide and the cyclobutadiene.</li>
+<li>Likewise, how should the angles O1-C2-O7 or C2-C3-H10 be interpreted?</li>
+</ol>
+<p>The reader may note a common theme emerging between these questions and the origins of helical stability in DNA as discussed above.</p>
+<p>The first of these questions was in fact posed in the form of a blog, written by the present author <a class="footnote-reference" href="#b26" id="id39">[26]</a> and based on chemical precedent and entropic arguments. It was posted in August 2010, little more than a month after the original report was first published. The precedent for this form of discourse when addressing a scientific issue had already been established <a class="footnote-reference" href="#b27" id="id40">[27]</a><a class="footnote-reference" href="#b28" id="id41">[28]</a>. Questions 2-4 emerged more conventionally and a little later in November 2010 in the same journal as the original article, and took the form of comments submitted by two independent groups <a class="footnote-reference" href="#b29" id="id42">[29]</a><a class="footnote-reference" href="#b30" id="id43">[30]</a>. The original authors have a right of reply to such comments, which they took <a class="footnote-reference" href="#b31" id="id44">[31]</a>. These various participants in the debate all had access to the same CIF data as is transcluded into Figure <a class="reference internal" href="#figure-5"><em>5</em></a>. The debate to this point was summarized in a second blog post <a class="footnote-reference" href="#b32" id="id45">[32]</a>, and this and the original post themselves attracted ~15 responses in the form of appended comments. These posed further questions, on themes such as the computed structure of 1,3-dimethylcyclobutadiene, a debate on how much energy was required for angular distortion of O1=C2=O7 as an isolated molecule, and whether molecule <strong>2</strong> is transparent to light in the 320 to 500nm excitation range employed by the original experiments. This latter point was followed up by calculations of the UV-visible absorption spectrum of <strong>2</strong> inside the host cavity, also appended to the blog, and finally by calculations of the predicted vibrational spectra. The next stage in the discourse occurred in a conventional journal <a class="footnote-reference" href="#b12" id="id46">[12]</a>, taking the form of a set of calculations on the likely barrier preventing <strong>4</strong> and carbon dioxide from recombining inside the host cavity, and addressing question 1 above in more complete detail. This article did have one less conventional aspect; in the &#8220;rich HTML&#8221; version, an interactive version of the table of data was made available <a class="footnote-reference" href="#b33" id="id47">[33]</a> in very much the manner adopted for Figures <a class="reference internal" href="#figure-3"><em>3</em></a> and <a class="reference internal" href="#figure-5"><em>5</em></a> in the present article. Additionally, there were links in this table to digital repository entries <a class="footnote-reference" href="#b34" id="id48">[34]</a>, which would enable any interested reader to access the complete archived details of all the calculations reported in that article.</p>
+<p>Shortly after this last article was published, in December 2010, several publishers chose to highlight this emerging debate with editorial blog posts of their own <a class="footnote-reference" href="#b35" id="id49">[35]</a><a class="footnote-reference" href="#b36" id="id50">[36]</a><a class="footnote-reference" href="#b37" id="id51">[37]</a><a class="footnote-reference" href="#b38" id="id52">[38]</a>. These posts in turn attracted further comments, including several by one of the original authors. One comment in particular <a class="footnote-reference" href="#b39" id="id53">[39]</a> entitled &#8220;Request of calculated structure data&#8221; highlighted an important aspect concerning the accessibility of previously reported data <a class="footnote-reference" href="#b12" id="id54">[12]</a>. This alludes to the &#8220;rich HTML&#8221; table, and the observation that it is important to provide information on the file formats in which data is held, so that appropriate conversions if needed and concomitant visualization can be performed. This particular query was answered in the form of another blog post <a class="footnote-reference" href="#b19" id="id55">[19]</a>, and applies directly to the issue of how to re-use data associated with the current article (Figures <a class="reference internal" href="#figure-3"><em>3</em></a> and <a class="reference internal" href="#figure-5"><em>5</em></a>).</p>
+<p>The scientific discourse described above regarding the nature of the species in a host crystal lattice is still ongoing, and so a final consensus (if ever achieved) cannot be reported at the time of writing. It is noteworthy that the primary (<em>hkl</em>) crystallographic data relating to the original measurements has been provided upon request <a class="footnote-reference" href="#b40" id="id56">[40]</a> and so further analysis of alternative crystallographic refinement models is now possible.</p>
+</div>
+<div class="section" id="conclusions">
+<h2>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h2>
+<p>The two scientific examples discussed in this article span 57 years, a relatively short period in the history of the scientific journal. The first is arguably the most influential scientific article of the 20th century, and clearly the absence of data associated with it has not held back its recognition as such. What is also clear is that addition of such data, albeit 57 years after the original report, may have the potential to reveal further insights into the structure of DNA that may not have hitherto been highlighted. Whether such a data-rich reformulation of the original problem has any measure of impact remains to be established. The second article is only months old, but in that brief period has been subjected to the kind of scrutiny that can only be achieved by having access to rich data sets. One might fairly conclude that the scientific article has evolved to enable that scrutiny. The article that you are now reading I suggest is one model for how such scientific discourse can be both improved and accelerated. It remains to be seen if scientists are prepared to author such articles in the future. There is an early example <a class="footnote-reference" href="#b41" id="id57">[41]</a> of an article where both the discourse and the data supporting that discussion were seamlessly integrated into one (XML-based) document, with the presentation being made available to the reader by application of suitable stylesheet-based transformations. The production of an article in this form was however non trivial. Since then tools have appeared to facilitate the process <a class="footnote-reference" href="#b42" id="id58">[42]</a><a class="footnote-reference" href="#b43" id="id59">[43]</a> and the task now much be to reach both the hearts and the minds of scientific authors to encourage them to start adopting this form of enhanced scientific discourse.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The author declares that they have no competing interests.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>Derived from a presentation given for a symposium celebrating the career of Peter Murray-Rust, in Cambridge UK on January 17, 2011.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>An Account of a Very Odd Monstrous Calf</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id15">2</a>)</em> The Internet Journal of Chemistry: What Lessons Have We Learned After Our First Year?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>What to expect in EPUB3</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Introducing HTML5</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>HTML5</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[6]</td><td><em>(<a class="fn-backref" href="#id6">1</a>, <a class="fn-backref" href="#id16">2</a>)</em> Defrosting the Digital Library: Bibliographic Tools for the Next Generation Web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[7]</td><td><em>(<a class="fn-backref" href="#id7">1</a>, <a class="fn-backref" href="#id11">2</a>)</em> Molecular Structure of Nucleic Acids: A Structure for Deoxyribose Nucleic Acid</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[8]</a></td><td>The Left Handed DNA Hall of Fame</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[9]</a></td><td>Pauling&#8217;s Left-Handed α-Helix</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[10]</td><td><em>(<a class="fn-backref" href="#id10">1</a>, <a class="fn-backref" href="#id13">2</a>)</em> The Complementary Structure of Deoxyribonucleic Acid</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[11]</a></td><td>Pericyclic reactions of 2-pyrones with nonconjugated dienes. Conformational analysis of the double Diels-Alder adducts by molecular mechanics calculation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[12]</td><td><em>(<a class="fn-backref" href="#id14">1</a>, <a class="fn-backref" href="#id46">2</a>, <a class="fn-backref" href="#id54">3</a>)</em> Can 1,3-dimethylcyclobutadiene and carbon dioxide co-exist inside a supramolecular cavity?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[13]</a></td><td>Long-range corrected hybrid density functionals with damped atom-atom dispersion corrections</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[14]</a></td><td>Assessment of the Performance of DFT and DFT-D Methods for Describing Distance Dependence of Hydrogen-Bonded Interactions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[15]</a></td><td>A Smooth Solvation Potential Based on the Conductor-Like Screening Model</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[16]</a></td><td>Continuous surface charge polarizable continuum models of solvation. I. General formalism</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[17]</a></td><td>Successful Computational Modeling of Isobornyl Chloride Ion-Pair Mechanisms</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[18]</a></td><td>Web-Based Molecular Visualization for Chemistry Education in the 21st Century</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[19]</td><td><em>(<a class="fn-backref" href="#id23">1</a>, <a class="fn-backref" href="#id36">2</a>, <a class="fn-backref" href="#id55">3</a>)</em> (re)Use of data from chemical journals</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[20]</a></td><td>Learning WebGL</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[21]</a></td><td>WebGL Specification</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id28">[22]</a></td><td>Consistent van der Waals Radii for the Whole Main Group</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[23]</a></td><td>Overstretching DNA at 65 pN Does Not Require Peeling from Free Ends or Nicks</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[24]</a></td><td>On the stability of single- and double-stranded DNA helices: The application of the PPT-MCF method on large fragments of DNA</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[25]</td><td><em>(<a class="fn-backref" href="#id31">1</a>, <a class="fn-backref" href="#id32">2</a>, <a class="fn-backref" href="#id33">3</a>, <a class="fn-backref" href="#id34">4</a>, <a class="fn-backref" href="#id35">5</a>, <a class="fn-backref" href="#id37">6</a>, <a class="fn-backref" href="#id38">7</a>)</em> Single-Crystal X-ray Structure of 1,3-Dimethylcyclobutadiene by Confinement in a Crystalline Matrix</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id39">[26]</a></td><td>Reactions in supramolecular cavities - trapping a cyclobutadiene: ! or ?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id40">[27]</a></td><td>Portals, blogs and co.: the role of the Internet as a medium of science communication</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id41">[28]</a></td><td>NaH as an Oxidant - Liveblogging!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id42">[29]</a></td><td>Comment on &#8220;Single-Crystal X-ray Structure of 1,3-Dimethylcyclobutadiene by Confinement in a Crystalline Matrix&#8221;</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id43">[30]</a></td><td>Comment on &#8220;Single-Crystal X-ray Structure of 1,3-Dimethylcyclobutadiene by Confinement in a Crystalline Matrix&#8221;</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id44">[31]</a></td><td>Response to Comments on &#8220;Single-Crystal X-ray Structure of 1,3-Dimethylcyclobutadiene by Confinement in a Crystalline Matrix&#8221;</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id45">[32]</a></td><td>Can a cyclobutadiene and carbon dioxide co-exist in a calixarene cavity?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id47">[33]</a></td><td>Table 1<sup>a</sup>Calculated relative free energies (kcal mol<sup>-1</sup>) for various models for the reaction between 4 and carbon dioxide</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b34" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id48">[34]</a></td><td>SPECTRa: The Deposition and Validation of Primary Chemistry Research Data in Digital Repositories</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b35" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id49">[35]</a></td><td>Crystallographic Confusion</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b36" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id50">[36]</a></td><td>Debating cyclobutadiene</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b37" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id51">[37]</a></td><td>Doubt cast on X-ray structure of trapped reactive species</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b38" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id52">[38]</a></td><td>Has a cyclobutadiene species been isolated?</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b39" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id53">[39]</a></td><td>comment entitled &#8220;Request of calculated structure data&#8221;</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b40" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id56">[40]</a></td><td>comment entitled &#8220;Some experimental details may be useful in this context&#8221;</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b41" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id57">[41]</a></td><td>Development of chemical markup language (CML) as a system for handling complex chemical content</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b42" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id58">[42]</a></td><td>CINF 115 Chem4Word</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b43" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id59">[43]</a></td><td>Chemistry Add-in for Word</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">The past, present and future of Scientific discourse</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-relationship-between-a-journal-article-and-data">The relationship between a journal article and data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-crystal-structure-of-1-3-dimethylcyclobutadiene">The crystal structure of 1,3-dimethylcyclobutadiene</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-45.html" title="Ami - The chemist’s amanuensis"
+             >previous</a> |
+          <a href="1758-2946-3-47.html" title="Open Bibliography for Science, Technology, and Medicine"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-46.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

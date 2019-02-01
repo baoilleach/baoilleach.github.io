@@ -1,0 +1,658 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data governance in predictive toxicology: A review &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="PubChem3D: Shape compatibility filtering using molecular shape quadrupoles" href="1758-2946-3-25.html" />
+    <link rel="prev" title="4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening" href="1758-2946-3-23.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-23.html" title="4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-25.html" title="PubChem3D: Shape compatibility filtering using molecular shape quadrupoles"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="data-governance-in-predictive-toxicology-a-review">
+<h1>Data governance in predictive toxicology: A review<a class="headerlink" href="#data-governance-in-predictive-toxicology-a-review" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>Due to recent advances in data storage and sharing for further data processing in predictive toxicology, there is an increasing need for flexible data representations, secure and consistent data curation and automated data quality checking. Toxicity prediction involves multidisciplinary data. There are hundreds of collections of chemical, biological and toxicological data that are widely dispersed, mostly in the open literature, professional research bodies and commercial companies. In order to better manage and make full use of such large amount of toxicity data, there is a trend to develop functionalities aiming towards data governance in predictive toxicology to formalise a set of processes to guarantee high data quality and better data management. In this paper, data quality mainly refers in a data storage sense (e.g. accuracy, completeness and integrity) and not in a toxicological sense (e.g. the quality of experimental results).</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>This paper reviews seven widely used predictive toxicology data sources and applications, with a particular focus on their data governance aspects, including: data accuracy, data completeness, data integrity, metadata and its management, data availability and data authorisation. This review reveals the current problems (e.g. lack of systematic and standard measures of data quality) and desirable needs (e.g. better management and further use of captured metadata and the development of flexible multi-level user access authorisation schemas) of predictive toxicology data sources development. The analytical results will help to address a significant gap in toxicology data quality assessment and lead to the development of novel frameworks for predictive toxicology data and model governance.</p>
+</div>
+<div class="section" id="conclusions">
+<h3>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h3>
+<p>While the discussed public data sources are well developed, there nevertheless remain some gaps in the development of a data governance framework to support predictive toxicology. In this paper, data governance is identified as the new challenge in predictive toxicology, and a good use of it may provide a promising framework for developing high quality and easy accessible toxicity data repositories. This paper also identifies important research directions that require further investigation in this area.</p>
+</div>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>With the enormous growth of organisational data and various possible ways to access such data, more and more organisations have become aware of the increasing significance of governing their data. Data governance involves a set of processes to improve data consistency and accuracy, reduce the cost of data management and increase security for the available data <a class="footnote-reference" href="#b1" id="id1">[1]</a><a class="footnote-reference" href="#b2" id="id2">[2]</a><a class="footnote-reference" href="#b3" id="id3">[3]</a>. A good data governance framework ensures that organisational data is formally managed throughout the enterprise and provides efficient access to accurate data and business intelligent tools for further analysis.</p>
+<p>It is important to note that data governance is different from data management. Data governance complements data management, but never replaces it. In general, management is about the decisions organisation make and it also involves implementing such decisions. Governance concerns what decisions need to be made by whom to ensure effective management, while aiming to provide a structure for achieving these tasks <a class="footnote-reference" href="#b4" id="id4">[4]</a><a class="footnote-reference" href="#b5" id="id5">[5]</a>. In other words, governance covers not only the decision domains, but also accountability for decision-making. Take organisational data quality for example, data governance provides a structure for identifying who in the organisation holds the decision making right to determine the standards for data quality, which aspects of data quality need to be included, and how to ensure such standards are attained. On the other hand, data management involves determining the actual metrics which will be employed to assess the pre-defined data quality standards. This paper is mainly concerned with the data governance aspect.</p>
+<p>If an organisation settles on a good data governance framework, people within that organisation can more easily and effectively create a clear mission, achieve clarity, maintain scope and focus, increase confidence of using the organisational data, establish accountabilities, and define measurable successes <a class="footnote-reference" href="#b1" id="id6">[1]</a>. However, establishing such data governance framework is not an easy task. The characteristics of the data, even the data itself, can be quite different from various organisations. This makes it very difficult to set a unique framework to assess and govern organisational data. In addition, data governance requires the bringing together of diverse expectations and expertises from different departments across the enterprise to achieve agreed, consistent, transparent and repeatable set of processes that enable better data-related decision making.</p>
+<p>In many domains of life sciences such as pharmacology, cosmetics and food protection, toxicity assessment at the early stage in a chemical compound discovery process is receiving increasing attention. Predictive toxicology aims to address this problem. The large number of publicly available data sources, development of computational chemistry and biology, and rapidly increasing number of <em>in vitro</em> assays have contributed to the development of more accurate QSAR predictive models. The new REACH legislation <a class="footnote-reference" href="#b6" id="id7">[6]</a> would require more animal testing to register a new chemical compound, if no alternative methods are used. This requirement pushes scientific institutions to move towards the better use of existing experimental data. Utilisation of toxicity information in conjunction with modelling techniques contribute to reduce the number of animal tests and decreases the cost of the new chemical compound discovery process.</p>
+<p>Developing an interoperable and extensible data governance framework for predictive toxicology is crucial and highly required. First, toxicity data includes information about chemical compounds, <em>in vivo</em> and <em>in vitro</em> experiments. This large amount of information is distributed through publicly available, and often overlapping data sources. Different data formats, incomplete information about experiments and computational errors increase inconsistency of the collected information and make data governance challenging.</p>
+<p>Second, in predictive toxicology, Quantitative Structure-Activity Relationships (QSAR) models relate the chemical compound structures to their measured effect or activity <a class="footnote-reference" href="#b7" id="id8">[7]</a><a class="footnote-reference" href="#b8" id="id9">[8]</a>. The quality of chemical and toxicity data has an impact on the process of model development for extracting new information, prediction or classification. Thus, it is crucial to ensure the accuracy and consistency of data. Currently, this process involves manual data curation and expert judgements of the data content. Automated data quality assessment is still a challenge for predictive toxicology <a class="footnote-reference" href="#b9" id="id10">[9]</a><a class="footnote-reference" href="#b10" id="id11">[10]</a>.</p>
+<p>Third, predictive toxicology is a multidisciplinary subject and the development of its data governance framework requires cross-functional groups/organisations to bring together the expertise needed to make predictive toxicology data-related decisions. This makes data governance in predictive toxicology more important and more difficult.</p>
+<p>This paper attempts to offer a brief overview of data governance development in predictive toxicology. In particular, some of the most significant and recent public predictive toxicology data sources are reviewed, as well as a discussion on their data governance aspects. This helps to bridge the significant gap in toxicology data quality assessment and hopefully will attract more attention to develop and refine data governance frameworks for predictive toxicology. Such frameworks will provide standards in data representation and easy access to good quality publicly available information. It will also support data quality assessment, common reporting formats and collaborations in knowledge exchange amongst various organisations. The remainder of this paper is organised as follows. In the next section, the main concepts and components of a proposed data governance framework are introduced and discussed. It sets the boundary for the toxicity data sources discussion, with regard to data governance aspects. Based on these components, some of the most significant current toxicity data repositories are reviewed according to their data governance aspects in Section: <em>Review of Public Data Sources Supporting Predictive Toxicology</em>. The final section concludes the paper and identifies important further work.</p>
+</div>
+<div class="section" id="data-governance-main-decision-domains">
+<h2>Data Governance: Main Decision Domains<a class="headerlink" href="#data-governance-main-decision-domains" title="Permalink to this headline">¶</a></h2>
+<p>Data governance receives increasing interest due to its importance and advantages in governing the use of data within and outside an organisation. This is evident in that data governance has recently been given prominence in many leading conferences, such as TDWI (The Data Warehousing Institute) World Conference, DAMA (Data Management Association) International Symposium, DG (Data Governance) Annual Conference and MDM (Master Data Management) Summit.</p>
+<p>In addition to this, some different general data governance frameworks <a class="footnote-reference" href="#b1" id="id12">[1]</a><a class="footnote-reference" href="#b5" id="id13">[5]</a><a class="footnote-reference" href="#b11" id="id14">[11]</a><a class="footnote-reference" href="#b12" id="id15">[12]</a> have been proposed by different organisations and researchers with an attempt to provide guidance in designing and developing effective data governance approaches. Different organisations may have their own focus on specific aspects of data governance. The above frameworks all aim to provide support for the most common areas of their particular interests.</p>
+<p>It is obvious that due to the wide variety of backgrounds, motivations and expectations, the proposed general frameworks can be different. For example, the framework <a class="footnote-reference" href="#b5" id="id16">[5]</a> which inherits an existing IT governance framework <a class="footnote-reference" href="#b13" id="id17">[13]</a> places special interests in data principles and data life cycle, whereas the work of <a class="footnote-reference" href="#b11" id="id18">[11]</a> focuses more on data warehouses and Business Intelligence (BI). Despite this, they still share some common decision domains, such as data quality, data availability and data privacy. In Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, the main decision domains in predictive toxicology data governance that this paper focuses on are depicted. The scopes of the selected decision domains will be firstly introduced and these will serve as the boundary for the toxicity data sources and applications review provided in the following sections.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-24-1.jpg" src="../_images/1758-2946-3-24-1.jpg" />
+<p class="caption">Figure 1. Decision domains for data governance</p>
+<div class="legend">
+<strong>Decision domains for data governance</strong>.</div>
+</div>
+<p>The data governance decision domains with particular interest for this paper include (see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>):</p>
+<p>• <strong>data principle</strong>: is the top level of data governance framework. An effective data principle provides a clear link between the data and the organisational business. Data principle establishes the goal and the main intended uses of data, thus it identifies the directions for all other decision domains. For example, the data principle identifies the data content and the standards for data quality, and these in turn are the basis for how data is interpreted by users in the format of metadata. Also, if the data principle will be publicly available, the data authorisation will be relatively simple.</p>
+<p>• <strong>data quality</strong>: is one of the most important domains in data governance. Poor data quality inevitably has huge negative impacts on enterprise profits and operations. When it comes to predictive modelling, in order to develop accurate predictive models for toxicity values, high quality data is required. In a toxicological sense, data quality may refer to not only the recorded chemical information, but also the quality of experimental results. For example, whether the experiment was performed to Good Laboratory Practice standards (GLP) and whether the identify and purity of the tested chemical compounds were confirmed would affect the quality of experimental results. A more detailed discussion of data quality assessment in <em>in silico</em> toxicology can be found in <a class="footnote-reference" href="#b14" id="id19">[14]</a>.</p>
+<p>Undoubtedly, poor quality chemical and toxicological data with errors and missing information contribute to poor predictive performance and low statistical fit <a class="footnote-reference" href="#b15" id="id20">[15]</a><a class="footnote-reference" href="#b16" id="id21">[16]</a>. This makes data quality checking a significant task and simultaneously a challenge for predictive toxicology. The quality of a study is judged based on its documentation, e.g. a study report or published paper. Therefore, in this paper, the quality of study data is considered in terms of data provenance under the <em>metadata and its management</em> domain. Rather than directly assessing the quality of experimental data, this paper more focuses on the discussion of whether the associated study metadata has been documented and provided together with data sources, which would help the users to make their own judgement about the quality of the underlying toxicology study.</p>
+<p>Generally speaking, data quality refers to its fitness for serving its purpose in a given context <a class="footnote-reference" href="#b5" id="id22">[5]</a>. In data storage sense, data quality often involves multiple dimensions, such as data accuracy, data integrity and completeness. In most cases, these dimensions need to be defined in the context of data usage. For predictive toxicology, the following three dimensions are of particular interest and they are defined as:</p>
+<ul class="simple">
+<li><strong>data accuracy</strong>: is the fundamental dimension in data quality. Data may come from various internal and external sources, and therefore data accuracy refers to the correctness and consistency of data. For example, given the same chemical name, a poor quality chemical repository may return different chemical structures. This often confuses the user. A curation process is often involved to improve the data accuracy.</li>
+<li><strong>data completeness</strong>: indicates that the required data are well recorded without missing values. A complete data source covers adequate data in both depth and breadth to meet the defined business information demand.</li>
+<li><strong>data integrity</strong>: means the wholeness, entirety and soundness of organisational data <a class="footnote-reference" href="#b17" id="id23">[17]</a>. It often involves a data integration process which combines data from different sources in an attempt to provide users with a unified view of these data. Data governance concerns some questions in this domain. For example, how to assure the integrity of data and how to determine if the integrity is compromised.</li>
+</ul>
+<p>• <strong>metadata and its management</strong>: is defined as data which describes data. Understanding the data context as well as the content and encoding it into meta representation is a core aim of data governance <a class="footnote-reference" href="#b3" id="id24">[3]</a>. A concise and consistent metadata representation makes the semantics of data become interpretable to users and ensures the data can be effectively used and tracked.</p>
+<p>Organisational metadata can be classified into different categories, including the physical metadata, provenance metadata, domain-specific metadata and user metadata <a class="footnote-reference" href="#b5" id="id25">[5]</a>. The physical storage metadata describes the physical storage of data. Provenance metadata refers to the data author and time stamp information, e.g. the source of the data, who is the owner of this data, when it was created and when has been last modified. If the recorded data is up-to-date for the task at hand and/or comes from a reliable source, it will contribute to better data quality. Domain-specific metadata summarises the semantics of data content. For example, in predictive toxicology, the study metadata indicates its key elements (e.g. study type, species and endpoints). User metadata captures the user information and historical usage record.</p>
+<p>Different categories of metadata contain lots of valuable information and play key roles in data management, retrieval, discovery and analysis within organisations. The development of metadata repositories and their efficient stewardship is one of the essential activities of data governance and it will maximise the value of collected data, support decision making processes and business needs. In addition, due to the rapid changing business environment, the way an organisation conducts business and the consequent data also changes. As such, there is also a need to manage changes in metadata. Metadata management includes: data object standards and definitions, identifying relationships between data objects, providing accuracy, completeness and timeliness measurements, standards of documenting and reporting. In short, data governance uses metadata management to impose management discipline on the collection and control of data.</p>
+<p>• <strong>data availability</strong>: concerns how users can access the data. It includes the data access and export formats (e.g. xml, pdf and spreadsheet), and how it can be accessed in what way and on what devices (e.g. PC and mobile phone). For example, some toxicity data sources can be downloaded in a dump sql file for local processing, whereas some data sources can only be queried about fixed fields via web/standalone system graphic user interface (GUI).</p>
+<p>• <strong>data authorisation</strong>: controls user access to private and sensitive data based on user privileges. The data might have multi-level user access by the support of the pre-defined authorisation policies. The authorisation policy indicates what parts of the data can be accessed/manipulated by whom. For example, given a database, some data may be publicly available, while for some sensitive data, only authorised users can access it.</p>
+</div>
+<div class="section" id="review-of-public-data-sources-supporting-predictive-toxicology">
+<h2>Review of Public Data Sources Supporting Predictive Toxicology<a class="headerlink" href="#review-of-public-data-sources-supporting-predictive-toxicology" title="Permalink to this headline">¶</a></h2>
+<p>Collection of sufficient <em>in vivo - in vitro</em> assays is a starting point to build predictive models in predictive toxicity <a class="footnote-reference" href="#b15" id="id26">[15]</a><a class="footnote-reference" href="#b18" id="id27">[18]</a>. In the literature, there is a large amount of chemical, biological and toxicological data; however, only a small portion of them can be directly used for quantitative toxicity prediction. The current data sources mainly cover the following three major domains (see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>):</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-24-2.jpg" src="../_images/1758-2946-3-24-2.jpg" />
+<p class="caption">Figure 2. Data domains for predictive toxicology</p>
+<div class="legend">
+<strong>Data domains for predictive toxicology</strong>.</div>
+</div>
+<p>• chemical data: this domain contains the chemicals and their associated information such as chemical descriptors, chemical and physical properties and molecular structures, which are used to build predictive models.</p>
+<p>• <em>in vivo</em> toxicology data: refers to information collected from experiments or studies done in live organisms. Currently, <em>in vivo</em> assay data is distributed across various resources such as scientific articles, company internal reports, governmental organisation documents and many institutional services. Integrating this information in publicly available data sources by appropriate extraction, curation and pre-procession is challenging and extremely valuable.</p>
+<p>• <em>in vitro</em> data: <em>in vitro</em> cell and molecular biology technology has attracted more attention of toxicology researchers, due to its relatively low cost. In comparison to <em>in vivo</em> technology, <em>in vitro</em> research is more suitable for the deduction of biological mechanisms of action <a class="footnote-reference" href="#b15" id="id28">[15]</a>. Together with chemical information <em>in vitro</em> data are used to predict <em>in vivo</em> toxicity and to prioritise animal testing.</p>
+<p>The huge amount of varied data impacts on the modelling process. However, there exists a common problem in data quality assessment. Due to the lack of standard measures (such as accuracy, consistency, comprehensiveness, coverage, accessibility, reliability) for quality evaluation, the quality of data sources is either not assessed or just assessed manually. The current assessment is normally quite subjective and mainly depends on assessors&#8217; own experiences and preferences. This makes the data governance of current toxicological data sources very important.</p>
+<p>Recently, many toxicogenomics and chemical data sources have been reviewed according to needs and challenges in predictive toxicology <a class="footnote-reference" href="#b18" id="id29">[18]</a><a class="footnote-reference" href="#b19" id="id30">[19]</a><a class="footnote-reference" href="#b20" id="id31">[20]</a><a class="footnote-reference" href="#b21" id="id32">[21]</a><a class="footnote-reference" href="#b22" id="id33">[22]</a><a class="footnote-reference" href="#b23" id="id34">[23]</a><a class="footnote-reference" href="#b24" id="id35">[24]</a>. In this section, the discussion of several major data sources that are widely applied to predictive toxicology is presented, with particular focus on their data governance aspects.</p>
+<p>More specifically, in the context of data governance, the framework which has been proposed in the previous section sets the boundary for discussion. The main framework components, including data accuracy, data completeness, data integrity, metadata and its management, data availability and data authorisation are the main interest of this paper. Their status in different data sources will be discussed respectively. It is also worth noting that the list of data sources discussed here is not exhaustive, but the selected data sources illustrate well the range of the publicly available data sources. Table <em class="xref std std-ref">1</em> details the analysis of various data sources according to the previously mentioned components of data governance framework.</p>
+<div class="section" id="chemspider">
+<h3>ChemSpider<a class="headerlink" href="#chemspider" title="Permalink to this headline">¶</a></h3>
+<p>The development of the Internet fosters on-line publications of chemical information by various organisations. The broad distribution of chemical and physical properties and molecular structures results in duplicated storage cost, inefficient information retrieval and inconsistency. Thus, there was a need to provide a framework for data integration and access to high quality chemical information.</p>
+<p>The free online repository ChemSpider <a class="footnote-reference" href="#b25" id="id36">[25]</a> was developed to address this problem. It was launched in 2007 to provide searchable chemical structures and property information in the public domain. The key feature of ChemSpider is the compound structure centric database. All possible available information about a given chemical compound is linked by its molecular structure, though ChemSpider is not an exhaustive database. The aim of ChemSpider is to provide services in chemical information searching, and also to build a crowd-sourcing community. In predictive toxicology, this community is a group of specialists from different organisations that contribute their knowledge to improve the quality of collected information in a database. At present, ChemSpider does not directly support toxicity predictions, however, the content of ChemSpider provides high quality chemical information and links to original resources that are very useful for building QSAR models.</p>
+<p>Reflecting back to the data governance framework (see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>), the main domains are discussed as follows:</p>
+<p>• <strong>data accuracy:</strong> ChemSpider has realised that ensuring the accuracy of included data is an essential requirement for public data sources, and it is trying to distinguish itself from other public chemical repositories (e.g. PubChem <a class="footnote-reference" href="#b26" id="id37">[26]</a> from the National Institutes of Health (NIH)). The NIH currently lacks a data curation mechanism to ensure the quality of included data. It relies totally on the data depositors to curate their own data. As a result, errors from various depositors and multiple representations and formats are included in PubChem. Rather than depending on any individual depositor, ChemSpider has spent much effort in improving data quality by employing the crowd-sourcing activities of the community. The following systematically organised data curation is performed by ChemSpider and this can be achieved both automatically and manually:</p>
+<ul class="simple">
+<li>the general curation activities include: removing incorrect names, correcting spellings, adding multilingual names and alternative names.</li>
+<li>to avoid anonymous act of vandalism, only registered users are allowed to edit the records.</li>
+<li>when uploading a chemical structure to ChemSpider, automated chemistry checking is performed.</li>
+<li>domain experts are invited to continuously validate and update included data. The data curation labels include &#8220;validated by experts&#8221;, &#8220;validated by users&#8221;, &#8220;non-validated&#8221;, &#8220;redirected by users&#8221; and &#8220;redirect approved by experts&#8221; <a class="footnote-reference" href="#b27" id="id38">[27]</a>.</li>
+</ul>
+<p>Currently, more than 130 people are involved in data validation and annotation. Over a million chemical structure and identifier relationships have been validated either automatically or manually <a class="footnote-reference" href="#b22" id="id39">[22]</a>. This data curation effort will continue with an intention to offer the highest quality online chemical database.</p>
+<p>• <strong>data completeness:</strong> ChemSpider currently contains over 25 million compounds (ChemSpider Count 03/2011) and the number is growing daily. It is claimed to be the richest source of structure-based chemistry. The variety of information about a compound provided at ChemSpider is hard to match on any other free website.</p>
+<p>• <strong>data integrity</strong>: ChemSpider aims to act as an aggregator of chemical information. Data from nearly 400 different data sources (including Wikipedia, PubChem <a class="footnote-reference" href="#b26" id="id40">[26]</a>, ChEBI <a class="footnote-reference" href="#b28" id="id41">[28]</a> and etc) are integrated and linked by means of chemical structure. Where possible, each chemical record retains the links to the original source of the material and also links out to other information of particular interests, including where to purchase a chemical, chemical toxicity, metabolism data, etc. Instead of employing classical search engines (e.g. Google) to search individual pieces of information, aggregating such chemical information into a central database saves lots of search effort and time for users.</p>
+<p>• <strong>metadata and its management:</strong> ChemSpider uses metadata representation to extract information about a chemical compound, its associated data sources together with its external IDs (if available) and relevant scientific articles. Additionally, the creation date and owners of the included data sources are provided in ChemSpider. The service keeps track of curation updates and makes this information available to the master curators. Also, once registered users login to the system to perform the search, their search history will be recorded and stored. This information can be further used to capture user preferences and then provide more customised services.</p>
+<p>• <strong>data availability:</strong> ChemSpider also realised the importance of data availability and accessibility. The website provides various simple and advanced search options via a user friendly web GUI. In addition to this, the system provides web services (including APIs) to allow users to query the content and request physiochemical properties prediction, and the retrieved results can be downloaded as a set. The included structure images and spectra can be easily embedded into external web pages by the use of provided tools. In addition, the newly developed Mobile ChemSpider allows users to access ChemSpider data through mobile devices, such as mobile phone browsers and iPads. Note that users are limited to assemble 5000 ChemSpider records or less to build an in-house data source.</p>
+<p>• <strong>data authorisation:</strong> ChemSpider is a publicly available database, the RSC logs the IP address of user&#8217;s PC to be able to receive and send information on the Internet. However, no multi-level user access is provided, all registered users share the same authorisation schema to access the data.</p>
+</div>
+<div class="section" id="cebs">
+<h3>CEBS<a class="headerlink" href="#cebs" title="Permalink to this headline">¶</a></h3>
+<p>Chemical Effects in Biological Systems (CEBS) is the first public repository which captures toxicogenomics data developed by the National Center for Toxicogenomics (NCT) within the National Institute of Environmental Health Science (NIEHS) <a class="footnote-reference" href="#b23" id="id42">[23]</a><a class="footnote-reference" href="#b29" id="id43">[29]</a>. A distinguishing feature of CEBS is that it contains very detailed animal-level study information including treatment protocols, study design, study time-line, metadata for microarray and proteomics data, histopathology and even raw genomic microarray results <a class="footnote-reference" href="#b23" id="id44">[23]</a>.</p>
+<p>The objective of CEBS is to provide users easy access to the integrated wide diversity of data types and detailed study information. The embedded rich information makes it possible to develop answers to comprehensive queries posted in the database, and then conduct gene signature and pathway analysis based on the retrieved answers. Users are allowed to query the data using study conditions, subject responses and microarray module.</p>
+<p>The main domains in the previously presented data governance framework (as shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>) are described as:</p>
+<p>• <strong>data accuracy:</strong> the accuracy of CEBS data is handled by collaboration between the data depositors and internal curation staff. Prior to being exported to CEBS database, all study information needs to go through Biomedical Investigation Database (BID) which is a component of CEBS responsible for loading and curating data.</p>
+<p>• <strong>data completeness:</strong> as of 2010, CEBS contains 132 chemicals (structure searchable via U.S EPA(Environmental Protection Agency) DSSTox) and their responses which were derived from 34 studies in mice, rats, and Caenorhabditis elegans <a class="footnote-reference" href="#b18" id="id45">[18]</a>. Most of the included studies have associated microarray data. CEBS welcomes high-quality study data relating to environmental health, pharmacology and toxicology. When submitting such data, a study design and phenotypic anchoring data is required.</p>
+<p>• <strong>data integrity:</strong> one of the main objectives of CEBS is to permit users to integrate various data types and studies. By the support of a well designed relational database schema, the CEBS users can effectively retrieve the associated biological and toxicological data based on the selected subject response or study conditions, etc. CEBS has employed controlled vocabularies (i.e. CEBS data dictionary) rather than free text to capture study related data, allowing data to be integrated within a given microarray platform for effective filtering, query and analysis. On the other hand, CEBS has to manage data from a variety of resources and each resource may use different study designs, treatment regimes and measures. Currently, there is lack of a widely accepted public standard for exchange and capture of such study design and assay data. A number of effort is under way to address this need, and CEBS will fully support the development of a standard which will provide better data integration.</p>
+<p>• <strong>metadata and its management:</strong> every study included in CEBS has its associated details document containing the following information: the institution, principal investigator, start date of the study, design details and supporting publications (together with their PubMed IDs). Such metadata can be easily retrieved in various graphical representations by clicking the provided links on the web page. This detailed domain-specific metadata helps to provide customised search options and then maximise the included data values.</p>
+<p>• <strong>data availability:</strong> CEBS provides easy access for users to retrieve, combine and download customised information. By using the SysTox browser, the CEBS users can combine components of different workflows provided by CEBS to customise their queries and export them to various formats for downloading. Alternatively, users can use the provided FTP service to individually download data sources. In addition, users are allowed to create and manage their own workspaces. The infrastructure has been simulated to be able to support up to 100 concurrent users in various use cases and workflows.</p>
+<p>• <strong>data authorisation:</strong> although CEBS is claimed as a public repository integrating study design and assay data, it only allows public access to the fully published data sources. For those not fully published data sources, they are not available for downloading without prior agreements of data owners. It is common to obtain access to unpublished data sources on a collaborative basis.</p>
+<p>One unique feature of CEBS is its allowance for users to upload their own data into CEBS in a private mode and only make it visible to their nominated collaborators behind the CEBS firewall <a class="footnote-reference" href="#b30" id="id46">[30]</a>. This private data authorisation schema securely protects sensitive user data and also allows users to integrate their own data with other public data sources in CEBS for analysis.</p>
+</div>
+<div class="section" id="cdt">
+<h3>CDT<a class="headerlink" href="#cdt" title="Permalink to this headline">¶</a></h3>
+<p>Environmental chemicals may play a crucial role in the etiology of human diseases. Despite this observation, the mechanism of action and the potential influences of most chemicals on many diseases are not known <a class="footnote-reference" href="#b19" id="id47">[19]</a><a class="footnote-reference" href="#b20" id="id48">[20]</a><a class="footnote-reference" href="#b31" id="id49">[31]</a><a class="footnote-reference" href="#b32" id="id50">[32]</a>. To gain a better understanding about the impact environmental chemicals have on human health, the Comparative Toxicogenomics Database (CTD) <a class="footnote-reference" href="#b33" id="id51">[33]</a><a class="footnote-reference" href="#b34" id="id52">[34]</a> has been developed by Mount Desert Island Biological Laboratory. It serves as a unique centralised and freely available resource to explore the interactions amongst chemicals, genes or proteins and diseases in diverse species.</p>
+<p>Chemicals might interact with various genes and proteins in multiple ways and then affect the mechanisms underlying the etiology of diseases. One of the major goals of CTD is to support the generation of novel hypotheses about chemical actions and environmental diseases. It is worth noting that CTD acts not only as a data repository but also as a discovery tool to generate novel inferences. The inferred interactions can also be evaluated based on local statistics, and the derived ranking scores will help users to prioritise further testing. In addition, a set of tools to visualise, manipulate and analyse different types of data such as comparisons of gene sequences from different species or comparisons of associated data sources for up to three chemicals, diseases or genes are provided by CTD.</p>
+<p>In terms of data governance framework components, the following aspects are considered:</p>
+<p>• <strong>data accuracy:</strong> the included chemical-gene interactions, chemical-disease and gene-disease relationships in CTD are completely manually curated, thus the data accuracy relies solely on professional experts. Curators should be trained in the data curation according to CTD requirements. Prior to monthly public releases, the curated data submitted by an individual curator still needs to go through a further review conducted by the scientific community, and this helps to ensure the high accuracy of curated data. It is obvious that such manual curation is time consuming and this task becomes more challenging with the increasing scope and volume of available data. With an attempt to speed up and improve the efficiency of manual data curation, a prototype text-mining application has recently been developed to prioritise the available literature <a class="footnote-reference" href="#b32" id="id53">[32]</a>.</p>
+<p>• <strong>data completeness:</strong> to date, CTD database includes 1.4 million chemical-gene-disease data connections and new data is available monthly. It currently consists of over 240,300 molecular interactions between 5900 unique chemicals and 17,300 gene products, 11,500 direct gene-disease relationships and 8500 direct chemical-disease relationships extracted from over 21,600 publications <a class="footnote-reference" href="#b19" id="id54">[19]</a>. The applicability and utility of CTD has been widely recognised and it is evident that CTD is being indexed by many public repositories.</p>
+<p>• <strong>data integrity:</strong> all curated data, especially the inferred interactions, are captured in a structured manner to minimise the inconsistency amongst different curators. This is achieved by employing community-accepted controlled vocabularies and ontologies. This not only helps users to retrieve data efficiently, but also provides a useful way of integrating and communicating with external data sources by using consistent terms. CTD data is integrated with a number of external chemical, gene, disease and pathway resources, including ChemIDplus, DrugBank, Gene Ontology Consortium, NCBI Gene, NCBI PubMed, etc <a class="footnote-reference" href="#b20" id="id55">[20]</a>.</p>
+<p>• <strong>metadata and its management:</strong> the original references of the curated interactions are included in CTD. For quality monitoring and follow-up purposes, the data of the curation such as the curator ID, date of curation and related articles is also recorded. Note that, the metadata of CTD records not just providing the domain-specific information, but also includes some evaluation metrix, such as similarity score and inference score.</p>
+<p>• <strong>data availability:</strong> CTD provides a wide variety of ways to access the included data, users can easily download individual data sources. Alternatively, the whole database as a dump file can be downloaded for local analysis. In addition, CTD allows users to perform both detailed query and batch query to find various types of data instead of just those relating to a specific chemical, gene or disease term. The retrieved results can be customised and exported to different formats (such as csv, xml and tsv).</p>
+<p>• <strong>data authorisation:</strong> CTD is a community-supported public resource tool that advances understanding of the effects of chemicals on human health. However, no multi-level user access is available. All registered users share the same authorisation schema to access the data, so that there is no authorisation protection of users&#8217; private data.</p>
+</div>
+<div class="section" id="dsstox">
+<h3>DSSTox<a class="headerlink" href="#dsstox" title="Permalink to this headline">¶</a></h3>
+<p>The Distributed Structure-Searchable Toxicity (DSSTox) public database network provides a public forum for high-quality, standardised chemical structure files associated with toxicity data <a class="footnote-reference" href="#b35" id="id56">[35]</a>. It aims to help in building publicly and easily accessible data collection to improve predictive toxicology capabilities. A major goal of the DSSTox project is to encourage the use of the DSSTox data format (including DSSTox Standard chemical structure fields and standardised SDF (structure data format)) for publishing chemicals and their associated toxicity data files.</p>
+<p>Recalling the data governance framework in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, the related domains are discussed as:</p>
+<p>• <strong>data accuracy:</strong> one of the unique features of DSSTox is the quality control of the included data. All documentation and data files considered for DSSTox publication are subject to DSSTox project review, EPA internal review, and in some cases outside peer review <a class="footnote-reference" href="#b35" id="id57">[35]</a>. In addition, most data sources are curated by experts and uniformly applied into DSSTox <a class="footnote-reference" href="#b18" id="id58">[18]</a>. DSSTox deals with the quality control process only according to the information stored in its own data sources. An extensive and clear information quality review procedure is applied to the annotation of included data. Every data source includes a quality assurance log file. This file summarises all undertaken procedures to ensure accuracy and consistency of chemical structure within a data source <a class="footnote-reference" href="#b35" id="id59">[35]</a>. Chemical structures are retrieved from outside sources and cross-validated for internal consistency. All errors and missing values are reported in a log file. Moreover, DSSTox provides procedures for users to report errors in DSSTox data sources. Such community efforts support integration and migration of chemical toxicity information into DSSTox. Finally, data is validated by experts (DSSTox users). It is worth noting that DSSTox does not provide a quality review for information collected from outside resources.</p>
+<p>• <strong>data completeness:</strong> the current DSSTox database contains over 8000 chemicals and has been incorporated into several external resources, including: ChemSpider, PubChem inventory <a class="footnote-reference" href="#b26" id="id60">[26]</a>, GEO <a class="footnote-reference" href="#b36" id="id61">[36]</a>, ACToR database, ArrayExpress Repository, and EMBL-EBI. DSSTox standardised format has gradually gained popularity in recent years. It is anticipated that more public chemical information and related toxicity data will be migrated into the DSSTox for publishing in the near future.</p>
+<p>• <strong>data integrity:</strong> publicly available toxicity data sources exist in different locations and widely disparate file formats. They are quite different in terms of toxicity endpoints, test methods, treatment conditions and degrees of result details. Additionally, they are often not downloadable in their entirety and most do not include related chemical structures embedded with rich content. Being aware of this, DSSTox extends the existing SDF and annotates the list with DSSTox Standard Chemical Fields to integrate the molecular structures and toxicity data into standardised DSSTox SDF. This is fully incorporated into U.S EPA ACToR and PubChem.</p>
+<p>• <strong>metadata and its management:</strong> metadata of published data sources are well recorded. Every data source is associated with documentation including following information: how and when chemical compounds were collected into a data source, links to the outside repositories, time-stamp of when a data source was created and updated, information about last update; a list of authors and reviewers of DSSTox data source and supporting literature.</p>
+<p>• <strong>data availability:</strong> DSSTox data sources and their documentations can be downloaded from the DSSTox website. User contributions are used to build larger DSSTox user communities. Each of the published data files can be freely downloaded in common formats such as pdf, sdf and spreadsheet, and are of potential use for (Q)SAR modelling. Large files are offered in compressed file format. In addition, a DSSTox Structure-Browser has been developed by EPA to provide a simple and handy structure-searching capability. The full collection of DSSTox published data files is searchable using many options, including chemical text, data file, SMILES, structure, generic test substance level and outputs.</p>
+<p>• <strong>data authorisation:</strong> DSSTox allows full and publicly open access to included toxicity data files and no user registration is required. Although the DSSTox website collects and stores user access log file, including access date and time, IP address, the objects/web page requested, access status and etc, no multi-level user access is enabled, all users share the same authorisation schema to access the data. To ensure that the service remains available to all users, EPA also makes effort to identify and block unauthorised attempts to upload or change information on their website.</p>
+</div>
+<div class="section" id="toxcast">
+<h3>ToxCast<a class="headerlink" href="#toxcast" title="Permalink to this headline">¶</a></h3>
+<p>There is a huge data gap between environmental chemicals and their associated toxicity information. This is because of the expense and length of time required to conduct animal testing to obtain such toxicity data. Traditional animal testing provides very limited information on mechanism of action (MOA). MOA is a sequence of events from the absorption of a compound into a living organism to toxic outcome and it is crucial to predicting toxicity in humans. Therefore, there is a pressing need to screen the large backlog of chemicals for their potential toxicity and, ultimately, their contribution to human diseases <a class="footnote-reference" href="#b37" id="id62">[37]</a>. Inspired by this, EPA NCCT launched the ToxCast Project <a class="footnote-reference" href="#b38" id="id63">[38]</a><a class="footnote-reference" href="#b39" id="id64">[39]</a> in 2007, in an attempt to develop an effective approach for prioritising the toxicity testing of a large number of environmental chemicals at low cost. The major goals of ToxCast are <a class="footnote-reference" href="#b37" id="id65">[37]</a>:</p>
+<p>• to detect <em>in vitro</em> assays which can reliably indicate alterations in biological processes that may lead to adverse health effects,</p>
+<p>• to improve <em>in vivo</em> toxicity prediction by developing signatures or computational models from multiple <em>in vitro</em> bioassays, together with calculated and available chemical properties, rather than just using a single assay or chemical structure alone,</p>
+<p>• to speed up the screening of the large number of untested environmental chemicals by the use of detected signatures from <em>in silico</em> and <em>in vitro</em> data.</p>
+<p>As stated in the data governance framework (as shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>), related domains are discussed as follows:</p>
+<p>• <strong>data accuracy:</strong> it is claimed by EPA that the data included in the ToxCast project has been subjected to internal technical review and approved for research use. In most cases, the data has also undergone the external peer-review and publication in scientific journals <a class="footnote-reference" href="#b39" id="id66">[39]</a>. In addition, the collection of ToxCast Phase I chemicals is carefully chosen subject to the availability of high quality, guideline-based animal toxicity data, and chemical property space coverage. The selected compounds represent the chemical space well and there are only a few compounds with extreme property values. In terms of updates, subsequent chemical analysis and verification of activity is still going on and the findings are added to the current data sources periodically.</p>
+<p>• <strong>data completeness:</strong> in its initial stage, Phase I, ToxCast has profiled 320 chemicals, most of which are pesticides due to the availability of their extensive animal testing results, in over 400 high-throughput screening (HTS) endpoints using 9 different assay technologies. The current data source covers various chemical classes and diverse mechanisms of action and it has been deposited in PubChem. A total of 624 <em>in vitro</em> assay endpoints ranging from gene to entire organism have been measured for each chemical in ToxCast Phase I. The output of each chemical-assay combination was reported in terms of either half-maximal activity concentration (AC50) or lowest effective concentration (LEC) at which there was a statistically significant change from the concurrent negative control.</p>
+<p>ToxCast Phase I is a proof of concept project to demonstrate its impact in various dimensions (e.g. chemical space, HTS assay data (&#8220;fast biology&#8221;) and <em>in vivo</em> bioassay data (&#8220;slow biology&#8221;)). Later phases will expand its impact to broader coverage of chemical space (over thousands of chemicals) and employ classes to validate the predictive toxicity signatures which built in Phase I. Phase II is currently screening 1,000 chemicals from a wider range of sources, including industrial and consumer products, food additives and drugs <a class="footnote-reference" href="#b39" id="id67">[39]</a>.</p>
+<p>• <strong>data integrity:</strong> it is important to note that ToxCast includes <em>in vivo</em> data for ToxCast chemicals and such information is stored in a relational database called ToxRefDB <a class="footnote-reference" href="#b40" id="id68">[40]</a> which contains nearly $2 billion worth of animal toxicity studies (55,950 in total). With the growth of the ToxCast database, the confidence in building statistical and computational models to forecast potential chemical toxicity will increase. This will result in refinement and reduction of animal use for hazard identification and risk assessment.</p>
+<p>In addition to this, ToxCast data is well integrated to many other EPA databases. The ToxCast toxicity testing results are also available in the EPA ACToR data warehouse. They can be easily searched and combined with other related testing results derived from other projects. Also, the Phase I chemical structures and associated toxicity data are integrated in SDF files and they are available for download at the DSSTox website.</p>
+<p>• <strong>metadata and its management:</strong> due to the availability of ToxCast Phase I data in DSSTox, the associated metadata (see data governance discussion in DSSTox) for these included information is provided. The software packages used to calculate physical and chemical properties from a chemical structure are indicated in the ToxCast data sources. For those <em>in vitro</em> assays included in ToxCast Phase I, the associated information, including contractor/collaborator, assay type, date stamp, assays/endpoints and references (publications and websites), are also provided in the EPA ToxCast website. In addition, ToxRefDB is the relational database storing <em>in vivo</em> toxicity testing data of ToxCast Phase I chemicals. The study details including time-stamps and owners are recorded in ToxRefDB.</p>
+<p>• <strong>data availability:</strong> the ToxCast data sets, including descriptions, supplemental data and associated publications are available from the U.S. EPA ToxCast website. The users are allowed to download them individually in zip files. More complete and detailed information of the ToxCast chemicals, including chemical structures and identifiers, can be found in the EPA DSSTox website. The DSSTox ToXCST files <a class="reference external" href="http://www.epa.gov/ncct/dsstox/sdf_toxcst.html">http://www.epa.gov/ncct/dsstox/sdf_toxcst.html</a> can be downloaded in diverse formats, such as sdf, spreadsheet and pdf. In addition, the ToxRefDB makes it possible to link toxicity information with the HTS and genomic data of ToxCast within the ACToR system. Recently, a new interface to access all ToxCast data has been provided via ToxCastDB <a class="footnote-reference" href="#b41" id="id69">[41]</a>. It delivers a clear and easy browse format, such that users can search and download ToxCast chemicals, assays, genes, pathways and endpoints more effectively.</p>
+<p>• <strong>data authorisation:</strong> similar to other EPA databases, ToxCast provides full and open access to included data and no user registration is required. For details, readers can refer to DSSTox data authorisation discussion.</p>
+</div>
+<div class="section" id="actor">
+<h3>ACToR<a class="headerlink" href="#actor" title="Permalink to this headline">¶</a></h3>
+<p>Tens of thousands of chemicals are currently in commercial use, but only a small portion of them have been adequately assessed for their potential toxicological risk due to the expensive and time consuming conventional chemical testing methods. As aforementioned, the ToxCast project has been developed by EPA to speed up the process in filling such data gaps. ToxCast is also a major driver of the development of the Aggregated Computational Toxicology Resource (ACToR) project <a class="footnote-reference" href="#b42" id="id70">[42]</a>. It is difficult to find related information about a given chemical. ACToR is therefore developed to support the ToxCast screening and prioritisation effort.</p>
+<p>An important goal of the ACToR project is to develop a publicly accessible and widely usable database that gathers toxicity data associated with a large number of environmental chemicals from multiple sources <a class="footnote-reference" href="#b18" id="id71">[18]</a><a class="footnote-reference" href="#b42" id="id72">[42]</a>. The key uses of ACToR are to support predictive toxicology in terms of computational analysis <a class="footnote-reference" href="#b42" id="id73">[42]</a><a class="footnote-reference" href="#b43" id="id74">[43]</a>:</p>
+<p>• collect and combine data from different sources to construct training and validation data sources to support high-throughput chemical screening and prioritisation efforts.</p>
+<p>• serve as a unique resource which links chemical structure with <em>in vitro</em> and <em>in vivo</em> assays to support the development of computational models.</p>
+<p>• provide EPA and other regulatory agency reviewers with the decision making support for novel chemicals approval.</p>
+<p>• support the workflow construction feature enabling users to build customised prioritisation of data capture, quality control and chemical prioritisation scoring tasks.</p>
+<p>The related domains in the data governance framework (see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>) are examined as follows:</p>
+<p>• <strong>data accuracy:</strong> ACToR database itself does not provide any data curation, the accuracy of the included data totally depends on the original sources of the data. Therefore, to ensure high data accuracy, the sources of included data collections are carefully selected by ACToR and the sources&#8217; institutional information are well recorded.</p>
+<p>• <strong>data completeness:</strong> currently, ACToR is made up of over 500,000 environmental chemicals and their associated toxicity data which were derived from more than 500 public data sources including various databases such us: DSSTox, ToxCast and ToxRefDB; NIH, PubChem and TOXNET. ACToR is focused mainly on capturing chemical structures, physical and chemical properties, <em>in vitro</em> bioassays and <em>in vivo</em> toxicity data. In terms of chemical structures, EPA DSSTox and PubChem are the two main sources for ACToR due to their high data quality and wide data coverage, respectively. Although ACToR currently does not include all toxicity data, it is designed to be flexible enough to incorporate new data from sources with different formats into the system in a straightforward manner.</p>
+<p>• <strong>data integrity:</strong> ACToR itself is an integration of available chemical toxicity data from a large number of sources. It is common that chemical toxicity data are stored in incompatible formats and in many different locations. In the past, in order to retrieve all relevant information for a given chemical, users needed to come across diverse data sources and aggregate the results manually for use. With the rapid increase of available chemicals and data sources, such a task becomes impractical and even impossible for comprehensive data sources. ACToR aggregates large number of chemical toxicity data and makes the included data searchable by chemical information (e.g. chemical name, chemical structure and identifiers). The data collections are formatted and organised in a consistent manner within ACToR. The clear and flexible ACToR database schema facilitates users to search and query data from other chemical toxicity data sources including ToxRefDB, ToxCastDB, DSSTox, ExpoCastDB and others to be added in the future.</p>
+<p>• <strong>metadata and its management:</strong> the institutional sources of data collections and assay information are well included in ACToR. The recorded metadata of data collections includes: details of the data collection, source ID, name, description, source type, number of substance, number of generic chemicals, number of assay results, and link-out which provides a direct connection to the external website of a given data collection. In addition, the study and assay time-stamps, source ID, name, units, value type, component type as well as owners are included in the original data source, such as ToxRefDB.</p>
+<p>• <strong>data availability:</strong> one of the significant advantages of using ACToR is its availability. The included data is provided in an easy accessible and computable manner via its web interface. The ACToR system is implemented using 100% open-source software, MySQL for the database development, Perl for loading data and Java for web interface development. This enables the user to download the entire ACToR database for local analysis. In addition, the ACToR database covers a wide variety of data sources. In particular, due to the use of similar data schemas, all data in PubChem can be easily loaded into ACToR. This feature makes the ACToR database easily expandable and scalable in the future.</p>
+<p>• <strong>data authorisation:</strong> similar to other EPA databases, ACToR provides full and open access to the included data and no user registration is required. For details, readers can refer to DSSTox data authorisation discussion.</p>
+</div>
+<div class="section" id="opentox">
+<h3>OpenTox<a class="headerlink" href="#opentox" title="Permalink to this headline">¶</a></h3>
+<p>OpenTox is a modern predictive toxicology framework under development <a class="footnote-reference" href="#b10" id="id75">[10]</a>. Different from other toxicity data sources, OpenTox provides easy access to not only the good quality data, but also a collection of various predictive toxicity applications. OpenTox is designed to support effective data exchange and accurate cross-organisational communication and collaboration. Its flexible architecture and modular design contribute to the development of customised predictive toxicology applications with respect to user requirements. Currently, OpenTox provides two applications for model development and toxicity estimation. <em>ToxPredict</em> allows users to predict a toxicity endpoint for a given chemical compound.</p>
+<p><em>ToxCreate</em> supports predictive model generation. Developed models within the OpenTox can be validated, reported according to the OECD principles <a class="footnote-reference" href="#b44" id="id76">[44]</a> and published within the OpenTox framework. Detailed model reporting supports reliable judgements about model validation and gives the possibility to reproduce predictions.</p>
+<p>Data access and management, model development, feature construction and selection are core components of the OpenTox framework. Thus, OpenTox supports the creation of dictionaries and ontologies, that describe the relations between chemical and toxicological data and experiments and to develop novel techniques for the retrieval and quality assurance of toxicological information <a class="footnote-reference" href="#b9" id="id77">[9]</a>.</p>
+<p>Recalling the data governance framework in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, the related domains are discussed as:</p>
+<p>• <strong>data accuracy:</strong> OpenTox provides data quality assessment by assessing validation labels to included data (e.g. 2D chemical structures). It allows for three types of data quality validation: automated, manual and global. For a given chemical compound, its chemical structures can be imported from different sources. Then, these structures are automatically compared and classified into the following groups and each group is associated with a predefined validation label:</p>
+<ul class="simple">
+<li>consensus (&#8220;OK&#8221;) - all structures are identical,</li>
+<li>majority (&#8220;ProbablyOK&#8221; and &#8220;ProbablyError&#8221;) - majority of identical structures,</li>
+<li>ambiguous (&#8220;Unknown&#8221;) - there is no majority of equal structures,</li>
+<li>unconfirmed (&#8220;Unknown&#8221;) - single source and no comparison available.</li>
+</ul>
+<p>The assigned quality labels will be further reviewed by experts according to their knowledge and manual comparison with external sources. The global validation aggregates the validation labels which derived from automated and manual validations for a given data source. Opentox employs a numerical measure, &#8220;ProbablyError&#8221; rate, to indicate the overall quality of a given data source. Obviously, the lower &#8220;ProbablyError%&#8221; indicates the better quality of the data source.</p>
+<p>• <strong>data completeness:</strong> OpenTox mainly focuses on publicly available toxicology data. As reported in <a class="footnote-reference" href="#b9" id="id78">[9]</a>, OpenTox framework currently includes data from ISS ISSCAN, IDEA AMBIT, JRC PRS, EPA DSSTox, ECETOC skin irritation, LLNA skin, and the Bioconcentration Factor (BCF). The additional informations for chemical structures has been collected from public sources such as Chemical Identifier Resolver, ChemIDplus, PubChem.</p>
+<p>• <strong>data integrity:</strong> is a current challenge for OpenTox. An ontology and controlled vocabularies have been developed by OpenTox to integrate and organise multidisciplinary data (e.g. chemicals, experiments, and toxicity data). With the support of ontology, OpenTox is currently moving towards the development of the Resource Description Framework (RDF) representation to exchange data from various sources.</p>
+<p>• <strong>metadata and its management:</strong> OpenTox database provides means to identify the original sources of the included data by indicating inventor name and reference. By doing this, the user is allowed to select the compounds of interest from a specified inventory. OpenTox also makes the latest updates of the data (e.g. updates of chemical structures and descriptor calculations) which become available. OpenTox includes enhanced metadata for algorithms, models and datasets that are managed by the ontology web service.</p>
+<p>• <strong>data availability:</strong> toxicity data is currently publicly available and accessible via the OpenTox Representational State Transfer (REST) web services. The RESTful web service has been chosen because it allows for the combination of different services into multiple applications to satisfy diverse user requirements. Additionally, OpenTox offers workflow architecture that is understandable and easy interpretable to users.</p>
+<p>• <strong>data authorisation:</strong> the OpenTox website has public sections that are read accessible by anyone with a web browser. Only the OpenTox Development area requires a user name/password registration and registration approval. Having recognised the importance of multi-level user access, OpenTox have considered different authentication and authorisation solutions for an initial implementation to grant access to protected resources. A set of REST operations (including authentication, authorisation, create policy, delete policy and etc) have been published in OpenTox API.</p>
+</div>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>While the above discussed public data sources are well developed, there nevertheless remain some gaps in the development of data governance framework to support predictive toxicology. Firstly, more and more data repositories have realised the importance of included data quality and their inherent impacts on QSAR modelling. In most of the reviewed data sources (except ActoR), data curation procedures are applied to ensure accuracy and completeness of included data. These features are important components in data quality assessment. However, the data quality checking is mostly based on human expertise. While there are techniques leading to the automated data quality assessment, the derived results still have to be validated by experts. Moreover, there is a lack of systematic and standard measures of data quality, including data completeness, accuracy and consistency. The current assessments are all based on internal measures and this causes difficulty in comparing data from different sources. A more interpretable and transparent assessment mechanism is highly desirable and such standard measures would also be used to visualise data quality and then to compare and rank different data resources.</p>
+<p>Second, data provenance is another substantial issue in predictive toxicology. Provenance is important and valuable to understanding, aggregating and making use of data sources and scientific results. In the presented data governance framework, data provenance is a part of metadata and its management. As shown in this review, the information about data submission, curation and authors are included as metadata in different manners and formats. This makes tracking the provenance of data very challenging. The determination of data provenance procedure and representation requires coordination and cooperation between various data sources, and this is currently very difficult. Automated data quality assessment will provide a more systematic and analytical metadata representation and this could lead to simplified and unified data quality control processes.</p>
+<p>Third, the publicly available data sources contain rich and valuable scientific data and they are also of great interest to commercial companies. Combining company in-house data with existing public data will help to discover more hidden ideas and knowledge. However, as shown in the review, although CEBS and OpenTox have recognised the importance and benefits of multi-level user access, this development is still at the early stage. Most public data sources currently do not allow multi-level user access. All (registered) users share the same authorisation schema to access the data. The lack of protection of private and sensitive data becomes a bottleneck which limits commercial companies to contribute their in-house data to public repositories. It is challenging but highly desirable to develop more flexible and customised data authorisation schemas which will allow multi-level user access to both in-house and public data resources.</p>
+</div>
+<div class="section" id="id79">
+<h2>Conclusions<a class="headerlink" href="#id79" title="Permalink to this headline">¶</a></h2>
+<p>In this paper, the review of some of the widely used public data sources which support predictive toxicology has been presented with regard to a proposed data governance framework. Current predictive toxicology challenges such as data integration and data quality assessment were authors&#8217; motivations to look at the existing solutions. In this review, widely used and well-known data resources were chosen, but the choice was not exhaustive.</p>
+<p>It has been well recognised that data quality inherently affects model development. With the increasing amount of varied toxicity data that comes from <em>in vivo -in vitro</em> studies, there is expected to be a boom in the number of predictive toxicity models. Datasets and models should not be considered in isolation. A more systematic and analytical metadata representation would help users to explore the relationships between datasets and models. This will lead to better management of information and knowledge captured from metadata and help users to choose the most appropriate model for a given task. For example, it would be interesting to investigate who has used which datasets previously and for what purpose, by analysing the captured information. As a result, the most predictive and popular models can be stored, managed and reused for future work. The most important aspect in this context is an extraction of relationships between a large number of objects (chemical compounds, datasets, models and users). This will lead to better management of information and knowledge captured from such predictive toxicology objects. Additionally, it will help the visualisation of the relationship among various objects and will support the utilisation of the existing information. Development of such a framework will support monitoring the model life cycle, automated model selection, chemical compound identification across various projects, and can lead to speeding up the process of chemical compound virtual screening.</p>
+<p>To achieve this, the following actions are foreseen:</p>
+<p>• Represent data and models as programmable objects and provide standards for their representations. Existing dataset and model representation schemas (e.g. ToxML, QSAR-ML and PMML) can be employed and extended.</p>
+<p>• Enable users to leave comments. In addition, each object (including dataset, model and user) can be associated with a wiki web link to keep notes and historical changes.</p>
+<p>• Introduce a score rating schema which will allow users to rate the overall quality and suitability of the datasets and models that they have used. The storage of such metadata (e.g. rating scores and comments) would help to reduce duplication of effort and provide suggestions for subsequent users.</p>
+<p>• Introduce a model version control system, which will allow models to be continuously updated whilst providing robust provenance of model predictions.</p>
+<p>The authors believe that applying data governance in building information warehouses will provide a good start for data and model quality control. The analytical measurement of object quality, object similarity and object relationships monitoring will make such a framework more trustworthy and transparent for users and regulatory bodies. Standards in data and model representation will allow for effective object categorisation and consistent supporting documentation. This will lead to easy access to high quality information. It will also reduce the cost of information management, and secure the use of available data. Designing and developing a novel data and model governance framework is an important piece of future work. The main idea is to provide a common formatting system for data generation, extraction, curation, model estimation and validation. This will involve extension and unification of existing solutions that are accepted by regulatory bodies, and introduction of new standards in predictive toxicology. It also opens a wide area for various interesting research questions such as data provenance tracking, data and model quality measurements and the capture of object relationships.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>XF proposed the described data governance framework and contributed to the data sources review and the drafting of the manuscript. AW participated in analysis for database review and helped to prepare the manuscript for this publication. DN and MR firstly proposed the concept of data and model governance. DN, MR and KT have been involved in the review discussions and participated in revising critically this manuscript and proof read the draft. All authors read and approved the final version of the manuscript.</p>
+</div>
+<div class="section" id="acknowledgements-and-funding">
+<h2>Acknowledgements and funding<a class="headerlink" href="#acknowledgements-and-funding" title="Permalink to this headline">¶</a></h2>
+<p>The authors would like to thank Syngenta Ltd for partly sponsoring the Knowledge Transfer Partnerships (KTP) Grant (No. 7596) for XF and BBSRC Industrial CASE Studentship Grant (No. BB/H530854/1) for AW. The authors are also grateful to the referees for their invaluable and insightful comments that have helped to improve this work.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id6">2</a>, <a class="fn-backref" href="#id12">3</a>)</em> On the governance of information: Introducing a new concept of governance to support the management of information</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id24">2</a>)</em> IBM Data Governance webpage</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Data Governance Institute</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[5]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id13">2</a>, <a class="fn-backref" href="#id16">3</a>, <a class="fn-backref" href="#id22">4</a>, <a class="fn-backref" href="#id25">5</a>)</em> Designing data governance</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[6]</a></td><td>REACH</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[7]</a></td><td>Summary of a workshop on regulatory acceptance of (Q)SARs for human health and environmental endpoints</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[8]</a></td><td>QSAR Applicability Domain Estimation by Projection of the Training Set in Descriptor Space: A Review</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[9]</td><td><em>(<a class="fn-backref" href="#id10">1</a>, <a class="fn-backref" href="#id77">2</a>, <a class="fn-backref" href="#id78">3</a>)</em> Collaborative development of predictive toxicology applications</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[10]</td><td><em>(<a class="fn-backref" href="#id11">1</a>, <a class="fn-backref" href="#id75">2</a>)</em> OpenTox</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[11]</td><td><em>(<a class="fn-backref" href="#id14">1</a>, <a class="fn-backref" href="#id18">2</a>)</em> The DGI Data Governance Framework</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[12]</a></td><td>A Model for Data Governance - Organising Accountabilities for Data Quality Management</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[13]</a></td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[14]</a></td><td>Chapter 4 Data Quality Assessment for In Silico Methods: A Survey of Approaches and Needs</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[15]</td><td><em>(<a class="fn-backref" href="#id20">1</a>, <a class="fn-backref" href="#id26">2</a>, <a class="fn-backref" href="#id28">3</a>)</em> NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[16]</a></td><td>Best Practices for QSAR Model Development, Validation, and Exploitation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[17]</a></td><td>Data Integration: A Theoretical Perspective</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[18]</td><td><em>(<a class="fn-backref" href="#id27">1</a>, <a class="fn-backref" href="#id29">2</a>, <a class="fn-backref" href="#id45">3</a>, <a class="fn-backref" href="#id58">4</a>, <a class="fn-backref" href="#id71">5</a>)</em> Public Databases Supporting Computational Toxicology</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[19]</td><td><em>(<a class="fn-backref" href="#id30">1</a>, <a class="fn-backref" href="#id47">2</a>, <a class="fn-backref" href="#id54">3</a>)</em> The Comparative Toxicogenomics Database: update 2011</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[20]</td><td><em>(<a class="fn-backref" href="#id31">1</a>, <a class="fn-backref" href="#id48">2</a>, <a class="fn-backref" href="#id55">3</a>)</em> Comparative Toxicogenomics Database: a knowledgebase and discovery tool for chemical-gene-disease networks</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[21]</a></td><td>Database development in toxicogenomics: issues and efforts</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[22]</td><td><em>(<a class="fn-backref" href="#id33">1</a>, <a class="fn-backref" href="#id39">2</a>)</em> ChemSpider: An Online Chemical Information Resource</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[23]</td><td><em>(<a class="fn-backref" href="#id34">1</a>, <a class="fn-backref" href="#id42">2</a>, <a class="fn-backref" href="#id44">3</a>)</em> Chemical Effects in Biological Systems: a public data repository integrating study design and toxicity data with microarray and proteomics dataCEBS</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[24]</a></td><td>Toxicogenomics and systems toxicology: aims and prospects</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id36">[25]</a></td><td>ChemSpider</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[26]</td><td><em>(<a class="fn-backref" href="#id37">1</a>, <a class="fn-backref" href="#id40">2</a>, <a class="fn-backref" href="#id60">3</a>)</em> PubChem</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id38">[27]</a></td><td>ChemSpider and Its Expanding Web: Building a Structure-Centric Community for Chemists</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id41">[28]</a></td><td>Chemical Entities of Biological</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id43">[29]</a></td><td>Toward a Checklist for Exchange and Interpretation of Data from a Toxicology Study</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id46">[30]</a></td><td>CEBS</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id49">[31]</a></td><td>The Comparative Toxicogenomics Database: A Cross-Species Resource for Building Chemical-Gene Interaction Networks</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[32]</td><td><em>(<a class="fn-backref" href="#id50">1</a>, <a class="fn-backref" href="#id53">2</a>)</em> Text mining and manual curation of chemical-gene-disease networks for the Comparative Toxicogenomics Database (CTD)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id51">[33]</a></td><td>Comparative Toxicogenomics Database</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b34" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id52">[34]</a></td><td>The Comparative Toxicogenomics Database (CTD)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b35" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[35]</td><td><em>(<a class="fn-backref" href="#id56">1</a>, <a class="fn-backref" href="#id57">2</a>, <a class="fn-backref" href="#id59">3</a>)</em> DSSTox</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b36" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id61">[36]</a></td><td>GEO</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b37" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[37]</td><td><em>(<a class="fn-backref" href="#id62">1</a>, <a class="fn-backref" href="#id65">2</a>)</em> In Vitro Screening of Environmental Chemicals for Targeted Testing Prioritization: The ToxCast Project</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b38" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id63">[38]</a></td><td>The ToxCast Program for Prioritizing Toxicity Testing of Environmental Chemicals</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b39" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[39]</td><td><em>(<a class="fn-backref" href="#id64">1</a>, <a class="fn-backref" href="#id66">2</a>, <a class="fn-backref" href="#id67">3</a>)</em> ToxCast</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b40" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id68">[40]</a></td><td>ToxRefDB</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b41" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id69">[41]</a></td><td>ToxCastDB</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b42" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[42]</td><td><em>(<a class="fn-backref" href="#id70">1</a>, <a class="fn-backref" href="#id72">2</a>, <a class="fn-backref" href="#id73">3</a>)</em> ACToR - Aggregated Computational Toxicology Resource. 2007 Toxicology and Risk Assessment Conference: Emerging Issues and Challenges in Risk Assessment - 2007 TRAC</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b43" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id74">[43]</a></td><td>The Toxicity Data Landscape for Environmental Chemicals</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b44" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id76">[44]</a></td><td>OECD principles for the validation, for regulatory purposes, of QSAR models</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Data governance in predictive toxicology: A review</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-governance-main-decision-domains">Data Governance: Main Decision Domains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#review-of-public-data-sources-supporting-predictive-toxicology">Review of Public Data Sources Supporting Predictive Toxicology</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#chemspider">ChemSpider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cebs">CEBS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cdt">CDT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dsstox">DSSTox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#toxcast">ToxCast</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#actor">ACToR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#opentox">OpenTox</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id79">Conclusions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements-and-funding">Acknowledgements and funding</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-23.html" title="4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening"
+             >previous</a> |
+          <a href="1758-2946-3-25.html" title="PubChem3D: Shape compatibility filtering using molecular shape quadrupoles"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-24.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

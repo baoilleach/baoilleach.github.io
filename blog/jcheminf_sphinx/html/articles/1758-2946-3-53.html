@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MyChemise: A 2D drawing program that uses morphing for visualisation purposes &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="New developments on the cheminformatics open workflow environment CDK-Taverna" href="1758-2946-3-54.html" />
+    <link rel="prev" title="Automated annotation of chemical names in the literature with tunable accuracy" href="1758-2946-3-52.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-52.html" title="Automated annotation of chemical names in the literature with tunable accuracy"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-54.html" title="New developments on the cheminformatics open workflow environment CDK-Taverna"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mychemise-a-2d-drawing-program-that-uses-morphing-for-visualisation-purposes">
+<h1>MyChemise: A 2D drawing program that uses morphing for visualisation purposes<a class="headerlink" href="#mychemise-a-2d-drawing-program-that-uses-morphing-for-visualisation-purposes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>MyChemise (My Chemical Structure Editor) is a new 2D structure editor. It is designed as a Java applet that enables the direct creation of structures in the Internet using a web browser. MyChemise saves files in a digital format (.cse) and the import and export of .mol files using the appropriate connection tables is also possible.</p>
+<p>MyChemise is available as a free online version in English and German. The MyChemise GUI is designed to be user friendly and can be used intuitively. There is also an English and German program description available as a PDF file.</p>
+<p>In addition to the known ways of drawing chemical structure formulas, there are also parts implemented in the program that allow the creation of different types of presentation. The morphing module uses this technology as a component for dynamic visualisation. For example, it enables a clear and simple illustration of molecule vibrations and reaction sequences.</p>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>2D drawing programs account for some of the first computer applications in chemistry and are widely distributed. Many publications, especially in recent times <a class="footnote-reference" href="#b1" id="id1">[1]</a><a class="footnote-reference" href="#b2" id="id2">[2]</a><a class="footnote-reference" href="#b3" id="id3">[3]</a>, show that this sector is developing continually. The incorporation of new programming languages or improvements in methods for targeted structure searching in the Web continues to present a challenge for chemists who are interested in programming.</p>
+<p>Having been given the option at work of setting up a new database with conventional structural images, the author asked himself the question how he could get hold of these images. Four options were considered:</p>
+<ol class="arabic simple">
+<li>To anchor the images using a link into the Web (e.g. using CAS-numbers).</li>
+<li>Copy the structural images from a source in the Web.</li>
+<li>Use a program already available on the market for drawing.</li>
+<li>Develop a program oneself.</li>
+</ol>
+<p>The first two options can be ruled out because not all the compounds entered were available as finished structures. Additionally, the structural images should look standardised if they are to be used as a marketing instrument for customer relations. Obtaining the images from different sources would have been unsatisfactory because the sizes and types of representations vary greatly. Known drawing programs would have been useable; however the drawings would have still required subsequent work in order to achieve a company specific layout. Therefore the fourth option seemed most sensible and the most interesting.</p>
+<p>MyChemise was written with the intention of producing a stand-alone approach in this field and because of the fun in programming chemistry software. The Version 11.01 presented here was created as sideline work in the period between January 2008 and March 2011.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>MyChemise is a modern scientific online 2D drawing program for chemical structural image. It was programmed in Java and runs as an applet in any browser that has an up-to-date Java plug-in (see <a class="reference external" href="http://www.java.com/en/download/installed.jsp">http://www.java.com/en/download/installed.jsp</a> to check if one is available). MyChemise can be opened as the English version <a class="reference external" href="http://www.knalltundstinkt.de/MyChemise_englisch/ChemiseZert_Home.html">http://www.knalltundstinkt.de/MyChemise_englisch/ChemiseZert_Home.html</a>. If MyChemise is not running it is possibly necessary to activate javascript and/or to reduce the security settings of the browser. A program description is available as a PDF file <a class="reference external" href="http://www.knalltundstinkt.de/MyChemise_englisch/Description.pdf">http://www.knalltundstinkt.de/MyChemise_englisch/Description.pdf</a> and additional file <a class="footnote-reference" href="#b4" id="id4">[4]</a> including appropriate instructions. From here you can always open the latest version. One advantage of this online technology is that any subsequent program enhancements do not need to be downloaded and there is even no need for a new installation to be carried out because the latest MyChemise version is always available online.</p>
+<p>Additional file 1</p>
+<p><strong>Description</strong>. The software description of MyChemise describes and presents the menu items. Well-known commands from standard-software (save, open etc.) or self-explanatory commands are not included.</p>
+<p>Click here for file</p>
+<p>The readers of this article can also download a zip-file (additional file</p>
+<p>Additional file 2</p>
+<p><strong>mychemise</strong>. It contains two files (MyChemise.html and ChemJar.jar). It can be downloaded and installed for running MyChemise in the off-line mode, too.</p>
+<p>Click here for file</p>
+<p>MyChemise is a signed applet, which means that it does not have to obey the applet sandbox principle intended for security purposes. It is possible to work online in the browser and once the work is finished to save the files on your own PC. This means that drawings can be directly exported as image files into other applications using the clipboard (Note for Linux users: see program description).</p>
+<p>The (theoretical) possible number of atoms that can be drawn in a file in MyChemise was set to 100000.</p>
+<p>MyChemise is optimized for Windows platforms with Firefox as browser. The minimum system requirements are a 1.6 GHz processor and 2 GB of RAM.</p>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>Results and discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<p>The input screen (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>) shows the most important commands, relevant menu items and toolbars in a clear way. This means that the screen is not overloaded with symbols belonging to windows program technology, only those toolbars that belong to the menu items that have just been opened are made visible.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-53-1.jpg" src="../_images/1758-2946-3-53-1.jpg" />
+<p class="caption">Figure 1. Input screen</p>
+<div class="legend">
+<strong>Input screen</strong>. It shows the menu items and the file-toolbar.</div>
+</div>
+<p>All atoms and bonds can be coloured. This allows aesthetically pleasing structural images to be easily created. Formulae can be represented in long form (with C- and H atoms labelled) and in short form. Many different bond types are available for selection. Cyclic hydrocarbons and aromatics can be quickly designed from a pull-down menu. Different 6-ring conformations can be constructed in the same way. Heterocyclics can be created by simply replacing the C atoms. Bond angles and lengths can be continuously adjusted by dragging the mouse or fit to the grid. Preset molecular geometries (tetrahedral, octahedral, etc.) make drawing easier. Newman projections are also possible.</p>
+<p>Atoms can be shown with symbolised atomic shells (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>), which can be separately shaped.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-53-2.jpg" src="../_images/1758-2946-3-53-2.jpg" />
+<p class="caption">Figure 2. Structural image with atomic shells</p>
+<div class="legend">
+<strong>Structural image with atomic shells</strong>. Atomic shells can be rendered with colour gradients.</div>
+</div>
+<p>A diverse range of drawing components (arrows, brackets, shapes) can be created using a dialog window (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>). Using club and banana basic shapes orbitals can be symbolically represented. The switching on of colour gradients increases this impression.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-53-3.jpg" src="../_images/1758-2946-3-53-3.jpg" />
+<p class="caption">Figure 3. Dialog window of drawing components</p>
+<div class="legend">
+<strong>Dialog window of drawing components</strong>. A choice of shapes can be added to the sketch area. Some of them are useful to symbolize orbitals.</div>
+</div>
+<p>If you want to give the structural images an individual style, then you can insert a background image into the drawing area which can be modified using a dialog window (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a> and <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>). A company logo (example of use see: <a class="footnote-reference" href="#b5" id="id5">[5]</a>) can be used as a marketing instrument to increase corporate identity (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>).</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-53-4.jpg" src="../_images/1758-2946-3-53-4.jpg" />
+<p class="caption">Figure 4. Dialog window for the background</p>
+<div class="legend">
+<strong>Dialog window for the background</strong>. It allows you to modify background images in several ways. Watermarks can be generated by increasing the brightness.</div>
+</div>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-53-5.jpg" src="../_images/1758-2946-3-53-5.jpg" />
+<p class="caption">Figure 5. Example for a chemical depiction with a background image</p>
+<div class="legend">
+<strong>Example for a chemical depiction with a background image</strong>. The background image can be used as drawing surface.</div>
+</div>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-53-6.jpg" src="../_images/1758-2946-3-53-6.jpg" />
+<p class="caption">Figure 6. Structural images with a company logo</p>
+<div class="legend">
+<strong>Structural images with a company logo</strong>. Chemical depictions with equal company logo can be used as a marketing instrument to increase corporate identity.</div>
+</div>
+<p>Single rows of text can be entered using the atom input box. A special editor (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>) is available for multiple rows of text. You can also use the editor to directly help you create short chemical-specific text in MyChemise, without the need for an extra writing program. This makes work easier and can help to save time, and therefore costs.</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-53-7.jpg" src="../_images/1758-2946-3-53-7.jpg" />
+<p class="caption">Figure 7. The text editor</p>
+<div class="legend">
+<strong>The text editor</strong>. With the text editor multiple rows of text can be formatted and added to the sketch area. Rotated text is only shown there.</div>
+</div>
+<p>A selection of special characters can be opened using a dialog window (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a>). Individual characters can be inserted into the editor or the atom input box by copying and pasting.</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-53-8.jpg" src="../_images/1758-2946-3-53-8.jpg" />
+<p class="caption">Figure 8. Dialog window for special characters</p>
+<div class="legend">
+<strong>Dialog window for special characters</strong>. A selection of often used symbols.</div>
+</div>
+<p>Atomic symbols are also shown with their atomic and mass numbers (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a>).</p>
+<div class="figure align-center" id="figure-9">
+<img alt="../_images/1758-2946-3-53-9.jpg" src="../_images/1758-2946-3-53-9.jpg" />
+<p class="caption">Figure 9. Atomic symbols</p>
+<div class="legend">
+<strong>Atomic symbols</strong>. Atomic symbols can be pasted with their atomic and mass numbers or without.</div>
+</div>
+<div class="section" id="file-import-and-export">
+<h3>File import and export<a class="headerlink" href="#file-import-and-export" title="Permalink to this headline">¶</a></h3>
+<p>The mol file format <a class="footnote-reference" href="#b6" id="id6">[6]</a><a class="footnote-reference" href="#b7" id="id7">[7]</a>, version V2000 was chosen as an interface so that MyChemise can also exchange files with similar programs. Mol files can be opened in the MyChemise screen and can be saved in mol format. In addition, mol files can be inserted just by a single click of the mouse into cse files and can also be attached onto existing structures. When doing this, the atom farthest to the left is always used as the coupling atom (atom with the smallest x-coordinate).</p>
+<p>The export function does not automatically limit the number of atoms and bonds that are to be exported. MyChemise allows the input of a large number of atoms, whilst mol files are setup for a maximum of 999 atoms and 999 bonds, this means that every user must ensure for themselves that when creating files they make them compatible with other programs.</p>
+</div>
+<div class="section" id="specials">
+<h3>Specials<a class="headerlink" href="#specials" title="Permalink to this headline">¶</a></h3>
+<p>A special highlight in MyChemise is the option of presenting any created drawings, structural images and texts in different ways; this can be done directly in the program itself. One of the options available allows you to put together different documents into a script in order to present a slide show. Another option exists that, for example, can arrange the fluctuating border structures of chemical depictions into an animation. Such animations can of course be integrated into a script. Morphing as a means of teaching chemistry/science has up until now been used very little. MyChemise offers you morphing as method of presentation.</p>
+</div>
+<div class="section" id="the-morphing-module">
+<h3>The morphing module<a class="headerlink" href="#the-morphing-module" title="Permalink to this headline">¶</a></h3>
+<p>When morphing is carried out, two images are brought together. This involves allocating those areas of the images with each other that are to be transformed. Changes are made in steps and apply to both shape and colour. Intermediate steps are interpolated from the starting images, whereby the share of one image reduces in dimensions while the dimensions of the other image increase <a class="footnote-reference" href="#b8" id="id8">[8]</a>. Using MyChemise, images can be morphed using affine or three-point mapping (i.e. division into triangular sections, affine mapping) and by dividing up into square areas. Four-point mapping (projective mapping) is mathematically solved using the unit squares method <a class="footnote-reference" href="#b8" id="id9">[8]</a>.</p>
+<p>When illustrating chemical states, it is sometimes more useful to transform only specific areas into each other. MyChemise achieves this by automatically recognising only the bonding and atom areas in the structural images used as being areas to be morphed. As soon as only two drawings have been made, dynamic representations can then be quickly produced by calculating the intermediate steps. These allow movements (e.g. molecular vibrations) and sequences (e.g. reaction mechanisms) to be graphically simulated.</p>
+<p>The menu item Extras enables you to upload various, simple morphing examples in the on-line mode (Figures <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>, <a class="reference internal" href="1758-2946-3-45.html#figure-11"><em>11</em></a>, <a class="reference internal" href="1758-2946-3-45.html#figure-12"><em>12</em></a>). The Morphing window then opens and they can be started from within the Morphing menu item. The process behaviour can be changed in the morphing set-up dialog box. Several morphing steps can be combined to a sequence (Figure <a class="reference internal" href="1758-2946-3-39.html#figure-13"><em>13</em></a>).</p>
+<div class="figure align-center" id="figure-10">
+<img alt="../_images/1758-2946-3-53-10.jpg" src="../_images/1758-2946-3-53-10.jpg" />
+<p class="caption">Figure 10. Example Morph 1</p>
+<div class="legend">
+<strong>Example Morph 1</strong>. The morphing window shows an example of molecule vibrations (symmetrical stretching).</div>
+</div>
+<div class="figure align-center" id="figure-11">
+<img alt="../_images/1758-2946-3-53-11.jpg" src="../_images/1758-2946-3-53-11.jpg" />
+<p class="caption">Figure 11. Example Morph 2</p>
+<div class="legend">
+<strong>Example Morph 2</strong>. The morphing window shows an example of molecule vibrations (asymmetrical stretching).</div>
+</div>
+<div class="figure align-center" id="figure-12">
+<img alt="../_images/1758-2946-3-53-12.jpg" src="../_images/1758-2946-3-53-12.jpg" />
+<p class="caption">Figure 12. Example Morph 3</p>
+<div class="legend">
+<strong>Example Morph 3</strong>. The morphing window shows an example of molecule vibrations (scissoring).</div>
+</div>
+<div class="figure align-center" id="figure-13">
+<img alt="../_images/1758-2946-3-53-13.jpg" src="../_images/1758-2946-3-53-13.jpg" />
+<p class="caption">Figure 13. A SN2-reaction as an example for a morphing sequence</p>
+<div class="legend">
+<strong>A SN2-reaction as an example for a morphing sequence</strong>. Reaction sequences can be visualized by combining two or more morphing steps.</div>
+</div>
+</div>
+</div>
+<div class="section" id="conclusions">
+<h2>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h2>
+<p>MyChemise is a new 2D drawing program that places special importance on simple operation and versatile ways of creating structural images. Continual advancements in processors have led to increasingly faster desktop PCs. Greater amounts of RAM have also enabled the inclusion of methods for displaying dynamic processes in such programs, in this case the morphing module.</p>
+<p>An enhancement for MyChemise is currently being worked on, which will, amongst other things, be able to export SMILES strings <a class="footnote-reference" href="#b9" id="id10">[9]</a> that can be used for structure searching in databases.</p>
+<p>The continuation of MyChemise as an open source project has been planned for a later date.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The author declares that they have no competing interests.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>Devoted to Andreas Schumann and Hans Wilhelm.</p>
+<p>I would like to thank Ingrid for providing specialised literature (and not only this). Daniel receives thanks for his support in setting up the homepage. MyChemise was written using free available java editor JOE <a class="footnote-reference" href="#b10" id="id11">[10]</a>. SignTool <a class="footnote-reference" href="#b11" id="id12">[11]</a> was very useful for signing the applets.</p>
+<div class="section" id="list-of-sources">
+<h3>List of sources<a class="headerlink" href="#list-of-sources" title="Permalink to this headline">¶</a></h3>
+<p>Parts of the following program codes were adapted for and extended for MyChemise:</p>
+<p>For the preview window in the File- &gt; Open menu: PreviewPanel.java <a class="reference external" href="http://www.quignon.de">http://www.quignon.de</a> accessed 11/22/2011</p>
+<p>For the morphing module: TriangulatedImage.java and MorphingCandS.java from [#B12]_`&lt;<a class="reference external" href="http://public.rz.fh-wolfenbuettel.de/~Klawonn/computergrafik/">http://public.rz.fh-wolfenbuettel.de/~Klawonn/computergrafik/</a>&gt;`_ accessed 11/22/2011</p>
+<p>For displaying round colour gradients: RoundGradientContext.java from [#B13]_`&lt;<a class="reference external" href="ftp://ftp.oreilly.com/pub/examples/java/2d/">ftp://ftp.oreilly.com/pub/examples/java/2d/</a>&gt;`_ accessed 11/22/2011</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Molecular structure input on the web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>FlaME: Flash Molecular Editor - a 2D structure input tool for the web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Open Source: Strukturen zeichnen</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Knalltundstinkt</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>WST-Winkel GmbH</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[7]</a></td><td>CTfile Formats</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[8]</td><td><em>(<a class="fn-backref" href="#id8">1</a>, <a class="fn-backref" href="#id9">2</a>)</em> NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[9]</a></td><td>SMILES, a chemical language and information system. 1. Introduction to methodology and encoding rules</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[10]</a></td><td>JOE</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[11]</a></td><td>SignTool</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[12]</td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[13]</td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">Results and discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#file-import-and-export">File import and export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#specials">Specials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-morphing-module">The morphing module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#list-of-sources">List of sources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-52.html" title="Automated annotation of chemical names in the literature with tunable accuracy"
+             >previous</a> |
+          <a href="1758-2946-3-54.html" title="New developments on the cheminformatics open workflow environment CDK-Taverna"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-53.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

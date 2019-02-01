@@ -1,0 +1,618 @@
+Open Babel: An open chemical toolbox
+====================================
+
+Abstract
+********
+
+Background
+^^^^^^^^^^
+
+A frequent problem in computational modeling is the interconversion of chemical structures between different formats. While standard interchange formats exist (for example, Chemical Markup Language) and *de facto* standards have arisen (for example, SMILES format), the need to interconvert formats is a continuing problem due to the multitude of different application areas for chemistry data, differences in the data stored by different formats (0D versus 3D, for example), and competition between software along with a lack of vendor-neutral formats.
+
+Results
+^^^^^^^
+
+We discuss, for the first time, Open Babel, an open-source chemical toolbox that speaks the many languages of chemical data. Open Babel version 2.3 interconverts over 110 formats. The need to represent such a wide variety of chemical and molecular data requires a library that implements a wide range of cheminformatics algorithms, from partial charge assignment and aromaticity detection, to bond order perception and canonicalization. We detail the implementation of Open Babel, describe key advances in the 2.3 release, and outline a variety of uses both in terms of software products and scientific research, including applications far beyond simple format interconversion.
+
+Conclusions
+^^^^^^^^^^^
+
+Open Babel presents a solution to the proliferation of multiple chemical file formats. In addition, it provides a variety of useful utilities from conformer searching and 2D depiction, to filtering, batch conversion, and substructure and similarity searching. For developers, it can be used as a programming library to handle chemical data in areas such as organic chemistry, drug design, materials science, and computational chemistry. It is freely available under an open-source license from `<http://openbabel.org>`_.
+
+Introduction
+************
+
+The history of chemical informatics has included a huge variety of textual and computer representations of molecular data. Such representations focus on specific atomic or molecular information and may not attempt to store all possible chemical data. For example, line notations like Daylight SMILES \ [#B1]_ do not offer coordinate information, while crystallographic or quantum mechanical formats frequently do not store chemical bonding data. Hydrogen atoms are frequently omitted from x-ray crystallography due to the difficulty in establishing coordinates, and are often ignored by some file formats as the "implicit valence" of heavy atoms that indicates their presence. Other types of representations require specification of atom types on the basis of a specific valence bond model, inclusion of computed partial charges, indication of biomolecular residues, or multiple conformations.
+
+While attempts have been made to provide a standard format for storing chemical data, including most notably the development of Chemical Markup Language (CML) \ [#B2]_\ [#B3]_\ [#B4]_\ [#B5]_\ [#B6]_, an XML dialect, such formats have not yet achieved widespread use. Consequently, a frequent problem in computational modeling is the interconversion of molecular structures between different formats, a process that involves extraction and interpretation of their chemical data and semantics.
+
+We outline for the first time, the development and use of the Open Babel project, a full-featured open chemical toolbox, designed to "speak" the many different representations of chemical data. It allows anyone to search, convert, analyze, or store data from molecular modeling, chemistry, solid-state materials, biochemistry, or related areas. It provides both ready-to-use programs as well as a complete, extensible programmer's toolkit for developing cheminformatics software. It can handle reading, writing, and interconverting over 110 chemical file formats, supports filtering and searching molecule files using Daylight SMARTS pattern matching \ [#B7]_ and other methods, and provides extensible fingerprinting and molecular mechanics frameworks. We will discuss the frameworks for file format interconversion, fingerprinting, fast molecular searching, bond perception and atom typing, canonical numbering of molecular structures and fragments, molecular mechanics force fields, and the extensible interfaces provided by the software library to enable further chemistry software development.
+
+Open Babel has its origin in a version of OELib released as open-source software by OpenEye Scientific under the GPL (GNU Public License). In 2001, OpenEye decided to rewrite OELib in-house as the proprietary OEChem library, so the existing code from OELib was spun out into the new Open Babel project. Since 2001, Open Babel has been developed and substantially extended as an international collaborative project using an open-source development model \ [#B8]_. It has over 160,000 downloads, over 400 citations \ [#B9]_, is used by over 40 software projects \ [#B10]_, and is freely available from the Open Babel website \ [#B11]_.
+
+Features
+********
+
+File Format Support
+^^^^^^^^^^^^^^^^^^^
+
+With the release of Open Babel 2.3, Open Babel supports 111 chemical file formats in total. It can read 82 formats and write 85 formats. These encompass common formats used in cheminformatics (SMILES, InChI, MOL, MOL2), input and output files from a variety of computational chemistry packages (GAMESS, Gaussian, MOPAC), crystallographic file formats (CIF, ShelX), reaction formats (MDL RXN), file formats used by molecular dynamics and docking packages (AutoDock, Amber), formats used by 2D drawing packages (ChemDraw), 3D viewers (Chem3D, Molden) and chemical kinetics and thermodynamics (ChemKin, Thermo). Formats are implemented as "plugins" in Open Babel, which makes it easy for users to contribute new file formats (see Extensible Interface below). Depending on the format, other data is extracted by Open Babel in addition to the molecular structure; for example, vibrational frequencies are extracted from computational chemistry log files, unit cell information is extracted from CIF files, and property fields are read from SDF files.
+
+A number of "utility" file formats are also defined; these are not strictly speaking a way of storing the molecular structure, but rather present certain functionality through the same interface as the regular file formats. For example, the *report format* is a write-only utility format \ [#B12]_ that presents a summary of the molecular structure of a molecule; the *fingerprint format* \ [#B13]_ and *fastsearch format* \ [#B14]_ are used for similarity and substructure searching (see below); the *MolPrint2D* and *Multilevel Neighborhoods of Atoms* formats calculate circular fingerprints defined by Bender *et al.* \ [#B15]_\ [#B16]_ and Filimonov *et al.* \ [#B17]_\ [#B18]_ respectively.
+
+Each format can have multiple options to control either reading or writing a particular format. For example, the InChI format has 12 options including an option "K" to generate an InChIKey, "T <param>" to truncate the InChI depending on a supplied parameter and "w" to ignore certain InChI warnings. The available options are listed in the documentation, are shown in the Graphical User Interface (GUI) as checkboxes or textboxes, and can be listed at the command-line. In fact, all three are generated from the same source; a documentation string in the C++ code.
+
+Fingerprints and Fast Searching
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Databases are widely used to store chemical information especially in the pharmaceutical industry. A key requirement of such a database is the ability to index chemical structures so that they can be quickly retrieved given a query substructure. Open Babel provides this functionality using a path-based fingerprint. This fingerprint, referred to as *FP2* in Open Babel, identifies all linear and ring substructures in the molecule of lengths 1 to 7 (excluding the 1-atom substructures C and N) and maps them onto a bit-string of length 1024 using a hash function. If a query molecule is a substructure of a target molecule, then all of the bits set in the query molecule will also be set in the target molecule. The fingerprints for two molecules can also be used to calculate structural similarity using the Tanimoto coefficient, the number of bits in common divided by the union of the bits set.
+
+Clearly, repeated searching of the same set of molecules will involve repeated use of the same set of fingerprints. To avoid the need to recalculate the fingerprints for a particular multi-molecule file (such as an SDF file), Open Babel provides a *fastindex* format that solely stores a fingerprint along with an index into the original file. This index leads to a rapid increase in the speed of searching for matches to a query - datasets with several million molecules are easily searched interactively. In this way, a multi-molecule file may be used as a lightweight alternative to a chemical database system.
+
+Bond Perception and Atom Typing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As mentioned above, many chemical file formats offer representations of molecular data solely as lists of atoms. For example, most quantum chemical software packages and most crystallographic file formats do not offer definitions of bonding. A similar situation occurs in the case of the Protein Data Bank (PDB) format; while standardized \ [#B19]_ files contain connectivity information, non-standard files exist that often do not provide full connectivity information. Consequently, Open Babel features methods to determine bond connectivity, bond order perception, aromaticity determination, and atom typing.
+
+Bond connectivity is determined by the frequently used algorithm of detecting atoms closer than the sum of their covalent radii, with a slight tolerance (0.45 \ |nonascii_1|\ ) to allow for longer than typical bonds. To handle disorder in crystallographic data (e.g., PDB or CIF files), atoms closer than 0.63 \ |nonascii_2|\  are not bonded. A further filtering pass is made to ensure standard bond valency is maintained; each element has a maximum number of bonds, if this is exceeded then the longest bonds to an atom are successively removed until the valence rule is fulfilled.
+
+After bond connectivity is determined, if needed or requested by the user, bond order perception is performed on the basis of bond angles and geometries. The method is similar to that proposed by Roger Sayle \ [#B20]_ and uses the average bond angle around an un-typed atom to determine sp and sp\ :sup:`2`\  hybridized centers. 5-membered and 6-membered rings are checked for planarity to estimate aromaticity. Finally, atoms marked as unsaturated are checked for an unsaturated neighbor to give a double or triple bond. After this initial atom typing, known functional groups are matched, followed by aromatic rings, followed by remaining unsatisfied bonds based on a set of heuristics for short bonds, atomic electronegativity, and ring membership.
+
+Atom typing is performed by "lazy evaluation," matching atoms against SMARTS patterns to determine hybridization, implicit valence, and external atom types. Atom type perception may be triggered by adding hydrogens (which requires determination of implicit and explicit valence), exporting to a file format that requires atom types, or as requested by the user. To minimize the amount of typing required, when importing from a format with atom types specified, a lookup table is used to translate between equivalent types.
+
+An important part of atom typing is aromaticity detection and assignment of Kekul\ |nonascii_3|\  bond orders (kekulization). In Open Babel, a central aromaticity model is used, largely matching the commonly used Daylight SMILES representation \ [#B1]_, but with added support for aromatic phosphorous and selenium. Potential aromatic atoms and bonds are flagged on the basis of membership in a ring system possibly containing 4n+2 \ |nonascii_4|\  electrons. Aromaticity is established only if a well-defined valence bond Kekul\ |nonascii_5|\  pattern can be determined. To do this, atoms are added to a ring system and checked against the 4n+2 \ |nonascii_6|\  electron configuration, gradually increasing the size to establish the largest possible connected aromatic ring system. Once this ring system is determined, an exhaustive search is performed to assign single and double bonds to satisfy all valences in a Kekul\ |nonascii_7|\  form. Since this process is exponential in complexity, the algorithm will terminate if more than 30 levels of recursion or 15 seconds are exceeded (which may occur in the case of large fused ring systems such as carbon nanotubes).
+
+Canonical Representation of Molecules
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In general, for any particular molecular structure and file format, there are a large number of possible ways the structure could be stored; for example, there are N! ways of ordering the atoms in an MOL file. While each of the orderings encodes exactly the same information, it can be useful to define a canonical numbering of the atoms of a molecule and use this to derive a canonical representation of a molecule for a particular file format. For a zero-dimensional file format without coordinates, such as SMILES, the canonical representation could be used to index a database, remove duplicates or search for matches.
+
+Open Babel implements a sophisticated canonicalization algorithm that can handle molecules or molecular fragments. The atom symmetry classes are the initial graph invariants and encode topological and chemical properties. A cooperative labeling procedure is used to investigate the automorphic permutations to find the canonical code. Although the algorithm is similar to the original Morgan canonical code \ [#B21]_, various improvements are implemented to improve performance. Most notably, the algorithm implements heuristics from the popular nauty package \ [#B22]_\ [#B23]_. Another aspect handled by the canonical code is stereochemistry as different labelings can lead to different parities. This is further complicated by the possibility of symmetry-equivalent stereocenters and stereocenters whose configuration is interdependent. The full details will be the subject of a separate publication.
+
+Coordinate Generation in 2D and 3D
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Open Babel, version 2.3, has support for 2D coordinate generation (Figure \ :ref:`1<figure_1>`) through the donation of code by Sergei Trepalin, based on the code used in the MCDL chemical structure editor \ [#B24]_\ [#B25]_\ [#B26]_. The MCDL algorithm aims to layout the molecular structure in 2D such that all bond lengths are equal and all bond angles are close to 120\ |nonascii_8|\ . The layout algorithm includes a small database of around 150 templates to help layout cages and large fragment cycles. To deal with the problem of overlapping fragments, the algorithm includes an exhaustive search procedure that rotates around acyclic bonds by 180\ |nonascii_9|\ .
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-33-1.jpg
+   :align: center
+
+   Figure 1. Interconversion of 0D, 2D and 3D structures
+
+   **Interconversion of 0D, 2D and 3D structures**. The structures shown are of sertraline, a selective serotonin reuptake inhibitor (SSRI) used in the treatment of depression. A SMILES string for sertraline is shown at the top; this can be considered a 0D structure (only connectivity and stereochemical information). From this, Open Babel can generate a 2D structure (bottom left, depicted by Open Babel) or a 3D structure (bottom right, depicted by Avogadro), and all of these can be interconverted.
+
+
+Coordinate generation in 3D was introduced in Open Babel version 2.2, and improved in version 2.3, to enable conversion from 0D formats such as SMILES to 3D formats such as SDF (Figure \ :ref:`1<figure_1>`). The 3D structure generator builds linear components from scratch following geometrical rules based on the hybridization of the atoms. Single-conformer ring templates are used for ring systems. The template matching algorithm iterates through the templates from largest to smallest searching for matches. If a match is found, the algorithm continues but will not match any ring atoms previously templated except in the case of a single overlap (the two ring systems of a spiro group) or an overlap involving exactly two adjacent atoms (two fused ring systems). After an initial structure is generated, the stereochemistry (cis/trans and tetrahedral) is corrected to match the input structure. Finally, the energy of the structure is minimized using the MMFF94 forcefield \ [#B27]_\ [#B28]_\ [#B29]_\ [#B30]_\ [#B31]_ and a low energy conformer found using a weighted rotor search.
+
+While the 3D structure builder produces reasonable conformations for molecules without rings or with ring systems for which a template exists, the results may be poor for molecules with more complex ring systems or organometallic species. Future work will be performed to compare the results of Open Babel with other programs with respect to both speed and the quality of the generated structures \ [#B32]_.
+
+Stereochemistry
+^^^^^^^^^^^^^^^
+
+A recent focus of Open Babel development has been to ensure robust translation of stereochemical information between file formats. This is particularly important when dealing with 0D formats as these explicitly encode the perceived stereochemistry. Open Babel 2.3 includes classes to handle cis/trans double bond stereochemistry, tetrahedral stereochemistry and square-planar stereochemistry (this last is still under development), as well as perception routines for 2D and 3D geometries, and routines to query and alter the stereochemistry.
+
+The detection of stereogenic units starts with an analysis of the graph symmetry of the molecule to identify the symmetry class of each atom. However, given that a complete symmetry analysis also needs to take stereochemistry into account, this means that the overall stereochemistry can only be found iteratively. At each iteration, the current atom symmetry classes are used to identify stereogenic units. For example, a tetrahedral center is identified as chiral if it has four neighbors with different symmetry classes (or three, in the case where a lone pair gives rise to the tetrahedral shape).
+
+Forcefields
+^^^^^^^^^^^
+
+Molecular mechanics functions are provided for use with small molecules. Typical applications include energy evaluation or minimization, alone or as part of a larger workflow. The selection of implemented force fields allows most molecular structures to be used and parameters to be assigned automatically. The MMFF94(s) force field can be used for organic or drug-like molecules \ [#B27]_\ [#B28]_\ [#B29]_\ [#B30]_\ [#B31]_. For molecules containing any element of the periodic table or complex geometry (i.e. not supported by MMFF94), the UFF force field can be used instead \ [#B33]_. Recently, code implementing the GAFF force field \ [#B34]_\ [#B35]_ was also contributed and released as part of version 2.3. All of the forcefields allow the application of constraints on particular atom positions, or particular distances.
+
+Several conformer searching methods have been implemented using the forcefields, all based on the "torsion-driving" approach. This approach involves setting torsion angles from a set of predefined allowed values for a particular rotatable bond. The most thorough search method implemented is a systematic search method, which iterates over all of the allowed torsion angles for each rotatable bond in the molecule and retains the conformer with the lowest energy. Since a systematic search may not be feasible for a molecule with multiple rotatable bonds, a number of stochastic search methods are also available: the random search method, which tries random settings for the torsion angles (from the predefined allowed values), and a weighted rotor search, a stochastic search method that converges on a low energy conformer by weighting particular torsion angles based on the relative energy of the generated conformer. With Open Babel 2.3, conformer search based on a genetic algorithm is also available which allows the application of filters (e.g. a diversity filter) and different scoring functions. This latter method can be used to generate a library of diverse conformers, or like the other methods to seek a low energy conformer \ [#B36]_.
+
+Implementation
+**************
+
+Technical Details
+^^^^^^^^^^^^^^^^^
+
+Open Babel is implemented in standards-compliant C++. This ensures support for a wide variety of C++ compilers (MSVC, GCC, Intel Compiler, MinGW, Clang), operating systems (Windows, Mac OS X, Linux, BSD, Windows/Cygwin) and platforms (32-bit, 64-bit). Since version 2.3, it is compiled using the CMake build system \ [#B37]_\ [#B38]_. This is an open-source cross-platform build system with advanced features for dependency analysis. The build system has an associated unit test framework CTest, which allows nightly builds to be compiled and tested automatically with the results collated and displayed on a centralized dashboard \ [#B39]_.
+
+To simplify installation Open Babel has as few external dependencies as possible. Where such dependencies exist, they are optional. For example, if the XML development libraries are not available, Open Babel will still compile successfully but none of the XML formats (such as Chemical Markup Language, CML) will be available. Similarly, if the Eigen matrix and linear algebra library is not found, any classes that require fast matrix manipulation (such as OBAlign, which performs least squares alignment) will not be compiled.
+
+While the majority of the Open Babel library is written in C++, bindings have been developed for a range of other programming languages, including Java and the .NET platform, as well as the so-called "dynamic" scripting languages Perl, Python, and Ruby. These are automatically generated from the C++ header files using the SWIG tool. As described previously \ [#B40]_, in the case of Python an additional module is provided named Pybel that simplifies access to the C++ bindings. These interfaces facilitate development of web-enabled chemistry applications, as well as rapid development and prototyping.
+
+Code Architecture
+^^^^^^^^^^^^^^^^^
+
+The Open Babel codebase has a modular design as shown in Figure \ :ref:`2<figure_2>`. The goal of this design is threefold:
+
+.. _figure_2:
+
+.. figure:: ../_static/1758-2946-3-33-2.jpg
+   :align: center
+
+   Figure 2. Architecture of the Open Babel codebase
+
+   **Architecture of the Open Babel codebase**.
+
+
+1. To separate the chemistry, the conversion process and the user interfaces reducing, as far as possible, the dependency of one upon another.
+
+2. To put all of the code for each chemical format in one place (usually a single file) and make the addition of new formats simple.
+
+3. To allow the format conversion of not just molecules, but also any other chemical objects, such as reactions.
+
+The code base can be considered as consisting of the following modules (Figure \ :ref:`2<figure_2>`):
+
+\ |nonascii_10|\  The Chemical Core, which contains OBMol etc. and has all of the chemical structure description and manipulation. This is the heart of the application and its API can be used as a chemical toolbox. It has no input/output capabilities.
+
+\ |nonascii_11|\  The Formats, which read and write to files of different types. These classes are derived from a common base class, OBFormat, which is in the Conversion Control module. They also make use of the chemical routines in the Chemical Core module. Each format file contains a global object of the format class. When the format is loaded the class constructor registers the presence of the class with OBConversion. This means that the formats are plugins - new formats can be added without changing any framework code.
+
+\ |nonascii_12|\  Common Formats include OBMoleculeFormat and XMLBaseFormat from which most other formats (like Format A and Format B in the diagram) are derived. Independent formats like Format C are also possible.
+
+\ |nonascii_13|\  The Conversion Control, which also keeps track of the available formats, the conversion options and the input and output streams. It can be compiled without reference to any other parts of the program. In particular, it knows nothing of the Chemical Core: mol.h is not included.
+
+\ |nonascii_14|\  The User Interface, which may be a command line application, a Graphical User Interface (GUI), or may be part of another program that uses Open Babel's input and output facilities. This depends only on the Conversion Control module (obconversion.h is included), but not on the Chemical Core or on any of the Formats.
+
+\ |nonascii_15|\  The Fingerprint API, as well as being usable in external programs, is employed by the fastsearch and fingerprint formats.
+
+\ |nonascii_16|\  The Fingerprints, which are bit arrays that describe an object and which facilitate fast searching. They are also built as plugins, registering themselves with their base class OBFingerprint which is in the Fingerprint API.
+
+\ |nonascii_17|\  Other features such as Forcefields, Partial Charge Models and Chemical Descriptors, although not shown in the diagram, are handled similarly to Fingerprints.
+
+\ |nonascii_18|\  The Error Handling can be used throughout the program to log and display errors and warnings.
+
+Extensible Interface
+^^^^^^^^^^^^^^^^^^^^
+
+The utility of software libraries such as Open Babel depends on the ability of the design to be extended over time to support new functionality. To facilitate this, Open Babel implements a *plugin interface* for file formats, fingerprints, charge models, descriptors, "operators" and molecular mechanics force fields. This ensures a clean separation of the implementation of a particular plugin from the core Open Babel library code, and makes it easy for a new plugin (e.g. a new file format) to be contributed; all that is needed is a single C++ file and a trivial change to one of the build files. The operator plugins provide a very general mechanism for operating on a molecule (e.g. energy minimization or 3D coordinate generation) or on a list of molecules (e.g. filtering or sorting) after reading but before writing.
+
+Plugins are dynamically loaded at runtime. This decreases the overall disk and memory footprint of Open Babel, allowing external developers to choose particular functionality needed for their application and ignore other, less relevant features. It also allows the possibility of a third-party distributing plugins separately to the Open Babel distribution to provide additional functionality.
+
+Open-Source License and Open Development
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Open Babel is open-source software, which offers end users and third-party developers a range of additional rights not granted by proprietary chemistry software. Open-source software, at its most basic level, grants users the rights to study how their software works, to adapt it for any purpose or otherwise modify it, and to share the software and their modifications with others. In this sense, Open Source functions in similar ways to the processes of open peer review, publication, and citation in science. The rights granted by open source licenses largely coincide with the norms of scientific ethics to enable verifiability, repeatability, and building on previous results and theories.
+
+Beyond these rights, Open Babel (like most other open-source projects) offers open development -- that is, all development occurs in public forums and with public code repositories. This results in greater input from the community as any user can easily submit bug reports or feature suggestions, get involved in discussions on the future direction of Open Babel or even become a developer him/herself. In practice, the number of active contributors has increased over time through this level of open, public development (Figure \ :ref:`3<figure_3>`). Moreover, it means that the development of the code is completely transparent and the quality of the software is available for public scrutiny. Indeed, since its inception, over 658 bugs have been submitted to the public tracker and fixed \ [#B41]_.
+
+.. _figure_3:
+
+.. figure:: ../_static/1758-2946-3-33-3.jpg
+   :align: center
+
+   Figure 3. Number of contributors over time
+
+   **Number of contributors over time**. Note that this graph only includes developers who directly commited code to the Open Babel source code repository, and does not include patches provided by users.
+
+
+Validation and Testing
+^^^^^^^^^^^^^^^^^^^^^^
+
+Open Babel includes an extensive test suite comprising 60 different test programs each with tens to hundreds of tests. In early 2010, a nightly build infrastructure and dashboard was put in place with support from Kitware, Inc. This has greatly improved code quality by catching regressions, and also ensures that the code compiles cleanly on all platforms and compilers supported by Open Babel. Some examples of tests that are run each night are:
+
+(1) The MMFF94 forcefield code is tested against the MMFF94 validation suite.
+
+(2) The OBAlign class, which was developed using Test-Driven Development (TDD) methodology, is run against its test suite.
+
+(3) Handling of symmetry is validated by converting several test cases between SMILES, 2D and 3D SDF, and InChI (there are also several test programs with unit tests for the individual stereo classes in the API).
+
+(4) The SMARTS parser is tested using over 250 valid and invalid SMARTS patterns, and the SMARTS matcher is tested using 125 basic SMARTS patterns.
+
+(5) The LSSR (Least Set of Smallest Rings) code is tested for invariance against changing the atom order for a series of polycyclic molecules.
+
+Recently the development team has placed a major focus on increasing the robustness of file format translation particularly in relation to the commonly used SMILES and MDL Molfile formats. Translating between these formats requires accurate stereochemistry perception, inference of implicit hydrogens, and kekulization of delocalized systems. While it is difficult to ensure that any complex piece of code is free of bugs, and Open Babel is no exception, validation procedures can be carried out to assess the current level of performance and to find additional test cases that expose bugs. The following procedure was used to guide the rewriting of stereochemistry code in Open Babel, a project that began in early 2009. Starting with a dataset of 18,084 3D structures from PubChem3D as an SDF file, we compared the result of (a) conversion to SMILES, followed by conversion of that to Canonical SMILES to (b) conversion directly to Canonical SMILES. This procedure can be used to flush out errors in reading the original SDF file, reading/writing SMILES (either due to stereochemistry errors or kekulization problems), and is also a test (to some extent) of the canonicalization code. At the time of starting this work (March 2009), the error rate found was 1424 (8%); by Oct 2009, combined work on stereochemistry, kekulization and canonicalization had reduced this to 190 (~1%), and continued improvements have reduced the number of errors down to two (shown in Figure \ :ref:`4<figure_4>`) for Open Babel 2.3.1 (~0.01%). The first failure is due to a kekulization error in a polycyclic aromatic molecule incorporating heteroatoms: (a) gave c1ccc2c(c1)c1[nH][nH]c3c4c1c(c2)ccc4cc1c3cccc1 while (b) gave c1ccc2c(c1)c1nnc3c4c1c(c2)ccc4cc1c3cccc1. This error led to confusion over whether or not the aromatic nitrogens have hydrogens attached (they do not). The second failure involves confusion over the canonical stereochemistry at a bridgehead carbon: (a) gave C1CN2[C@@H](C1)CCC2 while (b) gave C1CN2[C@H](C1)CCC2. This is actually a meso compound and so both SMILES strings are correct and represent the same molecule. However the canonicalization algorithm should have chosen one stereochemistry or the other for the canonical representation.
+
+.. _figure_4:
+
+.. figure:: ../_static/1758-2946-3-33-4.jpg
+   :align: center
+
+   Figure 4. The two failures found in the validation test for reading/writing SMILES
+
+   **The two failures found in the validation test for reading/writing SMILES**.
+
+
+Another area of focus was the canonicalization algorithm, which can be used to generate canonical SMILES as well as other formats. The algorithm can be tested by ensuring that the same canonical SMILES string is obtained even when the order of atoms in a molecule is changed (while retaining the same connection table). The test stresses all areas of the library, including aromaticity perception, kekulization, stereochemistry, and canonicalization. The development of the canonicalization code in Open Babel was guided by applying this test to the 5,151,179 molecules in the eMolecules catalogue (dated 2011-01-02) with 10 random shuffles of the atom order. At the time of the Open Babel 2.2.3 release, there were 24,404 failures of the canonicalization algorithm; this has now been reduced to only four (shown in Figure \ :ref:`5<figure_5>`, < 0.001%). The Open Babel nightly test suite ensures that this test passes for a number of problematic molecules. Although the canonicalization algorithm is still not perfect, we believe that the current level of performance (99.99992% success on the eMolecules catalogue) is acceptable for general use and with time we intend to improve performance further.
+
+.. _figure_5:
+
+.. figure:: ../_static/1758-2946-3-33-5.jpg
+   :align: center
+
+   Figure 5. The four failures found in the validation test for canonicalization
+
+   **The four failures found in the validation test for canonicalization**.
+
+
+Given that the error rate for canonicalization and handling of stereochemistry is now quite low, the next area of focus for the Open Babel development team is to improve the handling of implicit valence for "unusual atoms." This is particularly important for organometallic species and inorganic complexes.
+
+Using Open Babel
+****************
+
+Applications
+^^^^^^^^^^^^
+
+The Open Babel package is composed of a set of user applications as well as a programming library. The main command line application provided is *obabel* (a small upgrade on the earlier *babel*), which facilitates file format conversion, filtering (by SMARTS, title, descriptor value, or property field), 3D or 2D structure generation, conversion of hydrogens from implicit to explicit (and vice versa), and removal of small fragments or of duplicate structures. A number of features are provided to handle multi-molecule file formats (such as SDF or MOL2) and to use or manipulate the information in property fields and molecule titles. Here is an example of using *obabel* to convert from SDF format to SMILES:
+
+
+
+A more complicated use would be to extract all molecules in an SDF file whose titles start with "active":
+
+
+
+The *copy* format specified by "-o copy" is a utility format that copies the exact contents of the input file (for the filtered molecules) directly to the output, without perception or interpretation. The "-aT" indicates that only the title of the input SDF file should be read; full chemical perception is not required.
+
+The Open Babel graphical user interface (GUI) provides the same functionality. Figure \ :ref:`6<figure_6>` is a screenshot of the GUI carrying out the same filtering operation described in the *obabel* example above. The left panel deals with setting up the input file, the right panel handles the output and the central panel is for setting conversion options. Depending on whether a particular option requires a parameter, the available options are displayed either as check boxes or as text entry boxes. These interface elements are generated dynamically directly from the text description and help text provided by each format plugin.
+
+.. _figure_6:
+
+.. figure:: ../_static/1758-2946-3-33-6.jpg
+   :align: center
+
+   Figure 6. Screenshot of the Open Babel GUI
+
+   **Screenshot of the Open Babel GUI**. In the screenshot, the Open Babel GUI is running on Bio-Linux 6.0, an Ubuntu derivative.
+
+
+Programming Library
+^^^^^^^^^^^^^^^^^^^
+
+The Open Babel library allows users to write chemistry applications without worrying about the low-level details of handling chemical information, such as how to read or write a particular file format, or how to use SMARTS for substructure searching. Instead, the user can focus on the scientific problem at hand, or on creating a more easy-to-use interface (e.g. a GUI) to some of Open Babel's functionality. The Open Babel API (Application Programming Interface) is the set of classes, methods and variables provided by Open Babel to the user for use in programs. Documentation on the complete API (generated using Doxygen \ [#B42]_) is available from the Open Babel website \ [#B43]_, or can be generated from the source code.
+
+The functionality provided by the Open Babel library is relied upon by many users and by several other software projects, with the result that introducing changes to the API would cause existing software to break. For this reason, Open Babel strives to maintain API stability over long periods of time, so that existing software will continue to work despite the release of new Open Babel versions with additional features, file formats and bug fixes. Open Babel uses a version numbering system that indicates how the API has changed with every release:
+
+\ |nonascii_19|\  Bug fix releases (e.g. 2.0.0 versus 2.0.1) do not change API at all
+
+\ |nonascii_20|\  Minor version releases (e.g. 2.0 versus 2.1) will add to the API, but will otherwise be backwards-compatible
+
+\ |nonascii_21|\  Major version releases (e.g. 2 versus 3) are not backwards-compatible, and have changes to the API (including removal of deprecated classes and functions)
+
+Figure \ :ref:`7<figure_7>` shows an example C++ program that uses the two main classes OBConversion and OBMol to print out the molecular weight of all of the molecules in an SDF file. This could be used, for example, to investigate differences in the molecular weight distribution between two databases. The same program is shown in Figure \ :ref:`8<figure_8>` but implemented using the Python bindings.
+
+.. _figure_7:
+
+.. figure:: ../_static/1758-2946-3-33-7.jpg
+   :align: center
+
+   Figure 7. Example C++ program that uses the Open Babel library
+
+   **Example C++ program that uses the Open Babel library**. The program prints out the molecular weight of each molecule in the SDF file "dataset.sdf".
+
+
+.. _figure_8:
+
+.. figure:: ../_static/1758-2946-3-33-8.jpg
+   :align: center
+
+   Figure 8. Example Python program that uses the Open Babel library
+
+   **Example Python program that uses the Open Babel library**. The program prints out the molecular weight of each molecule in the SDF file "dataset.sdf".
+
+
+Examples of Use
+^^^^^^^^^^^^^^^
+
+Open Babel has already been referenced over 400 times for various uses. The most common use of Open Babel is through the *obabel* command line application (or the corresponding graphical user interface) for the interconversion of chemical file formats. Such conversions may also involve the calculation or inference of additional molecular information or application of a filter. Some published examples of these include the following:
+
+\ |nonascii_22|\  interconversion of chemical file formats or representations \ [#B44]_\ [#B45]_\ [#B46]_\ [#B47]_
+
+\ |nonascii_23|\  addition of hydrogens \ [#B48]_\ [#B49]_\ [#B50]_
+
+\ |nonascii_24|\  generation of 3D molecular structures \ [#B51]_\ [#B52]_\ [#B53]_
+
+\ |nonascii_25|\  calculation of partial charges \ [#B54]_\ [#B55]_
+
+\ |nonascii_26|\  generation of molecular fingerprints \ [#B56]_\ [#B57]_\ [#B58]_\ [#B59]_
+
+\ |nonascii_27|\  removal of duplicate molecules from a dataset \ [#B60]_
+
+\ |nonascii_28|\  calculation of MOL2 atom types \ [#B61]_
+
+An interesting example that shows how a particular chemical representation may be used to facilitate a scientific study is the crystallographic study of F\ |nonascii_29|\ bi\ |nonascii_30|\ n and Brock who used Open Babel to generate InChI strings for molecules in the Cambridge Structural Database \ [#B62]_. Exploiting the fact that InChIs of enantiomers are identical expect at the enantiomer sublayer ("/m0" or "/m1"), they used the InChIs as part of a workflow to identify kryptoracemates (a class of racemic crystals where the enantiomers are not related by space-group symmetry) in the database.
+
+To implement new methods, or access additional molecular information, it is necessary to use the Open Babel library directly either from C++ or using one of the supported language bindings. Some examples of published studies that have done this include the following:
+
+\ |nonascii_31|\  Dehmer *et al.* implemented molecular complexity measures based on information theory \ [#B63]_.
+
+\ |nonascii_32|\  Langham and Jain developed a model for chemical mutagenicity based on atom pair features \ [#B64]_.
+
+\ |nonascii_33|\  Fontaine *et al.* implemented a method, anchor-GRIND, that uses an anchor point of a molecular scaffold to compare molecular interaction fields when different substituents are present \ [#B65]_.
+
+\ |nonascii_34|\  Konyk *et al.* have developed a plugin for Open Babel that adds support for the Web Ontology Language (OWL) to allow automated reasoning about chemical structures \ [#B66]_.
+
+\ |nonascii_35|\  Kogej *et al.* (AstraZeneca) implemented a 3-point pharmacophore fingerprint called TRUST \ [#B67]_.
+
+\ |nonascii_36|\  Many other examples exist \ [#B68]_\ [#B69]_\ [#B70]_\ [#B71]_.
+
+The vital role that a cheminformatics toolkit plays in the development of scientific resources is shown by Tables \ :ref:`1<table_1>` and \ :ref:`2<table_2>`. Table \ :ref:`1<table_1>` lists examples of stand-alone applications or programming libraries that rely on Open Babel, either calling the library directly or via one of the command-line executables. Table \ :ref:`2<table_2>` contains examples of web applications and databases that either use Open Babel on the server or where Open Babel was used in the preparation of the data.
+
+Conclusions
+***********
+
+In November 2011, Open Babel will mark 10 years of existence as an independent project, and for the first time, we have discussed its development and features. As shown by more than 400 citations, it has become an essential tool for handling the myriad of molecular file formats encountered in diverse branches of chemistry. While more work remains to be done, through validation processes such as those described above and the recent introduction of a nightly build and testing framework, we aim to improve the quality and robustness of the toolkit with each new release.
+
+Looking forward to the future, one of the goals of the project is to extend support to molecules that currently are not handled very well by existing cheminformatics toolkits. Typically toolkits focus on the types of molecules of principal importance to the pharmaceutical industry, namely stable organic molecules comprising wholly of 2-center 2-electron covalent bonds. Molecules outside this set - such as radicals, organometallic and inorganic molecules, molecules with coordinate bonds or 3-center 2-electron bonds - are poorly supported in general. Future releases of Open Babel will provide substantially improved handling of such species. We also seek to improve speed and coverage of important methods such as structure generation, kekulization and canonicalization.
+
+Open Babel is freely available from `<http://openbabel.org>`_, and new community members are very welcome (users, developers, bug reporters, feature requesters). For information on how to use Open Babel, please see the documentation at `<http://openbabel.org/docs>`_ and the API documentation at `<http://openbabel.org/api>`_.
+
+Availability and Requirements
+*****************************
+
+**Project Name:** Open Babel
+
+**Project home page:** `<http://openbabel.org>`_
+
+**Operating system(s):** Cross-platform
+
+**Programming language:** C++, bindings to Python, Perl, Ruby, Java, C#
+
+**Other requirements (if compiling):** CMake 2.4+
+
+**License:** GNU GPL v2
+
+**Any restrictions to use by non-academics:** None
+
+Competing interests
+*******************
+
+The authors declare that they have no competing interests.
+
+Authors' contributions
+**********************
+
+GRH is the lead developer of the Open Babel project. CAJ, CM, MB, NMOB, and TV are developers of Open Babel. All authors read and approved the final manuscript.
+
+Acknowledgements and Funding
+****************************
+
+We would like to thank all users and contributors to the Open Babel project over its history, including OpenEye Scientific Software Inc. for their initial OELib code. We also thank the Blue Obelisk Movement for ideas, comments on this manuscript, and support. We thank SourceForge for providing resources for issue tracking and managing releases, and Kitware for additional dashboard resources. NMOB is supported by a Health Research Board Career Development Fellowship (PD/2009/13).
+
+.. [#B1]  SMILES, a chemical language and information system. 1. Introduction to methodology and encoding rules
+
+.. [#B2]  Chemical markup, XML, and the Worldwide Web. 1. Basic principles
+
+.. [#B3]  Chemical Markup, XML and the World-Wide Web. 2. Information Objects and the CMLDOM
+
+.. [#B4]  Development of chemical markup language (CML) as a system for handling complex chemical content
+
+.. [#B5]  Chemical Markup, XML, and the World Wide Web. 4. CML Schema
+
+.. [#B6]  Chemical Markup, XML, and the World Wide Web. 6. CMLReact, an XML Vocabulary for Chemical Reactions
+
+.. [#B7]  NOTITLE!
+
+.. [#B8]  NOTITLE!
+
+.. [#B9]  NOTITLE!
+
+.. [#B10]  NOTITLE!
+
+.. [#B11]  NOTITLE!
+
+.. [#B12]  NOTITLE!
+
+.. [#B13]  NOTITLE!
+
+.. [#B14]  NOTITLE!
+
+.. [#B15]  NOTITLE!
+
+.. [#B16]  Molecular Similarity Searching Using Atom Environments, Information-Based Feature Selection, and a Na\ |nonascii_37|\ ve Bayesian Classifier
+
+.. [#B17]  NOTITLE!
+
+.. [#B18]  Chemical Similarity Assessment through Multilevel Neighborhoods of Atoms: Definition and Comparison with the Other Descriptors
+
+.. [#B19]  NOTITLE!
+
+.. [#B20]  NOTITLE!
+
+.. [#B21]  The Generation of a Unique Machine Description for Chemical Structures-A Technique Developed at Chemical Abstracts Service
+
+.. [#B22]  NOTITLE!
+
+.. [#B23]  Practical graph isomorphism
+
+.. [#B24]  Modular Chemical Descriptor Language (MCDL): Composition, connectivity, and supplementary modules
+
+.. [#B25]  A Java Chemical Structure Editor Supporting the Modular Chemical Descriptor Language (MCDL)
+
+.. [#B26]  Modular Chemical Descriptor Language (MCDL): Stereochemical modules
+
+.. [#B27]  Merck molecular force field .1. Basis, form, scope, parameterization, and performance of MMFF94
+
+.. [#B28]  Merck molecular force field .2. MMFF94 van der Waals and electrostatic parameters for intermolecular interactions
+
+.. [#B29]  Merck molecular force field .3. Molecular geometries and vibrational frequencies for MMFF94
+
+.. [#B30]  Merck molecular force field .4. Conformational energies and geometries for MMFF94
+
+.. [#B31]  Merck molecular force field .5. Extension of MMFF94 using experimental data, additional computational data, and empirical rules
+
+.. [#B32]  Data-driven high-throughput prediction of the 3-D structure of small molecules: review and progress
+
+.. [#B33]  UFF, a full periodic table force field for molecular mechanics and molecular dynamics simulations
+
+.. [#B34]  Development and testing of a general amber force field
+
+.. [#B35]  Automatic atom type and bond type perception in molecular mechanical calculations
+
+.. [#B36]  Confab - Systematic generation of diverse low-energy conformers
+
+.. [#B37]  NOTITLE!
+
+.. [#B38]  Mastering CMake: A Cross-Platform Build System
+
+.. [#B39]  NOTITLE!
+
+.. [#B40]  Pybel: a Python wrapper for the OpenBabel cheminformatics toolkit
+
+.. [#B41]  NOTITLE!
+
+.. [#B42]  NOTITLE!
+
+.. [#B43]  NOTITLE!
+
+.. [#B44]  A collaborative informatics infrastructure for multi-scale science
+
+.. [#B45]  A Database-Centric Virtual Chemistry System
+
+.. [#B46]  A general approach for developing system-specific functions to score protein-ligand docked complexes using support vector inductive logic programming
+
+.. [#B47]  A virtual library of constrained cyclic tetrapeptides that mimics all four side-chain orientations for over half the reverse turns in the protein data bank
+
+.. [#B48]  A Mining Minima Approach to Exploring the Docking Pathways of p-Nitrocatechol Sulfate to YopH
+
+.. [#B49]  A Gibbs free energy correlation for automated docking of carbohydrates
+
+.. [#B50]  An Evaluation of Explicit Receptor Flexibility in Molecular Docking Using Molecular Dynamics and Torsion Angle Molecular Dynamics
+
+.. [#B51]  A Series of Natural Flavonoids as Thrombin Inhibitors: Structure-activity relationships
+
+.. [#B52]  A Structure-Based Approach for Mapping Adverse Drug Reactions to the Perturbation of Underlying Biological Pathways
+
+.. [#B53]  Molecular modeling of the human serotonin1A receptor: role of membrane cholesterol in ligand binding of the receptor
+
+.. [#B54]  TMACC: Interpretable Correlation Descriptors for Quantitative Structure\ |nonascii_38|\ Activity Relationships
+
+.. [#B55]  AMMOS: Automated Molecular Mechanics Optimization tool for in silico Screening
+
+.. [#B56]  An Efficiently Computable Graph-Based Metric for the Classification of Small Molecules
+
+.. [#B57]  Bioisosteric Similarity of Molecules Based on Structural Alignment and Observed Chemical Replacements in Drugs
+
+.. [#B58]  Application of kernel functions for accurate similarity search in large chemical databases
+
+.. [#B59]  Binary Classification of Aqueous Solubility Using Support Vector Machines with Reduction and Recombination Feature Selection
+
+.. [#B60]  Automated procedure for candidate compound selection in GC-MS metabolomics based on prediction of Kovats retention index
+
+.. [#B61]  Very fast prediction and rationalization of pKa values for protein-ligand complexes
+
+.. [#B62]  A list of organic kryptoracemates
+
+.. [#B63]  A Large Scale Analysis of Information-Theoretic Network Complexity Measures Using Chemical Structures
+
+.. [#B64]  Accurate and Interpretable Computational Modeling of Chemical Mutagenicity
+
+.. [#B65]  Anchor-GRIND: Filling the gap between standard 3D QSAR and the GRid-INdependent Descriptors
+
+.. [#B66]  Chemical knowledge for the semantic web
+
+.. [#B67]  Multifingerprint Based Similarity Searches for Targeted Class Compound Selection
+
+.. [#B68]  Designing Focused Chemical Libraries Enriched in Protein-Protein Interaction Inhibitors using Machine-Learning Methods
+
+.. [#B69]  DG-AMMOS: A New tool to generate 3D conformation of small molecules using Distance Geometry and Automated Molecular Mechanics Optimization for in silico Screening
+
+.. [#B70]  The environmental fate of organic pollutants through the global microbial metabolism
+
+.. [#B71]  Substructure Mining Using Elaborate Chemical Representation
+
+.. [#B72]  cclib: A library for package-independent computational chemistry algorithms
+
+.. [#B73]  Chemtool - Molek\ |nonascii_39|\ le zeichnen mit dem Pinguin
+
+.. [#B74]  The Computational Materials Design Facility (CMDF): A powerful framework for multi-paradigm multi-scale simulations
+
+.. [#B75]  Dockomatic - automated ligand creation and docking
+
+.. [#B76]  DOVIS 2.0: an efficient and easy to use parallel virtual screening tool based on AutoDock 4.0
+
+.. [#B77]  FAF-Drugs2: Free ADME/tox filtering tool to assist drug discovery and chemical biology projects
+
+.. [#B78]  Efficient mining for structurally diverse subgraph patterns in large molecular databases
+
+.. [#B79]  Large-scale graph mining using backbone refinement classes
+
+.. [#B80]  Lazy structure-activity relationships (lazar) for the prediction of rodent carcinogenicity and Salmonella mutagenicity
+
+.. [#B81]  OOPSE: an object-oriented parallel simulation engine for molecular dynamics
+
+.. [#B82]  Brute-force pharmacophore assessment and scoring with Open3DQSAR
+
+.. [#B83]  Open3DQSAR: a new open-source software aimed at high-throughput chemometric analysis of molecular interaction fields
+
+.. [#B84]  Optical Structure Recognition Software To Recover Chemical Information: OSRA, An Open Source Solution
+
+.. [#B85]  Pharmer: Efficient and Exact Pharmacophore Search
+
+.. [#B86]  PyADF - A scripting framework for multiscale quantum chemistry
+
+.. [#B87]  RMG - Reaction Mechanism Generator v3.3
+
+.. [#B88]  SMIREP: Predicting Chemical Activity from SMILES
+
+.. [#B89]  XTALOPT: An open-source evolutionary algorithm for crystal structure prediction
+
+.. [#B90]  Accessible haptic technology for drug design applications
+
+.. [#B91]  ChemDB update full-text search and virtual chemical space
+
+.. [#B92]  ChemMine tools: an online service for analyzing and clustering small molecules
+
+.. [#B93]  FragmentStore--a comprehensive database of fragments linking metabolites, toxic molecules and drugs
+
+.. [#B94]  Frog2: Efficient 3D conformation ensemble generator for small compounds
+
+.. [#B95]  IUPHAR-DB: new receptors and tools for easy searching and visualization of pharmacological data
+
+.. [#B96]  OpenCDLig: a free web application for sharing resources about cyclodextrin/ligand complexes
+
+.. [#B97]  The protein-small-molecule database, a non-redundant structural resource for the analysis of protein-ligand binding
+
+.. [#B98]  Samb Vca: A Web Application for the Calculation of the Buried Volume of N-Heterocyclic Carbene Ligands
+
+.. [#B99]  ScafBank: a public comprehensive Scaffold database to support molecular hopping
+
+.. [#B100]  The SMARTCyp cytochrome P450 metabolism prediction server
+
+.. [#B101]  sMOL Explorer: an open source, web-enabled database and exploration tool for Small MOLecules datasets
+
+.. [#B102]  Superimpose: a 3D structural superposition server
+
+.. [#B103]  SuperToxic: a comprehensive database of toxic compounds
+
+.. [#B104]  SuperSite: dictionary of metabolite and drug binding sites in proteins
+
+.. [#B105]  SuperSweet--a resource on natural and artificial sweetening agents
+
+.. [#B106]  STITCH 2: an interaction network database for small molecules and proteins
+
+.. [#B107]  Virtual Computational Chemistry Laboratory - Design and Description
+
+.. [#B108]  wwLigCSRre: a 3D ligand-based server for hit identification and optimization
+
+.. |nonascii_1| unicode:: 0xc5
+.. |nonascii_2| unicode:: 0xc5
+.. |nonascii_3| unicode:: 0xe9
+.. |nonascii_4| unicode:: 0x3c0
+.. |nonascii_5| unicode:: 0xe9
+.. |nonascii_6| unicode:: 0x3c0
+.. |nonascii_7| unicode:: 0xe9
+.. |nonascii_8| unicode:: 0xb0
+.. |nonascii_9| unicode:: 0xb0
+.. |nonascii_10| unicode:: 0x2022
+.. |nonascii_11| unicode:: 0x2022
+.. |nonascii_12| unicode:: 0x2022
+.. |nonascii_13| unicode:: 0x2022
+.. |nonascii_14| unicode:: 0x2022
+.. |nonascii_15| unicode:: 0x2022
+.. |nonascii_16| unicode:: 0x2022
+.. |nonascii_17| unicode:: 0x2022
+.. |nonascii_18| unicode:: 0x2022
+.. |nonascii_19| unicode:: 0x2022
+.. |nonascii_20| unicode:: 0x2022
+.. |nonascii_21| unicode:: 0x2022
+.. |nonascii_22| unicode:: 0x2022
+.. |nonascii_23| unicode:: 0x2022
+.. |nonascii_24| unicode:: 0x2022
+.. |nonascii_25| unicode:: 0x2022
+.. |nonascii_26| unicode:: 0x2022
+.. |nonascii_27| unicode:: 0x2022
+.. |nonascii_28| unicode:: 0x2022
+.. |nonascii_29| unicode:: 0xe1
+.. |nonascii_30| unicode:: 0xe1
+.. |nonascii_31| unicode:: 0x2022
+.. |nonascii_32| unicode:: 0x2022
+.. |nonascii_33| unicode:: 0x2022
+.. |nonascii_34| unicode:: 0x2022
+.. |nonascii_35| unicode:: 0x2022
+.. |nonascii_36| unicode:: 0x2022
+.. |nonascii_37| unicode:: 0xef
+.. |nonascii_38| unicode:: 0x2212
+.. |nonascii_39| unicode:: 0xfc

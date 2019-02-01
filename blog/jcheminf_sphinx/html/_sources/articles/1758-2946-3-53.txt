@@ -1,0 +1,284 @@
+MyChemise: A 2D drawing program that uses morphing for visualisation purposes
+=============================================================================
+
+Abstract
+********
+
+MyChemise (My Chemical Structure Editor) is a new 2D structure editor. It is designed as a Java applet that enables the direct creation of structures in the Internet using a web browser. MyChemise saves files in a digital format (.cse) and the import and export of .mol files using the appropriate connection tables is also possible.
+
+MyChemise is available as a free online version in English and German. The MyChemise GUI is designed to be user friendly and can be used intuitively. There is also an English and German program description available as a PDF file.
+
+In addition to the known ways of drawing chemical structure formulas, there are also parts implemented in the program that allow the creation of different types of presentation. The morphing module uses this technology as a component for dynamic visualisation. For example, it enables a clear and simple illustration of molecule vibrations and reaction sequences.
+
+Introduction
+************
+
+2D drawing programs account for some of the first computer applications in chemistry and are widely distributed. Many publications, especially in recent times \ [#B1]_\ [#B2]_\ [#B3]_, show that this sector is developing continually. The incorporation of new programming languages or improvements in methods for targeted structure searching in the Web continues to present a challenge for chemists who are interested in programming.
+
+Having been given the option at work of setting up a new database with conventional structural images, the author asked himself the question how he could get hold of these images. Four options were considered:
+
+1. To anchor the images using a link into the Web (e.g. using CAS-numbers).
+
+2. Copy the structural images from a source in the Web.
+
+3. Use a program already available on the market for drawing.
+
+4. Develop a program oneself.
+
+The first two options can be ruled out because not all the compounds entered were available as finished structures. Additionally, the structural images should look standardised if they are to be used as a marketing instrument for customer relations. Obtaining the images from different sources would have been unsatisfactory because the sizes and types of representations vary greatly. Known drawing programs would have been useable; however the drawings would have still required subsequent work in order to achieve a company specific layout. Therefore the fourth option seemed most sensible and the most interesting.
+
+MyChemise was written with the intention of producing a stand-alone approach in this field and because of the fun in programming chemistry software. The Version 11.01 presented here was created as sideline work in the period between January 2008 and March 2011.
+
+Implementation
+**************
+
+MyChemise is a modern scientific online 2D drawing program for chemical structural image. It was programmed in Java and runs as an applet in any browser that has an up-to-date Java plug-in (see `<http://www.java.com/en/download/installed.jsp>`_ to check if one is available). MyChemise can be opened as the English version `<http://www.knalltundstinkt.de/MyChemise_englisch/ChemiseZert_Home.html>`_. If MyChemise is not running it is possibly necessary to activate javascript and/or to reduce the security settings of the browser. A program description is available as a PDF file `<http://www.knalltundstinkt.de/MyChemise_englisch/Description.pdf>`_ and additional file \ [#B4]_ including appropriate instructions. From here you can always open the latest version. One advantage of this online technology is that any subsequent program enhancements do not need to be downloaded and there is even no need for a new installation to be carried out because the latest MyChemise version is always available online.
+
+Additional file 1
+
+**Description**. The software description of MyChemise describes and presents the menu items. Well-known commands from standard-software (save, open etc.) or self-explanatory commands are not included.
+
+Click here for file
+
+The readers of this article can also download a zip-file (additional file 
+
+Additional file 2
+
+**mychemise**. It contains two files (MyChemise.html and ChemJar.jar). It can be downloaded and installed for running MyChemise in the off-line mode, too.
+
+Click here for file
+
+MyChemise is a signed applet, which means that it does not have to obey the applet sandbox principle intended for security purposes. It is possible to work online in the browser and once the work is finished to save the files on your own PC. This means that drawings can be directly exported as image files into other applications using the clipboard (Note for Linux users: see program description).
+
+The (theoretical) possible number of atoms that can be drawn in a file in MyChemise was set to 100000.
+
+MyChemise is optimized for Windows platforms with Firefox as browser. The minimum system requirements are a 1.6 GHz processor and 2 GB of RAM.
+
+Results and discussion
+**********************
+
+The input screen (Figure \ :ref:`1<figure_1>`) shows the most important commands, relevant menu items and toolbars in a clear way. This means that the screen is not overloaded with symbols belonging to windows program technology, only those toolbars that belong to the menu items that have just been opened are made visible.
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-53-1.jpg
+   :align: center
+
+   Figure 1. Input screen
+
+   **Input screen**. It shows the menu items and the file-toolbar.
+
+
+All atoms and bonds can be coloured. This allows aesthetically pleasing structural images to be easily created. Formulae can be represented in long form (with C- and H atoms labelled) and in short form. Many different bond types are available for selection. Cyclic hydrocarbons and aromatics can be quickly designed from a pull-down menu. Different 6-ring conformations can be constructed in the same way. Heterocyclics can be created by simply replacing the C atoms. Bond angles and lengths can be continuously adjusted by dragging the mouse or fit to the grid. Preset molecular geometries (tetrahedral, octahedral, etc.) make drawing easier. Newman projections are also possible.
+
+Atoms can be shown with symbolised atomic shells (Figure \ :ref:`2<figure_2>`), which can be separately shaped.
+
+.. _figure_2:
+
+.. figure:: ../_static/1758-2946-3-53-2.jpg
+   :align: center
+
+   Figure 2. Structural image with atomic shells
+
+   **Structural image with atomic shells**. Atomic shells can be rendered with colour gradients.
+
+
+A diverse range of drawing components (arrows, brackets, shapes) can be created using a dialog window (Figure \ :ref:`3<figure_3>`). Using club and banana basic shapes orbitals can be symbolically represented. The switching on of colour gradients increases this impression.
+
+.. _figure_3:
+
+.. figure:: ../_static/1758-2946-3-53-3.jpg
+   :align: center
+
+   Figure 3. Dialog window of drawing components
+
+   **Dialog window of drawing components**. A choice of shapes can be added to the sketch area. Some of them are useful to symbolize orbitals.
+
+
+If you want to give the structural images an individual style, then you can insert a background image into the drawing area which can be modified using a dialog window (Figure \ :ref:`4<figure_4>` and \ :ref:`5<figure_5>`). A company logo (example of use see: \ [#B5]_) can be used as a marketing instrument to increase corporate identity (Figure \ :ref:`6<figure_6>`).
+
+.. _figure_4:
+
+.. figure:: ../_static/1758-2946-3-53-4.jpg
+   :align: center
+
+   Figure 4. Dialog window for the background
+
+   **Dialog window for the background**. It allows you to modify background images in several ways. Watermarks can be generated by increasing the brightness.
+
+
+.. _figure_5:
+
+.. figure:: ../_static/1758-2946-3-53-5.jpg
+   :align: center
+
+   Figure 5. Example for a chemical depiction with a background image
+
+   **Example for a chemical depiction with a background image**. The background image can be used as drawing surface.
+
+
+.. _figure_6:
+
+.. figure:: ../_static/1758-2946-3-53-6.jpg
+   :align: center
+
+   Figure 6. Structural images with a company logo
+
+   **Structural images with a company logo**. Chemical depictions with equal company logo can be used as a marketing instrument to increase corporate identity.
+
+
+Single rows of text can be entered using the atom input box. A special editor (Figure \ :ref:`7<figure_7>`) is available for multiple rows of text. You can also use the editor to directly help you create short chemical-specific text in MyChemise, without the need for an extra writing program. This makes work easier and can help to save time, and therefore costs.
+
+.. _figure_7:
+
+.. figure:: ../_static/1758-2946-3-53-7.jpg
+   :align: center
+
+   Figure 7. The text editor
+
+   **The text editor**. With the text editor multiple rows of text can be formatted and added to the sketch area. Rotated text is only shown there.
+
+
+A selection of special characters can be opened using a dialog window (Figure \ :ref:`8<figure_8>`). Individual characters can be inserted into the editor or the atom input box by copying and pasting.
+
+.. _figure_8:
+
+.. figure:: ../_static/1758-2946-3-53-8.jpg
+   :align: center
+
+   Figure 8. Dialog window for special characters
+
+   **Dialog window for special characters**. A selection of often used symbols.
+
+
+Atomic symbols are also shown with their atomic and mass numbers (Figure \ :ref:`9<figure_9>`).
+
+.. _figure_9:
+
+.. figure:: ../_static/1758-2946-3-53-9.jpg
+   :align: center
+
+   Figure 9. Atomic symbols
+
+   **Atomic symbols**. Atomic symbols can be pasted with their atomic and mass numbers or without.
+
+
+File import and export
+^^^^^^^^^^^^^^^^^^^^^^
+
+The mol file format \ [#B6]_\ [#B7]_, version V2000 was chosen as an interface so that MyChemise can also exchange files with similar programs. Mol files can be opened in the MyChemise screen and can be saved in mol format. In addition, mol files can be inserted just by a single click of the mouse into cse files and can also be attached onto existing structures. When doing this, the atom farthest to the left is always used as the coupling atom (atom with the smallest x-coordinate).
+
+The export function does not automatically limit the number of atoms and bonds that are to be exported. MyChemise allows the input of a large number of atoms, whilst mol files are setup for a maximum of 999 atoms and 999 bonds, this means that every user must ensure for themselves that when creating files they make them compatible with other programs.
+
+Specials
+^^^^^^^^
+
+A special highlight in MyChemise is the option of presenting any created drawings, structural images and texts in different ways; this can be done directly in the program itself. One of the options available allows you to put together different documents into a script in order to present a slide show. Another option exists that, for example, can arrange the fluctuating border structures of chemical depictions into an animation. Such animations can of course be integrated into a script. Morphing as a means of teaching chemistry/science has up until now been used very little. MyChemise offers you morphing as method of presentation.
+
+The morphing module
+^^^^^^^^^^^^^^^^^^^
+
+When morphing is carried out, two images are brought together. This involves allocating those areas of the images with each other that are to be transformed. Changes are made in steps and apply to both shape and colour. Intermediate steps are interpolated from the starting images, whereby the share of one image reduces in dimensions while the dimensions of the other image increase \ [#B8]_. Using MyChemise, images can be morphed using affine or three-point mapping (i.e. division into triangular sections, affine mapping) and by dividing up into square areas. Four-point mapping (projective mapping) is mathematically solved using the unit squares method \ [#B8]_.
+
+When illustrating chemical states, it is sometimes more useful to transform only specific areas into each other. MyChemise achieves this by automatically recognising only the bonding and atom areas in the structural images used as being areas to be morphed. As soon as only two drawings have been made, dynamic representations can then be quickly produced by calculating the intermediate steps. These allow movements (e.g. molecular vibrations) and sequences (e.g. reaction mechanisms) to be graphically simulated.
+
+The menu item Extras enables you to upload various, simple morphing examples in the on-line mode (Figures \ :ref:`10<figure_10>`, \ :ref:`11<figure_11>`, \ :ref:`12<figure_12>`). The Morphing window then opens and they can be started from within the Morphing menu item. The process behaviour can be changed in the morphing set-up dialog box. Several morphing steps can be combined to a sequence (Figure \ :ref:`13<figure_13>`).
+
+.. _figure_10:
+
+.. figure:: ../_static/1758-2946-3-53-10.jpg
+   :align: center
+
+   Figure 10. Example Morph 1
+
+   **Example Morph 1**. The morphing window shows an example of molecule vibrations (symmetrical stretching).
+
+
+.. _figure_11:
+
+.. figure:: ../_static/1758-2946-3-53-11.jpg
+   :align: center
+
+   Figure 11. Example Morph 2
+
+   **Example Morph 2**. The morphing window shows an example of molecule vibrations (asymmetrical stretching).
+
+
+.. _figure_12:
+
+.. figure:: ../_static/1758-2946-3-53-12.jpg
+   :align: center
+
+   Figure 12. Example Morph 3
+
+   **Example Morph 3**. The morphing window shows an example of molecule vibrations (scissoring).
+
+
+.. _figure_13:
+
+.. figure:: ../_static/1758-2946-3-53-13.jpg
+   :align: center
+
+   Figure 13. A SN2-reaction as an example for a morphing sequence
+
+   **A SN2-reaction as an example for a morphing sequence**. Reaction sequences can be visualized by combining two or more morphing steps.
+
+
+Conclusions
+***********
+
+MyChemise is a new 2D drawing program that places special importance on simple operation and versatile ways of creating structural images. Continual advancements in processors have led to increasingly faster desktop PCs. Greater amounts of RAM have also enabled the inclusion of methods for displaying dynamic processes in such programs, in this case the morphing module.
+
+An enhancement for MyChemise is currently being worked on, which will, amongst other things, be able to export SMILES strings \ [#B9]_ that can be used for structure searching in databases.
+
+The continuation of MyChemise as an open source project has been planned for a later date.
+
+Competing interests
+*******************
+
+The author declares that they have no competing interests.
+
+Acknowledgements
+****************
+
+Devoted to Andreas Schumann and Hans Wilhelm.
+
+I would like to thank Ingrid for providing specialised literature (and not only this). Daniel receives thanks for his support in setting up the homepage. MyChemise was written using free available java editor JOE \ [#B10]_. SignTool \ [#B11]_ was very useful for signing the applets.
+
+List of sources
+^^^^^^^^^^^^^^^
+
+Parts of the following program codes were adapted for and extended for MyChemise:
+
+For the preview window in the File- > Open menu: PreviewPanel.java `<http://www.quignon.de>`_ accessed 11/22/2011
+
+For the morphing module: TriangulatedImage.java and MorphingCandS.java from \ [#B12]_`<http://public.rz.fh-wolfenbuettel.de/~Klawonn/computergrafik/>`_ accessed 11/22/2011
+
+For displaying round colour gradients: RoundGradientContext.java from \ [#B13]_`<ftp://ftp.oreilly.com/pub/examples/java/2d/>`_ accessed 11/22/2011
+
+.. [#B1]  Molecular structure input on the web
+
+.. [#B2]  FlaME: Flash Molecular Editor - a 2D structure input tool for the web
+
+.. [#B3]  Open Source: Strukturen zeichnen
+
+.. [#B4]  Knalltundstinkt
+
+.. [#B5]  WST-Winkel GmbH
+
+.. [#B6]  NOTITLE!
+
+.. [#B7]  CTfile Formats
+
+.. [#B8]  NOTITLE!
+
+.. [#B9]  SMILES, a chemical language and information system. 1. Introduction to methodology and encoding rules
+
+.. [#B10]  JOE
+
+.. [#B11]  SignTool
+
+.. [#B12]  NOTITLE!
+
+.. [#B13]  NOTITLE!
+

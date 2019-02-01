@@ -1,0 +1,519 @@
+4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening
+=====================================================================================================================
+
+Abstract
+********
+
+Background
+^^^^^^^^^^
+
+The performance of 3D-based virtual screening similarity functions is affected by the applied conformations of compounds. Therefore, the results of 3D approaches are often less robust than 2D approaches. The application of 3D methods on multiple conformer data sets normally reduces this weakness, but entails a significant computational overhead. Therefore, we developed a special conformational space encoding by means of Gaussian mixture models and a similarity function that operates on these models. The application of a model-based encoding allows an efficient comparison of the conformational space of compounds.
+
+Results
+^^^^^^^
+
+Comparisons of our 4D flexible atom-pair approach with over 15 state-of-the-art 2D- and 3D-based virtual screening similarity functions on the 40 data sets of the Directory of Useful Decoys show a robust performance of our approach. Even 3D-based approaches that operate on multiple conformers yield inferior results. The 4D flexible atom-pair method achieves an averaged AUC value of 0.78 on the filtered Directory of Useful Decoys data sets. The best 2D- and 3D-based approaches of this study yield an AUC value of 0.74 and 0.72, respectively. As a result, the 4D flexible atom-pair approach achieves an average rank of 1.25 with respect to 15 other state-of-the-art similarity functions and four different evaluation metrics.
+
+Conclusions
+^^^^^^^^^^^
+
+Our 4D method yields a robust performance on 40 pharmaceutically relevant targets. The conformational space encoding enables an efficient comparison of the conformational space. Therefore, the weakness of the 3D-based approaches on single conformations is circumvented. With over 100,000 similarity calculations on a single desktop CPU, the utilization of the 4D flexible atom-pair in real-world applications is feasible.
+
+Background
+**********
+
+Sorting and comparing molecules from chemical databases represent two of the key tasks in cheminformatics \ [#B1]_. The sorting of such databases, with respect to a given set of queries (molecules) and similarity functions, is known as virtual screening (VS). The goal of VS is to enrich molecules with similar properties (e.g., biological activity) to the query molecules and to discover new chemical entities in a small fraction of the database. To ensure the desired properties (e.g., biological activity) and to evaluate the success of the VS run, it is necessary to further analyze the enriched molecules by means of biological assays. The success of a VS run consists of two different aspects. First, the enriched molecules should have similar properties as the query molecules. Second, the discovery of new chemical entities that consist of different scaffolds in comparison with the query molecules, and, therefore represent an information gain. Based on the focus on a relevant subset of the database and the possible structural information gain, VS experiments represent a fundamental approach in the drug discovery pipeline \ [#B2]_\ [#B3]_.
+
+In the last two decades a plethora of different similarity functions were proposed \ [#B4]_\ [#B5]_, and the development of new functions is still an open field of research. All similarity functions can be categorized by the dimension of the applied representation of molecules. 1D similarity functions are based on molecular property counts such as molecular weight or number of hydrogen bond acceptors. 2D approaches make use of the adjacency matrix of the molecular graph, and, therefore they are also called topological-based approaches. MOLPRINT2D \ [#B6]_, substructure-based fingerprints like BCI \ [#B7]_ and DAYLIGHT \ [#B8]_ as well as the MACCS \ [#B9]_ keys are well known 2D similarity methods. Those topological or structural fingerprints yield promising results with respect to the enrichment of active molecules, but often lack the ability to discover new chemical entities \ [#B10]_. 3D similarity functions are based on the shape \ [#B11]_\ [#B12]_\ [#B13]_\ [#B14]_ or geometrical distance information \ [#B15]_\ [#B16]_\ [#B17]_ of molecules. Information of the conformational ensembles of molecules extends the 3D-based methods and can be seen as 4D approaches \ [#B18]_\ [#B19]_.
+
+Based on the key-lock principle of Hermann Emil Fischer, it could be expected that the shape of molecules plays an important role for the biological activity. However, the shape of a molecule is not unique, but rather a function of internal parameters like the torsion angles. Hence, each rotatable bond represents a degree of freedom and increases the number of possible shapes (conformations) of the molecule. The resulting space, which contains all possible conformations, represents the conformational space of the molecule. Based on this increased complexity, it is not surprising that several literature studies reported a more robust VS performance of 2D methods in comparison to 3D approaches \ [#B20]_\ [#B21]_. Further arguments for 2D methods are their simplicity and speed \ [#B22]_.
+
+In a comprehensive study, Venkatraman et al. \ [#B21]_ investigated the performance of different 2D and 3D methods on a wide range of pharmaceutically relevant targets. The results of the study underpin the predominant opinion that 2D-based approaches are superior to 3D approaches with respect to the enrichment of active molecules. The performance of the 2D and 3D approaches with respect to the knowledge gain by means of the discovery of new chemical entities was not evaluated by the study. A possible reason for the inferior performance of 3D methods is the geometric information that is based on one conformation of the molecule \ [#B21]_. One opportunity to improve the performance of 3D methods is to apply the 3D methods on different conformations of the molecules and use the mean or maximum similarity value. The drawback of this workaround is the quadratic increase in computation time, which scales with the number of conformations. To address this runtime issue, it is necessary to perform the similarity calculation on the complete conformational ensemble in one step in a feasible manner. These limitations of 3D approaches also affect the performance of instance-based machine learning QSAR/QSPR models. To improve the robustness of those QSAR/QSPR models, we developed a 4D-based approach that is able to compare the conformational space of molecules within one step in feasible time \ [#B23]_. The results showed that our approach produces robust models that are superior to similar 3D and 2D approaches. Given the fact that the reasons for the inferior performance of 3D-based methods seem to be similar in both applications (VS and QSAR/QSPR), it is possible that our 4D-based approach is also able to increase the VS performance in comparison to 2D and 3D methods.
+
+The aim of this study is to evaluate our 4D approach as VS similarity function on a variety of literature VS benchmark data sets. Additionally, we compare the results to state-of-the-art 2D and 3D approaches to assess the performance of our method. We employed VS performance metrics that measure the chemotype enrichment performance to reduce the influence of artificial enrichment. The results show a robust performance of our approach in comparison to state-of-the-art 2D and 3D approaches. Therefore, our conformational space comparison is able to reduce the weakness of 3D-based methods without the time-demanding pair-wise comparison of individual conformations.
+
+Methods
+*******
+
+This section describes our 4D flexible atom-pair (4D FAP) similarity measure on the conformational space of molecules. To allow an efficient comparison of the conformational space of molecules, our approach needs a special encoding of the conformational ensembles, which can be seen as a preprocessing step. First, We describe our conformational space encoding. Afterwards, a modified Expectation Maximization (EM) algorithm will be presented that computes generative models, which represent the behavior of the molecules in their conformational space. Finally, the actual similarity calculation, which operates on the preprocessed molecules, will be explained.
+
+Conformational Space Encoding
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To ensure a fast comparison of the conformational space of molecules, it is necessary to transform the complex information of the conformational space of molecules into a representation that is suitable for the integration into fast similarity functions. Therefore, we decompose the information of the conformational space into small portions. Given a conformational sampling \ :sub:`M`\  Cof molecule *M* with |*M*| heavy atoms, the encoding is based on the distance behavior of atom-pairs in the conformational space. Hence, the conformational space \ :sub:`M`\  Cof molecule *M* is segmented into the distance behavior of 
+
+Figure \ :ref:`1<figure_1>` represents exemplarily an atom-pair and the corresponding geometric distance. Not all of the *M* have a flexible distance behavior in the conformational space. The distance relation of neighboring atoms or atoms of a ring system only shows a small variability of the distance. Therefore, our encoding separates the atom-pairs into two disjoint classes: The flexible and the rigid atom-pair class. The separation is realized by a heuristic that employs the number of rotatable bonds in the shortest path of the corresponding molecular graph. Figure \ :ref:`1<figure_1>` visualizes the shortest path of the marked atom-pair. A bond is supposed to be rotatable if it is a single bond and not a bond of a ring system. If the number of rotatable bonds in the shortest path is \ |nonascii_1|\  1, the atom-pair represents a flexible, otherwise a rigid atom-pair. Terminal rotatable bonds (rotatable bonds that are adjacent to one of the atoms that form the atom-pair) are not counted in the heuristic because a rotation of such a bond has no influence on the distance relation of the atoms (Figure \ :ref:`1<figure_1>`).
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-23-1.jpg
+   :align: center
+
+   Figure 1. Shortest flexible atom-pair path
+
+   **Shortest flexible atom-pair path**. Exemplary visualization of an atom-pair of the marked atoms. The shortest topological path is depicted by the red and green dotted lines. A red line represents a rigid bond, whereas a green line marks a rotatable bond. The last bond of the path (bond from the heterocycle to the carbon of the carboxyl group) is treated as a rigid bond because a rotation of this bond has no influence on the geometric distance of the atom-pair.
+
+
+Given the class of flexible atom-pairs from the heuristic above, our encoding measures the distance of each atom-pair and conformation of the given conformational sampling \ :sub:`M`\ C. This results into atom-pairs that have |\ :sub:`M`\ C| distance values, where |\ :sub:`M`\ C| represents the number of sampled conformers of molecule *M*. We refer to the atom-pairs containing the distance information in the conformational space as distance profiles.
+
+These distance profiles can be visualized by means of normalized histograms, which represent the relative frequency of observing the corresponding atom-pair distance within a binned distance range. A histogram-based visualization of the distance profile from the atom-pair of Figure \ :ref:`1<figure_1>` can be seen in Figure \ :ref:`2<figure_2>`. The application of histograms in a similarity function entails two major drawbacks. First, the binning size represents a parameter and has substantial impact on the resulting similarity value. Second, the storage of the information needs more space than a model-based encoding. Therefore, we decided to describe the distance behavior in the conformational space by means of Gaussian Mixture Models (GMMs). After the encoding of the distance profiles as GMMs the preprocessing of the molecules is finished.
+
+.. _figure_2:
+
+.. figure:: ../_static/1758-2946-3-23-2.jpg
+   :align: center
+
+   Figure 2. Atom-pair distance distribution
+
+   **Atom-pair distance distribution**. Histogram-based visualization of the distance distribution of the marked atom-pair of Figure 1. The line represents the corresponding GMM that models the distance behavior of the atom-pair in the conformational space.
+
+
+Gaussian Mixture Models and Parameter Estimation on Distance Profiles
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Mixture models are probabilistic models that represent a complex distribution based on a linear combination of individual sub-distributions. Applying Gaussian distributions as sub-distributions in a mixture model yields a GMM as given in Equation 1, where *p*(**x**) represents the probability density at the point **x**, \ :sub:`c`\  \ |nonascii_2|\ determines the weight of the c-th Gaussian distribution, and **\ |nonascii_3|\ **\ :sub:`c`\  and covariance matrix **\ |nonascii_4|\ **\ :sub:`c`\ .
+
+
+
+GMMs are generative models for real-world data and involve two advantages in our application. First, a conformational ensemble of a molecule represents only a discrete sampled approximation of the complete conformational space. Therefore, the flexible atom-pairs contain a series of sampled distance values. A generative model, fitted to the distance values, represents a continuous function, and, therefore describes a more realistic model in comparison to discrete or binned values. Second, the models can be efficiently stored because only the model parameters are necessary for a similarity calculation between such models. A drawback of the GMMs is the parameter estimation for a given data set. Given the distance values of a flexible atom-pair, it is necessary to fit the parameters \ :sub:`c`\ \ |nonascii_5|\ , **\ |nonascii_6|\ **\ :sub:`c`\ , **\ |nonascii_7|\ **\ :sub:`c`\ , and *C* (number of Gaussian components) of Equation 1 to the distance values. A popular approach to determine the parameters of a mixture model is the Expectation Maximization (EM) algorithm \ [#B24]_. This algorithm is based on the maximum likelihood framework and optimizes the objective function given in Equation 2.
+
+
+
+The EM algorithm represents an iterative process that consists of two steps. The first step (E-step) evaluates the responsibilities that the k-th component of the GMM was responsible for generating the n-th (**x**\ :sub:`n`\ ) data point of the given data set **X** (Equation 3).
+
+
+
+The second step (M-step) updates the parameters of the GMM on the basis of the responsibilities of the previous E-step (Equation 4-7).
+
+
+
+
+
+
+
+
+
+These two steps are repeated until a predefined convergence criterion is reached. The EM algorithm optimizes the parameters of the GMM and guarantees a local optimum solution. Therefore, it is necessary to execute the EM algorithm with different initial parameters to avoid a model from a local optimum with an inferior likelihood value.
+
+The EM algorithm estimates the parameters of a GMM based on a predefined number of Gaussian components. A suitable number of components is crucial for a useful model. Therefore, a model selection step that determines an optimal number of components is necessary. To reduce the risk of overfitting (high number of Gaussian components), several model selection criterions, such as the Bayesian information criterion \ [#B25]_ or the Akaike information criterion \ [#B26]_, were proposed that penalize an increased number of components. This model selection step involves a significant runtime overhead and can be avoided if the number of sub-distributions can be estimated. In our application, a GMM has to model the distance behavior of the corresponding atom-pair in the conformational space. The distance behavior of an atom-pair can be seen as a function of the flexibility of the shortest path in the molecular graph.
+
+Therefore, the number of flexible bonds in the shortest path (as applied to classify the atom-pairs) can also be applied as a heuristic to determine the number of Gaussian components for the GMM. In an earlier study we already presented the comparable performance of the heuristic in comparison to model selection criterions \ [#B23]_. This heuristic avoids the model selection step and reduces the runtime of the preprocessing step. Figure \ :ref:`2<figure_2>` presents the GMM that models the distance behavior of the atom-pair in Figure \ :ref:`1<figure_1>`. The presented EM algorithm assumes that all samples of the data set are equally important for the final model. Transferred to our application this means that each conformation has the same influence on the final model. Based on a thermodynamic point of view, this assumption of equal influence holds if all conformations of the ensemble have the same energy. To emphasize the influence of low energy conformations on the final model, we developed an extension of the EM algorithm that integrates the importance of each sample into the optimization process. In an earlier study, our modified EM algorithm generated improved QSAR/QSPR models in comparison to models based on equally weighted GMMs \ [#B27]_.
+
+Boltzmann Weighted Expectation Maximization Algorithm
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To increase the importance of low energy conformations on the final GMMs of a molecule, we apply the normalized Boltzmann distribution as given in Equation 8 to determine a probability value for a given conformer. \ |nonascii_8|\ **E**\ :sub:`n`\  represents the energy offset of the n-th conformer to the global optimum of the conformational ensemble, R presents the gas constant, and T the temperature of the canonical ensemble.
+
+
+
+These probability values have to be integrated into the EM algorithm and modify the objective function as outlined in Equation 9, where **E** symbolizes a vector containing the energy values of the conformers and *p*(**E**\ :sub:`n`\ ) depicts the probability of the n-th conformation.
+
+
+
+The E-step (computation of the responsibilities) remains unchanged, and, therefore the responsibilities are calculated as stated in the Equation 3. However, the equations of the M-step (update of the parameters) need the integration of the probability values as listed in the Equations 10-13.
+
+
+
+
+
+
+
+
+
+Based on the described modifications, the EM algorithm computes GMMs that represent the distance behavior of atom-pairs as a function of the frequency of observing an atom-pair at a certain distance as well as the probability that the canonical ensemble will occupy these states (conformations). Figure \ :ref:`3<figure_3>` visualizes a weighted (probabilities of the conformations) histogram-based representation of the same atom-pair visualized in Figure \ :ref:`2<figure_2>`. The Boltzmann weighted model of Figure \ :ref:`3<figure_3>` shows that the distances at 9.25 \ |nonascii_9|\  and 11 \ |nonascii_10|\  are energetically favorable, and, therefore the probability density is increased in comparison to the unweighted model of Figure \ :ref:`2<figure_2>`. In contrast, the conformations with low range distances have higher energy values and, as a consequence, the corresponding probability densities are reduced.
+
+.. _figure_3:
+
+.. figure:: ../_static/1758-2946-3-23-3.jpg
+   :align: center
+
+   Figure 3. Boltzmann weighted atom-pair distance distribution
+
+   **Boltzmann weighted atom-pair distance distribution**. Boltzmann weighted histogram-based visualization of the distance distribution of the atom-pair of Figure 1. The line describes the probability density of the GMM that was computed by the Boltzmann weighted EM algorithm.
+
+
+4D Flexible Atom-Pair Similarity Function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After the preprocessing of the molecules (encoding the distance distributions by means of GMMs) the actual 4D similarity calculation can be conducted. The similarity function operates on the molecular graph (adjacency matrix) and the GMMs of the flexible atom-pairs. Therefore, the conformational ensemble of the molecules is not further needed.
+
+In a first step, the 4D FAP creates for each heavy atom of the molecule an atom-pair prefix tree. This data structure represents an efficient approach for search and comparison operations and was already applied as a data structure for an atom-pair-based similarity measure \ [#B28]_\ [#B29]_. Each prefix tree has one atom as root node and contains all atom-pair information to the remaining |*M*| - 1 heavy atoms of the molecule (leaves of the tree). The preprocessing step divides the atom-pairs into two disjoint classes. Therefore, an atom-pair tree *T* contains the two different sub-trees *R* and *F* for the rigid and flexible atom-pair class, respectively. The rigid sub-tree *R* contains the information of the rigid atom-pairs that were not modeled by GMMs. To increase the information content of the rigid atom-pairs, the sub-tree additionally contains the topological distance information of each atom-pair. An example of such an atom-pair tree can be seen in Figure \ :ref:`4<figure_4>`.
+
+.. _figure_4:
+
+.. figure:: ../_static/1758-2946-3-23-4.jpg
+   :align: center
+
+   Figure 4. Flexible atom-pair tree
+
+   **Flexible atom-pair tree**. The left molecule represents the example molecule for the tree on the right side. The white 'R' marks the atom that serves as root atom (point of origin for the atom-pairs) for the tree. The black numbers symbolize the topological distance for the rigid atom-pairs. The red and green numbers correspond with the leaf numbers of the tree on the right side. The red or green color of these atom numbers indicates the membership of the atom to the rigid or flexible sub-tree, respectively.
+
+
+The nodes in these prefix trees can be labeled by any arbitrary atom typing scheme. We applied a labeling function that consists of three different elements. The first element is the element symbol of the atom. A ring flag indicates the membership to a ring system. The final value is the result of the number of neighboring heavy atoms minus the number of neighboring hydrogen atoms.
+
+Given the prefix trees of two molecules *A* and *B*, the 4D FAP computes a similarity matrix *S*, where each entry represents the similarity value between two atom-pair trees. Based on the two different sub-trees, an entry \ :sup:`ij`\  Sin the similarity matrix is the sum of two distinct similarity calculations 
+
+The rigid sub-tree contains the labels of the atoms and a topological distance value. This type of information represents nominal features and enables the use of simple similarity functions. We applied the Tanimoto similarity function as stated in Equation 14. \ :sub:`i`\  Rand \ :sub:`j`\  Rrepresent the rigid atom-pair sub-trees of the *i*-th and *j*-th atom, respectively.
+
+
+
+The comparison of the flexible atom-pair sub-tree consists of two different similarity functions. Given the flexible atom-pair sub-trees \ :sub:`i`\  Fand \ :sub:`j`\  Fcontaining |\ :sub:`i`\ F| and |\ :sub:`j`\ F| flexible atom-pairs (number of leaves in the sub-tree). The first function compares the atom labels of two given flexible atom-pairs AP\ :sub:`n`\  \ |nonascii_11|\  \ :sub:`i`\  Fand AP\ :sub:`m`\  \ |nonascii_12|\  \ :sub:`j`\  Fas presented in Equation 15. \ :sub:`m`\  land \ :sub:`n`\  lrepresent the atom labels of the atom-pairs. The function is a Dirac function on the atom labels and returns a value of 1.0 if the labels are equal and 0 otherwise.
+
+
+
+The second similarity function compares the behavior of the atom-pairs in the conformational space. For this purpose, a correlation measure on GMMs is applied as denoted in Equation 16, where \ :sub:`m`\  gand \ :sub:`n`\  gsymbolize the GMMs of the flexible atom-pair AP\ :sub:`m`\  and AP\ :sub:`n`\ , respectively.
+
+
+
+The assembly of both similarity functions for flexible atom-pairs results in Equation 17 and represents the similarity function for the flexible atom-pair sub-tree.
+
+
+
+Unlike the similarity function for the rigid atom-pair sub-tree, the similarity function for the flexible atom-pair sub-tree is not based on nominal features. Therefore, Equation 17 performs a pair-wise comparison of all atom-pairs and sums up the individual similarity scores. To avoid overestimated similarity values of sub-trees with an increased number of flexible atom-pairs, the similarity value is normalized by Equation 18
+
+
+
+After computation of the similarity matrix *S*, which contains all pair-wise similarity values of the atom-pair trees, the 4D FAP computes a final similarity value based on the matrix *S*. The original 4D FAP, as applied in QSAR/QSPR studies \ [#B23]_\ [#B27]_, sums up the entries of the *S* matrix and normalizes the sum to obtain a value in the range [0.0, 1.0]. Another possibility to compute a final similarity value represents the optimal assignment. This approach was introduced into the field of cheminformatics by Fr\ |nonascii_13|\ hlich et al. \ [#B30]_\ [#B31]_ and applied as a VS similarity function in a previous study \ [#B28]_.
+
+Preliminary experiments (not published) showed that an optimal assignment on the matrix *S* improves the VS performance in comparison to the normalized summation of the matrix elements. Therefore, we changed the final computation step of the 4D FAP to perform an optimal assignment on the matrix *S* as stated in Equation 19. Given the molecules *A* and *B* (with |*A*| < |*B*| w.l.o.g.), *\ |nonascii_14|\ * represents a function that maps each value of *i* \ |nonascii_15|\  [1, ..., |*A*|] on a value in the range [1, ..., |*B*|] in such a way that the sum of the similarity entries is maximized. The final sum of the optimal assigned similarity values of the atom-pair trees is also normalized by Equation 18. We refer to the optimal assignment-based variant of the 4D FAP as 4D FAP\ :sub:`OA`\ .
+
+
+
+Experimental
+************
+
+In this section we initially characterize the applied VS benchmark data sets as well as their preparation step. Afterwards, the protocol for the conformational sampling of the molecules as well as a short description of the VS evaluation metrics follow. Finally, we present a brief overview of literature VS methods that were applied to classify the results of the 4D FAP\ :sub:`OA`\ .
+
+Data sets
+^^^^^^^^^
+
+To evaluate the 4D FAP\ :sub:`OA`\  on a wide range of pharmaceutically relevant targets, we employed the directory of useful decoys (DUDs) release 2 \ [#B32]_. These data sets were introduced as a benchmark data set compilation for the evaluation of docking algorithms \ [#B33]_. Ligand-based VS, based on similarity values to a query structure, can be afflicted with an analogue enrichment bias. This bias results from the enrichment of structurally similar molecules with respect to the query structure. These similar structures represent only a limited information gain, and, therefore the results of the experiment will have an analogue enrichment bias.
+
+To reduce this bias and to enable a fair comparison between similarity-based and docking-based algorithms, Good and Oprea applied a lead-like filter \ [#B34]_ on the data sets and clustered the actives \ [#B35]_. These filtered and clustered data sets were already applied in a ligand-based VS study \ [#B28]_ and are publicly available \ [#B36]_. Table \ :ref:`1<table_1>` shows a complete overview of the 40 targets and the number of actives and decoys for the DUD release 2 and the filtered variant. For the VS experiments we applied the target ligands as query structure for the respective active and decoy data set. The data sets were not further modified to allow a fair comparison of the results.
+
+The evaluation of similarity functions by means of the DUD data sets represents a retrospective evaluation. Analogous to the "Kubinyi paradox" \ [#B37]_ of QSAR models, the solely retrospective evaluation possibly implies the risk that the development of new methods or the improvement of existing approaches will increase their retrospective performance at the expense of the prospective performance. However, the DUD data sets contain over 100,000 molecules for 40 different targets. Consequently, the evaluation on all 40 data sets is based on an increased molecular diversity in comparison with the usually smaller and less diverse benchmark data sets of QSAR experiments. Therefore, the risk of an inferior prospective performance of VS similarity functions as a result of their optimization for the retrospective performance is reduced but still present.
+
+Conformational sampling
+^^^^^^^^^^^^^^^^^^^^^^^
+
+To create the conformational ensembles of the molecules, we applied the ConfGen tool of Schr\ |nonascii_16|\ dinger \ [#B38]_. Recent studies showed the ability of ConfGen to compute reasonable conformers of molecules \ [#B39]_\ [#B40]_. The tool provides four standard parameter schemes that sample the conformational space at different resolutions. To compute useful GMMs in the preprocessing step, it is necessary to sample the conformational space at a high resolution. Therefore, we modified the 'comprehensive' parameter scheme of ConfGen to further increase the resolution. We reduced the heavy atom rmsd for distinct conformers from 0.5 \ |nonascii_17|\  to 0.1 \ |nonascii_18|\ . This modification results in more conformers but does not increase the runtime of the conformational sampling. The energy values, which are necessary for the Boltzmann weighted GMMs, were computed by the OPLS 2005 force-field with standard parameters.
+
+The applied conformational sampling algorithm as well as the force-field model have a major impact on the final results of the 4D FAP\ :sub:`OA`\ . Different conformational sampling algorithms compute different sets of conformers, which in turn yield different atom-pair distance profiles. The force-field computes an energy value for each conformer and determines the weight of each measured atom-pair distance. As a result, a different conformational sampling protocol will yield different GMMs of the atom-pairs. Hence, the computed similarity values differ and will probably change the results. However, the aim of this study is not the evaluation of the impact of different conformational sampling protocols on the 4D FAP\ :sub:`OA`\ , but the evaluation of the 4D FAP\ :sub:`OA`\  as a VS similarity function based on the given protocol.
+
+Evaluation metrics
+^^^^^^^^^^^^^^^^^^
+
+To evaluate the performance of our 4D FAP\ :sub:`OA`\  approach, we applied different standard evaluation metrics. The receiver operating characteristic (ROC) curve represents a function that plots the true positive rate as a function of the false positive rate. The area under the ROC curve (AUC) represents a quantification of the curve and facilitates an easier comparison of results. The AUC is calculated as given in Equation 20, where *N*\ :sub:`actives`\  depicts the number of actives, *N*\ :sub:`decoys`\  represents the number of decoys, and *i*-th active structure. The received value is in the range [0.0, 1.0], where 0.5 indicates a random performance.
+
+
+
+The AUC metric represents a measure that evaluates the performance on the complete data. However, a major goal of VS experiments is the enrichment of active structures in a small fraction of the database. Therefore, it is necessary to apply additional metrics that focus on the early enrichment behavior. A common metric for the early enrichment problem is the enrichment factor at a predefined fraction of the data set (*x*%) as given in Equation 21.
+
+
+
+The enrichment factor depends on the number of actives, and, therefore it is not a robust metric. Korff et al. \ [#B41]_ proposed the relative enrichment factor (REF) as stated in Equation 22 to remove the dependency on the number of actives structures.
+
+
+
+The enrichment of active structures that are based on different scaffolds emerged to an additional important goal of VS experiments. All metrics that evaluate the so-called chemotype enrichment are based on a clustering of the active structures into different chemotypes (scaffolds). Mackey and Melville showed the integration of the scaffold information into common VS metrics \ [#B42]_. We decided to apply the arithmetic weighting on the ROC enrichment as given in Equation 23. Based on the information of the clustering, a structure *i* obtains a weight that is inversely proportional to the number of structures (\ :sub:`j`\ N) in the cluster *i*-th active structure of the *j*-th cluster is contained in the first *x*% of the data set.
+
+
+
+The evaluation metrics listed above represent only a small fraction of possible metrics. Other popular metrics for the early enrichment evaluation are the BEDROC \ [#B43]_ score or the enrichment factor. To enable future comparisons with the presented results of the 4D FAP\ :sub:`OA`\ , we computed for each target of the filtered DUD data set a result file that contains several additional VS metrics (e.g., BEDROC score at nine predefined alpha values). Additionally, the files contain the complete ranking of the molecules that allows the computation of the VS metric of choice. The 40 result files are contained in the additional file 
+
+Additional file 1
+
+Archive of the 4D FAP\ :sub:`OA`\  result files. This is a Gzip compressed Tar archive containing the result files of the 4D FAP\ :sub:`OA`\  on the filtered DUD data sets. The result files are tab-separated plain text files including the following information: method name, active data set with size, cluster information and the distribution of the active molecules over the clusters, decoy data set with size, ratio active:decoy, AUC, awAUC, BEDROC scores for predefined alpha values as suggested by Truchon and Bayly \ [#B43]_, enrichment factors, relative enrichment factor \ [#B41]_, ROC enrichments, awROC enrichments at predefined false positive fractions, chemotype enrichment, ROC and awROC data points, and the ranking of each structure to compute other VS metrics.
+
+Click here for file
+
+Literature Similarity Functions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We employed a wide range of different 2D and 3D similarity approaches to assess the performance of the 4D FAP\ :sub:`OA`\ . Due to the fact that we compare our approach to 20 other approaches, we only mention the name of the method and the applied type of information. For a comprehensive description we refer to the original publications.
+
+Different optimal assignment approaches were already evaluated on the filtered DUD data sets in an earlier publication \ [#B28]_. The best approach of this study was a two-step hierarchical assignment (2SHA) that first operates on a substructure level and afterwards on the atomic level. A second approach of that study optimally assigns the atom-pair (OAAP) environment trees and represents a similar 3D concept in comparison to the 4D FAP\ :sub:`OA`\ . The optimal assignment kernel (OAK) \ [#B30]_\ [#B31]_ and its flexibility extension, the OAK\ :sub:`FLEX`\  \ [#B44]_, were also evaluated in this earlier publication.
+
+Cheeseright et al. \ [#B45]_ introduced FieldScreen as a multiconformer-based VS tool. FieldScreen utilizes a database that contains conformers of each molecule. Therefore, it operates on a conformational ensemble in a similar way as the 4D FAP\ :sub:`OA`\  and represents an interesting reference approach. FieldScreen employs four different types of locally optimized molecular field points to compute a similarity value between two given molecules.
+
+Venkatraman et al. conducted a comparison study in which a plethora of different 2D and 3D approaches were evaluated on the original as well as the filtered DUD data sets \ [#B21]_. We compared the performance of the 4D FAP\ :sub:`OA`\  to the main results of this study. The study conducted by Venkatraman et al. employed the 2D fingerprint methods: OPENBABEL \ [#B46]_, DAYLIGHT \ [#B8]_, BCI \ [#B7]_, MACCS \ [#B9]_, and MOLPRINT2D \ [#B6]_. As 3D-based approaches they utilized ROCS \ [#B12]_ with two different scoring schemes ROCSS (shape only) and ROCS\ :sub:`SC`\  (shape and chemistry). The EON \ [#B47]_ approach compares the electrostatic fields computed by the Poisson-Boltzmann equation and was also evaluated using two different parameterizations. EON\ :sub:`SE`\  is based on the shape and the electrostatic, whereas EON\ :sub:`SCE`\  additionally uses chemical information.
+
+SHAEP \ [#B14]_ is based on a maximum common subgraph approach that is employed to perform a superposition of the molecules. The method operates only on the shape of molecules (SHAPE\ :sub:`S`\ ) or on the shape and the electrostatic (SHAPE\ :sub:`SE`\ ). The Ultrafast Shape Recognition (USR) \ [#B17]_ employs four distance relations of each atom and computes the first three moments of each distribution to obtain 12 descriptor values for each molecule. ESHAPE3D is based on a heavy atom distance matrix that is employed to compute fingerprints. The ESHAPE\ :sub:`HYD`\  alternatively uses the hydrophobic heavy atoms.
+
+PARAFIT \ [#B13]_ computes a similarity value based on spherical harmonic expansions of molecular surfaces. Another important class of similarity functions are the pharmacophore-based approaches. These approaches operate on an abstract representation of the molecules by means of pharmacophore features. These features are divided into different classes (e.g., hydrogen bond acceptor, aromatic, or hydrophobic) and represent important interaction points of molecules. The distance relation between these pharmacophore features plays an important role and can be measured in a topological or geometrical manner. Therefore, the pharmacophore-based approaches can also be divided into 2D- and 3D-based approaches. Korff et al. \ [#B41]_ compared different structure- and ligand-based VS approaches on the DUD data sets. This study contains two different pharmacophore-based methods. The topological pharmacophore point histogram (TopPPHist) computes for each pair of pharmacophore classes a distance histogram based on the topological distances. Therefore, the TopPPHist represents a 2D-based pharmacophore approach. Finally, the distance histograms are converted into a descriptor vector. The Flexophore approach \ [#B1]_\ [#B41]_ computes geometrical and binned distance histograms for each pharmacophore point pair based on a representative set of given conformers. The final comparison between two molecules is similar to the maximum common subgraph-isomorphism because the pharmacophore points together with the distance histograms form complete graphs.
+
+Results and Discussion
+**********************
+
+The results section is divided into four different subsections. The first subsection compares the results of the 4D FAP\ :sub:`OA`\  approach with other optimal assignment-based approaches that were already evaluated on the DUD data sets \ [#B28]_. The second part is based on the results of Venkatraman et al. \ [#B21]_ and compares the average performance of the 4D FAP\ :sub:`OA`\  with 15 state-of-the-art 2D and 3D approaches. Afterwards, a comparison with the pharmacophore-based approaches of Korff et al. \ [#B41]_ follows. The final subsection focuses on the performance difference between 3D approaches on multiple conformers and our 4D FAP\ :sub:`OA`\  approach.
+
+Comparison with other Optimal Assignment Methods
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The comparison with other optimal assignment methods measures the influence of the applied information type on the final performance. The OAAP represents the comparable 3D approach in comparison with the 4D FAP\ :sub:`OA`\ , and, therefore directly measures the performance gain of the 4D extension. As an early enrichment metric we applied the awROCE\ :sub:`5%`\ , which also assesses the chemotype enrichment performance. To reduce the bias introduced by a low number of chemotypes, we only applied data sets that have at least 15 different chemotypes. The AUC value was applied to evaluate the performance on the complete data sets.
+
+Table \ :ref:`2<table_2>` shows the results of the four optimal assignment methods and the 4D FAP\ :sub:`OA`\ . The direct comparison of the OAAP and the 4D FAP\ :sub:`OA`\  indicates that the 4D FAP\ :sub:`OA`\  outperforms the OAAP on 10 out of 13 data sets with respect to both performance measures. The OAAP is superior to the 4D FAP\ :sub:`OA`\  on the COX2, HIVRT, and the PDGFrb data sets. These three data sets are more rigid data sets with respect to the number of rotatable bonds of the query compounds. The query compounds of COX2, HIVRT, and PDGFrb have 5, 9, and 7 rotatable bonds, respectively. In comparison, the most flexible data sets are the ACE and EGFr data sets with 18 and 14 rotatable bonds, respectively. The correlation between the performance gain on the AUC metric *n* is the number of samples (13 data sets) and *r* the correlation, the probability that both variables (AUC performance gain and flexibility of query compounds) result in such a correlation if there is no true correlation of the variables (*\ |nonascii_19|\ * = 0.0) is 0.0277. Therefore, the correlation is significant (*p* = 0.05) and indicates that the performance gain of the 4D FAP\ :sub:`OA`\  is a function of the flexibility of the data set. In comparison to the other optimal assignment methods there is no correlation apparent. However, the OAK, OAK\ :sub:`FLEX`\ , and 2SHA are based on a different type of information (local atom similarity based on atom and bond features), and therefore, a direct comparison of the correlations is not meaningful.
+
+The comparisons of the 4D FAP\ :sub:`OA`\  with all other optimal assignment approaches show that the 4D FAP\ :sub:`OA`\  outperforms all other methods on 6 and 9 data sets with respect to the awROCE\ :sub:`5%`\  and AUC, respectively. These results yield a best average rank of 1.58 for the 4D FAP\ :sub:`OA`\  with respect to the AUC. For the awROCE\ :sub:`5%`\  results the 2SHA achieves the best average rank of 2.15 followed by the 4D FAP\ :sub:`OA`\  with an average rank of 2.31. In a direct comparison the 4D FAP\ :sub:`OA`\  outperforms the 2SHA approach on 7 data sets, whereas the reverse case only occurs on 5 data sets. To conclude, the 4D FAP\ :sub:`OA`\  shows a robust performance on 13 data sets. Considering the results of the complete data sets (AUC) the 4D FAP\ :sub:`OA`\  outperforms all other optimal assignment methods. The ability of 4D FAP\ :sub:`OA`\  to early enrich different scaffolds is comparable with the 2SHA approach.
+
+The encoding of the conformational space should be most beneficial if the flexibility of the query structure is high. Therefore, we discuss the results on the two data sets with the most flexible query compounds, the ACE and EGFr data set, in more detail.
+
+Figure \ :ref:`5<figure_5>` shows the ROC plot of all optimal assignment methods on the ACE data set. The curve of the 4D FAP\ :sub:`OA`\  passes always above the other curves with the exception of the 2SHA curve between 0.3 and 0.4 false positive rate. In the early enrichment range (0.0 - 0.1 false positive rate) the 4D FAP\ :sub:`OA`\  shows a strong increase of the true positive rate without any longer phases of stagnation (horizontal elements in the curve). The other optimal assignment methods show a similar behavior till \ |nonascii_20|\  0.03 false positive rate, but they stagnate until \ |nonascii_21|\  0.1 false positive rate. Therefore, the 4D FAP\ :sub:`OA`\  has an offset of the true positive rate of nearly 0.2 in comparison to the other methods. The 4D FAP\ :sub:`OA`\  is also the first approach that is able to retrieve all actives of the data set (\ |nonascii_22|\  0.7 false positive rate). The second approach that retrieves all actives is the 2SHA approach at a false positive rate of \ |nonascii_23|\  0.9. The comparable 3D approach (OAAP) is always inferior in comparison to the 4D FAP\ :sub:`OA`\ .
+
+.. _figure_5:
+
+.. figure:: ../_static/1758-2946-3-23-5.jpg
+   :align: center
+
+   Figure 5. ROC plot on ACE
+
+   **ROC plot on ACE**. ROC plot of all optimal assignment methods on the filtered ACE data set. TPR and FPR denote the true positive rate and false positive rate, respectively.
+
+
+To evaluate the chemotype discovery on the complete data set, we plotted the fraction of the discovered chemotypes as a function of the fraction of the ranked data set. A chemotype is considered as discovered if one compound of the chemotype is ranked.
+
+Figure \ :ref:`6<figure_6>` presents the chemotype discovery of all optimal assignment approaches on the ACE data set. The curves of the 4D FAP\ :sub:`OA`\ , 2SHA, OAK, and OAK\ :sub:`FLEX`\  show a similar behavior over the complete data set. Only the OAAP has an inferior chemotype discovery rate until \ |nonascii_24|\  40% of the data set. Therefore, the information gain by discovering new chemotypes is increased by the 4D FAP\ :sub:`OA`\  in comparison to its similar 3D method (OAAP). However, the other approaches that are based on a different type of information (OAK, OAK\ :sub:`FLEX`\ , and 2SHA) show a similar discovery rate.
+
+.. _figure_6:
+
+.. figure:: ../_static/1758-2946-3-23-6.jpg
+   :align: center
+
+   Figure 6. Chemotype discovery on ACE
+
+   **Chemotype discovery on ACE**. Chemotype discovery of all optimal assignment methods on the filtered ACE data set.
+
+
+The ROC plots and the chemotype discovery on the EGFr data set can be seen in the Figures \ :ref:`7<figure_7>` and \ :ref:`8<figure_8>`, respectively. In both figures a considerably performance gain of the 4D FAP\ :sub:`OA`\  is apparent. The 4D FAP\ :sub:`OA`\  is able to retrieve all actives within \ |nonascii_25|\  30% of the data set (Figure \ :ref:`7<figure_7>`). All chemotypes were discovered within 23% of the data set (Figure \ :ref:`8<figure_8>`). All other optimal assignment methods retrieve at least 20% of the actives and at least 15% of the chemotypes within the last percent of the data set. In comparison to the OAAP the performance gain of the 4D FAP\ :sub:`OA`\  is approximately twice that of the OAK, OAK\ :sub:`FLEX`\ , and 2SHA. Therefore, our encoding of the conformational space entails a significant performance gain on the EGFr data set.
+
+.. _figure_7:
+
+.. figure:: ../_static/1758-2946-3-23-7.jpg
+   :align: center
+
+   Figure 7. ROC plot on EGFr
+
+   **ROC plot on EGFr**. ROC plot of all optimal assignment methods on the filtered EGFr data set.
+
+
+.. _figure_8:
+
+.. figure:: ../_static/1758-2946-3-23-8.jpg
+   :align: center
+
+   Figure 8. Chemotype discovery on EGFr
+
+   **Chemotype discovery on EGFr**. Chemotype discovery of all optimal assignment methods on the filtered EGFr data set.
+
+
+Another important property of a VS similarity function is the computation performance. To enable a VS experiment on a real-world database, the VS similarity function should be able to process a reasonable number of compounds in a feasible time. All presented VS similarity functions that are based on the optimal assignment approach were developed at our department, and, therefore we are able to perform a fair comparison of the computation time. We computed the average computation time of each optimal assignment method on the 13 data sets, which were used in Table \ :ref:`2<table_2>`, to approximate a reasonable performance for drug-like compounds.
+
+The 4D FAP\ :sub:`OA`\  approach has an averaged performance of 38.8 \ |nonascii_26|\  27.56 similarity calculations per second. This computation time is based on preprocessed molecules (GMMs already computed). The OAK yields 27.34 \ |nonascii_27|\  3.40 calculations per second, whereas its flexibility extension (OAK\ :sub:`FLEX`\ ) computes 41.03 \ |nonascii_28|\  7.32 molecules per second. The OAAP represents the fastest approach with 51.49 \ |nonascii_29|\  18.07 computations per second. In contrast, the 2SHA is the slowest method with a throughput of 14.04 \ |nonascii_30|\  1.78 per second. All calculations were done on a Core2Duo CPU with 2 GHz using one core and 1 GB memory. As a result, the 4D FAP\ :sub:`OA`\  is fast enough to screen over 100,000 molecules within one hour on a desktop CPU using only one core. The similarity calculation can be easily parallelized to further increase the throughput, and, therefore the approach should be fast enough for real-world applications.
+
+The preprocessing step (conformational sampling and GMM calculation) represents an additional computational task of our approach. However, the preprocessing step has only to be computed once for each molecule. Additionally, the computation of different conformers (conformational sampling) is often necessary for different tasks in the drug discovery pipeline. Furthermore, our encoding is a model-based encoding that reduces the memory usage in a database in comparison to the storage of multiple conformers of a molecule.
+
+Comparison with State-of-the-Art 2D and 3D Approaches
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In this subsection we compare the performance of the 4D FAP\ :sub:`OA`\  with different state-of-the-art 2D and 3D approaches. Venkatraman et al. \ [#B21]_ conducted a comprehensive evaluation of 15 different literature methods on the DUD data sets. The study contains the averaged (over all 40 data sets) relative enrichment factors at 1%, 5%, and 10% as well as the AUC values for each method. Unfortunately, the study lacks any evaluation metric that rates the chemotype discovery of the approaches. Therefore, the results in this section are only based on the early enrichment (relative enrichment factors) and the performance on the complete data set (AUC). All results are based on the filtered data sets and compiled in Table \ :ref:`3<table_3>`.
+
+The results of Table \ :ref:`3<table_3>` confirm that the 2D approaches are more robust in comparison to the 3D methods. Only the ROCS\ :sub:`SC`\  is able to yield comparable results in comparison to the MACCS keys and MOLPRINT2D. The 4D FAP\ :sub:`OA`\  is able to utilize the GMMs as a source of reasonable information, and, therefore the approach yields the best results with respect to the relative enrichment factor at 5% and 10% as well as the AUC metric. Only the BCI approach is able to marginally improve the results with respect to the relative enrichment factor at 1%. The best performance of the 4D FAP\ :sub:`OA`\  on three out of four metrics results in the best average rank of 1.25. The BCI and DAYLIGHT fingerprints yield an average rank of 2.75 and represent the best 2D-based approach. ROCS\ :sub:`SC`\  is the best 3D-based approach with an average rank of 5.0, and, therefore higher ranked as the 2D-based approaches MOLPRINT2D (6.0) and the MACCS keys (7.0). All other 3D-based methods are inferior in comparison to the 2D-based approaches. To conclude, the 4D FAP\ :sub:`OA`\  benefits from the conformational space information and is able to yield the best average performance of all methods.
+
+Comparison with Pharmacophore-Based Approaches
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Korff et al. \ [#B41]_ evaluated the TopPPHist and the Flexophore approach on the 40 targets of the DUD data sets. The early enrichment performance was assessed by the relative enrichment factor at 1% of the data set. To evaluate the chemotype enrichment, Korff et al. counted the discovered chemotypes within the enriched data set fraction with respect to the chemotype definition of Good and Oprea \ [#B35]_. Table \ :ref:`4<table_4>` lists the relative enrichment factors and the number of discovered chemotypes for each of the 40 data sets of the DUD.
+
+With respect to the early enrichment performance the TopPPHist and the Flexophore approach achieved an average relative enrichment factor of 37.34 \ |nonascii_31|\  31.38 and 43.31 \ |nonascii_32|\  33.25, respectively. The application of the 4D FAP\ :sub:`OA`\  resulted in an average relative enrichment factor of 55.45 \ |nonascii_33|\  33.26 and increased the performance of the Flexophore approach by over 20%. However, based on their abstract representation of molecules, one of the strengths of pharmacophore-based approaches is the ability to discover new chemical entities. This abstraction from the query scaffold can be seen in the chemotype discovery results of Table \ :ref:`4<table_4>`. The Flexophore approach needs \ |nonascii_34|\  20% less active compounds to discover a similar amount of chemotypes (94) in comparison with the 4D FAPOA (98). The 2D-based TopPPHist discovered only 66 chemotypes over all 40 data sets and showed an inferior chemotype discovery in comparison with the 4D-based approaches (Flexophore, 4D FAP\ :sub:`OA`\ ).
+
+Comparison with Multiple Conformer Approaches
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The results of the previous sections demonstrated the inferior performance of 3D-based approaches in comparison with 2D-based methods. A common technique to tackle this deficit of 3D approaches is to utilize multiple conformers and average or use the maximum of all pair-wise similarity values. The number of necessary similarity computations scales with *O*(*n*\ :sup:`2`\ ), where *n* represents the number of conformers of the molecules. Therefore, this technique implies a significant increase in computation time. However, the averaging over multiple conformers increases the available information content of the 3D-based approaches to a level that is similar in comparison to the 4D FAP\ :sub:`OA`\ . The 4D FAP\ :sub:`OA`\  has a model-based description of the conformational space, whereas the 3D-based approaches explicitly have the conformational space. Consequently, a comparison of the 4D FAP\ :sub:`OA`\  with 3D-based approaches on multiple conformers represents an interesting comparison based on a equal source of information.
+
+Venkatraman et al. \ [#B21]_ evaluated the ROCS\ :sub:`SC`\  (best 3D-based approach of Table \ :ref:`3<table_3>`) in three additional experiments on the unfiltered DUD data sets with different ensembles of size 10, 100, and 1000 conformers per molecule. Table \ :ref:`5<table_5>` lists in detail the AUC performance of the ROCS\ :sub:`SC`\  on different ensemble sizes and the AUC results of the 4D FAP\ :sub:`OA`\ . The table also contains the AUC results of the ROCS\ :sub:`SC`\  on one given conformation as a baseline to evaluate the performance gain of the multiple conformer setup.
+
+The average AUC of the ROCS\ :sub:`SC`\  increases from 0.692 (AUC(1)) over 0.703 (AUC(10)) to 0.725(AUC(100)). The results on 1000 conformers are marginally inferior (average AUC(1000) of 0.722) in comparison to the results on 100 conformers. As a result, the ROCS\ :sub:`SC`\  slightly benefits from the additional information content of multiple conformers. However, the average AUC of the 4D FAP\ :sub:`OA`\  is 0.80, and, therefore superior in comparison to all four ROCS\ :sub:`SC`\  setups. These results are verified by the average ranks of the approaches. The 4D FAP\ :sub:`OA`\  is able to achieve the best AUC value on 27 out of 40 data sets and demonstrates its robust performance on a wide range of pharmaceutically relevant targets. The best ROCS\ :sub:`SC`\  setup (100 conformers) yields on eight data sets the best result. Please note that the different average AUC values in Table \ :ref:`3<table_3>` and \ :ref:`5<table_5>` are the result of the applied data sets (filtered DUD in Table \ :ref:`3<table_3>` and unfiltered in Table \ :ref:`5<table_5>`).
+
+Despite the robust and superior performance of the 4D FAP\ :sub:`OA`\  on the majority of the 40 data sets, the weak performance on the HIVPR data set is conspicuous. The HIVPR data set has an average number of heavy atoms of 36.3 and represents the data set with the largest compounds of all 40 DUD data sets. The 4D FAP\ :sub:`OA`\  entails an optimal assignment step to compute a final similarity value based on the atom-pair tree similarity matrix *S*. If the approach computes the similarity value between the query compound and a data set compound, the *i*-th row of *S* represents the atom-pair tree with the *i*-th atom of the query compound as root node. Analogously, this applies to the *j*-th column of *S* and the *j*-th atom of the data set compound. The optimal assignment step maps each atom of the query compound onto an atom of the data set compound. With an increased size of atoms the number of possibilities (possible mappings) scales with *O*(*n*!), where *n* is the number of heavy atoms. This increase also increments the risk of a topological error in the assignment step. Topological errors are assignments that do not preserve a substructure mapping (e.g., atoms of a ring are assigned to atoms of different rings). Figure \ :ref:`9<figure_9>` shows a mapping with several topological errors. These topological errors maximize the final similarity value, but from a chemical point of view these mappings are questionable. Therefore, these errors can negatively influence the ranking of the compounds on the HIVPR data set.
+
+.. _figure_9:
+
+.. figure:: ../_static/1758-2946-3-23-9.jpg
+   :align: center
+
+   Figure 9. Optimal assignment with topological errors
+
+   **Optimal assignment with topological errors**. Example mapping with several topological errors. Figure was taken from Jahn et al. \ [#B28]_
+
+
+The FieldScreen approach by Cheeseright et al. \ [#B45]_ represents a VS similarity function that applies four different types of locally optimized field points and operates on a multiconformer database. Therefore, it also operates on a comparable information content as our 4D FAP\ :sub:`OA`\  approach. Cheeseright et al. evaluated the FieldScreen approach on the filtered DUD data sets and applied the chemotype information on the result metrics. The results of the FieldScreen approach as well as the 4D FAP\ :sub:`OA`\  are listed in Table \ :ref:`6<table_6>`.
+
+The 4D FAP\ :sub:`OA`\  yields a superior early enrichment performance (awROCE\ :sub:`5%`\ ) on 9 out of 13 data sets. Concerning the performance on the complete data set (AUC) our approach outperforms FieldScreen on 8 data sets. The 4D FAP\ :sub:`OA`\  is able to increase the mean early enrichment and complete data set performance by \ |nonascii_35|\  30% and \ |nonascii_36|\  16%, respectively. The major improvements of FieldScreen in comparison to the 4D FAP\ :sub:`OA`\  are on the FXa and HIVRT data sets. These data sets also consist of larger molecules, and, therefore the risk of topological errors is increased and is probably a reason for the inferior 4D FAP\ :sub:`OA`\  performance.
+
+To conclude, the best 3D-based approach of Table \ :ref:`3<table_3>` (ROCS\ :sub:`SC`\ ) could increase the performance if it is applied on multiple conformer data sets. However, the performance gain was not strong enough to reach the results of the 4D FAP\ :sub:`OA`\ . The comparison with the FieldScreen approach yields similar results and underpinned the robust performance of the 4D FAP\ :sub:`OA`\ . The detailed evaluation of the results reveals a weakness of our approach if the compounds of a data set have an increased number of heavy atoms. This weakness is likely the result of the optimal assignment step and was already reported as a weak point of optimal assignment approaches \ [#B28]_. Nevertheless, the 4D FAP\ :sub:`OA`\  represents a robust similarity measure for small and medium sized drug-like compounds.
+
+Conclusions
+***********
+
+We presented a VS similarity function that operates on GMM encoded conformational space information. Our approach is able to compare the conformational space of molecules within one step, and, therefore avoids the application of time-consuming averaging techniques. The approach was already applied in QSAR experiments and demonstrated its robust performance in comparison to similar 3D-based QSAR models \ [#B23]_\ [#B28]_.
+
+The aim of this study was to evaluate our approach as VS similarity function. Therefore, we compared the results of the 4D FAP\ :sub:`OA`\  with 20 other 2D- and 3D-based approaches. Additionally, we applied two approaches (ROCS\ :sub:`SC`\  and FieldScreen) that operate on multiple conformers to provide a comparison of approaches that are based on a similar information content.
+
+The results showed that our approach is able to achieve superior results on a wide range of pharmaceutically relevant targets. Even the best 3D approach, with respect to the results of Venkatraman et al. \ [#B21]_, applied on multiple conformers is inferior in comparison to our approach.
+
+The preprocessing, which is necessary to encode the conformational space information by means of GMMs, represents an additional computational step. However, all compounds have only be computed once and the encoded models need less space in comparison to the storage of conformational ensembles. The computational speed of the actual similarity function is fast enough to screen over 100,000 compounds within one hour on a standard desktop CPU with one core. Therefore, our approach should meet the requirements of real-world VS applications.
+
+The complete source code of the preprocessing tool (computing GMMs based on conformational ensembles) as well as the 4D FAP\ :sub:`OA`\  similarity function are publicly available on our department website `<http://www.cogsys.cs.uni-tuebingen.de/software/4DFAP>`_.
+
+List of abbreviations
+*********************
+
+ACE: angiotensin-converting enzyme; AChE: acetylcholinesterase; ADA: adenosine deaminase; ALR2: aldose reductase; AmpC: AmpC *\ |nonascii_37|\ *-lactamase; AR: androgen receptor; CDK2: cyclin-dependent kinase 2; COMT: catechol O-methyltransferase; COX-1: cyclooxygenase-1; COX-2: cyclooxygenase-2; DHFR: dihydrofolate reductase; EGFr: epidermal growth factor receptor; ER: estrogen receptor; FGFr1: fibroplast growth factor receptor kinase; FXa: factor Xa; GART: glycinamide ribonucleotide transformylase; GPB: glycogen phosphorylase *\ |nonascii_38|\ *; GR: glucocorticoid receptor; HIVPR: HIV protease; HIVRT: HIV reverse transcriptase; HMGR: hydroxymethylglutaryl-CoA reductase; HSP90: human heat shock protein 90; InhA: enoyl ACP reductase; MR: mineralo-corticoid receptor; NA: neuraminidase; P38: P38 mitogen activated protein; PARP: poly(ADP-ribose) polymerase; PDE5: phosphodiesterase 5; PDGFrb: platelet derived growth factor receptor kinase; PNP: purine nucleoside phosphorylase; PPAR\ :sub:`\ |nonascii_39|\ `\ : peroxisome proliferator activated receptor *\ |nonascii_40|\ *; PR: progesterone receptor; RXR\ :sub:`\ |nonascii_41|\ `\  retinoic X receptor *\ |nonascii_42|\ *; SAHH: S-adenosyl-homocysteine hydrolase; SRC: tyrosine kinase SRC; TK: thymidine kinase; VEGFr2: vascular endothelial growth factor receptor.
+
+Competing interests
+*******************
+
+The authors declare that they have no competing interests.
+
+Authors' contributions
+**********************
+
+AJ designed and developed the main part of the 4D FAP\ :sub:`OA`\ , has written the manuscript, participated in the design of the experiments and the discussion of the results. LR participated in the design of the experiments and the discussion of the results. GH contributed to the development of the 4D FAP\ :sub:`OA`\ , participated in the design of the experiments and the discussion. AZ participated in the design of the 4DFAP\ :sub:`OA`\ , the design of the experiments, and the discussion of the results.
+
+.. [#B1]  Flexophore, a New Versatile 3D Pharmacophore Descriptor That Considers Molecular Flexibility
+
+.. [#B2]  Integration of virtual and high-throughput screening
+
+.. [#B3]  NOTITLE!
+
+.. [#B4]  Current Trends in Ligand-Based Virtual Screening: Molecular Representations, Data Mining Methods, New Application Areas, and Performance Evaluation
+
+.. [#B5]  How Similar Are Similarity Searching Methods? A Principal Component Analysis of Molecular Descriptor Space
+
+.. [#B6]  Similarity Searching of Chemical Databases Using Atom Environment Descriptors (MOLPRINT 2D): Evaluation of Performance
+
+.. [#B7]  Chemical Fragment Generation and Clustering Software
+
+.. [#B8]  Daylight Chemical Information Systems Inc
+
+.. [#B9]  NOTITLE!
+
+.. [#B10]  Measuring CAMD Technique Performance: A Virtual Screening Case Study in the Design of Validation Experiments
+
+.. [#B11]  Application of 3D Zernike descriptors to shape-based ligand similarity searching
+
+.. [#B12]  A fast method of molecular shape comparison: A simple application of a Gaussian description of molecular shape
+
+.. [#B13]  Toward High Throughput 3D Virtual Screening Using Spherical Harmonic Surface Representations
+
+.. [#B14]  ShaEP: Molecular Overlay Based on Shape and Electrostatic Potential
+
+.. [#B15]  Pharmacophoric pattern matching in files of three-dimensional chemical structures: Comparison of conformational-searching algorithms for flexible searching
+
+.. [#B16]  Distance Profiles (DiP): A translationally and rotationally invariant 3D structure descriptor capturing steric properties of molecules
+
+.. [#B17]  Ultrafast shape recognition: Evaluating a new ligand-based virtual screening technology
+
+.. [#B18]  Treating Chemical Diversity in QSAR Analysis: Modeling Diverse HIV-1 Integrase Inhibitors Using 4D Fingerprints
+
+.. [#B19]  4D-Fingerprints, Universal QSAR and QSPR Descriptors
+
+.. [#B20]  Unconventional 2D Shape Similarity Method Affords Comparable Enrichment as a 3D Shape Method in Virtual Screening Experiments
+
+.. [#B21]  Comprehensive Comparison of Ligand-Based Virtual Screening Tools Against the DUD Data set Reveals Limitations of Current 3D Methods
+
+.. [#B22]  One-Dimensional Molecular Representations and Similarity Calculations: Methodology and Validation
+
+.. [#B23]  Probabilistic Modeling of Conformational Space for 3D Machine Learning Approaches
+
+.. [#B24]  Maximum Likelihood from Incomplete Data via the EM Algorithm
+
+.. [#B25]  Estimating the dimension of a model
+
+.. [#B26]  A new look at the statistical model identification
+
+.. [#B27]  Boltzmann-Enhanced Flexible Atom-Pair Kernel with Dynamic Dimension Reduction
+
+.. [#B28]  Optimal assignment methods for ligand-based virtual screening
+
+.. [#B29]  Graph kernels for chemical compounds using topological and three-dimensional local atom pair environments
+
+.. [#B30]  Optimal assignment kernels for attributed molecular graphs
+
+.. [#B31]  Kernel Functions for Attributed Molecular Graphs - A New Similarity-Based Approach to ADME Prediction in Classification and Regression
+
+.. [#B32]  DUD - A Directory of Useful Decoys
+
+.. [#B33]  Benchmarking Sets for Molecular Docking
+
+.. [#B34]  Is There a Difference between Leads and Drugs? A Historical Perspective
+
+.. [#B35]  Optimization of CAMD Techniques 3. Virtual Screening Enrichment Studies: a Help or Hindrance in Tool Selection?
+
+.. [#B36]  DUD Filtered - Lead-like filtered DUD
+
+.. [#B37]  Pharmacophore Discovery - Lessons Learned
+
+.. [#B38]  NOTITLE!
+
+.. [#B39]  ConfGen: A Conformational Search Method for Efficient Generation of Bioactive Conformers
+
+.. [#B40]  Drug-like Bioactive Structures and Conformational Coverage with the LigPrep/ConfGen Suite: Comparison to Programs MOE and Catalyst
+
+.. [#B41]  Comparison of Ligand- and Structure-Based Virtual Screening on the DUD Data Set
+
+.. [#B42]  Better than Random? The Chemotype Enrichment Problem
+
+.. [#B43]  Evaluating Virtual Screening Methods: Good and Bad Metrics for the "Early Recognition" Problem
+
+.. [#B44]  Atomic Local Neighborhood Flexibility Incorporation into a Structured Similarity Measure for QSAR
+
+.. [#B45]  FieldScreen: Virtual Screening Using Molecular Fields. Application to the DUD Data Set
+
+.. [#B46]  The Open Babel Package
+
+.. [#B47]  The Use of Three-Dimensional Shape and Electrostatic Similarity Searching in the Identification of a Melanin-Concentrating Hormone Receptor 1 Antagonist
+
+.. |nonascii_1| unicode:: 0x2265
+.. |nonascii_2| unicode:: 0x3c0
+.. |nonascii_3| unicode:: 0x3bc
+.. |nonascii_4| unicode:: 0x3a3
+.. |nonascii_5| unicode:: 0x3c0
+.. |nonascii_6| unicode:: 0x3bc
+.. |nonascii_7| unicode:: 0x3a3
+.. |nonascii_8| unicode:: 0x394
+.. |nonascii_9| unicode:: 0xc5
+.. |nonascii_10| unicode:: 0xc5
+.. |nonascii_11| unicode:: 0x2208
+.. |nonascii_12| unicode:: 0x2208
+.. |nonascii_13| unicode:: 0xf6
+.. |nonascii_14| unicode:: 0x3c0
+.. |nonascii_15| unicode:: 0x2208
+.. |nonascii_16| unicode:: 0xf6
+.. |nonascii_17| unicode:: 0xc5
+.. |nonascii_18| unicode:: 0xc5
+.. |nonascii_19| unicode:: 0x3c1
+.. |nonascii_20| unicode:: 0x2248
+.. |nonascii_21| unicode:: 0x2248
+.. |nonascii_22| unicode:: 0x2248
+.. |nonascii_23| unicode:: 0x2248
+.. |nonascii_24| unicode:: 0x2248
+.. |nonascii_25| unicode:: 0x2248
+.. |nonascii_26| unicode:: 0xb1
+.. |nonascii_27| unicode:: 0xb1
+.. |nonascii_28| unicode:: 0xb1
+.. |nonascii_29| unicode:: 0xb1
+.. |nonascii_30| unicode:: 0xb1
+.. |nonascii_31| unicode:: 0xb1
+.. |nonascii_32| unicode:: 0xb1
+.. |nonascii_33| unicode:: 0xb1
+.. |nonascii_34| unicode:: 0x2248
+.. |nonascii_35| unicode:: 0x2248
+.. |nonascii_36| unicode:: 0x2248
+.. |nonascii_37| unicode:: 0x3b2
+.. |nonascii_38| unicode:: 0x3b2
+.. |nonascii_39| unicode:: 0x3b3
+.. |nonascii_40| unicode:: 0x3b3
+.. |nonascii_41| unicode:: 0x3b1
+.. |nonascii_42| unicode:: 0x3b1

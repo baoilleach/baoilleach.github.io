@@ -1,0 +1,112 @@
+Journal of Cheminformatics Volume 3
+===================================
+
+.. toctree::
+
+
+   articles/1758-2946-3-1.rst
+
+   articles/1758-2946-3-2.rst
+
+   articles/1758-2946-3-3.rst
+
+   articles/1758-2946-3-4.rst
+
+   articles/1758-2946-3-5.rst
+
+   articles/1758-2946-3-6.rst
+
+   articles/1758-2946-3-7.rst
+
+   articles/1758-2946-3-8.rst
+
+   articles/1758-2946-3-9.rst
+
+   articles/1758-2946-3-11.rst
+
+   articles/1758-2946-3-12.rst
+
+   articles/1758-2946-3-13.rst
+
+   articles/1758-2946-3-14.rst
+
+   articles/1758-2946-3-15.rst
+
+   articles/1758-2946-3-16.rst
+
+   articles/1758-2946-3-17.rst
+
+   articles/1758-2946-3-18.rst
+
+   articles/1758-2946-3-19.rst
+
+   articles/1758-2946-3-20.rst
+
+   articles/1758-2946-3-21.rst
+
+   articles/1758-2946-3-22.rst
+
+   articles/1758-2946-3-23.rst
+
+   articles/1758-2946-3-24.rst
+
+   articles/1758-2946-3-25.rst
+
+   articles/1758-2946-3-26.rst
+
+   articles/1758-2946-3-27.rst
+
+   articles/1758-2946-3-28.rst
+
+   articles/1758-2946-3-29.rst
+
+   articles/1758-2946-3-30.rst
+
+   articles/1758-2946-3-31.rst
+
+   articles/1758-2946-3-32.rst
+
+   articles/1758-2946-3-33.rst
+
+   articles/1758-2946-3-34.rst
+
+   articles/1758-2946-3-35.rst
+
+   articles/1758-2946-3-36.rst
+
+   articles/1758-2946-3-37.rst
+
+   articles/1758-2946-3-38.rst
+
+   articles/1758-2946-3-39.rst
+
+   articles/1758-2946-3-40.rst
+
+   articles/1758-2946-3-41.rst
+
+   articles/1758-2946-3-42.rst
+
+   articles/1758-2946-3-43.rst
+
+   articles/1758-2946-3-44.rst
+
+   articles/1758-2946-3-45.rst
+
+   articles/1758-2946-3-46.rst
+
+   articles/1758-2946-3-47.rst
+
+   articles/1758-2946-3-48.rst
+
+   articles/1758-2946-3-49.rst
+
+   articles/1758-2946-3-50.rst
+
+   articles/1758-2946-3-51.rst
+
+   articles/1758-2946-3-52.rst
+
+   articles/1758-2946-3-53.rst
+
+   articles/1758-2946-3-54.rst
+

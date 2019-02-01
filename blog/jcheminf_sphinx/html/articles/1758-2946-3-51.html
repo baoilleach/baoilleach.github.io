@@ -1,0 +1,887 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Automated annotation of chemical names in the literature with tunable accuracy" href="1758-2946-3-52.html" />
+    <link rel="prev" title="2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope" href="1758-2946-3-50.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-50.html" title="2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-52.html" title="Automated annotation of chemical names in the literature with tunable accuracy"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="an-investigation-into-pharmaceutically-relevant-mutagenicity-data-and-the-influence-on-ames-predictive-potential">
+<h1>An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential<a class="headerlink" href="#an-investigation-into-pharmaceutically-relevant-mutagenicity-data-and-the-influence-on-ames-predictive-potential" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>In drug discovery, a positive Ames test for bacterial mutation presents a significant hurdle to advancing a drug to clinical trials. In a previous paper, we discussed success in predicting the genotoxicity of reagent-sized aryl-amines (ArNH<sub>2</sub>), a structure frequently found in marketed drugs and in drug discovery, using quantum mechanics calculations of the energy required to generate the DNA-reactive nitrenium intermediate (ArNH:+). In this paper we approach the question of what molecular descriptors could improve these predictions and whether external data sets are appropriate for further training.</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>In trying to extend and improve this model beyond this quantum mechanical reaction energy, we faced considerable difficulty, which was surprising considering the long history and success of QSAR model development for this test. Other quantum mechanics descriptors were compared to this reaction energy including AM1 semi-empirical orbital energies, nitrenium formation with alternative leaving groups, nitrenium charge, and aryl-amine anion formation energy. Nitrenium formation energy, regardless of the starting species, was found to be the most useful single descriptor. External sets used in other QSAR investigations did not present the same difficulty using the same methods and descriptors. When considering all substructures rather than just aryl-amines, we also noted a significantly lower performance for the Novartis set. The performance gap between Novartis and external sets persists across different descriptors and learning methods. The profiles of the Novartis and external data are significantly different both in aryl-amines and considering all substructures. The Novartis and external data sets are easily separated in an unsupervised clustering using chemical fingerprints. The chemical differences are discussed and visualized using Kohonen Self-Organizing Maps trained on chemical fingerprints, mutagenic substructure prevalence, and molecular weight.</p>
+</div>
+<div class="section" id="conclusions">
+<h3>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h3>
+<p>Despite extensive work in the area of predicting this particular toxicity, work in designing and publishing more relevant test sets for compounds relevant to drug discovery is still necessary. This work also shows that great care must be taken in using QSAR models to replace experimental evidence. When considering all substructures, a random forest model, which can inherently cover distinct neighborhoods, built on Novartis data and previously reported external data provided a suitable model.</p>
+</div>
+</div>
+<div class="section" id="introduction">
+<h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="aims">
+<h3>1.1 Aims<a class="headerlink" href="#aims" title="Permalink to this headline">¶</a></h3>
+<p>In the field of drug-discovery, a positive Ames test can halt development of a particular chemotype and possibly work on an entire drug target because genotoxicity of a potential therapeutic would be a serious issue that needs to be avoided. Sufficiently nuanced rules do not exist to fix such a problem while maintaining the careful balance of potency and properties. Compounding this problem is that impurities or metabolites that could be generated in parts-per-million quantities (10 μg/day) are just as serious from a regulatory standpoint, which could eliminate an essential core structure. Thus, prediction of whether a starting material, degradation product, or drug will be mutagenic in the Ames genotoxicity test is our primary goal. More specifically, our initial focus was on aryl-amines, which are commonly used reagent building blocks in many small molecule drug-discovery projects and appear as a substructure in at least 13% of currently marketed drugs <a class="footnote-reference" href="#b1" id="id1">[1]</a>. Aryl-amines also have a known mechanism for genotoxicity. In a previous article, we have shown that an <em>in silico</em> assessment of aryl-amines using quantum mechanics reaction energy calculations can provide excellent detection of mutagenic aryl-amines <a class="footnote-reference" href="#b2" id="id2">[2]</a>. However, we were surprised that statistical models incorporating additional descriptors did not improve the performance of the single nitrenium formation energy parameter given the wealth of QSAR literature showing accuracy approaching or exceeding the known experimental error. Additionally, we found that the set of Novartis aryl-amines was surprisingly challenging to model compared to those in the literature.</p>
+<p>Our ultimate goal is to provide medicinal chemists with usable models to improve the chances of avoiding a toxicity trap that is often visible only after low-throughput tests come back. The aryl-amines can be predicted reliably with the nitrenium formation energy calculation but comparing all-substructure external Ames results to our Novartis results, we found that these were also much harder. Other groups in pharmaceutical companies have noted difficulties in predicting mutagenicity in aryl-amines <a class="footnote-reference" href="#b3" id="id3">[3]</a>, and in internal all-substructure data sets using commercial software <a class="footnote-reference" href="#b4" id="id4">[4]</a><a class="footnote-reference" href="#b5" id="id5">[5]</a>.</p>
+<p>Previous to this article, differences between data sets typically used in the literature for building mutagenicity predictive methods and the data at pharmaceutical companies have not been compared. This is key to the disconnect from literature studies and pharmaceutical studies. The high level of performance of statistical models in this arena with constructed test sets is misleading and does not reflect performance in pharmaceutically relevant sets. Here we show the relative difficulty in predicting the Ames test result in the Novartis aryl-amines and other substructures, in contrast to literature sets.</p>
+</div>
+<div class="section" id="the-significance-of-the-ames-test">
+<h3>1.2 The Significance of the Ames Test<a class="headerlink" href="#the-significance-of-the-ames-test" title="Permalink to this headline">¶</a></h3>
+<p>Many compounds in the environment released from industrial pollution and production are known to cause cancer <a class="footnote-reference" href="#b6" id="id6">[6]</a>. Regulatory agencies around the world in cooperation with industry experts have adopted stringent test methods to identify and regulate the use of chemical mutagens that might be exposed to the environment or administered to humans directly as pharmaceuticals <a class="footnote-reference" href="#b7" id="id7">[7]</a>. Carcinogenicity is usually determined by an array of in-vivo and in-vitro surrogate tests, which are specified by regulatory authorities before administration to man. The Ames bacterial test is a simple experiment to perform and it is a mandatory regulatory test that has been in use for almost 40 years and correlates with life-time rodent carcinogenicity studies that require 2 years to complete <a class="footnote-reference" href="#b8" id="id8">[8]</a><a class="footnote-reference" href="#b9" id="id9">[9]</a>.</p>
+<p>At the molecular level, this test for mutagenicity <a class="footnote-reference" href="#b10" id="id10">[10]</a><a class="footnote-reference" href="#b11" id="id11">[11]</a> detects a substance&#8217;s ability to cause mutations in engineered strains of Salmonella typhimurium by observing return of function by point mutations in an altered His operon gene. The mutations in the His operon strains prevents histidine biosynthesis, thus random mutations or mutations due to an external agent must occur for colony growth on histidine-deficient medium. Many compounds are converted to mutagenic compounds after metabolism, so the test is performed with and without pre-incubation of the compound with rat liver enzymes. The bacterial strains used in the test have been further engineered to have permeable cell membranes, a reasonably high spontaneous mutation rate, and diminished DNA repair capacity <a class="footnote-reference" href="#b12" id="id12">[12]</a>.</p>
+<p>Although the result of the Ames test can be reported as a standardized quantity of the number of colonies formed, in most recent studies and databases, including the Novartis internal test results, are reported as categorical results: &#8220;Ames-positive&#8221; (Ames+) or &#8220;Ames-negative&#8221; (Ames-). Additionally, it has been shown that the qualitative carcinogenicity result is not improved by quantitative mutagenicity potency data <a class="footnote-reference" href="#b8" id="id13">[8]</a>. An increase in number of colonies over control by at least a factor of 2 and a clear dose dependence in the mini-Ames screening test <a class="footnote-reference" href="#b13" id="id14">[13]</a> is classified as a positive result. Although high-throughput screening assays exist, they do not faithfully predict the result of the Ames test and at the same time require a significant investment <a class="footnote-reference" href="#b14" id="id15">[14]</a><a class="footnote-reference" href="#b15" id="id16">[15]</a>. Consequently, the volume of data available for the Ames test is fairly limited. The turnaround time and cost for Ames testing makes accurate in silico models quite useful.</p>
+<p>There are some limitations of the Ames test that present a challenge to building accurate in silico models. The exact sensitivity of the test for carcinogenicity is somewhat controversial <a class="footnote-reference" href="#b8" id="id17">[8]</a>, but in a recent retrospective analysis by FDA and EPA researchers of carcinogenicity and surrogate test results showed the Ames test is positive for 49% (275Ames+/557 rodent carcinogens) of carcinogenic compounds but only 19% of the Ames+ compounds are not carcinogenic to rats (85 Ames+/431 rodent non-carcinogens) <a class="footnote-reference" href="#b16" id="id18">[16]</a>. Reproducibility both across and inside one laboratory conducting the test is another serious issue. Both literature and internal intra-laboratory assessments of the test, at least in a 2-strain screening version of the test, have found discrepancies on the order of 15-20% <a class="footnote-reference" href="#b9" id="id19">[9]</a>. Based on a retrospective analysis of 237 compounds at Novartis with multiple Ames screen test results, this is a realistic estimate; there were 49 (21%) with discrepant results. Among aryl amines, 13 out of 57 compounds with multiple test results were discordant (23%). The test is sensitive and uses high concentrations of the test chemical, which can increase the effect of impurities including metals <a class="footnote-reference" href="#b17" id="id20">[17]</a>, degradation products, or reagents <a class="footnote-reference" href="#b18" id="id21">[18]</a><a class="footnote-reference" href="#b19" id="id22">[19]</a>. The chemical can also be toxic to the bacterial system, most notably antibacterials or cytotoxic compounds, but must still be tested to the maximum possible concentration <a class="footnote-reference" href="#b7" id="id23">[7]</a>.</p>
+</div>
+<div class="section" id="substructure-alert-and-qsar-methods">
+<h3>1.3 Substructure alert and QSAR methods<a class="headerlink" href="#substructure-alert-and-qsar-methods" title="Permalink to this headline">¶</a></h3>
+<p>The cause of cancer through the action of chemicals has been studied extensively, and the process typically begins with the chemical, or one of its metabolites, interacting with DNA, which subsequently leads to mutations <a class="footnote-reference" href="#b20" id="id24">[20]</a>. The principle of mutagenicity through reaction of DNA with electrophiles has been especially useful in rationalizing and deriving &#8220;toxicophores,&#8221; substructures that are strongly associated with mutagenicity <a class="footnote-reference" href="#b21" id="id25">[21]</a><a class="footnote-reference" href="#b22" id="id26">[22]</a>. Some of these mechanisms have been studied carefully in vitro and in vivo <a class="footnote-reference" href="#b23" id="id27">[23]</a>, and DNA or protein adducts can be measured and observed experimentally <a class="footnote-reference" href="#b24" id="id28">[24]</a><a class="footnote-reference" href="#b25" id="id29">[25]</a>. The first line of defense in avoiding carcinogenicity in drug design is through the use of alerts to chemicals commonly associated with carcinogenicity, mostly derived from environmental testing <a class="footnote-reference" href="#b22" id="id30">[22]</a><a class="footnote-reference" href="#b26" id="id31">[26]</a>. Kazius et al. provided an analysis of mutagenicity data correlating chemical substructures to mutagenicity <a class="footnote-reference" href="#b21" id="id32">[21]</a><a class="footnote-reference" href="#b27" id="id33">[27]</a><a class="footnote-reference" href="#b28" id="id34">[28]</a>. Most of these toxicophores are associated with Michael acceptors, electrophiles, or enophiles including α,β-unsaturated carbonyl systems, aziridines and epoxides, aliphatic halides, azides, and acid halides. Others such as aryl-amines and nitroaromatics are known to be converted to more reactive species through oxidation, reduction, and conjugation metabolism reactions <a class="footnote-reference" href="#b29" id="id35">[29]</a>. The simplest of prediction systems search a chemical for these substructures and uses rules to correctly predict the Ames+ compounds for known mutagenic substructures. However, despite the inclusion of detoxifying rules, these methods misclassify many of the Ames- compounds as positive. For chemical sets containing many unknown classes of mutagens, structural alert systems like DEREK correctly predict only around 50% of the Ames+ compounds <a class="footnote-reference" href="#b5" id="id36">[5]</a><a class="footnote-reference" href="#b30" id="id37">[30]</a><a class="footnote-reference" href="#b31" id="id38">[31]</a>. A similar result (55% sensitivity) was found for compounds tested at Novartis (all mini-Ames screening results, August 2009) using an internally modified DEREK rule set <a class="footnote-reference" href="#b32" id="id39">[32]</a>. There is a long history of modeling mutagenicity on chemicals expected to be encountered from environmental and food exposure <a class="footnote-reference" href="#b9" id="id40">[9]</a><a class="footnote-reference" href="#b33" id="id41">[33]</a><a class="footnote-reference" href="#b34" id="id42">[34]</a><a class="footnote-reference" href="#b35" id="id43">[35]</a><a class="footnote-reference" href="#b36" id="id44">[36]</a><a class="footnote-reference" href="#b37" id="id45">[37]</a>. Recent reviews on statistical models of mutagenicity <a class="footnote-reference" href="#b9" id="id46">[9]</a><a class="footnote-reference" href="#b33" id="id47">[33]</a><a class="footnote-reference" href="#b38" id="id48">[38]</a><a class="footnote-reference" href="#b39" id="id49">[39]</a> and a recent collaborative head-to-head mutagenicity prediction challenge summarize the current state of the art for external sets <a class="footnote-reference" href="#b40" id="id50">[40]</a>. A summary of some recent models is included in the Supporting Information (Additional file <a class="footnote-reference" href="#b40" id="id51">[40]</a><a class="footnote-reference" href="#b41" id="id52">[41]</a>.</p>
+<p>Additional file 1</p>
+<p><strong>Supplemental figures and tables</strong>. Supplemental figures and tables referred to in the text of the article.</p>
+<p>Click here for file</p>
+</div>
+</div>
+<div class="section" id="methods">
+<h2>2. Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="data-set-preparation">
+<h3>2.1 Data set preparation<a class="headerlink" href="#data-set-preparation" title="Permalink to this headline">¶</a></h3>
+<p>Ames test data is available from a number of sources including literature reviews, regulatory agencies, and funding agencies <a class="footnote-reference" href="#b42" id="id53">[42]</a>. For our analysis, we focused on an internal Novartis set and two literature sets (combined into one) for aryl-amines and four datasets covering all substructures as detailed in Table <em class="xref std std-ref">1</em>.</p>
+<p>For the aryl-amine sets, molecules with other substructures associated with mutagenicity, such as nitroaromatic, nitrile oxide, N-nitroso substructures, were removed from the analysis. Set A was from internal Novartis Ames screening test results tested in one laboratory up to 2009. Set B is the aryl-amine subset from compilations published by Hansen et al <a class="footnote-reference" href="#b38" id="id54">[38]</a><a class="footnote-reference" href="#b43" id="id55">[43]</a> and Kazius et al <a class="footnote-reference" href="#b21" id="id56">[21]</a>. All Ames screening results at Novartis excluding those with discrepant values comprised Set C. The complete set of Hansen et al. was used as Set D. Set E represents a second pharmaceutically relevant set of marketed pharmaceuticals extracted from a recent review by Brambilla and Martelli <a class="footnote-reference" href="#b44" id="id57">[44]</a>. The complete Kazius set, Set F, was included in the analysis to give a combined collection of 9423 molecules. A basic summary of the sets is shown in Table <em class="xref std std-ref">1</em>.</p>
+</div>
+<div class="section" id="computational-studies">
+<h3>2.2 Computational studies<a class="headerlink" href="#computational-studies" title="Permalink to this headline">¶</a></h3>
+<p>For all PLS and random forest models, a set of 185 2D descriptors available in the MOE software program <a class="footnote-reference" href="#b45" id="id58">[45]</a> and a circular Morgan fingerprint <a class="footnote-reference" href="#b46" id="id59">[46]</a><a class="footnote-reference" href="#b47" id="id60">[47]</a> generated with a radius of 3 bonds (ECFP6) hashed to 1024 count variables using RDKit <a class="footnote-reference" href="#b48" id="id61">[48]</a>. Quantum mechanics reaction energies for nitrenium formation from the primary amine were calculated as described in a previous publication considering conformation, tautomer, and spin state <a class="footnote-reference" href="#b2" id="id62">[2]</a> using B3LYP hybrid density functional theory energies with a 6-31G* basis set for all C, F, H, O, S, N, and P atoms and the LANL2DZ basis set and ECP for Cl, Br, and I in Gaussian03 <a class="footnote-reference" href="#b49" id="id63">[49]</a>. The nitrenium formation energy is equal to the energy of the lowest energy amine conformation subtracted from the energy of the lowest energy nitrenium ion plus hydride anion (ArNH<sub>2</sub> → ArNH:<sup>+</sup> + H<sup>-</sup>). The anion formation energy and radical formation energy were similarly calculated and generated and also used the 6-31G* basis set, though improvement in the energy could be expected by adding a diffuse function for the anion. The AM1 <a class="footnote-reference" href="#b50" id="id64">[50]</a> HOMO and LUMO orbital energies were calculated using the MOPAC <a class="footnote-reference" href="#b51" id="id65">[51]</a> module implemented in MOE. Nitrenium ion charges were determined by using the lowest energy B3LYP/6-31G* nitrenium ion conformation and calculating the NBO population analysis <a class="footnote-reference" href="#b52" id="id66">[52]</a><a class="footnote-reference" href="#b53" id="id67">[53]</a> using B3LYP and a 6-311G* basis set in Gaussian03.</p>
+<p>The random forest classification models used in this article were constructed using the randomForest package <a class="footnote-reference" href="#b54" id="id68">[54]</a> for R <a class="footnote-reference" href="#b55" id="id69">[55]</a> using the approach developed by Breiman <a class="footnote-reference" href="#b54" id="id70">[54]</a><a class="footnote-reference" href="#b56" id="id71">[56]</a>. The method was used by constructing 500 unpruned trees using a random sample of sqrt(<em>N</em>) of the available predictors for each tree and a 0.632 bootstrap sample of the data for each tree. The remaining data was predicted using the tree and averaged to create the combined out-of-bag (OOB) predictions depicted in the receiver operator characteristic (ROC) plots.</p>
+<p>The PLS classifications were done using a PLS regression implemented using the kernel algorithm available in the PLS <a class="footnote-reference" href="#b57" id="id72">[57]</a> package in R <a class="footnote-reference" href="#b55" id="id73">[55]</a>. Variables showing little variance among cases were removed using the nearZeroVar function in the caret <a class="footnote-reference" href="#b58" id="id74">[58]</a> package and all variables were centered by the mean and divided by the standard deviation using the preProcess function in the caret package. The response variable was 0 for Ames- or 1 for Ames+ in these models and the predicted value found from the regression was used as a cutoff in constructing a classification model. All ROC plots and area-under-the-curve (AUC) metrics used the ROCR package <a class="footnote-reference" href="#b59" id="id75">[59]</a> in R. Averaging of model performances in the ROC plots was done with vertical averaging of performance at a given false-positive rate, and error bars give the standard deviation. A random sample of 70% of the data was used for training and the process was repeated 100 times representing in part how small batches of Ames results might perform. Variables with zero variance were removed prior to training thus removing 906 variables for the Novartis set and 956 for Set B, and variables were mean-centered and variance-scaled at each training step.</p>
+<p>The aryl-amine data sets were constructed as previously described <a class="footnote-reference" href="#b2" id="id76">[2]</a>. The all-substructure sets were combined using Pipeline Pilot <a class="footnote-reference" href="#b60" id="id77">[60]</a> ignoring chirality due to a lack of chirality in our 2D descriptors and after generating a canonical tautomer. It is also worth noting that absolute chirality determination cannot be done for all compounds and inevitable data entry errors can make this another source of error. A consensus Ames result was used in these all-substructure data with the definition that any Ames+ result in any of the sources was an Ames+ result. Substructure counts were calculated using a Pipeline Pilot <a class="footnote-reference" href="#b60" id="id78">[60]</a> protocol with substructure queries that were able to closely reproduce the counts generated in the work of Kazius et al. <a class="footnote-reference" href="#b21" id="id79">[21]</a> for their data set (see Additional file</p>
+<p>Additional file 2</p>
+<p><strong>Ames toxicophore queries</strong>. Compressed library of Ames toxicophore queries as.mol files.</p>
+<p>Click here for file</p>
+<p>Additional file 3</p>
+<p><strong>Public structures used in the research</strong>. SDF file with 6812 structures and data in public sets B, D, E, and F of the paper. Fields BrambillaMarketedDrug, Hansen, and Kazius indicate which set the structure is in and if this is 1, the corresponding fields BrambillaExpAmes, HansenExpAmes, or KaziusExpAmes respectively will indicate the Ames result for that set. Sets D, E, and F are unfiltered, all-substructure sets: Set D is from Hansen et al.,<a class="footnote-reference" href="#b38" id="id80">[38]</a> Set E is the marketed drug set taken from Brambilla et al. <a class="footnote-reference" href="#b44" id="id81">[44]</a>, and Set F is from Kazius et al.<a class="footnote-reference" href="#b21" id="id82">[21]</a> Set B is an aryl amine set which includes the union of Set D and F filtered by the aryl amine substructure. Other fields are results of counting the query substructures in Additional file</p>
+<p>Click here for file</p>
+<p>The Self-Organizing Map <a class="footnote-reference" href="#b61" id="id83">[61]</a> for the combined all-substructure set was generated in Schrodinger Canvas version 1.4 <a class="footnote-reference" href="#b62" id="id84">[62]</a> with a 30 cell by 30 hexagonal cell output grid. The program uses Euclidean distance to measure similarity between compounds, and the internal Morgan<a class="footnote-reference" href="#b46" id="id85">[46]</a>-type circular fingerprints <a class="footnote-reference" href="#b47" id="id86">[47]</a><a class="footnote-reference" href="#b63" id="id87">[63]</a> generated with radius 2 and functional atom types were used as descriptors (ECFP4). The TopKat mutagenicity prediction was centered and scaled to give results from 0 to 1 and the random forest model provided probabilities between 0 and 1 for the Ames+ class. The deviation was then the difference between either 1 for an experimentally Ames+ or 0 for Ames- result and the model output. For the aryl-amine set, the &#8216;kohonen&#8217; package <a class="footnote-reference" href="#b64" id="id88">[64]</a> in R was used instead due to a discovered problem in Canvas with applying trained maps to new compounds. In this case, RDKit was used to generate circular Morgan fingerprints hashed to 1024 count variables as described for the statistical modeling.</p>
+</div>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>3. Results and Discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<p>In the following results, the differences in the sets are examined in terms of their properties, presence of previously identified mutagenic substructures, and structural similarity and clustering visualized using Kohonen self-organized maps. The difference in predictivity of multiple statistical methods and descriptors between pharmaceutically relevant data and literature compilations is analyzed firstly for aryl-amines and then for sets containing all substructures. For aryl-amines, the quantum mechanically derived reaction energy for forming a known reactive intermediate was shown to be a more stable and accurate predictor than statistical models with more descriptors.</p>
+<div class="section" id="comparison-of-molecules-in-external-ames-data-sets-and-pharmaceutically-relevant-sets">
+<h3>3.1 Comparison of molecules in external Ames data sets and pharmaceutically relevant sets<a class="headerlink" href="#comparison-of-molecules-in-external-ames-data-sets-and-pharmaceutically-relevant-sets" title="Permalink to this headline">¶</a></h3>
+<p>As can be seen in Table <em class="xref std std-ref">1</em>, the Novartis Set A of aryl-amines and Set C of all substructures tested have a low number of Ames+ compounds compared to their literature counterparts (Sets B and D). In aryl-amines (Set A), only 22% of the molecules are Ames+, and in the entire set of test results at Novartis (Set D), only 15% of the molecules are Ames+. This low percentage is quite similar to other recent reports on Ames results at other pharmaceutical companies such as the recent report from Hillebrecht et al. from Roche <a class="footnote-reference" href="#b4" id="id89">[4]</a> where 300/2335 = 13% of the internal compounds were Ames+. A paper by Leach et al. <a class="footnote-reference" href="#b3" id="id90">[3]</a> on aryl-amines from AstraZeneca had a slightly higher percentage (109/312 = 35%) of Ames+ aryl-amines less than 250 g/mol. However, in the literature sets (Sets B and D): 71% of aryl-amines and 54% of the entire chemical space are Ames+. Perhaps surprisingly, the marketed pharmaceutical set, set E, has a non-zero incidence of Ames+ test results but it is fairly low-around 12%. An Ames+ test result is only part of a potential drug&#8217;s profile but the risk of carcinogenicity in later stage animal testing and added regulatory scrutiny present a significant hurdle to drug development in a competitive space.</p>
+<p>Another major difference between the sets is the number of compounds of intermediate molecular weight (200-500 g/mol). This range was nearly absent in the benchmark sets shown in the left plot of Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, but for the Novartis and marketed drugs sets in the right plot, there is a large percentage of the compounds. The bias towards larger molecules likely reflects that the Ames test has often been considered later in drug development, when molecules and their precursors have more complex structures. For all Novartis compounds tested, the median weight was 415 with a fairly wide distribution from 80 to 600 g/mol as shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a> (right). In contrast, the median weight for Set D is about 229, with a slightly sharper distribution as shown in the left plot in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>. In quantitative terms, the range of 400-600 g/mol in the literature set, Set D, contains just 372 molecules (6% of the set) compared to 1380 compounds (50% of the set) found in the Novartis Set D. The set of marketed pharmaceuticals with Ames test results is shown in green in the right plot of Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>. It has a molecular weight distribution more like the Novartis set, with a median weight of 309 g/mol.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-51-1.jpg" src="../_images/1758-2946-3-51-1.jpg" />
+<p class="caption">Figure 1. Molecular weight distributions of Ames test data sets</p>
+<div class="legend">
+<strong>Molecular weight distributions of Ames test data sets</strong>. Molecular weight distributions of all six sets plotted up to molecular weight of 700 g/mol with mean molecular weight marked with the dotted line of the same color. The literature sets are shown in the left plot, and the Novartis (Sets A and C) and the marketed drugs compilation (Set E) are shown on the right.</div>
+</div>
+<p>For the aryl-amine sets, Sets A and B, the situation is similar: the Novartis set, Set A, has a higher average molecular weight but there is an even distribution of weights from about 150-500 g/mol. In Set B, there are only 3 aryl-amine data in the range of 400-600 g/mol. In Set A, there are 93, which is almost 30% of the set. The fact that there is such an even distribution, including a large fraction of lower molecular weight compounds, in the Novartis set may reflect the importance of this class and the response to the issue of genotoxicity. When an issue is identified, the typical medicinal chemistry approach is to synthesize dozens of molecules and test all of them. Building blocks that are components of larger molecules are often tested in case of trace genotoxic impurities and for internal guidelines are tested if used for a final clinical candidate. Also drugs for different disease areas such as neuroscience may require smaller molecules.</p>
+<p>The &#8220;toxicophores&#8221; described in Kazius were used to construct a further comparison of two of the all-substructure sets, Set C (Novartis) and Set D (Hansen). Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a> portrays the overall count of these functional groups in the two sets and Table <em class="xref std std-ref">2</em> summarizes the percentage of Ames+ compounds in each class, done in a filtered manner where nitroaromatic is the first class. The labels &#8220;[OH, NH2][O, N]&#8221; and &#8220;ArN(CH2C)2&#8221;, denote an alcohol or amine bonded to an oxygen or nitrogen, such as a hydrazine or a hydroxylamine, and a di-alkylarylamine respectively. Naturally, a number of these functional groups are less common in drug design because of their reactivity or under-represented in test results or in the compounds synthesized due to concerns for toxicity in the Ames test. Aryl-amines, aryl-amine-amides, and dimethylarylamines are quite-well represented and have a lower Ames+ rate. Nitroaromatics were not nearly as represented in this set and are well-established as having a high probability of being responsible for genotoxicity. Building statistical models in the other data sets may benefit greatly from having a feature so strongly associated with genotoxicity. The structures in our set with a nitroaromatic group were Ames+ 40% of the time and in Set D, 84% were Ames+.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-51-2.jpg" src="../_images/1758-2946-3-51-2.jpg" />
+<p class="caption">Figure 2. Mutagenic substructure distributions of Ames test data sets (non-aryl-amine)</p>
+<div class="legend">
+<strong>Mutagenic substructure distributions of Ames test data sets (non-aryl-amine)</strong>. Comparison of Novartis Set C (orange bars) and the Hansen et al. set, Set D (red bars) by mutagenic substructure counts taken from Kazius et al.</div>
+</div>
+<p>Even within a distinct substructure, aryl-amines, the pharmaceutically relevant set is much different from the Ames test results typically presented in the literature. The use of Kohonen, or Self-Organizing, Maps <a class="footnote-reference" href="#b61" id="id91">[61]</a> (SOMs) was helpful for visualizing the differences between the sets using distances between molecular fingerprints of the molecules. This technique clusters molecules with similar substructure with each other in the best matching cell while also maintaining a 2-dimensional grid of cells such that similar molecules appear in adjacent cells. Multidimensional scaling and simple clustering was also investigated for visualization but yielded unsatisfactory neighbors in the first case, and a less useful visualization tool in the second. A SOM map built with the aryl-amines found in all sets is shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> but colored by property. The left plot is colored by where the aryl-amine is from: whether the molecule is a Novartis aryl-amine (orange) or from the external sets (blue). The center plot is colored by whether the compound is Ames+ (red) or Ames- (green). Finally, some representative structures are shown in the approximate locations of the map in the right plot. Cells with some of each class are colored as pie charts depicting the relative fraction of each class present. The approach knows nothing of the set membership of each compound, yet it shows a striking separation of the 1005 aryl-amines both by whether they are part of a drug company&#8217;s tested compounds or from a literature Ames compilation. Due to the clustering by substructure and that Set D is so largely Ames+, this method also provides excellent separation of the Ames+ aryl-amines. Polyaromatic amines such as aminoacridines, aminophenazines, or aminochrysenes are not highly common in medicinal chemistry. However, they are quite common in the available literature sets. These structures are in Ames+ cells and can be easily represented using molecular fingerprints found in many QSAR models. This makes these sets easier to model.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-51-3.jpg" src="../_images/1758-2946-3-51-3.jpg" />
+<p class="caption">Figure 3. Self-organizing map of aryl-amine chemical space</p>
+<div class="legend">
+<strong>Self-organizing map of aryl-amine chemical space</strong>. Comparison of aryl-amines in Set C and D using a self-organizing map (SOM) based on circular Morgan fingerprints, the SOM cells are shown in the top two plots with coloring applied based on a.) whether the compound is from Novartis, or b.) whether an Ames+ result (red) exists for the molecules in the cells. In c.) commercial aryl-amines have been mapped to the SOM trained on known aryl-amines and colored by their predicted Ames test result based on nitrenium formation energy in kcal/mol. Size of the marker conveys the number of compounds in the cell. In d.), an approximate location of some Set D aryl-amines is given.</div>
+</div>
+<p>In Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>, we also show where commercial aryl-amines that have been calculated by our model lie in the map. A significant population exists near CF<sub>3</sub>-substituted anilines in the top right, which have historically been Ames- (2<sup>nd</sup> plot) and have higher nitrenium formation energies. The top left of the map contains mostly larger and more polar aryl-amines, which were purposely left out of the calculations because of the goal of identifying safer starting materials and the better performance of the predictor for lower molecular weight aryl-amines. The center-right area of the map is where a large proportion of the commercially available aryl-amines are located avoiding some of the larger polyaromatic and triphenyl systems. It is also an area that has cells that contain Ames+ and Ames- amines. The nitrenium formation energy predictor can clarify which compounds in this area are safer bets as discussed in the next section.</p>
+<p>The set of 9423 unique compounds included in sets C, D, E, and F are depicted in the SOM in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>. The left-most, top plot colors the SOM by whether it is from Novartis (orange) or an external set (red), the center-top plot shows the distribution of Ames+ (red) and Ames- (green) compounds, and the upper-right plot shows the population of the cells. For the aryl-amine SOM, the population was somewhat uniform, but in the all-substructure plot, the number of molecules per cell varies from 1 to 66. This is natural due to the more extensive differences in the set. The bottom three plots then further characterize where certain substructures are distributed in the SOM. The blue cells show the presence of a polyaromatic substructure in the bottom-left. The aryl-amines are distributed throughout the area and depicted in shades of red. Those molecules with multiple aryl-amine substructures have an increasingly pink hue sector of the pie marker. Finally in the bottom-right plot, the nitroaromatics are highlighted in shades of green. As in the case of the aryl-amines, multiple substructures are given as separate pie-chart sectors of increasing brightness. These are seen almost solely in the external set and in regions of high mutagenicity.</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-51-4.jpg" src="../_images/1758-2946-3-51-4.jpg" />
+<p class="caption">Figure 4. Self organizing map of the chemical space of compounds considered colored by properties</p>
+<div class="legend">
+<strong>Self organizing map of the chemical space of compounds considered colored by properties</strong>. SOM for all compounds in Sets C, D, E, and F colored according to property (with pie charts to represent the percentage of molecules in the cell matching a property). The properties labeled from top-left clockwise: whether the compound is in the Novartis deck, whether it has an Ames+ result, the number of molecules in each cell, whether the polyaromatic substructure occurs in a cell, how many compounds have an aryl-amine substructure present, or how many compounds have a nitroaromatic substructure.</div>
+</div>
+</div>
+<div class="section" id="predicting-aryl-amine-mutagenicity-using-quantum-mechanically-derived-descriptors-alone">
+<h3>3.2 Predicting aryl-amine mutagenicity using quantum mechanically derived descriptors alone<a class="headerlink" href="#predicting-aryl-amine-mutagenicity-using-quantum-mechanically-derived-descriptors-alone" title="Permalink to this headline">¶</a></h3>
+<p>In a previous report, we determined that for aryl-amines, a case in which reactivity is a principle mode of toxicity, a quantum mechanics reaction energy provides an excellent classifier of Ames+ and Ames- compounds across multiple aryl-amine data sets <a class="footnote-reference" href="#b2" id="id92">[2]</a>. The principle of reactivity has been included in models using energies of the HOMO and LUMO orbitals calculated with a fast semi-empirical quantum method such as AM1 or PM3 <a class="footnote-reference" href="#b34" id="id93">[34]</a><a class="footnote-reference" href="#b65" id="id94">[65]</a><a class="footnote-reference" href="#b66" id="id95">[66]</a>. The HOMO energy correlates with the ionization potential, or the energetic cost of losing an electron, while the LUMO correlates to electron affinity, or the gain of an electron. Good performance using these descriptors has been achieved for small sets of aryl-amines with only a few terms in linear classification and regression models <a class="footnote-reference" href="#b35" id="id96">[35]</a>. The HOMO energy also does surprisingly well in discriminating Ames+ amines (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>) despite the fact that it does not represent a reaction.</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-51-5.jpg" src="../_images/1758-2946-3-51-5.jpg" />
+<p class="caption">Figure 5. Beanplots of four QM descriptors considered in our study</p>
+<div class="legend">
+<strong>Beanplots of four QM descriptors considered in our study</strong>. The beanplot is a way to show all data while also conveying a sense of the distribution. In this case, the Ames- points are plotted to the left of the center of each of the four plots with a green distribution and dark points; Ames+ data points are plotted to the right of the center in each plot and shown as white whiskers on a red distribution plot. The mean of each distribution is given as a long dark line. Reaction energies are given relative to aniline.</div>
+</div>
+<p>A number of groups have also studied the utility of studying the reactions of aryl-amines to understand mutagenicity <a class="footnote-reference" href="#b2" id="id97">[2]</a><a class="footnote-reference" href="#b3" id="id98">[3]</a><a class="footnote-reference" href="#b35" id="id99">[35]</a><a class="footnote-reference" href="#b67" id="id100">[67]</a><a class="footnote-reference" href="#b68" id="id101">[68]</a>. It was determined that the most statistically significant factor for predicting Ames toxicity was the reaction energy for forming the reactive intermediate, the nitrenium ion, from the aryl-amine <a class="footnote-reference" href="#b2" id="id102">[2]</a><a class="footnote-reference" href="#b3" id="id103">[3]</a>. This simple descriptor alone can provide a useful prediction of mutagenicity <a class="footnote-reference" href="#b3" id="id104">[3]</a><a class="footnote-reference" href="#b67" id="id105">[67]</a><a class="footnote-reference" href="#b68" id="id106">[68]</a>. These energies are dependent on 3D conformation and the electronic spin state of the reactive intermediate and thus require care to ensure the calculated value is accurate. Using this reaction energy for all Novartis aryl-amines was initially disappointing since good to excellent performance was observed in previous reports for other datasets, in addition to our prediction of external sets gathered for our testing. Upon closer examination, it was clear that most of the sets did not have a uniform distribution up to the range of molecular weight of final pharmaceutical compounds and natural products that comprise a significant portion of the Novartis set. As shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>, the performance was much lower for molecules with higher molecular weight in Set A (orange dotted line). Considering that the principle toxicity mechanism of aryl-amines requires metabolic activation, one possible explanation is that larger molecules have more selectivity in metabolic enzymes. Anecdotally, smaller molecular fragments that present themselves as impurities, degradation products or metabolic products were the most common aryl-amine Ames problem at Novartis. Therefore, prediction of lower molecular weight, reagent-like aryl-amines were the principal interest.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-51-6.jpg" src="../_images/1758-2946-3-51-6.jpg" />
+<p class="caption">Figure 6. ROC curve for using the single parameter nitrenium formation energy for aryl-amine sets A and B</p>
+<div class="legend">
+<strong>ROC curve for using the single parameter nitrenium formation energy for aryl-amine sets A and B</strong>. Using the reaction energy for nitrenium intermediate formation (RNH<sub>2</sub> → RNH:<sup>+</sup> + H<sup>-</sup>) as a cutoff (labeled by shapes as indicated in the legend) for Novartis and External aryl-amines for the subsets with MW &lt; 250 g/mol (solid line) and 250 &lt; MW &lt; 500 g/mol (dashed line).</div>
+</div>
+<p>Other groups have introduced other quantum mechanics descriptors for aryl-amines in addition to nitrenium forming reactions <a class="footnote-reference" href="#b2" id="id107">[2]</a><a class="footnote-reference" href="#b3" id="id108">[3]</a><a class="footnote-reference" href="#b67" id="id109">[67]</a><a class="footnote-reference" href="#b68" id="id110">[68]</a><a class="footnote-reference" href="#b69" id="id111">[69]</a><a class="footnote-reference" href="#b70" id="id112">[70]</a>, including the charge on the nitrenium ion nitrogen <a class="footnote-reference" href="#b68" id="id113">[68]</a>, relative energy of anion formation and relative iron complexation energy in a CYP1A2 binding site model <a class="footnote-reference" href="#b70" id="id114">[70]</a>, and finally reaction energy for aminyl radical formation, another species that could be produced in the cytochrome systems and has been associated with DNA damage <a class="footnote-reference" href="#b71" id="id115">[71]</a>. Some of the reactions that have been used are summarized below in Equations 1-5 and these have been compared for Set A. The Pearson correlation matrix in Table <em class="xref std std-ref">3</em> shows that all of the nitrenium forming processes represented by Equations 1-3 are closely correlated and all provide good discrimination. The area-under-the-curve (AUC) for the ROC plot for each of these parameters is given in Table <em class="xref std std-ref">3</em> and shown graphically in Additional file</p>
+<p>The best single parameters include the nitrenium formation energy reactions and the AM1 HOMO orbital energy. The Ames+ compounds have values tightly clustered in these two parameters as shown in the beanplots in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a> and show the expected relationship to the barrier of forming the nitrenium intermediate. Larger HOMO orbital energies of the amine and lower reaction energies for forming the reactive nitrenium ion would make it easier to form the intermediate. Ames+ amines tend to have a more negative charge on the nitrenium nitrogen, which has been presented previously <a class="footnote-reference" href="#b68" id="id116">[68]</a>, but the relationship is clearly not as strong. As suggested in a recent article <a class="footnote-reference" href="#b70" id="id117">[70]</a>, we looked at the anion formation energy (Equation 5) and though on its own it has little discrimination as shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a> and its AUC in Table <em class="xref std std-ref">3</em>, it appears to provide a useful complement to the nitrenium formation energy. Higher sensitivity at equivalent false-positive ratios in the 80-87% sensitivity region of the ROC curve (Additional file</p>
+<p>Out of all of the QM parameters, the most useful parameter by PLS loadings and Random Forest variable importance (top ranked in all runs) using all of the data was the nitrenium formation energy (Equation 1). This particular reaction is also the easiest to calculate out of Equations 1-3 since it reduces the number of atoms in the system compared to losing -OH or -OAc as the leaving group (Equations 2 and 3). While HOMO energy has a high correlation with nitrenium formation energy (0.84), the nitrenium formation energy provided better overall performance in the 70-84% sensitivity range.</p>
+</div>
+<div class="section" id="predicting-aryl-amine-ames-test-results-using-multivariate-statistics">
+<h3>3.3 Predicting aryl-amine Ames test results using multivariate statistics<a class="headerlink" href="#predicting-aryl-amine-ames-test-results-using-multivariate-statistics" title="Permalink to this headline">¶</a></h3>
+<p>Multi-dimensional statistical models improving upon the performance of the nitrenium formation energy parameter alone were difficult to construct. A number of available approaches including <em>k</em>-Nearest-Neighbors (<a href="#id118"><span class="problematic" id="id119">*</span></a>k*NN), random forest, partial least squares (PLS), support vector machines (SVM), and PLS with discriminant analysis provided similar performance for Set A. A comparison of these methods and other approaches to modeling Ames toxicity when all mutagens are included have already been presented in other studies <a class="footnote-reference" href="#b36" id="id120">[36]</a>. We have chosen to focus on PLS and random forest analysis of the aryl-amine data for further discussion because of the interpretability of PLS, the ability to include a large number of correlated variables, and the straightforward assessment of the importance of variables.</p>
+<p>Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a> shows the receiver operator characteristic (ROC) curve averaged over true-positive rates for 100 PLS models at identical false-positive rates for Set A (left) and Set B (right) using 1, 2, and 3 components of a PLS model. As summarized in Table <em class="xref std std-ref">4</em>, the performance of the method on the Novartis set, Set A, was highly variable and significantly poorer than for Set B. The performance on the test set decreased dramatically when adding a second component leading to a decrease in average AUC of 0.12. The same approach for the external set, Set B, resulted in a significantly higher AUC performance in the test set of 0.79, 0.80, and 0.81 for a 1-, 2-, or 3-component PLS model respectively. This was higher than the test set performance of Set A by 0.17 for the PLS models in the test set. After 2 components, the test set accuracy at a cutoff chosen in the training set to produce 80% sensitivity began to decrease for Set B. The random forest out-of-bag model performance on the test set for Set B averaged over 100 runs was significantly better than the 2-component PLS model. The performance of a random forest model for Set A was almost identical to the 1-component PLS model, so the AUC performance difference between Set A and Set B random forest models was an even higher 0.24.</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-51-7.jpg" src="../_images/1758-2946-3-51-7.jpg" />
+<p class="caption">Figure 7. Averaged ROC curves of PLS models for aryl-amine sets (MW &lt; 250 g/mol)</p>
+<div class="legend">
+<strong>Averaged ROC curves of PLS models for aryl-amine sets (MW &lt; 250 g/mol)</strong>. Performance using 1, 2, or 3 components using 100 randomly sampled test and training sets is shown with Set A on the left and Set B on right. The darker shades of lines have fewer components (see scale) and the green ROC curves are for the 100 random test sets (30% sample) and the red for 100 training sets (remaining 70% of set) both averaged over identical false positive rates. Error bars represent standard deviation.</div>
+</div>
+<p>For both Set A and Set B, the multiple-variable PLS models offered an improved prediction over using nitrenium formation energy alone (dashed line) in the training set but not in the test set. The performance of the Set A PLS model on the test set was much worse on average than using this single parameter. The model in Set B was slightly better but unfortunately, most of the performance increase over the nitrenium formation energy (0.03 in AUC) was in a low-sensitivity region of the ROC curve (&lt; 50% true positive rate). The prediction in this range was not considered to be useful for excluding Ames+ fragments. These results are frustrating but provoked thought about why the molecules commonly used in the literature are different and easier to model.</p>
+<p>In an attempt to address the problem of overfitting in this PLS model, a smaller selection of variables was chosen guided by the PLS loading weights, Pearson correlation between variables, and variable importances from a random forest model of the set. The weights were averaged over the 100 models and the largest 30 mean loading weights were used. Table <em class="xref std std-ref">5</em> shows the variable loading and jack-knife significance testing run in the PLS cross-validation as well as the mean decrease in Gini coefficient over all trees for the random forest model built with the widest selection of parameters. Two additional descriptors (the Balaban j index <a class="footnote-reference" href="#b72" id="id121">[72]</a> and density) are given, which were suggested by random forest importance measures and their low correlation with the other descriptors. The Balaban index was also identified as a discriminating variable in a previous investigation of aryl-amines and depends partly on the number of rings <a class="footnote-reference" href="#b3" id="id122">[3]</a>.</p>
+<p>The first principal component included the nitrenium formation energy and other descriptors relating to electrostatics, hydrophobicity, and indirect properties such as the number of atoms. The variable chi0v_C (<sup>0</sup>χ<sub>C</sub>), <a class="footnote-reference" href="#b73" id="id123">[73]</a> is a valence-modified carbon atom connectivity index which depends on the number of carbon atoms in the structure and how many non-hydrogen atoms are connected to them. a_count and a_nH are simply the number of atoms and hydrogens respectively. GCUT_SLOGP calculates log P based on atomic contributions and a modified graph distance <a class="footnote-reference" href="#b74" id="id124">[74]</a>, while BCUT_SMR calculates the molar refractivity based on atomic contributions and bond order <a class="footnote-reference" href="#b75" id="id125">[75]</a><a class="footnote-reference" href="#b76" id="id126">[76]</a><a class="footnote-reference" href="#b77" id="id127">[77]</a>. Q_VSA_POS is the sum of atomic contributions to van der Waals surface area where the sum of partial charges of the atoms are positive <a class="footnote-reference" href="#b78" id="id128">[78]</a>, and density is the molecular weight divided by total van der Waals volume.</p>
+<p>The most interpretable variables in the second component for Set B related to flexibility and included the number of rotatable bonds and number of rotatable single-bonds, b_rotN and b_1rotN respectively, the Kier flexibility parameter <a class="footnote-reference" href="#b79" id="id129">[79]</a>, abbreviated here as KierFlex. The number of oxygen atoms and a fingerprint bit associated with an aryl-amine substructure was also significant.</p>
+<p>Using just the first component parameters shown in bold in Table <em class="xref std std-ref">5</em> resulted in less decrease in performance between training and test sets and decreased performance by less than 0.03 AUC. Fitting all data led to an intermediate performance between the training and test sets as would be expected. A random forest model using only these descriptors performed much better than one using all of the potential descriptors for Set A, and for Set B this approach had similar but slightly lower performance. The likely overfitting in the random forest model was quite surprising and indicates a tendency for many of the parameters to introduce conflicting results. These results are summarized in Table <em class="xref std std-ref">6</em> and the full ROC curves are shown in Figures <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a> and <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a>. The single parameter nitrenium formation energy can met or exceeded the performance of PLS models that were given far more information. It was also able to perform well on the challenging Novartis set.</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-51-8.jpg" src="../_images/1758-2946-3-51-8.jpg" />
+<p class="caption">Figure 8. Averaged ROC curves for Set A aryl-amine PLS models</p>
+<div class="legend">
+<strong>Averaged ROC curves for Set A aryl-amine PLS models</strong>. The plot on the left is for the model built with a full descriptor set and the plot on the right is for a limited descriptor set. The left plot shows the averaged (identical false positive values) ROC curves for the test (dark line) and training (lighter line) sets of 100 PLS models built on a random 70% sample of the Set A aryl-amine data (MW &lt; 250 g/mol) and the performance of a PLS model built on all of the data as a dashed line with all non-zero-variance descriptors. The right plot uses only 9 descriptors including nitrenium formation energy.</div>
+</div>
+<div class="figure align-center" id="figure-9">
+<img alt="../_images/1758-2946-3-51-9.jpg" src="../_images/1758-2946-3-51-9.jpg" />
+<p class="caption">Figure 9. Averaged ROC curves for Set B aryl-amine PLS models</p>
+<div class="legend">
+<strong>Averaged ROC curves for Set B aryl-amine PLS models</strong>. The plot on the left uses a full descriptor set while the plot on the right is for a model using a limited descriptor set. The left plot shows the averaged (identical false positive values) ROC curves for the test (dark line) and training (lighter line) sets of 100 PLS models built on a random 70% sample of the Set B aryl-amine data (MW &lt; 250 g/mol) and the performance of a PLS model built on all of the data as a dashed line with all non-zero-variance descriptors. The right plot uses only 9 descriptors including nitrenium formation energy.</div>
+</div>
+</div>
+<div class="section" id="cross-set-performance-training-with-set-a-and-testing-set-b-and-vice-versa">
+<h3>3.4 Cross set performance-training with Set A and testing Set B and vice versa<a class="headerlink" href="#cross-set-performance-training-with-set-a-and-testing-set-b-and-vice-versa" title="Permalink to this headline">¶</a></h3>
+<p>In a further attempt to characterize the differences in Set A and Set B, the sets were used as a test set for a model built from the other set. The results of this experiment are shown in Table <em class="xref std std-ref">7</em> and Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>. The difference in performance was quite instructive and shows that the performance of Set B is less able to extrapolate to the aryl-amines in Set A than vice versa. The performance of the Set A model was actually better for Set B data than for the data used to train it while a model based on Set B had clear difficulty in predicting Set A. This can be quickly seen in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a> which shows the ROC curve for Set B predicted by a PLS model built on Set A (solid red line, left graph) and the ROC curve for Set A predicted by Set B (solid orange line, right graph). The performance of the Set A model on Set B (0.73) was almost identical by AUC to the Set A performance (0.72), representing a decrease in AUC of 0.07 from the Set B model performance. In fact even the 9-descriptor Set A model gave a performance of 0.73 for Set B. PLS models built on Set B performed extremely well on Set B with AUCs around 0.8. However, when these models were applied to Set A, the performance was markedly worse and the 9-descriptor model performed much better than the model with all of the descriptors. The unscaled PLS scores are shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-11"><em>11</em></a> in the form of a boxplot for each model. The Set A scores are broadly and almost normally distributed in the Set A model encompassing all of the scores of the Set B data, mostly in the middle 50% of the data (interquartile range). However, the Set B data is not as centered in the model and most of the Set A data is outside the middle 50% of the Set B scores.</p>
+<div class="figure align-center" id="figure-10">
+<img alt="../_images/1758-2946-3-51-10.jpg" src="../_images/1758-2946-3-51-10.jpg" />
+<p class="caption">Figure 10. Extrapolation from one aryl-amine data set to another: cross-set performance</p>
+<div class="legend">
+<strong>Extrapolation from one aryl-amine data set to another: cross-set performance</strong>. Comparison of the performance obtained when a PLS (1-component) model is fitted using all of the data in Set A and used to predict Set B (left plot, solid red line) to that obtained when fitting to the data in Set B and using that model to predict the data in Set A (right plot, solid orange line). The performance for the training set is also shown in dashed lines and the performance of using only the nitrenium formation energy is shown with a dot-dashed line.</div>
+</div>
+<div class="figure align-center" id="figure-11">
+<img alt="../_images/1758-2946-3-51-11.jpg" src="../_images/1758-2946-3-51-11.jpg" />
+<p class="caption">Figure 11. Extrapolation from one aryl-amine data set to another: cross-set Tukey Boxplot of the distribution of scores</p>
+<div class="legend">
+<strong>Extrapolation from one aryl-amine data set to another: cross-set Tukey Boxplot of the distribution of scores</strong>. Distribution of scores obtained for Set A (orange box) and Set B (red box) when applying a model trained on all of the data in Set A (left) or a model trained on all of the data in Set B (right) as a measure of outliers and domain.</div>
+</div>
+</div>
+<div class="section" id="performance-of-a-commercial-model-on-aryl-amine-data-topkat">
+<h3>3.5 Performance of a commercial model on aryl-amine data-TOPKAT<a class="headerlink" href="#performance-of-a-commercial-model-on-aryl-amine-data-topkat" title="Permalink to this headline">¶</a></h3>
+<p>The pre-built mutagenicity prediction model available to us in TopKat <a class="footnote-reference" href="#b80" id="id130">[80]</a> was explored as a possible prediction method. The performance of the prebuilt model on the 327 aryl-amines in Set A was quite poor with an AUC of the ROC curve of 0.59 for the molecular weight &lt; 250 g/mol subset and 0.61 for the molecular weight ≥ 250 g/mol subset. The model provides the Tanimoto similarity with the most similar compound used to construct the model as one way to assess model applicability. Set A has an average closest Tanimoto distance of 0.41 ± 0.14 for aryl-amines less than 250 g/mol molecular weight and 0.57 ± 0.07 for those between 250 and 500 g/mol. At least a large portion of the aryl-amine data in Set B was used to build the TOPKAT model and the aryl-amines in this set have an average Tanimoto distance close to zero and a fantastic AUC performance of 0.92 for MW &lt; 250 g/mol (<em>N</em> = 398) and 0.997 for MW ≥ 250 (<em>N</em> = 62). Although it could be argued that these models require retraining when applied to data far from the training set, such data are often not available. A simple retraining using a three-fold cross-validation experiment, resulted in only marginal improvement in performance for the Novartis set with AUCs 0.60, 0.64, and 0.69 achieved in the three test sets over the AUCs of 0.58, 0.63, and 0.57 obtained for the default model for the respective sets. Most of the improvement in the ROC curve was in the range of more than 50% false positive performance, which would not be considered a useful range. The ROC curves for these investigations are shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-12"><em>12</em></a>. The good performance for the aryl-amines in Set B suggests that the aryl-amine substructure alone is not problematic in developing these models. Previous publications have not separated the performance by substructure, so it was unclear that this would be true.</p>
+<div class="figure align-center" id="figure-12">
+<img alt="../_images/1758-2946-3-51-12.jpg" src="../_images/1758-2946-3-51-12.jpg" />
+<p class="caption">Figure 12. Performance of the TopKat Ames mutagenicity prediction module on aryl-amines</p>
+<div class="legend">
+<strong>Performance of the TopKat Ames mutagenicity prediction module on aryl-amines</strong>. Performance of the default, prebuilt TopKat Ames mutagenicity model on Set A (orange) and Set B (red) for MW &lt; 250 g/mol (solid line) or for 250 &lt; MW &lt; 500 g/mol (dashed). Additionally, the vertically averaged performance of a 3-fold random cross-validated retraining of the TopKat model using Set A is shown in brown with standard deviation error bars.</div>
+</div>
+</div>
+<div class="section" id="modeling-ames-test-results-for-all-substructures">
+<h3>3.6 Modeling Ames test results for all substructures<a class="headerlink" href="#modeling-ames-test-results-for-all-substructures" title="Permalink to this headline">¶</a></h3>
+<p>Given the difficulty of addressing aryl-amines, we began to search for reasons the set would be more difficult and if the result would be true for more than just this subspace. Literature reports have provided excellent results for benchmark sets containing all mutagens and small collections of aryl-amines or nitroaromatics. Even better performance could be obtained using multiple models based on the applicability domain of a mutagen under consideration such as Sushko et al. <a class="footnote-reference" href="#b40" id="id131">[40]</a> for multiple substructures and Leong et al. <a class="footnote-reference" href="#b41" id="id132">[41]</a> for just the aryl-amine substructure. Though surveys of the poor performance of pre-built commercial model performance on proprietary sets has been presented, reports on models of large proprietary sets and delineation of substructure seemed to be lacking. A classification model given a collection of distinct features strongly associated with mutagenicity would be expected to perform better than a model missing such clear-cut mutagenic features such as nitroaromatics mentioned previously.</p>
+<p>Table <em class="xref std std-ref">8</em> and Figure <a class="reference internal" href="1758-2946-3-39.html#figure-13"><em>13</em></a> describes the performance of 2 global models, the TopKat pre-built commercial model and a random forest model built from all data in Sets C, D, E, and F. For clarity, substructure ROC plot performance is shown only for the TopKat in the left plot. Removing molecules with the typically mutagenic polyaromatic, aryl-amine, and nitroaromatic substructures resulted in significant performance decreases in both models in both Set C (Novartis, orange, solid line to orange, dashed line) and Set D (Hansen et al., red, solid line to red, dashed line). The decreases in performance were greater for the TopKat model and for Set D. The global random forest model contained more training data which improved the performance on Set D compared to TopKat, and Set C had fewer of these mutagenic substructures as was presented in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>. The nitroaromatic mutagenic substructure had much better performance in the TopKat model and accounts for over 10% of Set D. However, the nitroaromatic subset in the random forest global model and the aryl-amine and polyaromatic mutagenic substructure performance in both models were equivalent or slightly worse than the overall performance.</p>
+<div class="figure align-center" id="figure-13">
+<img alt="../_images/1758-2946-3-51-13.jpg" src="../_images/1758-2946-3-51-13.jpg" />
+<p class="caption">Figure 13. ROC curve performance for models on all-substructure data sets</p>
+<div class="legend">
+<strong>ROC curve performance for models on all-substructure data sets</strong>. The left plot shows the performance of the default TopKat Ames mutagenicity model on Sets C (orange), D (red), E (green), and F (black) as well as the performance for particular substructures in all sets (blue): nitroaromatics (purple), aryl-amines (brown), or polyaromatic (gray). Dotted lines for Sets C and D show performance after removing these substructures. The center plot shows the out-of-bag performance of random forest models built on Sets C (orange), D (red), and E (green) and the global model (blue) when they are used as the training set. The right plot shows the Set C, D, or E subsets of the global out-of-bag performance (blue) of a random forest model built on all of the data.</div>
+</div>
+<p>The performance of the random forest model built on the global set was similar to the performance of local random forest models built on the individual sets for Sets C and D. It is important to note the extremely high performance for the Kazius set which is a large portion of the training data in the TopKat method. The random forest model constructed from all of the data also did well on this set which again indicates that it is inherently a simpler set to model using the commonly used descriptors. This all-data model has good performance across the entire chemical space map as detailed in Figure <a class="reference internal" href="#figure-14"><em>14</em></a> where greens indicate a successful prediction (over 500 trees) while yellow indicates an equivocal prediction and oranges and reds would be expected to give the wrong prediction. In fact, a random forest model built with just Set D provided a fairly good prediction but gave more equivocal results in the regions occupied mainly by Novartis compounds. As might be expected from the good performance of TopKat on set D and poor performance on the Novartis set, Figure <a class="reference internal" href="#figure-14"><em>14</em></a> shows that most of the cells with Novartis compounds would be misclassified by the TopKat model (red cells) but also gets other regions wrong such as the lower left-hand corner. Unlike the case of the aryl-amines, the Novartis all-substructure model does not perform well on regions occupied mostly by the other sets. The performance map provides almost a perfect opposite to TopKat, though the lower-left-hand corner is still difficult to predict with many equivocal cells. Looking at the Ames+/Ames- coloring of the cells in the left-hand plot gives an idea of why this might be possible. This region of substructure space has many cells that contain a mix of Ames+ and Ames- compounds.</p>
+<div class="figure align-center" id="figure-14">
+<img alt="../_images/1758-2946-3-51-14.jpg" src="../_images/1758-2946-3-51-14.jpg" />
+<p class="caption">Figure 14. Performance of global models mapped to chemical space</p>
+<div class="legend">
+<strong>Performance of global models mapped to chemical space</strong>. Self-organizing map of Sets C, D, E, and F (from Figure 4) again colored by whether the molecule is in the Novartis set (Set C, orange) or is Ames+ (red) in the left box. In the right box, the SOM is colored by the mean absolute error of the predictions in the cell for the indicated model. Dark green indicates correct classification, yellow an equivocal prediction, and red an incorrect prediction. Cell mean absolute error is defined as the difference between the predicted probability of being mutagenic and the experimental class (0 or 1).</div>
+</div>
+</div>
+</div>
+<div class="section" id="id133">
+<h2>4. Conclusions<a class="headerlink" href="#id133" title="Permalink to this headline">¶</a></h2>
+<p>In this article we have shown that there are significant differences in the physicochemical and biological properties of compounds used in drug discovery and those in compiled Ames test results from the literature. This includes molecular weight, substructure distribution, and the percentage of mutagenic compounds in the data set. This is important to communicate, as much of the literature data is being used to test prediction methods as well as playing a role in current testing strategy debates. The compounds in the Novartis test results are mostly drug precursor molecules, while literature mutagenicity results are often petrochemicals and pesticides of primary concern as environmental pollutants. The size and complexity of the molecules tested at Novartis was significantly larger on average than that of molecules included in external sets, as visualized by distributions in molecular weight. Chemical functional groups or substructures that have a high association with mutagenicity determined from the literature data are largely absent in the Novartis set taking away a valuable discrimination feature. Additionally, the proportion of mutagens in external sets is higher and disturbingly close to 50% as might occur from successive culling for balanced model development. As a result of these factors, many drug discovery molecules are outside the applicability domain of pre-built commercial models. The data is also more difficult due to lack of strongly associated structural features and would lead to worse performance of these statistical models if they were included in the training set. Therefore these models cannot provide adequate performance to predict, let alone, avoid a positive Ames test. The Ames test, as well as other genotoxicity tests, continue to be a significant problem in drug discovery, and companies should work together to share data with the wider community of scientists and organizations. The best-validated and best-performing prediction available for low molecular weight aryl-amines is still a quantum-mechanics reaction energy representing the formation of the nitrenium ion. Effective predictive models could be built for all-substructure sets using the random forest methodology and commonly available 2D descriptors and chemical fingerprints. Performance was still significantly lower for molecules from Novartis and marketed pharmaceuticals. Despite extensive work in the area of predicting this particular toxicity, work in designing more difficult test sets and more adaptable models is still necessary.</p>
+</div>
+<div class="section" id="abbreviations">
+<h2>Abbreviations<a class="headerlink" href="#abbreviations" title="Permalink to this headline">¶</a></h2>
+<p>Ames+: positive Ames test result; Ames-: negative Ames test result; PLS: partial least squares; ROC: receiver operator characteristic; AUC: area-under-the-curve; N: number of points; NitFormE: nitrenium formation energy; SOM: self-organizing map; OOB: out-of-bag; HOMO: highest occupied molecular orbital; LUMO: lowest occupied molecular orbital; IQR: interquartile range</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors are employees of a pharmaceutical company and must comply with regulatory guidelines for genotoxicity; however, all analysis is based on the 2-strain non-GLP screening version of the test. Novartis licenses software for a fee from Schrodinger, Accelrys, CCG, and Gaussian, Inc.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>PM wrote, developed the idea behind the work, and performed the statistical analysis in the paper. CS substantially contributed to the idea for the paper, discussion, statistical experiments, editing, and technique suggestions. LW contributed significantly to the idea for the paper, guidance, editing, and discussion. All authors have reviewed and approved the final manuscript.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>We would like to thank the devoted help and computational resources provided by the NIBR IT Scientific Computing group and especially Steve Litster, Michael Derby. P.M. is a NIBR postdoctoral fellow and thanks the NIBR Education Office for funding.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Known drug space as a metric in exploring the boundaries of drug-like chemical space</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id62">2</a>, <a class="fn-backref" href="#id76">3</a>, <a class="fn-backref" href="#id92">4</a>, <a class="fn-backref" href="#id97">5</a>, <a class="fn-backref" href="#id102">6</a>, <a class="fn-backref" href="#id107">7</a>)</em> Avoidance of the Ames test liability for arylamines via computation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id90">2</a>, <a class="fn-backref" href="#id98">3</a>, <a class="fn-backref" href="#id103">4</a>, <a class="fn-backref" href="#id104">5</a>, <a class="fn-backref" href="#id108">6</a>, <a class="fn-backref" href="#id122">7</a>)</em> Reaction energies computed with density functional theory correspond with a whole organism effect; modelling the Ames test for mutagenicity</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[4]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id89">2</a>)</em> Comparative Evaluation of in Silico Systems for Ames Test Mutagenicity Prediction: Scope and Limitations</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[5]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id36">2</a>)</em> The computational prediction of genotoxicity</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td>A brief history of scrotal cancer</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[7]</td><td><em>(<a class="fn-backref" href="#id7">1</a>, <a class="fn-backref" href="#id23">2</a>)</em> S2(R1) Guidance on genotoxicity testing and data interpretation for pharmaceuticals intended for human use</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[8]</td><td><em>(<a class="fn-backref" href="#id8">1</a>, <a class="fn-backref" href="#id13">2</a>, <a class="fn-backref" href="#id17">3</a>)</em> Predicting rodent carcinogenicity from mutagenic potency measured in the Ames Salmonella assay</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[9]</td><td><em>(<a class="fn-backref" href="#id9">1</a>, <a class="fn-backref" href="#id19">2</a>, <a class="fn-backref" href="#id40">3</a>, <a class="fn-backref" href="#id46">4</a>)</em> Alternatives to the carcinogenicity bioassay: in silico methods, and the in vitro and in vivo mutagenicity assays</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[10]</a></td><td>The Ames Salmonella/microsome mutagenicity assay</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[11]</a></td><td>Detection of carcinogens as mutagens in the Salmonella/microsome test: assay of 300 chemicals</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[12]</a></td><td>Isolation of plasmid pKM101 in the Stocker laboratory</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[13]</a></td><td>Comparison of the Results of a Modifed Miniscreen and the Standard Bacterial Reverse Mutation Assays</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[14]</a></td><td>Evaluation of high-throughput genotoxicity assays used in profiling the US EPA ToxCast (TM) chemicals</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[15]</a></td><td>Evaluation of the Vitotox(TM) and RadarScreen assays for the rapid assessment of genotoxicity in the early research phase of drug development</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[16]</a></td><td>An analysis of genetic toxicity, reproductive and developmental toxicity, and carcinogenicity data: I. Identification of carcinogens using surrogate endpoints</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[17]</a></td><td>A survey of metal-induced Mutagenicity in vitro and in vivo</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[18]</a></td><td>An evaluation of the sensitivity of the Ames assay to discern low-level mutagenic impurities</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[19]</a></td><td>Risk Assessment of Potentially Genotoxic Impurities within the Framework of Quality by Design</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[20]</a></td><td>Advances in chemical carcinogenesis: a historical review and prospective</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[21]</td><td><em>(<a class="fn-backref" href="#id25">1</a>, <a class="fn-backref" href="#id32">2</a>, <a class="fn-backref" href="#id56">3</a>, <a class="fn-backref" href="#id79">4</a>, <a class="fn-backref" href="#id82">5</a>)</em> Derivation and Validation of Toxicophores for Mutagenicity Prediction</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[22]</td><td><em>(<a class="fn-backref" href="#id26">1</a>, <a class="fn-backref" href="#id30">2</a>)</em> Computer Prediction of Possible Toxic Action from Chemical Structure; The DEREK System</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id27">[23]</a></td><td>Carcinogenesis by chemicals: an overview-GHA Clowes memorial lecture</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id28">[24]</a></td><td>Monocyclic aromatic amines as potential human carcinogens: old is new again</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[25]</a></td><td>DNA adducts formed by a novel antitumor agent 11β-dichloro in vitro and in vivo</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id31">[26]</a></td><td>Computer prediction of possible toxic action from chemical structure: an update on the DEREK system</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id33">[27]</a></td><td>Fundamental structural alerts to potential carcinogenicity or noncarcinogenicity</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[28]</a></td><td>Definitive relationships among chemical structure, carcinogenicity and mutagenicity for 301 chemicals tested by the U.S. NTP</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[29]</a></td><td>A Comprehensive Listing of Bioactivation Pathways of Organic Functional Groups</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id37">[30]</a></td><td>Assessment of the sensitivity of the computational programs DEREK, TOPKAT, and MCASE in the prediction of the genotoxicity of pharmaceutical molecules</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id38">[31]</a></td><td>Computational prediction of genotoxicity: room for improvement</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id39">[32]</a></td><td>S18: In silico assessment of safety concerns esp. of carcino-genic potential</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[33]</td><td><em>(<a class="fn-backref" href="#id41">1</a>, <a class="fn-backref" href="#id47">2</a>)</em> Predictivity and Reliability of QSAR Models: The Case of Mutagens and Carcinogens</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b34" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[34]</td><td><em>(<a class="fn-backref" href="#id42">1</a>, <a class="fn-backref" href="#id93">2</a>)</em> A QSAR investigation of the role of hydrophobicity in regulating mutagenicity in the ames test: 1. Mutagenicity of aromatic and heteroaromatic amines inSalmonella typhimurium TA98 and TA100</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b35" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[35]</td><td><em>(<a class="fn-backref" href="#id43">1</a>, <a class="fn-backref" href="#id96">2</a>, <a class="fn-backref" href="#id99">3</a>)</em> Quantitative structure-activity relationships of mutagenic aromatic and heterocyclic amines</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b36" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[36]</td><td><em>(<a class="fn-backref" href="#id44">1</a>, <a class="fn-backref" href="#id120">2</a>)</em> Structure-activity relationships of chemical mutagens and carcinogens</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b37" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id45">[37]</a></td><td>Random Forest Prediction of Mutagenicity from Empirical Physicochemical Descriptors</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b38" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[38]</td><td><em>(<a class="fn-backref" href="#id48">1</a>, <a class="fn-backref" href="#id54">2</a>, <a class="fn-backref" href="#id80">3</a>)</em> Benchmark Data Set for in Silico Prediction of Ames Mutagenicity</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b39" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id49">[39]</a></td><td>Collection and Evaluation of (Q)SAR Models for Mutagenicity and Carcinogenicity</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b40" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[40]</td><td><em>(<a class="fn-backref" href="#id50">1</a>, <a class="fn-backref" href="#id51">2</a>, <a class="fn-backref" href="#id131">3</a>)</em> Applicability Domains for Classification Problems: Benchmarking of Distance to Models for Ames Mutagenicity Set</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b41" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[41]</td><td><em>(<a class="fn-backref" href="#id52">1</a>, <a class="fn-backref" href="#id132">2</a>)</em> Predicting Mutagenicity of Aromatic Amines by Various Machine Learning Approaches</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b42" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id53">[42]</a></td><td>Collaborative development of predictive toxicology applications</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b43" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id55">[43]</a></td><td>Benchmark Data Set for In Silico Prediction of Ames Mutagenicity</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b44" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[44]</td><td><em>(<a class="fn-backref" href="#id57">1</a>, <a class="fn-backref" href="#id81">2</a>)</em> Update on genotoxicity and carcinogenicity testing of 472 marketed pharmaceuticals</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b45" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id58">[45]</a></td><td>Molecular Operating Environment</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b46" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[46]</td><td><em>(<a class="fn-backref" href="#id59">1</a>, <a class="fn-backref" href="#id85">2</a>)</em> The Generation of a Unique Machine Description for Chemical Structures-A Technique Developed at Chemical Abstracts Service</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b47" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[47]</td><td><em>(<a class="fn-backref" href="#id60">1</a>, <a class="fn-backref" href="#id86">2</a>)</em> Extended-Connectivity Fingerprints</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b48" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id61">[48]</a></td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b49" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id63">[49]</a></td><td>Gaussian 03</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b50" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id64">[50]</a></td><td>Development and use of quantum mechanical molecular models. 76. AM1: a new general purpose quantum mechanical molecular model</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b51" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id65">[51]</a></td><td>MOPAC</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b52" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id66">[52]</a></td><td>Natural hybrid orbitals</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b53" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id67">[53]</a></td><td>Natural population analysis</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b54" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[54]</td><td><em>(<a class="fn-backref" href="#id68">1</a>, <a class="fn-backref" href="#id70">2</a>)</em> Classification and Regression by randomForest</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b55" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[55]</td><td><em>(<a class="fn-backref" href="#id69">1</a>, <a class="fn-backref" href="#id73">2</a>)</em> R: A Language and Environment for Statistical Computing</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b56" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id71">[56]</a></td><td>Random Forests</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b57" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id72">[57]</a></td><td>pls: Partial Least Squares Regression (PLSR) and Principal Component Regression (PCR)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b58" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id74">[58]</a></td><td>caret: Classification and Regression Training</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b59" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id75">[59]</a></td><td>ROCR: visualizing classifier performance in R</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b60" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[60]</td><td><em>(<a class="fn-backref" href="#id77">1</a>, <a class="fn-backref" href="#id78">2</a>)</em> Pipeline Pilot</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b61" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[61]</td><td><em>(<a class="fn-backref" href="#id83">1</a>, <a class="fn-backref" href="#id91">2</a>)</em> NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b62" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id84">[62]</a></td><td>Canvas</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b63" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id87">[63]</a></td><td>Analysis and comparison of 2D fingerprints: Insights into database screening performance using eight fingerprint methods</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b64" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id88">[64]</a></td><td>Self- and Super-organising Maps in R: the kohonen package</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b65" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id94">[65]</a></td><td>Mechanistic QSAR of aromatic amines: New models for discriminating between homocyclic mutagens and nonmutagens, and validation of models for carcinogens</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b66" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id95">[66]</a></td><td>QSAR models for discriminating between mutagenic and nonmutagenic aromatic and heteroaromatic amines</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b67" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[67]</td><td><em>(<a class="fn-backref" href="#id100">1</a>, <a class="fn-backref" href="#id105">2</a>, <a class="fn-backref" href="#id109">3</a>)</em> An in Silico Method for Predicting Ames Activities of Primary Aromatic Amines by Calculating the Stabilities of Nitrenium Ions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b68" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[68]</td><td><em>(<a class="fn-backref" href="#id101">1</a>, <a class="fn-backref" href="#id106">2</a>, <a class="fn-backref" href="#id110">3</a>, <a class="fn-backref" href="#id113">4</a>, <a class="fn-backref" href="#id116">5</a>)</em> Ultimate Carcinogenic Metabolites from Aromatic and Heterocyclic Aromatic Amines:A Computational Study in Relation to Their Mutagenic Potency</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b69" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id111">[69]</a></td><td>Deprotonation and hydride shifts in nitrenium and iminium forms of aminoimidazole-azaarene mutagens</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b70" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[70]</td><td><em>(<a class="fn-backref" href="#id112">1</a>, <a class="fn-backref" href="#id114">2</a>, <a class="fn-backref" href="#id117">3</a>)</em> Explanation for Main Features of Structure-Genotoxicity Relationships of Aromatic Amines by Theoretical Studies of Their Activation Pathways in CYP1A2</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b71" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id115">[71]</a></td><td>Purified prostaglandin synthase activates aromatic amines to derivatives that are mutagenic to Salmonella typhimurium</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b72" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id121">[72]</a></td><td>Highly discriminating distance-based topological index</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b73" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id123">[73]</a></td><td>Nature of structure-activity-relationships and their relation to molecular connectivity</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b74" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id124">[74]</a></td><td>Prediction of Physicochemical Parameters by Atomic Contributions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b75" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id125">[75]</a></td><td>Metric Validation and the Receptor-Relevant Subspace Concept</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b76" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id126">[76]</a></td><td>Molecular identification number for substructure searches</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b77" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id127">[77]</a></td><td>A chemically intuitive molecular index based on the eigenvalues of a modified adjacency matrix</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b78" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id128">[78]</a></td><td>Iterative partial equalization of orbital electronegativity: a rapid access to atomic charges</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b79" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id129">[79]</a></td><td>The molecular connectivity chi indexes and kappa shape indexes in structure-property modeling</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b80" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id130">[80]</a></td><td>TOPKAT</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">1. Introduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aims">1.1 Aims</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-significance-of-the-ames-test">1.2 The Significance of the Ames Test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#substructure-alert-and-qsar-methods">1.3 Substructure alert and QSAR methods</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#methods">2. Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-set-preparation">2.1 Data set preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#computational-studies">2.2 Computational studies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">3. Results and Discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#comparison-of-molecules-in-external-ames-data-sets-and-pharmaceutically-relevant-sets">3.1 Comparison of molecules in external Ames data sets and pharmaceutically relevant sets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#predicting-aryl-amine-mutagenicity-using-quantum-mechanically-derived-descriptors-alone">3.2 Predicting aryl-amine mutagenicity using quantum mechanically derived descriptors alone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#predicting-aryl-amine-ames-test-results-using-multivariate-statistics">3.3 Predicting aryl-amine Ames test results using multivariate statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cross-set-performance-training-with-set-a-and-testing-set-b-and-vice-versa">3.4 Cross set performance-training with Set A and testing Set B and vice versa</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#performance-of-a-commercial-model-on-aryl-amine-data-topkat">3.5 Performance of a commercial model on aryl-amine data-TOPKAT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modeling-ames-test-results-for-all-substructures">3.6 Modeling Ames test results for all substructures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id133">4. Conclusions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abbreviations">Abbreviations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-50.html" title="2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope"
+             >previous</a> |
+          <a href="1758-2946-3-52.html" title="Automated annotation of chemical names in the literature with tunable accuracy"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-51.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

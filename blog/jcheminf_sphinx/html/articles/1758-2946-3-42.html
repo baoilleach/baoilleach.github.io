@@ -1,0 +1,779 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The semantic architecture of the World-Wide Molecular Matrix (WWMM) &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="The semantics of Chemical Markup Language (CML): dictionaries and conventions" href="1758-2946-3-43.html" />
+    <link rel="prev" title="OSCAR4: a flexible architecture for chemical text-mining" href="1758-2946-3-41.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-41.html" title="OSCAR4: a flexible architecture for chemical text-mining"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-43.html" title="The semantics of Chemical Markup Language (CML): dictionaries and conventions"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-semantic-architecture-of-the-world-wide-molecular-matrix-wwmm">
+<h1>The semantic architecture of the World-Wide Molecular Matrix (WWMM)<a class="headerlink" href="#the-semantic-architecture-of-the-world-wide-molecular-matrix-wwmm" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>The World-Wide Molecular Matrix (WWMM) is a ten year project to create a peer-to-peer (P2P) system for the publication and collection of chemical objects, including over 250, 000 molecules. It has now been instantiated in a number of repositories which include data encoded in Chemical Markup Language (CML) and linked by URIs and RDF. The technical specification and implementation is now complete. We discuss the types of architecture required to implement nodes in the WWMM and consider the social issues involved in adoption.</p>
+</div>
+<div class="section" id="origins-history-vision">
+<h2>Origins/history/vision<a class="headerlink" href="#origins-history-vision" title="Permalink to this headline">¶</a></h2>
+<p>The World-Wide Molecular Matrix (WWMM) was conceived in 2001 in the spirit of the about-to-be launched UK eScience <a class="footnote-reference" href="#b1" id="id1">[1]</a> programme and also the rapid and exciting success of peer-to-peer (P2P) systems in the music industry, such as Napster <a class="footnote-reference" href="#b2" id="id2">[2]</a>. We interpreted the spirit of the age to be the dawn of a data- and knowledge-rich infosphere which would be self-evidently valuable to science and where every discipline would be actively publishing their data on the web. The vision was also inspired by the cyberpunk of William Gibson <a class="footnote-reference" href="#b3" id="id3">[3]</a> and others with his idea of the information matrix where humans and machines would &#8220;jack-in&#8221; to an essentially infinitely large amount of information resources. This vision was 20 years ahead of its time but besides coining the term &#8220;cyberspace&#8221;, now has many features of today&#8217;s evolving web (&#8220;semantic web&#8221;) communities. It is from this, and not from the Matrix films <a class="footnote-reference" href="#b4" id="id4">[4]</a>, that the word is borrowed with thanks. The concept is sufficiently compelling that others outside this group have set up a Wikipedia article on the WWMM <a class="footnote-reference" href="#b5" id="id5">[5]</a>. Inspiration was also provided by the final session at WWW1 <a class="footnote-reference" href="#b6" id="id6">[6]</a> (1994) where Tim Berners-Lee outlined brilliantly how semantic information would drive and represent events in the real world, and the WWMM has tried to capture this for the domain of chemistry and related sciences.</p>
+<p>We have often used the term &#8220;chemical semantic web&#8221; which is effectively synonymous with the WWMM, the preferred term in this article.</p>
+<p>This article describes the evolution of the WWMM. Some of the early ideas (several of which were exposed in the eScience program) were ahead of implementability but are now linked into general semantic web approaches. The paper therefore represents an evolving vision of a distributed decentralised system.</p>
+<p>The eScience programme held out the vision of a total network (&#8220;Grid&#8221;) of linked computing resources, with provision for high-speed access and interchange of data. We assumed that this would be a semantic network where many of the resources would not be bytes and CPU but would be structured information. We were grateful to receive early funding from the eScience project (&#8220;Molecular Standards for the Grid&#8221;<a class="footnote-reference" href="#b7" id="id7">[7]</a>) but have been somewhat frustrated by the top-heavy concentration on CPU performance, bulk storage of un-semantic data and almost obsessive concentration on building middleware. The eScience programme, <em>per se</em>, contributed little to the semantic web in our fields.</p>
+<p>Like many early ideas, it is impossible to predict the requirements for successful autonomous growth and it has taken approximately 10 years for the initial ideas of the WWMM to become an early reality today. The semantic web and, in its wake, the WWMM, have had to wait for the time to be right for them to flourish. This requires a complex mixture of different requirements:</p>
+<p>• A widely-distributed toolchain in at least alpha.</p>
+<p>• A critical mass of early adopters.</p>
+<p>• A general realisation that this was an imperative whose time was bound to come.</p>
+<p>In bioscience these ideas have been taken up at an early stage and many semantic resources have been created. There is a large amount of public investment in bioscience information technology driven in part by the Genome publications but also by the realisation that machines were going to be essential for discovery linking and simple inferences from semi-structured knowledge. We believed, optimistically and perhaps naively, that the same philosophy would be taken up in chemical disciplines. Some chemists had led the field of AI in the early 1970s (DENDRAL and CONGEN <a class="footnote-reference" href="#b8" id="id8">[8]</a>, LHASA <a class="footnote-reference" href="#b9" id="id9">[9]</a>) and it was natural to assume that chemistry would be a growing point for the semantic web.</p>
+<p>In fact, there have been relatively few new conceptual developments in mainstream chemical informatics over the last decade or more. Apart from the development of InChI <a class="footnote-reference" href="#b10" id="id10">[10]</a> (a semantic identifier system for connection tables), there has been very little central community interest in creating semantic resources. Many businesses and information providers take a 1980s model of capturing data (expensively), packaging it and re-selling it to the community. Similarly almost all publishers of chemistry are closed access and have determinedly remained so. This means that the data deluge expected in 2000 has failed to materialise in chemistry. The consequence of this is that not only is there no data to make semantic, there is little understanding in the community of the value of semantic data.</p>
+<p>This situation is now changing. The semantic web is now reaching the high street and powerful commodity tools can be used for managing distributed linked data. Chemistry cannot ignore these developments. The &#8220;walled garden&#8221;<a class="footnote-reference" href="#b11" id="id11">[11]</a> model of data is being shattered in governments, geospatial systems, music, libraries <em>etc</em>. where institutions are realising that to fulfil their roles they need to make their data Open and to make it semantic. There are still major cultural social commercial and political barriers; for example, the automated machine extraction of chemistry from electronic articles may result in a legal action by the publisher, and this attitude has held back the development of the WWMM by a considerable period.</p>
+<p>In 2000, we envisaged that the technology would be based on P2P systems, where all nodes in the network would be equally able to receive and publish semantic data. The current evolution of the WWMM has been strongly influenced by the technologies in common everyday and business use, and now is much more likely to consist of servers and clients using REST (REpresentational State Transfer)<a class="footnote-reference" href="#b12" id="id12">[12]</a> and similar philosophies for information exchange. The original vision however of a community-led process, sharing resources, is still at the heart of the WWMM.</p>
+<p>The Napster and similar models worked because of a fortunate combination of circumstances. Almost all nodes were read-and-publish, in that they would consume information they wanted (music tracks) and would install a re-publication server as part of their &#8220;bargain&#8221; to the community. In addition, the metadata for music is relatively simple and was already widely used. The title of a track or artist generally identifies more or less precisely what is required. The P2P model survives in systems such as Skype <a class="footnote-reference" href="#b13" id="id13">[13]</a> and BitTorrent <a class="footnote-reference" href="#b14" id="id14">[14]</a> where owners of clients are prepared to pay for benefits in kind through offering bandwidth and services. A necessary requirement is that software is available which is almost transparent for the client to install and re-use.</p>
+<p>The WWMM started with a more complex challenge. The metadata for molecules (and even more, chemical reactions, substances and properties) is not as simple as discovering music on the web. But the biggest challenge was that software would have to be written, which could be trivially distributed and where clients could legitimately and safely offer services without needing to know the details of installation. Nevertheless, the original (2001) concept has lost none of its validity. We envisage an ecology of sites (using a common syntactic and semantic infrastructure) which store a variety of objects in different numbers and with different attributes, and offer them to the world for re-use. Some sites can be expected to provide monocultural collections of certain types of object (<em>e.g</em>. molecules) while others might represent the work created in a particular institution. We also expect that there will be specialist sites for aggregating and indexing. This is a potential model for publication of data and metadata. In 2004 we had anticipated that some of the roles of the WWMM would be exemplified by the infrastructure and ecology of university institutional repositories but in reality these are poorly linked and there is no re-use and re-purposing of content.</p>
+<p>It has become clear that in science domain-specific repositories are the appropriate model and in several fields there is a critical mass of adoption, support and contribution of content. Many of the bioscience repositories are managed by international data centres such as the NCBI (National Center for Biotechnology Information)<a class="footnote-reference" href="#b15" id="id15">[15]</a> and EBI (European Bioinformatics Institute)<a class="footnote-reference" href="#b16" id="id16">[16]</a>, but a newer generation of distributed, often university-based domain repositories are emerging. Two examples of these are Dryad <a class="footnote-reference" href="#b17" id="id17">[17]</a> (where ecological content is deposited) and Tranche <a class="footnote-reference" href="#b18" id="id18">[18]</a> (where proteomics data such as mass spectra are deposited <a class="footnote-reference" href="#b19" id="id19">[19]</a>). These models are particularly compelling as it is now a requirement of several journals and publishers that data is committed to them. The WWMM is a technology that can respond to such requirements in chemical publishing.</p>
+<p>By contrast, in chemistry, the only mandatory deposition of domain-specific data is in crystallography. Some of this is published openly on publishers&#8217; websites (and we use this in CrystalEye <a class="footnote-reference" href="#b20" id="id20">[20]</a>), but approximately half of it is deposited directly in the CCDC. This has been a pioneering example of a domain repository but is now hampered by the fact that the data are not Open. While individual crystal structures can be requested by email, a considerable proportion of the raw data (in major journals) are only accessible in bulk by subscription. There are also restrictions on the re-use and re-publication of this data.</p>
+<p>In science, repositories seem to work best where there is a central unifying concept found in every entry. For example, Swiss-Prot <a class="footnote-reference" href="#b21" id="id21">[21]</a> is based on protein sequences, PDB <a class="footnote-reference" href="#b22" id="id22">[22]</a> on protein structures and GenBank <a class="footnote-reference" href="#b23" id="id23">[23]</a> on nucleic acid sequences. This may be, in part, because the repositories represent well-accepted concepts in the discipline and in most cases have an organisation or a committed group who oversees the semantics and ontology. It is necessarily a reductionist view and considerable flexibility and detail is lost, but at this stage in scientific information it is vastly better than having nothing at all.</p>
+</div>
+<div class="section" id="semantics-and-ontologies-in-molecular-sciences">
+<h2>Semantics and Ontologies in Molecular Sciences<a class="headerlink" href="#semantics-and-ontologies-in-molecular-sciences" title="Permalink to this headline">¶</a></h2>
+<p>The major current repositories of chemical information are generally run outside the community input of chemists and related disciplines Very few are fully Open (exceptions being bioscience-based collections of molecules <em>e.g</em>. PubChem <a class="footnote-reference" href="#b24" id="id24">[24]</a>, ChEBI <a class="footnote-reference" href="#b25" id="id25">[25]</a>, NMRShiftDB <a class="footnote-reference" href="#b26" id="id26">[26]</a> and CrystalEye, and the emerging collection in Wikipedia). There is a limited amount of Open data in ChemSpider <a class="footnote-reference" href="#b27" id="id27">[27]</a> but Chemical Abstracts asserts copyright over its identifier system, does not publish its ontologies, and charges for lookup of names and identifiers.</p>
+<p>For a full semantic implementation we need a variety of identifier systems with ontological mapping between them. We expect that, at some time, chemistry will develop a semantic infrastructure similar to that in current bioscience. In 2011, we note the development of semantic resources between Southampton and ChemSpider, but in general there is conservatism and resistance to the free flow of chemical information, and hence to the development of infrastructure. We have therefore taken a pragmatic view that much of what we implement can be done without formal ontologies and supported by a dictionary concept (see article in this issue).</p>
+<p>Identifier systems are essential but very challenging. Semantic identifiers will always fail to represent general concepts, because the decision of which aspects of the concept are important to its identity are fixed, or from a fixed set (<em>e.g</em>. InChI). InChI doesn&#8217;t fall short because of which information it chooses to include, it falls short because it chooses. In contrast, the CAS system is more flexible and can be assigned to a wide range of chemical substances. We recommend the use of relatively short alphanumeric identifiers. Chemists have a long tradition of using numeric identifiers (<em>e.g</em>. CAS, in-house compounds, regulatory labels <em>etc</em>.) and for most systems sequential numbering seems to be the best way of minting identifiers.</p>
+<p>Arbitrary identifiers, however, require a central authority (even if only a server to mint the next in sequence). Without this, name collisions are certain. Moreover, without authorities to maintain identifier systems, they inevitably decay. We hope that this paper may stimulate persistent non-profit organisations (such as international scientific unions and learned societies) to create Open identifier systems. In the absence of this, the most likely solution will be through web persistence as in Wikipedia (though we note that that does not yet have a unique identifier system, being based completely on linguistic approaches).</p>
+<p>In chemistry the &#8220;molecule&#8221; has become a central concept for aggregation. We note that there is much semantic and ontological confusion between substance, compound, connection table, and other concepts describing chemical objects and their composition. Thus, for example, the InChI only formally relates to a connection table, and works where there is a pragmatic correlation between connections tables and the composition of substances. It breaks down where a substance may contain components with different connection tables, where the connection table is dynamic, or where different substances can occur in different macroscopic forms. The technology of WWMM can support concepts such as molecule (connection table) and substance independently.</p>
+<p>The WWMM paradigm relies on a unique identifier system for discovering and asserting the identity of objects. This works well where the connection table is a complete description and identification of the substance, but where it fails (<em>e.g</em>. &#8220;aluminium chloride&#8221;, &#8220;glucose&#8221;, &#8220;diamond&#8221;) we must rely on an authority to provide a controlled identifier system. The system in commonest use is the Chemical Abstracts registry number (CAS number)<a class="footnote-reference" href="#b28" id="id28">[28]</a> but this is not Open and its use outside CAS is restricted to a small percentage of the compounds indexed by CAS. The best candidate for an Open system of substance identifiers is Wikipedia, which at the moment uses textual representations as the public unique identification of pages describing compounds. Until there is a public identifier system, the WWMM concept will be restricted to entries where connection tables suffice.</p>
+<p>Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a> shows four sites all playing different roles in the WWMM. Site A is an aggregation site which trawls the web, either for other WWMM sites or legacy (white rectangles) and aggregates this in a similar manner to conventional search engines. The objects aggregated in the diagram are molecules with a variable number of properties (physical chemical and metadata). The concept can be extended to other chemical objects such as crystals, spectra, reactions and computational chemistry. In some cases we would have single instances of an object with several different properties (site A, right), while in other cases an object would be observed several times and have different instances of the properties (site A, bottom). Site B represents an archival site (<em>e.g</em>. the Internet Archive&#8217;s Wayback Machine <a class="footnote-reference" href="#b29" id="id29">[29]</a>) where it would mirror for posterity the transient picture on site A. Site C represents data publication at source (<em>e.g</em>. our current CLaRION project <a class="footnote-reference" href="#b30" id="id30">[30]</a> which is designed to publish scientific data from the laboratory to the web). The expectation is that visitors to the site (machines or humans) can then either assess the value of the site itself <em>e.g</em>. for data-oriented peer review, or can aggregate and re-use objects of interest. Site D specialises in one particular facet of objects or properties. This is exemplified by CrystalEye which trawls the web and extracts only crystal structures and collates and systematizes them.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-42-1.jpg" src="../_images/1758-2946-3-42-1.jpg" />
+<p class="caption">Figure 1. A 2004 vision of the variety of functions in the distributed sites of the WWMM concept</p>
+<div class="legend">
+<strong>A 2004 vision of the variety of functions in the distributed sites of the WWMM concept</strong>.</div>
+</div>
+<p>This vision, in 2004, was ahead of the technology to implement it, although we created some early prototypes of parts of the system. In both closed and Open systems, the successes have largely been through centralised sites (<em>e.g</em>. Google, Open StreetMap <a class="footnote-reference" href="#b31" id="id31">[31]</a>, ChemSpider, DBpedia <a class="footnote-reference" href="#b32" id="id32">[32]</a>). These have the value of coherency and visibility but can run into problems of scale and also potential frustration with central control. The P2P system is more flexible and allows a different type of innovation but is harder to reach to critical mass. It represents a general imperative for the web, a distributed non-hierarchical system of sites collecting and publishing data. This architecture is reflected in both the Quixote project <a class="footnote-reference" href="#b33" id="id33">[33]</a> and the OpenBibliography project <a class="footnote-reference" href="#b34" id="id34">[34]</a> reported elsewhere in this issue. It is clearly difficult to create off-the-shelf software for these types of system, but we believe that an investment in RDF, a very strong investment in all types of metadata in the system, and, most importantly, a critical mass of a community prepared to explore this will come up with prototypes which show the value.</p>
+<p>The WWMM is also designed to hold properties of chemical molecules and substances. In many cases, these concepts are very well defined and managed by community definitions such as the IUPAC Gold Book <a class="footnote-reference" href="#b35" id="id35">[35]</a>. However, there is much opportunity for confusion: scientific units of measurement are often omitted and physical constraints (<em>e.g</em>. pressure at which a boiling point was measured) are not recorded. In some cases it is unclear what the molar unit is. For example, some programs calculate the extensive properties for a complete unit cell (<em>e.g</em>. Na<sub>4</sub>Cl<sub>4</sub>). These properties are supported by a system of dictionaries (see the sibling article in this issue).</p>
+<p>Concepts which are relations between objects (<em>e.g</em>. chemical reactions and processes, such as chemical syntheses) have been excluded from the initial version of the WWMM until their semantic representation has been more explored within the community.</p>
+<p>In a distributed system, there is a major challenge of different versions of the &#8220;same&#8221; object. Traditionally and currently many systems tackle this by creating a canonical &#8220;correct&#8221; object by merging different versions into one. Systems such as CrystalEye work well because although there are a variety of sources, there is only one agreed instance of the crystal structure publication. Sites such as ChemSpider normalise chemical names and identities by correcting &#8220;wrong&#8221; names and structures. Building a more complex system than this is psychologically difficult with the dangers of either over-simplistic representation through normalisation or over-complication of the details of different occurrences of objects. A typical problem is the management of the different versions over time and location of human-authored documents.</p>
+<p>Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a> illustrates this problem: mol1 exists in Alice but not Bob, and mol5 exists in Bob not Alice. mol2 exists in both, but Alice has more properties (attributes), and mol4 is the reverse. mol3 is identical in both repositories. The arrows show various updating processes so that Bob will need to import mol1 and all its properties to be in sync, and Alice must do this for mol5. For mol2 and mol4 each site would have to import properties and keep them in sync, whilst for mol3 only the values of properties need to be synchronised. In practice it is likely that Alice and Bob will not synchronise at this level and it is up to users of their sites to determine existence of entries and of properties, and the identity relations.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-42-2.jpg" src="../_images/1758-2946-3-42-2.jpg" />
+<p class="caption">Figure 2. An example of the problems of different entries and different versions in two repositories</p>
+<div class="legend">
+<strong>An example of the problems of different entries and different versions in two repositories</strong>.</div>
+</div>
+<p>Because of this, we think that the CrystalEye and Quixote systems are excellent example of systems that can succeed as distributed WWMM repositories. In CrystalEye the uniqueness is determined by the bibliographic data of the publication (or the metadata from the creators). In Quixote a calculation is the same regardless of which laboratory carries it out and duplications of calculations have the same canonical representation. We believe that there will be a demand for molecules from CrystalEye and Quixote and that these will be excellent exemplars and workbench for crystallographers, scientists and computational scientists interested in P2P systems and distributed repositories.</p>
+<p>The Linked Open Data (LOD) concept and movement has demonstrated the vision of a cloud of interlinked resources, and many of the bioscience databases feature prominently. In 2011, there are still very few Open data resources in chemistry. To be a full member of this graph, a resource has to have a public identifier system (URI) and a license that allows essentially total freedom of access and re-use. &#8220;Free resources&#8221; (where there is no right of re-use) cannot be included. The following current resources could be transformed into LOD nodes:</p>
+<p>• Bioscience databases (PDB, Uniprot <a class="footnote-reference" href="#b36" id="id36">[36]</a>, KEGG [#B37]_*etc*.)</p>
+<p>• NMRShiftDB (a volunteer-driven collection of Open NMR spectra)</p>
+<p>• A subset of the ChemSpider resource (a small percentage of items are now labelled as &#8216;Open Data&#8217; and there is a stable identifier system)</p>
+<p>• Chemical entries in Wikipedia</p>
+<p>• CrystalEye (semantic crystal structures from Openly published data)</p>
+<p>• Computational chemistry from the Quixote project</p>
+<p>The data so far has been primarily from current aggregators and voluntary collections. The WWMM concept also included the idea that scientists would publish their data directly onto the web as they carried out experiments or calculations. Although a very small percentage of the community, chemistry has been among the leaders in developing this idea and J-C Bradley <a class="footnote-reference" href="#b38" id="id37">[38]</a> and, more recently, Matt Todd in Sydney <a class="footnote-reference" href="#b39" id="id38">[39]</a> and the Frey group at Southampton <a class="footnote-reference" href="#b40" id="id39">[40]</a> have published tools and data onto the public web. In particular, Todd&#8217;s community of collaborative drug design has attracted considerable interest and, assuming it is successful, will be a strong driver to show the value of the semantic web and WWMM approach. The concept of &#8220;the contents&#8221; of a site can be problematic. At one level, chemists think of collections of molecules as a large defined collection of molecular datafiles which could in principle be distributed on a memory device or published as individual pages on the web. In other circumstances, molecules and their properties are retrieved from a search system. In yet other applications, molecules can be generated &#8220;on-the-fly&#8221; by web services (an example is our OPSIN server <a class="footnote-reference" href="#b41" id="id40">[41]</a> which converts IUPAC names into connection tables and effectively has an infinite number of possible molecules). In many closed systems it is impossible to tell whether particular data is in the system unless the interface allows us to ask this question. The WWMM is conceptually designed as an infrastructure where all of the content can be systematically retrieved and the limitations are technical rather than socio-political.</p>
+</div>
+<div class="section" id="design-and-evolution-technologies">
+<h2>Design and evolution: technologies<a class="headerlink" href="#design-and-evolution-technologies" title="Permalink to this headline">¶</a></h2>
+<p>Tim Berners-Lee originally introduced the four principles of linked data <a class="footnote-reference" href="#b42" id="id41">[42]</a>:</p>
+<ol class="arabic simple">
+<li>Use URIs as names for things.</li>
+<li>Use HTTP URIs so that people can look up those names.</li>
+<li>When someone looks up a URI, provide useful information, using the standards (RDF*, SPARQL).</li>
+<li>Include links to other URIs so that they can discover more things.</li>
+</ol>
+<p>The modern WWMM adopts principle 1 completely. All things including not only data but metadata such as dictionaries are completely supported by URIs. Principle 2 brings certain problems. In the initial design of HTML and XML there was a strong architectural differences between URLs (addresses) and URIs (identifiers) and this formal distinction has to remain in many fields. Tim Berners-Lee simplified this to principle 2 on the basis that everything of interest could have both an address and a URI, and that they could be conflated into the same string. For this to happen, the identified object must be sufficiently stable and conceptually bounded that it is effectively describable as a single persistent object. (There are ontological systems which can describe non-persistent and mutable objects but they are beyond the current scope of chemistry and the WWMM.) The single address requirement can also be problematic. Principle 2 only fails to break when the user or user agent has pervasive access to the web (<em>e.g</em>. not in an aeroplane) and where the maintainer of the resource can guarantee 24/7 availability. If this latter condition cannot be met, then either the system breaks (perhaps temporarily) or it has to provide a fall-through mechanism of aliased addresses. CML was originally designed with the clear W3C principle that names and addresses were distinct but we are attracted by the conflated URI vision which we believe will work for much of chemistry. Given at least a partial implementation of principle 2, then we endeavour to satisfy principle 3 by using RDF and SPARQL where appropriate. Principle 4 is a fundamental part of the WWMM and follows practice in, for example, bioscience where most resources have copious links to others. Whether or not resources are normalised is a problem that we have not yet explored in depth.</p>
+<p>More recently, discussions on the eGov W3C mailing list <a class="footnote-reference" href="#b43" id="id42">[43]</a> refer to Tim Berners-Lee&#8217;s &#8220;five star&#8221; model for government data:</p>
+<ul class="simple">
+<li>on the web, open license</li>
+</ul>
+<p>** machine-readable data</p>
+<p><a href="#id43"><span class="problematic" id="id44">**</span></a>* non-proprietary formats</p>
+<p><a href="#id45"><span class="problematic" id="id46">**</span></a>** RDF standards</p>
+<p><strong>*</strong> Linked RDF</p>
+<p>Semantic data requires a minimum of an identifier system. Many published collections of information do not generate identifiers and are only accessible and identifiable through their web addresses. This is a fragile design and it is essential that components of the WWMM have unique permanent identifiers. The traditional use of chemical identifiers has been restricted to large authorities such as CAS, Beilstein <a class="footnote-reference" href="#b44" id="id47">[44]</a>, RTECS <a class="footnote-reference" href="#b45" id="id48">[45]</a>, and more recently, ChemSpider, PubChem, DrugBank <a class="footnote-reference" href="#b46" id="id49">[46]</a>, ChEBI and ChEMBL <a class="footnote-reference" href="#b47" id="id50">[47]</a>. Of these, we believe that only the bioscience-oriented systems (ChEBI, ChEMBL, PubChem) are formally Open (<em>i.e</em>. that the whole identifier system, with or without the data, can be re-used without permission). There are a small number of spectral identifiers in NMRShiftDB and a small number of reaction identifiers in KEGG, confined to biological transformations. The CrystalEye collection does not have an identifier system yet although the Crystallography Open Database (COD)<a class="footnote-reference" href="#b48" id="id51">[48]</a> does. There is no Open system for small molecule crystallographic identifiers (the CCDC <a class="footnote-reference" href="#b49" id="id52">[49]</a> codes are for a closed system).</p>
+<p>In principle, LOD can be completely held as RDF triples. However, many components of chemistry (molecules, spectra, reactions <em>etc</em>.) are more easily understood and processed in XML form (<em>e.g</em>. CML). The WWMM, therefore, is a mixture of CML components linked together and annotated by RDF triples. As the semantic web develops new approaches to indexing and describing RDF we can expect the flavour of RDF to evolve. In 2011, it is still unclear exactly what triple-store or other RDF technology is required to support large amounts of RDF, but we believe that for local collections (<em>e.g</em>. the output of a laboratory) there are now many good OS RDF engines.</p>
+<p>We have built prototype ontologies with formal RDF-based systems such as OWL <a class="footnote-reference" href="#b50" id="id53">[50]</a>, and developed an OWL-based system (ChemAxiom <a class="footnote-reference" href="#b51" id="id54">[51]</a>) which describes physical properties and aspects of chemical structure and composition. At present, however, we believe the implementation cost (validating the ontology, installing sufficiently powerful servers) not to be cost-effective. This parallels our experience in Open Bibliography (see sibling article in this issue) where the implementation costs were too large to be deployable without additional resource, and we reverted to a simpler model with some implicit semantics. There is also a psychological barrier in that many scientists working with chemical information need to feel comfortable with the textual representation.</p>
+<p>To be semantic, the information must be understandable by machines and humans. In the full semantic web vision, this is (partially) provided by high-level ontological frameworks such as OWL, OBO <a class="footnote-reference" href="#b52" id="id55">[52]</a>, Cyc [#B53]_*etc*. In WWMM we take the view that semantics can be provided by a number of inter-operating dictionaries which describe the semantics in human terms and also provide a variety of machine-enforceable constraints and interpretations. These work at a pragmatic rather than a formal level. The success of the WWMM will depend in part on the willingness of the community to create such dictionaries and to make sure that material produced uses the dictionary URIs in its annotation. Unlike all current knowledge bases in chemistry, the WWMM will not have a central repository and service. Like peer-to-peer systems we expect that there will be a federation of repositories adopting common identifier systems and semantics. We do not believe that traditional institutional repositories are the most appropriate place to deposit scientific data, and strongly believe that domain-oriented approaches are required. A scientist wishes to interact with a repository that understands her problem, not with the organisation that happens to employ her. Because chemistry is a multi-disciplinary subject we expect that the WWMM will consist of a considerable number of independent nodes. There is no requirement that any given repository holds &#8220;all&#8221; the data, nor that data should not be duplicated in different nodes. We expect that the community will evolve systems that make sense in terms of ease of access and robustness.</p>
+<p>It will be fundamental to have an indexing and discovery system. Because of the non-textual nature of much chemistry, current search engines such as Bing and Google will not be able to index much of the WWMM material. We therefore need distributed search technologies and in the first instance will rely on RDF and on conventional chemical substructure search. We have designed the system such that it is possible for scientists to add indexers (plug-ins) to a repository to create domain-specific searchable metadata. For example, it is not easy to search on the web for a compound containing between 10-15 carbon atoms, but if a repository exposes a carbon-count field as RDF then it is straightforward to retrieve entries using an RDF query containing combinations of index fields. More complex chemical concepts can also be indexed, such as peaks in NMR spectra, cavities in crystals or HOMO-LUMO gaps in theoretical calculations.</p>
+<p>The architecture of the WWMM is built on a number of web standards and protocols, described in detail below:</p>
+<p><strong>|nonascii_10| SWORD deposit</strong>: publish data to server</p>
+<p><strong>|nonascii_11| Atom archive feeds</strong>: syndicate published data</p>
+<p><strong>|nonascii_12| HTTP content negotiation</strong>: retrieve data in human and machine understandable formats</p>
+<p><strong>|nonascii_13| OAI-ORE/RDF:</strong> machine understandable representation of the data</p>
+<div class="section" id="sword-atompub">
+<h3>SWORD/AtomPub<a class="headerlink" href="#sword-atompub" title="Permalink to this headline">¶</a></h3>
+<p>The Atom Publishing Protocol (AtomPub <a class="footnote-reference" href="#b54" id="id56">[54]</a>) provides a standardised application-level protocol for publishing and editing Web Resources using HTTP. AtomPub is applicable to many domains, but is particularly widely supported by the Blogosphere, where it enables authoring tools such as Microsoft Word to publish content to different blogging software using a common protocol. The JISC-funded SWORD (Simple Web-service Offering Repository Deposit) project <a class="footnote-reference" href="#b55" id="id57">[55]</a> extends the AtomPub protocol to support the deposit of aggregate resources - packages consisting of a number of related files and associated metadata - onto a server. For example, the &#8216;package&#8217; object needed by WWMM may include crystal structure (CIF and CML formats), picture of the 3D structure, and a 2D representation of the connection table <em>etc</em>.</p>
+</div>
+<div class="section" id="atom-rss-feeds">
+<h3>Atom/RSS Feeds<a class="headerlink" href="#atom-rss-feeds" title="Permalink to this headline">¶</a></h3>
+<p>Web feeds are widely used to provide users with notifications of updated content. Typically a feed document lists recent content - such as active news items, or the list of articles in the current issue of a journal - and by monitoring (&#8220;subscribing to&#8221;) a feed, users can be alerted when new content is published. Entries in a feed document typically contain the title and summary of an item, along with a link to the full resource. Earlier iterations of the WWMM made use of RSS feeds <a class="footnote-reference" href="#b56" id="id58">[56]</a> to alert users of newly published chemical data, but these suffer from the constraint that only the most recent content can be accessed. The Atom Syndication Format offers a solution to this limitation through standardized support for paging, specified by RFC5005. Like an RSS feed, the Atom feed&#8217;s document contains a list of recently updated content, however it can also contain a link to a previous page containing entries describing other content. A client application can always access the latest content by retrieving the document at the feed URL, but can &#8216;walk&#8217; back through the previous pages to discover all the content in the system (Figures <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> and <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>).</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-42-3.jpg" src="../_images/1758-2946-3-42-3.jpg" />
+<p class="caption">Figure 3. An example of &#8220;paging&#8221; using Atom feeds</p>
+<div class="legend">
+<strong>An example of &#8220;paging&#8221; using Atom feeds</strong>.</div>
+</div>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-42-4.jpg" src="../_images/1758-2946-3-42-4.jpg" />
+<p class="caption">Figure 4. Atom feed content, based on the example in Figure 3 above</p>
+<div class="legend">
+<strong>Atom feed content, based on the example in Figure 3 above</strong>.</div>
+</div>
+</div>
+<div class="section" id="http-content-negotiation">
+<h3>HTTP Content Negotiation<a class="headerlink" href="#http-content-negotiation" title="Permalink to this headline">¶</a></h3>
+<p>The HTTP protocol <a class="footnote-reference" href="#b57" id="id59">[57]</a> allows content providers to deliver alternative representations (<em>e.g</em>. multiple languages, data formats, size, resolution <em>etc</em>.) of a resource (<em>i.e</em>. a data object or service identified by a URI) from the same URI, based on the preferences expressed by a client, through a mechanism called content negotiation (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>).</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-42-5.jpg" src="../_images/1758-2946-3-42-5.jpg" />
+<p class="caption">Figure 5. HTTP content negotiation delivering different representations of the same URI, based on the content of the &#8216;Accept&#8217; header</p>
+<div class="legend">
+<strong>HTTP content negotiation delivering different representations of the same URI, based on the content of the &#8216;Accept&#8217; header</strong>.</div>
+</div>
+<p>When requesting a resource from a web server, a client may include an &#8216;Accept&#8217; header in the request, indicating the media types it prefers, and optionally a strength of preference; for example, Mozilla Firefox 4.0.1 uses the following header:</p>
+<p>Accept: text/html, application/xhtml+xml, application/xml;q = 0.9, <em>/</em>;q = 0.8</p>
+<p>This says that Firefox prefers HTML (text/html) and XHTML (application/xhtml+xml) content, or less strongly (q = 0.9) XML (application/xml). If none of these are available it will accept anything else (<em>/</em>).</p>
+<p>The WWMM uses content negotiation to publish data in formats that are both human and machine readable. The URI for a resource published on the WWMM can be resolve to alternative representations - an HTML or XHTML &#8216;splash&#8217; page for humans, or an RDF representation (application/rdf+xml) for machines.</p>
+<p>This request by a web browser (such as Mozilla Firefox)</p>
+<p><a class="reference external" href="http://crystaleye.ch.cam.ac.uk">http://crystaleye.ch.cam.ac.uk</a></p>
+<p>will return a human-friendly HTML page describing the crystal structure, while the following request for the same resource by a machine agent</p>
+<p><a class="reference external" href="http://crystaleye.ch.cam.ac.uk">http://crystaleye.ch.cam.ac.uk</a></p>
+<p>can return a machine understandable RDF representation of the data.</p>
+</div>
+<div class="section" id="oai-ore-rdf">
+<h3>OAI-ORE/RDF<a class="headerlink" href="#oai-ore-rdf" title="Permalink to this headline">¶</a></h3>
+<p>Open Archives Initiative Object Reuse and Exchange (OAI-ORE)<a class="footnote-reference" href="#b58" id="id61">[58]</a> is a standard for describing aggregations of Web resources, commonly serialized into RDF. The WWMM uses OAI-ORE to describe the resources making up a data item - <em>e.g</em>. a crystal structure of NMR spectrum and the aggregate resource (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>).</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-42-6.jpg" src="../_images/1758-2946-3-42-6.jpg" />
+<p class="caption">Figure 6. Using an RDF representation for data items such as crystal structures and calculations enables them to be connected by shared concepts (InChI, creator) to form a graph of linked data</p>
+<div class="legend">
+<strong>Using an RDF representation for data items such as crystal structures and calculations enables them to be connected by shared concepts (InChI, creator) to form a graph of linked data</strong>.</div>
+</div>
+<p>The OAI-ORE model includes three classes of object: Aggregation, Aggregated Resource and Resource Map. Aggregations are an abstract concept, containing one or more Aggregated Resource. An Aggregation may be serialized into a number of different formats, and each of these serializations is termed a Resource Map. Each Resource Map has a unique URI, distinct from the Aggregation&#8217;s URI, in order for the different representations of the Aggregation to be resolvable.</p>
+<p>As well as describing an Aggregation, a Resource Map may contain additional data about the Aggregation and the individual Aggregated Resources (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>).</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-42-7.jpg" src="../_images/1758-2946-3-42-7.jpg" />
+<p class="caption">Figure 7. The structure of an RDF representation of an ORE resource map describing an aggregation of related resources and associated metadata</p>
+<div class="legend">
+<strong>The structure of an RDF representation of an ORE resource map describing an aggregation of related resources and associated metadata</strong>.</div>
+</div>
+</div>
+</div>
+<div class="section" id="software-development-environment">
+<h2>Software development environment<a class="headerlink" href="#software-development-environment" title="Permalink to this headline">¶</a></h2>
+<p>We have developed a large number of software components of varying complexity with much inter-dependence between the components. We embrace agile development practices and our software development environment is built upon existing technologies. Substantial use is made of existing Open Source utilities, tools and libraries such as Apache Commons <a class="footnote-reference" href="#b59" id="id62">[59]</a>, Restlet <a class="footnote-reference" href="#b60" id="id63">[60]</a> and CDK <a class="footnote-reference" href="#b61" id="id64">[61]</a>. The majority of the code is written in Java and we use the Apache maven <a class="footnote-reference" href="#b62" id="id65">[62]</a> build system (compiles, manages dependencies <em>etc</em>.)</p>
+<p>We endeavour to write the code with high test coverage (as much unit testing as possible is built-in at the initial stages), and aim for test-driven development. We run a Jenkins continuous integration <a class="footnote-reference" href="#b63" id="id66">[63]</a> server and a Nexus maven repository so all the code is developed under source control (a mixture of Subversion (svn)<a class="footnote-reference" href="#b64" id="id67">[64]</a> and mercurial <a class="footnote-reference" href="#b65" id="id68">[65]</a>). The Jenkins server polls the source repositories at regular intervals and rebuilds and tests any updated projects in a clean environment. If the updated code compiles successfully and passes all the unit tests, it is deployed to the maven repository and any downstream (dependent) projects are then re-compiled/re-tested in the same way. Thus, any modifications which would break compatibility with any other components are flagged, identified and rectified at the earliest possible opportunity (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a>).</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-42-8.jpg" src="../_images/1758-2946-3-42-8.jpg" />
+<p class="caption">Figure 8. Current status page of the &#8216;new-jumbo-converters&#8217; project on the Jenkins continuous integration server, showing its relationships to other projects</p>
+<div class="legend">
+<strong>Current status page of the &#8216;new-jumbo-converters&#8217; project on the Jenkins continuous integration server, showing its relationships to other projects</strong>.</div>
+</div>
+</div>
+<div class="section" id="virtual-communities">
+<h2>Virtual communities<a class="headerlink" href="#virtual-communities" title="Permalink to this headline">¶</a></h2>
+<p>The WWMM is predicated on a critical mass of users who are prepared to develop both content and technology. The precise path for the evolution will depend on a mixture of what technologies are available, the familiarity of the community and the resources that are available. It may also depend on the perceived business models and the uptake by significant producers and consumers. The earliest experiment is in our Quixote community where we are producing semantic computational chemistry and disseminating this from RDF-aware servers. It is likely that different members of the community will play different roles. Some may wish to upload their results to a semantifier which deposits them in a given repository (&#8220;push&#8221;). Others may wish to aggregate legacy data and re-disseminate it (&#8220;pull&#8221;). For example, a University Department or group might wish to expose its results on its own webpages to enhance the reputation and provide re-usable material. A national lab might act as an aggregator for a sub-community of scientists (<em>e.g</em>. in materials properties prediction).</p>
+</div>
+<div class="section" id="future-development-of-the-wwmm">
+<h2>Future Development of the WWMM<a class="headerlink" href="#future-development-of-the-wwmm" title="Permalink to this headline">¶</a></h2>
+<p>The future of the WWMM will depend on a number of factors which we cannot predict:</p>
+<ol class="loweralpha simple">
+<li>The change from &#8220;walled garden&#8221; providers to Open collections.</li>
+<li>Citizen science. The most dramatic example in science has been the large collaboration involved in GalaxyZoo <a class="footnote-reference" href="#b66" id="id69">[66]</a>, and now spreading to other types of activity (Zooniverse <a class="footnote-reference" href="#b67" id="id70">[67]</a>). We expect and hope that this philosophy will spread to chemistry and disciplines which require chemistry.</li>
+<li>The need to link data. Almost all chemical systems at the moment are unsuitable for LOD in both the lack of semantics and the problems of licences. The ChemSpider system is a hybrid in that some of the data are Open and some of the material is exposed in RDF.</li>
+<li>The realisation that chemistry needs community ontologies.</li>
+<li>The high and unsustainable cost of closed data collections.</li>
+<li>The growing dissatisfaction of the upcoming generation of scientists with closed systems.</li>
+<li>The frustration of the non-academic community in the difficulty of obtaining material published in STM publications.</li>
+<li>The desire of scientific publishers and editorial boards to publish the semantic data associated with articles.</li>
+</ol>
+<p>We understand that the initial collection of 175, 000 molecules in <a class="reference external" href="mailto:DSpace&#37;&#52;&#48;Cambridge">DSpace<span>&#64;</span>Cambridge</a> <a class="footnote-reference" href="#b68" id="id71">[68]</a> is regularly used and accounts for ca. 10% of the repository traffic. This further encourages us to believe that decentralised resources are valuable and can be discovered and used by current web technology.</p>
+<p>The WWMM is now technically deployable and its critical mass will depend on adopters who need an Open distributed system, and who are prepared to contribute to the infrastructure design, the ontology design and its implementation.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>PMR had the original vision for the WWMM, has participated in and overseen its development and has written the manuscript. SEA has been responsible for much of the current infrastructure and has written the manuscript. OJD has contributed to the development of the infrastructure, provided valuable advice on technical matters and has written the manuscript. JAT was involved in development of the original infrastructure and content production and has written the manuscript. YZ was involved in the development of the original infrastructure and content production. All authors have seen and approved the final version.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>We thank the following for funding over the lifetime of the WWMM: Unilever, DTI eScience, JISC. The assistance of Dr Charlotte Bolton in the production of this manuscript is gratefully acknowledged.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Science &amp; Technology Facilities Council e-Science</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Napster</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>William Gibson</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>The Matrix franchise</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>World Wide Molecular Matrix</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td>First International Conference on the World-Wide Web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[7]</a></td><td>Molecular Standards for the Grid, Cambridge eScience Centre</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[8]</a></td><td>DENDRAL and CONGEN: Molecular Structure Elucidation in Organic Chemistr</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[9]</a></td><td>Logic and Heuristics Applied to Synthetic Analysi</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[10]</a></td><td>The IUPAC International Chemical Identifier (InChI™)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[11]</a></td><td>Walled garden model</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[12]</a></td><td>Architectural Styles and the Design of Network-based Software Architectures</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[13]</a></td><td>Skype</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[14]</a></td><td>BitTorrent</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[15]</a></td><td>National Center for Biotechnology Informatio</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[16]</a></td><td>European Bioinformatics Institut</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[17]</a></td><td>Dryad</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[18]</a></td><td>Tranche project</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[19]</a></td><td>Proteome Commons</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[20]</a></td><td>CrystalEye</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[21]</a></td><td>ExPASy Proteomics server (Swiss-Prot database)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[22]</a></td><td>RCSB Protein Data Ban</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[23]</a></td><td>NCBI GenBank<sup>|nonascii_15|</sup></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[24]</a></td><td>PubChem</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[25]</a></td><td>ChEB</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id26">[26]</a></td><td>NMRShiftDB</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id27">[27]</a></td><td>ChemSpider</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id28">[28]</a></td><td>CAS</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[29]</a></td><td>Internet Archive&#8217;s Wayback Machine</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[30]</a></td><td>CLaRIO</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id31">[31]</a></td><td>Open StreetMap</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[32]</a></td><td>DBpedia</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id33">[33]</a></td><td>Quixote project on QC databases</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b34" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[34]</a></td><td>Open bibliography and Open Bibliographic Dat</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b35" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[35]</a></td><td>IUPAC Compendium of Chemical Terminology - the Gold Book</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b36" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id36">[36]</a></td><td>Universal Protein Resourc</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b37" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[37]</td><td>KEGG: Kyoto Encyclopedia of Genes and Genomes</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b38" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id37">[38]</a></td><td>Jean-Claude Bradle</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b39" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id38">[39]</a></td><td>Matthew Tod</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b40" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id39">[40]</a></td><td>Jeremy Fre</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b41" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id40">[41]</a></td><td>OPSI</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b42" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id41">[42]</a></td><td>Tim Berners-Lee&#8217;s Four Principles of Linked Data</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b43" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id42">[43]</a></td><td>W3C eGov mailing list archive</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b44" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id47">[44]</a></td><td>Beilstein (since 2009, distributed as Reaxys by Elsevier)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b45" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id48">[45]</a></td><td>RTEC</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b46" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id49">[46]</a></td><td>DrugBank</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b47" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id50">[47]</a></td><td>ChEMBL database</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b48" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id51">[48]</a></td><td>Crystallography Open Databas</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b49" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id52">[49]</a></td><td>Cambridge Crystallographic Data Centr</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b50" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id53">[50]</a></td><td>OWL2 Web Ontology Language</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b51" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id54">[51]</a></td><td>ChemAxiom - An Ontological Framework for Chemistry in Science</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b52" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id55">[52]</a></td><td>The Open Biological and Biomedical Ontologie</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b53" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[53]</td><td>OpenCyc ontology</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b54" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id56">[54]</a></td><td>The Atom publishing protocol</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b55" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id57">[55]</a></td><td>Simple Web-service Offering Repository Deposi</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b56" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id58">[56]</a></td><td>Chemical Markup, XML, and the World Wide Web. 5. Applications of chemical metadata in RSS aggregators</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b57" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id59">[57]</a></td><td>HTTP protocol</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b58" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id61">[58]</a></td><td>Open Archives Initiative Object Reuse and Exchang</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b59" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id62">[59]</a></td><td>Apache Commons</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b60" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id63">[60]</a></td><td>Restle</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b61" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id64">[61]</a></td><td>Chemistry Development Ki</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b62" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id65">[62]</a></td><td>Apache Maven project</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b63" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id66">[63]</a></td><td>Jenkins-ci development environment</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b64" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id67">[64]</a></td><td>Apache™ Subversion<sup>|nonascii_17|</sup> project</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b65" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id68">[65]</a></td><td>Mercurial source control management tool</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b66" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id69">[66]</a></td><td>GalaxyZoo</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b67" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id70">[67]</a></td><td>Zooniverse</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b68" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id71">[68]</a></td><td><a class="reference external" href="mailto:DSpace&#37;&#52;&#48;Cambridge">DSpace<span>&#64;</span>Cambridge</a> repository</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#origins-history-vision">Origins/history/vision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#semantics-and-ontologies-in-molecular-sciences">Semantics and Ontologies in Molecular Sciences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#design-and-evolution-technologies">Design and evolution: technologies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sword-atompub">SWORD/AtomPub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#atom-rss-feeds">Atom/RSS Feeds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#http-content-negotiation">HTTP Content Negotiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#oai-ore-rdf">OAI-ORE/RDF</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#software-development-environment">Software development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#virtual-communities">Virtual communities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#future-development-of-the-wwmm">Future Development of the WWMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-41.html" title="OSCAR4: a flexible architecture for chemical text-mining"
+             >previous</a> |
+          <a href="1758-2946-3-43.html" title="The semantics of Chemical Markup Language (CML): dictionaries and conventions"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-42.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

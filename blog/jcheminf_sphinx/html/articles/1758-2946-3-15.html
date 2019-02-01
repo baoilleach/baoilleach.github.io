@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Resource description framework technologies in chemistry &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Semantic Web integration of Cheminformatics resources with the SADI framework" href="1758-2946-3-16.html" />
+    <link rel="prev" title="Analysis of in vitro bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds" href="1758-2946-3-14.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-14.html" title="Analysis of in vitro bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-16.html" title="Semantic Web integration of Cheminformatics resources with the SADI framework"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="resource-description-framework-technologies-in-chemistry">
+<h1>Resource description framework technologies in chemistry<a class="headerlink" href="#resource-description-framework-technologies-in-chemistry" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="editorial">
+<h2>Editorial<a class="headerlink" href="#editorial" title="Permalink to this headline">¶</a></h2>
+<p>The Resource Description Framework (RDF) is providing the life sciences with new standards around data and knowledge management. The uptake in the life sciences is significantly higher than the uptake of the eXtensible Markup Language (XML) and even relational databases, as was recently shown by Splendiani et al. <a class="footnote-reference" href="#b1" id="id1">[1]</a> Chemistry is adopting these methods too. For example, Murray-Rust and co-workers used RDF already in 2004 to distribute news items where chemical structures were embedded using RDF Site Summary 1.0 <a class="footnote-reference" href="#b2" id="id2">[2]</a>. Frey implemented a system which would now be referred to as an electronic lab notebook (ELN) <a class="footnote-reference" href="#b3" id="id3">[3]</a>. The use of the SPARQL query language goes back to 2007 where it was used in a system to annotate crystal structures <a class="footnote-reference" href="#b4" id="id4">[4]</a>.</p>
+<p>The American Chemical Society (ACS) Division of Chemical Information (CINF) invited scientists from around the world to present their use of RDF technologies in chemistry on 22nd-23rd August 2010 at the 240th ACS National Meeting in Boston, USA. During three half-day sessions, the speakers demonstrated a mix of smaller and larger initiatives where RDF and related technologies are used in cheminformatics and bioinformatics as Open Standards for data exchange, common languages (ontologies), and problem solving. The fifteen presentations were grouped in the themes computation, ontologies, and chemical applications. Figures <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>, <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a> and <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> display the most important keywords reflecting the abstracts of the talks in each session as word clouds <a class="footnote-reference" href="#b5" id="id5">[5]</a>.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-15-1.jpg" src="../_images/1758-2946-3-15-1.jpg" />
+<p class="caption">Figure 1. Keyword cloud for the RDF and Computation session</p>
+<div class="legend">
+<strong>Keyword cloud for the RDF and Computation session</strong>.</div>
+</div>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-15-2.jpg" src="../_images/1758-2946-3-15-2.jpg" />
+<p class="caption">Figure 2. Keyword cloud for the RDF and Ontologies session</p>
+<div class="legend">
+<strong>Keyword cloud for the RDF and Ontologies session</strong>.</div>
+</div>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-15-3.jpg" src="../_images/1758-2946-3-15-3.jpg" />
+<p class="caption">Figure 3. Keyword cloud for the RDF and Chemical Applications session</p>
+<div class="legend">
+<strong>Keyword cloud for the RDF and Chemical Applications session</strong>.</div>
+</div>
+<p>The goal of the meeting was to make more chemists aware of what the RDF Open Standard has to offer to chemistry. We are delighted to continue this effort with this Thematic Series, for which the speakers (and others) were invited to present their work in more detail to a wider chemistry community. The choice of an Open Access journal follows this goal. At this place, we would like to thank Pfizer, Inc., who had partially funded the article processing charges for this Thematic Series. Pfizer, Inc. has had no input into the content of the publication or the articles themselves. All articles in the series were independently prepared by the authors and were subjected to the journal&#8217;s standard peer review process.</p>
+<p>In the remainder of this editorial, we will briefly outline the various RDF technologies and how they have been used in chemistry so far.</p>
+</div>
+<div class="section" id="concepts">
+<h2>1 Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h2>
+<p>The core RDF specification was introduced by the World Wide Web Consortium (W3C) in 1999 <a class="footnote-reference" href="#b6" id="id6">[6]</a> and defines the foundation of the RDF technologies. It has evolved into a set of recommendations by the W3C published in 2004 (See Table <em class="xref std std-ref">1</em>). RDF specifies a very simple data structure linking a subject to an object or a value (literal) using a predicate. Cheminformaticians will recognize this data structure as an edge from graph theory. This structure allows us to represent facts like &#8220;vanillin dissolves in methyl alcohol&#8221; <a class="footnote-reference" href="#b7" id="id7">[7]</a>. RDF uses Uniform Resource Identifiers (URIs) to identify things. Therefore, the RDF equivalent of the solution statement could be like this so-called triple:</p>
+<p><a class="reference external" href="http://dbpedia.org/resource/Vanillin">http://dbpedia.org/resource/Vanillin</a> <a class="reference external" href="http://example.com/dissolvesIn">http://example.com/dissolvesIn</a> <a class="reference external" href="http://dbpedia.org/resource/Methanol">http://dbpedia.org/resource/Methanol</a>.</p>
+<p>Since URIs may be used to reference resources on any server worldwide, RDF triples allow to span a global graph data structure. This is not surprising, since RDF is the core technology behind the proposed Semantic Web <a class="footnote-reference" href="#b8" id="id8">[8]</a>. In fact, the Web nature is clear here, as one can follow both the URIs for vanillin and methanol to obtain further information on those two chemicals. These molecules&#8217; URIs are said to be dereferencable, allowing agents to spider the Web for information following the hyperlinks, quite like how you follow hyperlinks on websites. Hence, the term Semantic Web.</p>
+<p>Recent projects such as Bio2RDF <a class="footnote-reference" href="#b9" id="id9">[9]</a>, Chem2Bio2RDF <a class="footnote-reference" href="#b10" id="id10">[10]</a>, and OpenTox <a class="footnote-reference" href="#b11" id="id11">[11]</a> have brought genomic, chemical and pharmaceutical knowledge to the Semantic Web by expressing it in RDF. These three projects aim at making databases with chemical knowledge available from a central access point, interlinking the individual data sets. Smaller data sets are also becoming available as RDF, such as the Open Notebook Science Solubility data <a class="footnote-reference" href="#b12" id="id12">[12]</a>.</p>
+</div>
+<div class="section" id="formats">
+<h2>2 Formats<a class="headerlink" href="#formats" title="Permalink to this headline">¶</a></h2>
+<p>The actual use of RDF depends on various further standards. For example, standards were required that describe how RDF statements are exchanged. Several standards serve this purpose: RDF/XML is an XML-based serialization <a class="footnote-reference" href="#b13" id="id13">[13]</a>, while simpler formats exist with N-Triples <a class="footnote-reference" href="#b14" id="id14">[14]</a> and Notation3 <a class="footnote-reference" href="#b15" id="id15">[15]</a>. For integration with current web practices, RDFa has been defined to allow RDF triples to be embedded in HTML pages <a class="footnote-reference" href="#b16" id="id16">[16]</a>. Additionally, a proposal has been written that describes how RDF can be serialized as Javascript Object Notation (JSON) <a class="footnote-reference" href="#b17" id="id17">[17]</a>, and while this is not a formal specification yet, a new RDF working group will formalize this into a new standard <a class="footnote-reference" href="#b18" id="id18">[18]</a>. Several of these serialization standards are used in the papers in this Series.</p>
+<p>Using these serializations, RDF can be downloaded directly from pure RDF documents (RDF/XML, Notation3), or extracted from RDFa-based web pages using online RDF extraction web services, like <a class="reference external" href="http://www.w3.org/2007/08/pyRdfa/.">http://www.w3.org/2007/08/pyRdfa/.</a> These approaches make it simple to aggregate chemical data from web pages.</p>
+</div>
+<div class="section" id="querying-the-world-wide-web">
+<h2>3 Querying the World Wide Web<a class="headerlink" href="#querying-the-world-wide-web" title="Permalink to this headline">¶</a></h2>
+<p>The most promising technology in the RDF family is the SPARQL Protocol and RDF Query Language (SPARQL) <a class="footnote-reference" href="#b19" id="id19">[19]</a>, which has been applied by Chen et al. in three chemogenomics use cases <a class="footnote-reference" href="#b10" id="id20">[10]</a>. One of the use cases shows how SPARQL queries are used to find compounds that are active in bioassay for genes related to proteins to which the chemical dexamethasone binds, using information from PubChem, Uniprot, and DrugBank, all made available as RDF in the Chem2Bio2RDF database. The other use cases in this paper use the same approach by aggregating data sources before querying them. As such, it is similar to querying data stored in a relational database. However, an important difference between SPARQL and SQL query engines is the underlying data they act on: a graph of triples for RDF data, and rectangular tables in relational databases. This difference implies that RDF resources must have at least some common elements, whereas a relational DBMS assumes an identical data structure for all records of a table.</p>
+<p>For example, Jankowski used a public SPARQL service to extract boiling points of a series of alkanes from an XHTML webpage with the data made machine readable with RDFa, and visualized that using Javascript in another web page dynamically <a class="footnote-reference" href="#b20" id="id21">[20]</a> (see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>). A second important difference is that SPARQL queries can be <em>federated</em> <a class="footnote-reference" href="#b21" id="id22">[21]</a>. Federated SPARQL allows one to query various RDF providers in one query. This has been used recently in the Receptor Explorer tool to help translational research by connecting basic neuroscience research with clinical trials <a class="footnote-reference" href="#b22" id="id23">[22]</a>. Being able to query resources in this manner, brings us a step closer to systems biology approaches.</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-15-4.jpg" src="../_images/1758-2946-3-15-4.jpg" />
+<p class="caption">Figure 4. Web page using SPARQL to visualize alkane boiling points extracted from another web page</p>
+<div class="legend">
+<strong>Web page using SPARQL to visualize alkane boiling points extracted from another web page</strong>. Web page with JavaScript by Jankowski visualizing the boiling point of a series of alkanes from Wiener <a class="footnote-reference" href="#b31" id="id24">[31]</a> extracted with SPARQL from a second, XHTML+RDFa web page at <a class="reference external" href="http://egonw.github.com/cheminformatics.classics/classic1.html">http://egonw.github.com/cheminformatics.classics/classic1.html</a></div>
+</div>
+</div>
+<div class="section" id="ontologies">
+<h2>4 Ontologies<a class="headerlink" href="#ontologies" title="Permalink to this headline">¶</a></h2>
+<p>With RDF we have a data structure to link resources and provide details about those resources, and SPARQL provides us with the tools to query and aggregate that data. The next standard we will discuss now is the Web Ontology Language (OWL) which brought the RDF technology to the ontology community <a class="footnote-reference" href="#b23" id="id25">[23]</a>. Ontologies are most certainly not new to chemistry <a class="footnote-reference" href="#b24" id="id26">[24]</a> nor biology or life sciences, but the OWL standard makes it much easier to use ontologies, partly because they are formulated in RDF themselves. Ontologies, like controlled vocabularies and thesauri, describe what things mean, by linking terms to a human-readable definition. As such, ontologies are used for sharing knowledge in a common language, as well as to organize that knowledge. While linking resources is not new either, expressing the content of resources in explicit terms allows humans and software to reason formally on the content and to find possible sources of error. For example, Konyk et al. have used OWL to link PubChem, DrugBank, and DBPedia, noting that it offers new ways to discover knowledge <a class="footnote-reference" href="#b25" id="id27">[25]</a>.</p>
+<p>There are currently not many ontologies in chemistry, but many OBO Foundry-based ontologies can be reused using an OBO to OWL mapping <a class="footnote-reference" href="#b26" id="id28">[26]</a>. This makes available chemical ontologies like the CO ontology <a class="footnote-reference" href="#b27" id="id29">[27]</a>, the ontology of Chemical Entities of Biological Interest (ChEBI) <a class="footnote-reference" href="#b28" id="id30">[28]</a><a class="footnote-reference" href="#b29" id="id31">[29]</a>, and the Chemical Information Ontology <a class="reference external" href="http://code.google.com/p/semanticchemistry/">http://code.google.com/p/semanticchemistry/</a>, but also other ontologies in the life sciences, such as the Gene Ontology <a class="footnote-reference" href="#b30" id="id32">[30]</a>. This way, OWL provides a universal standard to link data sources in life sciences, transcending traditional boundaries between the various domains.</p>
+<p>The current state is that different RDF resources are using different ontologies. This does not necessarily have to be a problem, because the ontologies can be explicitly mapped to each other. This way, equivalent terms from two ontologies can be formally defined as equivalent, using the OWL predicates owl:equivalentClass and owl:equivalentProperty for classes, and owl:sameAs for instance. Making the equivalence explicit this way helps to illustrate the provenance of data integration efforts.</p>
+</div>
+<div class="section" id="discussion">
+<h2>5 Discussion<a class="headerlink" href="#discussion" title="Permalink to this headline">¶</a></h2>
+<p>This Thematic Series shows the current state of the use of RDF in chemistry, as presented at the ACS RDF 2010 meeting in Boston, and provides an insight into the progress of these methods. Much of the research is currently explorative, rather than formative, though standards are being proposed. It may very well turn out that some aspects of chemistry will never be expressed in RDF, and some computation will be done without ontology-based reasoning. It is important to realize here where RDF is positioned, namely for linking resources.</p>
+<p>However, the use of RDF for already well-defined data structures in chemistry is not obvious. Data types like connection tables and various matrices are possible, but the use of URIs makes such structures needlessly verbose. Moreover, there is no need to format already well-formalized data structures into RDF, such as the various uses of matrices in computational chemistry as RDF triples. In fact, several papers in this series outline how to combine knowledge expressed with RDF with computational services. This shows that RDF is not an isolated framework, but one that can be integrated into existing cheminformatics workflows.</p>
+<p>What RDF does not solve, are the following issues that remain in cheminformatics. RDF is about knowledge representation, and while ontologies take care of meaning and provide requirements to verify formal data consistency, it does not enforce any data quality, data structure, or data availability. This is, in fact, similar to other ways of providing data. For example, a data set with boiling points may or may not include information about experimental error. Metabolomics data may name the molecules for which concentration profiles have been measured, or the original accurate masses from which the identity was deduced.</p>
+<p>It must be clear, therefore, that the RDF technologies are not the solution to everything. Their use does not guarantee an impressive scientific scenario. Instead, it can help simplify data analysis and particularly data integration, making it easier to handle large volumes of data accurately, or at least, with an explicitly defined accuracy.</p>
+<p>As such, the use of explicit, semantic formats can be considered a gold standard of scientific practise. It is about adding as much detail to your lab notebook as you need. But, it does not inhibit you from writing nonsense in your notebook.</p>
+</div>
+<div class="section" id="outlook">
+<h2>6 Outlook<a class="headerlink" href="#outlook" title="Permalink to this headline">¶</a></h2>
+<p>The future of the use of RDF technologies as open standards in chemistry looks bright, and fills the needs in chemistry for semantically linking chemical data to other data sources. RDF technologies provide a domain-independent way for representing knowledge and their open nature assures many alternative approaches for making data available as RDF. This Thematic Series shows a few novel and creative applications of these RDF technologies, and we hope they may serve as seminal work in cheminformatics for future years.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Biomedical semantics in the Semantic Web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Chemical markup, XML, and the World Wide Web. 5. Applications of chemical metadata in RSS aggregators</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Dark Lab or Smart Lab: The Challenges for 21st Century Laboratory Software</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Collaborative Annotation of 3D Crystallographic Models</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>Wordle</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td>Resource Description Framework(RDF) Model and Syntax Specification</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[7]</a></td><td>Open Notebook Science Challenge: Solubilities of Organic Compounds in Organic Solvents</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[8]</a></td><td>The Semantic Web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[9]</a></td><td>Bio2RDF: Towards a mashup to build bioinformatics knowledge systems</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[10]</td><td><em>(<a class="fn-backref" href="#id10">1</a>, <a class="fn-backref" href="#id20">2</a>)</em> Chem2Bio2RDF: a semantic framework for linking and data mining chemogenomic and systems chemical biology data</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[11]</a></td><td>Collaborative development of predictive toxicology applications</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[12]</a></td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[13]</a></td><td>RDF/XML Syntax Specification (Revised)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[14]</a></td><td>RDF Test Cases</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[15]</a></td><td>Notation 3 - An readable language for data on the Web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[16]</a></td><td>RDFa in XHTML: Syntax and Processing</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[17]</a></td><td>RDF in JSON</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[18]</a></td><td>New RDF Working Group, RDF/JSON, RDF API...</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[19]</a></td><td>SPARQL Query Language for RDF</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[20]</a></td><td>SPARQL to Chart</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[21]</a></td><td>Federated SPARQL</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[22]</a></td><td>A journey to Semantic Web query federation in the life sciences</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[23]</a></td><td>OWL Web Ontology Language Overview</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id26">[24]</a></td><td>Chemical inference. 3. Formalization of the language of relational chemistry: ontology and algebra</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id27">[25]</a></td><td>Chemical Knowledge for the Semantic Web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id28">[26]</a></td><td>OBO to OWL: a protege OWL tab to read/save OBO ontologies</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[27]</a></td><td>CO: A chemical ontology for identification of functional groups and semantic comparison of small molecules</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[28]</a></td><td>ChEBI: a database and ontology for chemical entities of biological interest</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id31">[29]</a></td><td>GO faster ChEBI with Reasonable Biochemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[30]</a></td><td>Understanding and using the meaning of statements in a bio-ontology: recasting the Gene Ontology in OWL</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[31]</a></td><td>Structural Determination of Paraffin Boiling Points</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[32]</td><td>Resource Description Framework (RDF): Concepts and Abstract Syntax</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[33]</td><td>OWL 2 Web Ontology Language Document Overview</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Resource description framework technologies in chemistry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#editorial">Editorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#concepts">1 Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#formats">2 Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#querying-the-world-wide-web">3 Querying the World Wide Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ontologies">4 Ontologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#discussion">5 Discussion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#outlook">6 Outlook</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-14.html" title="Analysis of in vitro bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds"
+             >previous</a> |
+          <a href="1758-2946-3-16.html" title="Semantic Web integration of Cheminformatics resources with the SADI framework"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-15.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

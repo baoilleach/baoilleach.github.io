@@ -1,0 +1,720 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="PubChem3D: Conformer generation" href="1758-2946-3-4.html" />
+    <link rel="prev" title="Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method" href="1758-2946-3-2.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-2.html" title="Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-4.html" title="PubChem3D: Conformer generation"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="jcompoundmapper-an-open-source-java-library-and-command-line-tool-for-chemical-fingerprints">
+<h1>jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints<a class="headerlink" href="#jcompoundmapper-an-open-source-java-library-and-command-line-tool-for-chemical-fingerprints" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>The decomposition of a chemical graph is a convenient approach to encode information of the corresponding organic compound. While several commercial toolkits exist to encode molecules as so-called fingerprints, only a few open source implementations are available. The aim of this work is to introduce a library for exactly defined molecular decompositions, with a strong focus on the application of these features in machine learning and data mining. It provides several options such as search depth, distance cut-offs, atom- and pharmacophore typing. Furthermore, it provides the functionality to combine, to compare, or to export the fingerprints into several formats.</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>We provide a Java 1.6 library for the decomposition of chemical graphs based on the open source Chemistry Development Kit toolkit. We reimplemented popular fingerprinting algorithms such as depth-first search fingerprints, extended connectivity fingerprints, autocorrelation fingerprints (e.g. CATS2D), radial fingerprints (e.g. Molprint2D), geometrical Molprint, atom pairs, and pharmacophore fingerprints. We also implemented custom fingerprints such as the all-shortest path fingerprint that only includes the subset of shortest paths from the full set of paths of the depth-first search fingerprint. As an application of jCompoundMapper, we provide a command-line executable binary. We measured the conversion speed and number of features for each encoding and described the composition of the features in detail. The quality of the encodings was tested using the default parametrizations in combination with a support vector machine on the Sutherland QSAR data sets. Additionally, we benchmarked the fingerprint encodings on the large-scale Ames toxicity benchmark using a large-scale linear support vector machine. The results were promising and could often compete with literature results. On the large Ames benchmark, for example, we obtained an AUC ROC performance of 0.87 with a reimplementation of the extended connectivity fingerprint. This result is comparable to the performance achieved by a non-linear support vector machine using state-of-the-art descriptors. On the Sutherland QSAR data set, the best fingerprint encodings showed a comparable or better performance on 5 of the 8 benchmarks when compared against the results of the best descriptors published in the paper of Sutherland et al.</p>
+</div>
+<div class="section" id="conclusions">
+<h3>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h3>
+<p>jCompoundMapper is a library for chemical graph fingerprints with several tweaking possibilities and exporting options for open source data mining toolkits. The quality of the data mining results, the conversion speed, the LPGL software license, the command-line interface, and the exporters should be useful for many applications in cheminformatics like benchmarks against literature methods, comparison of data mining algorithms, similarity searching, and similarity-based data mining.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>The decomposition of a chemical graph into a list of features is a convenient way to assess the similarity between chemical compounds by comparing the resulting lists of features. Such representations are also called chemical fingerprints <a class="footnote-reference" href="#b1" id="id2">[1]</a>. These encodings are important for data mining applications like similarity-based machine learning approaches or similarity searches <a class="footnote-reference" href="#b2" id="id3">[2]</a>.</p>
+<p>The goal of this work is to introduce an open source molecular fingerprinting library for data mining purposes which provides exact definitions of its fingerprinting algorithms. The algorithms can be parametrized with various options to adapt the encodings, for example, by applying a custom labeling function or by altering the search depth parameter. Additionally, the library can be used as a basis for new implementations. It is based on the Chemistry Development Kit <a class="footnote-reference" href="#b3" id="id4">[3]</a>, which also provides several fingerprints in its API. However, there are several differences. The first aim of jCompoundMapper is to focus on the exact definition of its encodings, which is crucial to describe the features in data mining experiments. The second aim is to provide the functionality to export the fingerprints or pairwise similarity matrices to formats of popular machine learning toolboxes. A label or property of an input compound to be trained by a machine learning algorithm can be included.</p>
+<p>Most fingerprint algorithms rely on either the geometrical or the topological distance between the atoms of a structure. The topological information is stored in the all-shortest path matrix, which encodes the minimum topological distance between two atoms (vertices) by the shortest path using the bonds (edges). Organic compounds are usually weakly connected because the number of covalent bonds (vertex degree) of an organic molecule is limited. In contrast, the geometry of a structure can be interpreted as a fully connected graph. The complexity of both approaches can reduced by limiting the search depth for topological fingerprints or by introducing a distance cut-off for geometrical fingerprints.</p>
+<p>jCompoundMapper offers a variety of topological (e.g. radial atom environments <a class="footnote-reference" href="#b4" id="id5">[4]</a>, extended connectivity fingerprints <a class="footnote-reference" href="#b5" id="id6">[5]</a>, depth-first search fingerprints <a class="footnote-reference" href="#b6" id="id7">[6]</a>, or auto-correlation vectors <a class="footnote-reference" href="#b7" id="id8">[7]</a>) and geometrical (e.g. two-point and three-point encodings <a class="footnote-reference" href="#b8" id="id9">[8]</a><a class="footnote-reference" href="#b9" id="id10">[9]</a> or geometrical atom environments <a class="footnote-reference" href="#b10" id="id11">[10]</a>) fingerprints. If applicable, it allows for a parameterization of an encoding, such as the search depth, the distance cut-off, the geometrical scaling factor, the atom typing scheme, or the hash space.</p>
+<p>After the feature generation step, the list of features can be mapped to a vectorial format. One possibility is to encode a set of features as a hashed fingerprint. Here, a unique identifier of a feature is used to initialize a pseudo random number generator which produces numbers in <em>h</em> is the maximum size of the hash space. Thus, the dimensionality of the original feature space can be considerably reduced. For example, the Fingal fingerprint <a class="footnote-reference" href="#b11" id="id12">[11]</a>, uses the cyclic redundancy check algorithm to generate seeds for the hashing of chemical graph patterns. For an introduction into hashed fingerprints, please refer to the review by Brown <a class="footnote-reference" href="#b1" id="id13">[1]</a>. Another strategy reserves fixed bit positions in a vector for specific feature types, like patterns obtained at a certain parameter (such as depth or distance) with a limited number of possible combinations. The definition of the CATS2D <a class="footnote-reference" href="#b7" id="id14">[7]</a> vector is an example for this approach.</p>
+<p>jCompoundMapper supports native formats of common open source machine learning libraries. The exporters can be used to write feature maps to comma-separated format, LIBSVM <a class="footnote-reference" href="#b12" id="id15">[12]</a> format (sparse and matrix), and WEKA ARFF <a class="footnote-reference" href="#b13" id="id16">[13]</a>. Therefore, various data mining libraries can be directly applied on the output files. Furthermore, the library provides efficient data structures to compare sets of features in the case that the computation of a similarity matrix is required.</p>
+<p>The quality of the encodings was compared on QSAR and toxicity benchmark problems in the results section. First, we conducted experiments using the support vector regression of LIBSVM on the well-known Sutherland QSAR benchmark set <a class="footnote-reference" href="#b14" id="id17">[14]</a>. Second, we used a large Ames toxicity classification benchmark <a class="footnote-reference" href="#b15" id="id18">[15]</a> and LIBLINEAR <a class="footnote-reference" href="#b16" id="id19">[16]</a> to evaluate the performance using binary hashed sparse fingerprints. On the Sutherland data sets, the averaged squared correlation of the all-shortest-path and the atom triplet fingerprint was at least 5% better on ACHE than the best encoding given by Sutherland et al. On BZR and DHFR, the all-shortest path fingerprint achieved a squared correlation of 0.57 and 0.76 respectively. The performance was comparable on two data sets. On the remaining three data sets, the best encoding was more than 5% worse than the results of the best encoding published by Sutherland et al. On the Ames toxicity data set, the implementation of the extended connectivity fingerprint achieved an AUC ROC performance of 0.87, which is comparable to the performance by a non-linear support vector machine trained on state-of-the-art descriptors. Nevertheless, the goal was not an exhaustive comparison but to show that the implementations are able to obtain similar results when compared against literature results. jCompoundMapper features a command-line interface but can also be used as a Java API. It depends solely on open source libraries and is licensed under the LPGL. The source code and an executable is available at Sourceforge.</p>
+<p>The library originated from various implementations of literature fingerprints and descriptors used in comparison studies. The encodings were employed either as part of a new approach or as a reference method <a class="footnote-reference" href="#b17" id="id20">[17]</a><a class="footnote-reference" href="#b18" id="id21">[18]</a><a class="footnote-reference" href="#b19" id="id22">[19]</a><a class="footnote-reference" href="#b20" id="id23">[20]</a><a class="footnote-reference" href="#b21" id="id24">[21]</a>.</p>
+<p>To sum up, jCompoundMapper is an open source library for the encoding of chemical graphs as fingerprints. It can be used from the command-line interface or as a Java API. Hence, a further use in applications, like in KNIME <a class="reference external" href="http://www.knime.org">http://www.knime.org</a> nodes, is possible. The overall performance of the fingerprints in machine learning experiments indicates that structured-based models of reasonable quality can be obtained.</p>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="notation">
+<h4>Notation<a class="headerlink" href="#notation" title="Permalink to this headline">¶</a></h4>
+<p>The binned geometrical distance matrix <sub>ij</sub> Gencodes the spatial distances between two heavy atoms. The topological distance matrix <sub>ij</sub> Tencodes the shortest topological distance between atoms <em>i</em> and <em>j</em>. The labeling function <em>d</em> defines a distance cut-off for features, all features with <sub>ij</sub> g&gt;*d* or <sub>ij</sub> t&gt; d are omitted. A labeled path <em>p</em> is a sequence of atoms connected by bonds <sub>i</sub> bconnects <em>p**ij</em> :sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">denotes</span> <span class="pre">a</span> <span class="pre">path</span> <span class="pre">connecting</span> <span class="pre">the</span> <span class="pre">*i*th</span> <span class="pre">atom</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">*j*th</span> <span class="pre">atom.</span> <span class="pre">The</span> <span class="pre">depth</span> <span class="pre">*d*</span> <span class="pre">for</span> <span class="pre">topological</span> <span class="pre">patterns</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">maximum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">bonds</span> <span class="pre">allowed</span> <span class="pre">for</span> <span class="pre">connecting</span> <span class="pre">the</span> <span class="pre">first</span> <span class="pre">atom</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">last</span> <span class="pre">atom.</span> <span class="pre">Analogously</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">definition</span> <span class="pre">of</span> <span class="pre">topological</span> <span class="pre">paths,</span> <span class="pre">a</span> <span class="pre">geometrical</span> <span class="pre">pattern</span> <span class="pre">must</span> <span class="pre">consist</span> <span class="pre">of</span> <span class="pre">different</span> <span class="pre">atoms,</span> <span class="pre">i.e.</span> <span class="pre">for</span> <span class="pre">two</span> <span class="pre">atoms</span> <span class="pre">*a**i*\</span> <span class="pre">:sub:</span></tt>, <em>a**j</em> :sub:<a href="#id25"><span class="problematic" id="id26">``</span></a>it holds that <em>i</em> ≠ <em>j</em>. Finally, <em>a</em> ⊕ <em>b</em> is defined as the concatenation of alphanumerical string symbols separated by an unique delimiter. In the following, we assume a hydrogen-depleted molecular graph <em>C</em> with <em>n</em> atoms.</p>
+<p>An encoding algorithm <em>F</em> has the form</p>
+<p>where an encoding algorithm <em>F</em> maps some compound <em>C</em> to a set of features <em>X</em>. <em>m</em> depends, with the exception of fixed-vector fingerprints, on <em>C</em>. A feature <em>f</em> has an unique <em>f.nom. f.id</em> does not necessarily depend on <em>f.nom</em>. However, in most cases it is convenient to use a hash code of the string representation of a feature.</p>
+</div>
+<div class="section" id="fundamental-matrices">
+<h4>Fundamental Matrices<a class="headerlink" href="#fundamental-matrices" title="Permalink to this headline">¶</a></h4>
+<p>The geometrical distance matrix <sub>ij</sub> Gis computed as the matrix of binned Euclidean distances in Ångstrom between the three-dimensional coordinates of all atom coordinates <sub>i</sub>a.*c* ∈ ℝ<sup>3</sup>, multiplied by a scaling factor <em>s</em> ∈ ℝ<sup>+</sup>. The scaling factor <em>s</em> influences the resolution of the geometry and should be chosen according to the size of the compounds. The entry <em>i</em>, <em>j</em> (<sub>ij</sub>g) in the matrix is calculated as follows</p>
+<p>The computation time for the geometrical distance matrix is quadratic. The binning of the real-valued geometrical distance is important to produce discrete features <sub>x</sub>f, <sub>y</sub>f, which can be compared by the Dirac function</p>
+<p>The topological distance matrix is defined as <sub>ij</sub>T. The element <em>i, j</em> contains the shortest path between the <em>i*th and the *j*th atom (:sub:`ij`t). :sub:`ij` tis computed by the Floyd-Warshall algorithm. Therefore, the computation time for the matrix is *O*(*n</em><sup>3</sup>).</p>
+</div>
+<div class="section" id="feature-extraction">
+<h4>Feature Extraction<a class="headerlink" href="#feature-extraction" title="Permalink to this headline">¶</a></h4>
+<p>The molecular similarity is based on the numerical identifiers <sub>x</sub>.id fof a feature <em>x</em>. Two features are regarded as equal if <sub>x</sub>.id f= <sub>y</sub>.idf. In all implementations the features of a compound <em>C</em> are distinguishable by recurrence, which means that we include a feature if the id of a feature is different from the previously extracted features. If a feature with the same id is generated again, the count for the feature is incremented. All atom pair encodings are extracted by regarding the upper half of the distance matrix only. For each atom pair, the string representation is generated in both reading directions. Only the version with the greater hash code is included in the final set of descriptors.</p>
+<p>The modified depth-first search applied in this library generates all possible paths originating from a root atom. Therefore, the feature space can be approximated by an <em>m</em>-ary tree and is therefore <em>O*(:sup:`d`nm), where *n</em> is the number of heavy atoms and <em>m</em> the number of children in an <em>m</em>-ary tree, <em>d</em> is the depth of the tree. In organic compounds, every atom has at most 4 neighbors (<em>m</em> = 4 - 1 because one of the neighboring bonds has already been visited). Thus, the hypothetical worst case has a complexity of <em>O*(*n*3:sup:`d`) at a search depth of *d</em>. If we assume an average branching factor <em>|nonascii_8|*, which is slightly above 1 for organic compounds [#B6]_, the depth-first search has a complexity of *O*(:sup:`d`n|nonascii_9|). The average branching factor depends on the average degree of a vertex, which is about 2 in organic molecules. We define *DFS*(:sub:`i`a, *d</em>) as the set of all possible paths originating from a root atom <sub>i</sub> awith a depth up to <em>d</em>.</p>
+<p>For some of the definitions, we defined a <em>can</em> function that maps a set of features to a single canonical pattern. In an implementation this function can be realized by first sorting the patterns, which is possible if a natural order can be defined on the features. Then, the list of sorted patterns can be merged to a single canonical representation.</p>
+</div>
+<div class="section" id="atom-types-and-pharmacophore-types">
+<h4>Atom Types and Pharmacophore Types<a class="headerlink" href="#atom-types-and-pharmacophore-types" title="Permalink to this headline">¶</a></h4>
+<p>jCompoundMapper applies the standard atom types and ring detection algorithms implemented in the CDK. There are various typing schemes for small drug-like compounds described in the literature. In the current version, jCompoundMapper features the following typing schemes as labeling function</p>
+<ol class="arabic simple">
+<li>Element symbol (e.g. C, O, N, ...)</li>
+<li>CDK atom types (e.g. C.sp2, O.minus, N.amine, ...)</li>
+<li>Element plus the number of neighboring heavy atoms (e.g. C.2, O.1, N.2, ...)</li>
+<li>Element plus ring type plus the number of neighboring heavy atoms (e.g. C.r.2, C.a.2, O.1, N.2, ...) where <em>r</em> is an arbitrary ring, and <em>a</em> is an aromatic system. If <sub>i</sub> ais not contained in a ring, no ring type is set. The precedence is <em>a</em> &gt;*r*.</li>
+<li>Daylight-Invariants (plus optional ring flag) have the following properties, separated by a dot: Atomic number, number of heavy atom neighbors, valency minus the number of connected hydrogens, atomic mass, atomic charge, number of connected hydrogens, and a flag if the atom is member of at least one ring. (e.g. 6.2.3.12.0.1.1 for a carbon in a benzole ring)</li>
+</ol>
+<p>The following listing of potential pharmacophore points (PPPs) was published by Renner et al. <a class="footnote-reference" href="#b7" id="id27">[7]</a> for the CATS autocorrelation descriptors. If PPP atom types are needed, this list is parsed and matched with the structure using the CDK SMARTS matcher or specially implemented graph searches.</p>
+<ol class="arabic simple">
+<li>Hydrogen-bond donor (D): [#6H] oxygen atom of an OH-group; [#7 H,#7H2] nitrogen atom of an NH or NH<sub>2</sub> group</li>
+<li>Hydrogen-bond acceptor (A): oxygen atom [#6]; [#7H0] nitrogen atom not adjacent to a hydrogen atom</li>
+<li>Positive (P): [<a href="#id28"><span class="problematic" id="id29">*</span></a>+] atom with a positive charge; [#7H2] nitrogen atom of an NH<sub>2</sub> group</li>
+<li>Negative (N): [<a href="#id30"><span class="problematic" id="id31">*</span></a>-] atom with a negative charge; [C&amp;$(C(= O)#8H1), P&amp;$(P(= O)O), S&amp;$(S(= O)O)] carbon, sulfur or phosphorus atom of a COOH, SOOH, or POOH group (SMARTS replaced by a direct graph search)</li>
+<li>Lipophilic (L): [Cl, Br, I] chlorine, bromine, or iodine atom; [S;D2;$(S(C)(C))] sulfur; atom adjacent to exactly two carbon atoms; sulfur atom adjacent to only carbon atoms (SMARTS replaced by a direct graph search)</li>
+</ol>
+</div>
+</div>
+<div class="section" id="encodings">
+<h3>Encodings<a class="headerlink" href="#encodings" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="topological-fingerprints">
+<h4>Topological Fingerprints<a class="headerlink" href="#topological-fingerprints" title="Permalink to this headline">¶</a></h4>
+<p>All encodings described in the following section rely on the <em>d</em> parameter which constrains the maximum topological distance allowed between two atoms <sub>i</sub>, a<sub>j</sub> ain a feature.</p>
+<div class="section" id="all-path-encoding-dfs">
+<h5>All-Path Encoding (DFS)<a class="headerlink" href="#all-path-encoding-dfs" title="Permalink to this headline">¶</a></h5>
+<p>All-path encodings are paths generated by a graph traversal with a modified depth-first search as proposed by Ralaivola et al. <a class="footnote-reference" href="#b6" id="id32">[6]</a>. The linear fragments are obtained by iterating over all atoms in a molecular graph and performing an exhaustive search up to a predefined depth <em>d</em>. To generate an unique representation for each path, a temporary path object is generated and mapped to two alphanumerical string representations by generating the original and reverse string representation of the corresponding path object. The version with the higher lexicographical order is stored.</p>
+</div>
+<div class="section" id="all-shortest-path-encoding-asp">
+<h5>All-Shortest Path Encoding (ASP)<a class="headerlink" href="#all-shortest-path-encoding-asp" title="Permalink to this headline">¶</a></h5>
+<p>The ASP encoding equals the DFS encoding with the exception that only the paths from an atom are stored that have shortest distances from the root atom to the last atom contained in the path, which leads to a sparser representation. During the depth-first search, all paths are removed from the temporary set of depth-first search paths that do not fulfill this constraint. To incorporate this information the <sub>ij</sub> Tmatrix is required. Let <a href="#id75"><span class="problematic" id="id76">|\ :sub:`ij`\ p|</span></a> be the length (number of bonds between the <em>i*th and the *j*th atom in a path) of a path between atoms *i, j</em>, then the set of features <em>F</em> encoding a compound <em>C</em> is</p>
+<p>Thus, the all-shortest path encoding is a subset of the paths contained in the DFS fingerprint. It is similar to topological atom pair approaches <a class="footnote-reference" href="#b8" id="id33">[8]</a> with the exception that all-shortest paths between two atoms are explicitly stored. Borgwardt et al. proposed a graph kernel based on the set of all-shortest paths <a class="footnote-reference" href="#b22" id="id34">[22]</a>, however, only the vertex pairs and their shortest-path distances were included in this work. The explicit generation of paths is necessary because the Floyd-Warshall algorithm computes only the shortest distances between two vertices.</p>
+</div>
+<div class="section" id="topological-atom-pairs-ap2d">
+<h5>Topological Atom Pairs (AP2D)<a class="headerlink" href="#topological-atom-pairs-ap2d" title="Permalink to this headline">¶</a></h5>
+<p>This encoding contains atom types and the shortest path distance information between all pairs of atoms. It can be directly extracted from <sub>ij</sub> Tby converting the pattern <em>i</em> ≠ <em>j</em> to a string feature. The features are canonicalized by generating the patterns from both reading directions and storing the version with the higher lexicographical order.</p>
+<p>For 2-point patterns this can be easily conducted by regarding the upper half of the distance matrix <sub>ij</sub> Tonly (i.e. <em>i</em> &gt;*j*). O(<em>n</em><sup>2</sup>) is needed for the generation of features and O(<em>n</em><sup>3</sup>) for the computation of <sub>ij</sub>T.</p>
+<p>Thus, the total computation time is cubic.</p>
+</div>
+<div class="section" id="topological-atom-triplets-at2d">
+<h5>Topological Atom Triplets (AT2D)<a class="headerlink" href="#topological-atom-triplets-at2d" title="Permalink to this headline">¶</a></h5>
+<p>This encoding extends the AP2D encoding by a further atom. The set of patterns consists of atom triplets and the topological distance to the next atom in the feature <em>i</em> ≠ <em>j</em> ≠ <em>k</em> and <sub>ij</sub>, t<sub>jk</sub>, t<sub>ki</sub> t≤ <em>d</em>. The total computation time for the features is cubic because all possible combinations of heavy atoms <em>a**i</em>:sub:<tt class="docutils literal"><span class="pre">\</span> <span class="pre">,</span> <span class="pre">*a**j*\</span> <span class="pre">:sub:</span></tt>, <em>a**k</em> :sub:<a href="#id35"><span class="problematic" id="id36">``</span></a>have to be considered in the worst case.</p>
+</div>
+<div class="section" id="topological-autocorrelation-keys-cats2d">
+<h5>Topological Autocorrelation Keys (CATS2D)<a class="headerlink" href="#topological-autocorrelation-keys-cats2d" title="Permalink to this headline">¶</a></h5>
+<p>The CATS2D descriptors encode the pairwise topological relationships of PPP patterns in a molecular graph by a vector of fixed size. The approach was described by Schneider et al. <a class="footnote-reference" href="#b23" id="id37">[23]</a>, a list of PPP patterns was presented by Renner et al. <a class="footnote-reference" href="#b7" id="id38">[7]</a>. The PPPs are defined in the subsection (&#8220;Atom Types and Pharmacophore Types&#8221;). The combination of all points leads to 15 possible pairs. The pairs are mapped to a key with a fixed dimensionality. The position of a feature in the key is determined by the index for the corresponding pattern pair of PPPs plus the topological distance. For example, this means the bit 76 in the CATS vector with <em>d</em> = 9 belongs to the PPP pair DN, and contains the number of pairs with distance 6. In the original publication of the topological CATS descriptors, <em>d</em> = 9 was used as the distance cut-off for the topological search, resulting in a vector with 150 dimensions. In our implementation, the search depth can be adjusted by altering the <em>d</em> parameter. The resulting vector has (<em>d</em> + 1) · 15 dimensions. The complete list of possible PPP pairs in the vector (block index in parentheses) is: AA (0), AD (1), AL (2), AN (3), AP (4); DD (5); DL (6); DN (7); DP (8); LL (9), LN (10), LP (11), NN (12), NP (13), PP (14). Let <em>F</em> (<em>C</em>) = <em>X</em> be a decomposition into all valid PPP pairs. Then, the CATS2D vector is</p>
+<p>where offset(<em>p</em>) returns the predefined start index for the pattern <em>p</em>, <em>d**D</em><sub>2</sub>(<em>p</em>) returns the topological distance between two atoms in the PPP pair, and <em>|nonascii_15|*:sub:`p`(*X</em>) counts the number of occurrences of a pattern <em>p</em> in <em>X</em>.</p>
+</div>
+<div class="section" id="pharmacophore-pair-and-triplet-encodings-phap2pt2d-phap3pt2d">
+<h5>Pharmacophore Pair and Triplet Encodings (PHAP2PT2D, PHAP3PT2D)<a class="headerlink" href="#pharmacophore-pair-and-triplet-encodings-phap2pt2d-phap3pt2d" title="Permalink to this headline">¶</a></h5>
+<p>The PHAP2PT2D encoding is computed similarly to the AP2D. However, instead of atom types, the information of all PPPs of an atom is used to generate the fingerprint. Thus, we have to iterate over all PPPs of an atom. Analogously, the PHAP3PT2D encoding is computed, which uses three points. To keep the notation simple, let <sub>i</sub> Pdenote the set of valid PPPs for the <a href="#id39"><span class="problematic" id="id40">*</span></a>i*th atom. Then, the set of valid 2-point pharmacophores is</p>
+<p>and the set of valid 3-point pharmacophores is defined as</p>
+<p>where <sub>ij</sub>, t<sub>jk</sub>, t<sub>ki</sub> ≤ dt. Actually, there are three additional inner loops over all valid pharmacophore points at atoms <em>i, j, k</em>. The complexity of these inner loops is theoretically 5<sup>3</sup> because the cardinality of the set of PPPs is 5. However, this complexity is further reduced because the meaning of some PPP definitions is contradicting for some combinations, such as &#8220;atom is positively charged&#8221; and &#8220;atom is negatively charged&#8221;. The overall complexity is <em>O*(*n</em><sup>3</sup>) because of the constant computation time of the inner loops.</p>
+</div>
+<div class="section" id="shed-key-shed">
+<h5>SHED Key (SHED)<a class="headerlink" href="#shed-key-shed" title="Permalink to this headline">¶</a></h5>
+<p>The SHED Keys are closely related to the pharmacophore atom pair based encodings, with the following major differences: First, the number of dimensions is fixed, second the entries do not describe a count but the entropy of the respective atom pair descriptor <a class="footnote-reference" href="#b24" id="id41">[24]</a>. The implementation differs slightly from the original implementation because it utilizes the PPP definitions as described by Renner et al. <a class="footnote-reference" href="#b7" id="id42">[7]</a>. The distribution is analyzed for all possible combinations of PPPs. From that distribution of pairwise features the Shannon entropy is calculated as the descriptor in the corresponding PPP pair dimension of the SHED Key. The Shannon entropy of a PPP pair PPP<sub>i</sub> is defined as</p>
+<p>where PPP<sub>i</sub>(<em>l</em>) denotes the <em>i*th PPP pair that is separated by a topological distance *l</em>. If pattern <em>i</em> was not found, the value of the <em>i*th dimension is set to 0. The distribution of a PPP pair is calculated by regarding the different distances 1, 2, ...,*l</em>, ..., d. The resulting vector has 15 real-valued entries.</p>
+</div>
+<div class="section" id="extended-connectivity-fingerprints-ecfp">
+<h5>Extended Connectivity Fingerprints (ECFP)<a class="headerlink" href="#extended-connectivity-fingerprints-ecfp" title="Permalink to this headline">¶</a></h5>
+<p>We implemented a variant of the ECFP as described by Rogers and Hahn <a class="footnote-reference" href="#b5" id="id43">[5]</a>. Each ECFP feature represents a circular substructure around a center atom. The algorithm starts with the initial atom identifier of the center atom and grows a circular substructure around this atom throughout a defined number of iterations (search depth). For each round, the current extended version of the feature is added to the final set of features. In contrast to other radial fingerprints, the bonding information is included. Therefore, a feature can be extracted, for example, as canonical SMILES.</p>
+<p>The current implementation of the ECFP in jCompoundMapper differs slightly from the original implementation. In the original algorithm, the identifiers of the alpha atoms of a center atom are used to calculate an updated identifier for the center atom. The algorithm only includes the alpha atoms of a center atom in each iteration and thus the connectivity information is completely discarded between the layers. However, the identifier of a center atom implicitly contains information from further and further away of the center atom in each iteration because the atom identifiers of the previous iteration are used. We explicitly model the growing substructure by using the initial atom identifiers in each iteration and keeping the connectivity information between the layers. After an iteration, new possible attachment points for a specific circular substructure are kept in memory and those attachment points are extended in the next iteration.</p>
+</div>
+<div class="section" id="topological-molprint-like-fingerprints-rad2d">
+<h5>Topological Molprint-like fingerprints (RAD2D)<a class="headerlink" href="#topological-molprint-like-fingerprints-rad2d" title="Permalink to this headline">¶</a></h5>
+<p>This encoding was proposed by Bender et al. <a class="footnote-reference" href="#b4" id="id44">[4]</a><a class="footnote-reference" href="#b25" id="id45">[25]</a> and describes the radial environment by the atoms with the topological distance 1, 2, ..., <em>l</em>, ..., <em>d</em> rather than the full paths containing bonds. A shell <em>s*(:sub:`i`a):sub:`l` in our implementation contains the canonically sorted set of topological neighbors of atom :sub:`i` aat a distance :sub:`ij` t= *l</em>. Additionally, we include the concatenation of all shells ≤ 1, 2, ..., <em>l</em>, ..., d as additional features. Therefore, a resulting set of features contains <em>n |nonascii_18| d</em> features.</p>
+</div>
+<div class="section" id="local-path-environments-lstar">
+<h5>Local Path Environments (LSTAR)<a class="headerlink" href="#local-path-environments-lstar" title="Permalink to this headline">¶</a></h5>
+<p>This fingerprint is a radial fingerprint similar to RAD2D. The major difference is that all paths up to depth <em>d</em> are stored in a shell. First, the tree of all paths originating from an atom <sub>i</sub> ais generated. Then, all paths of a certain length are assigned to a shell <em>s*(:sub:`i`a):sub:`d` containing the paths originating from root atom :sub:`i` aof length *d</em>. This is equal to a canonical representation of <em>DFS*(*a**i</em>, :sub:<a href="#id46"><span class="problematic" id="id47">``</span></a><em>d</em>) in a single canonical feature. The paths in a shell are sorted in lexicographical order to be comparable. The resulting fingerprint contains all shells ≤ 1, 2, ..., <em>l</em>, ..., <em>d</em>. The major difference to the Molprint-like fingerprints is that the bond information is still included.</p>
+</div>
+</div>
+<div class="section" id="geometrical-fingerprints">
+<h4>Geometrical Fingerprints<a class="headerlink" href="#geometrical-fingerprints" title="Permalink to this headline">¶</a></h4>
+<p>All geometrical encodings support the <em>d</em> parameter which defines the distance cut-off between two atoms. Another important parameter is the scaling factor <em>s</em>, as described at the beginning of this section.</p>
+<div class="section" id="geometrical-atom-pairs-and-atom-triplets-ap3d-at3d">
+<h5>Geometrical Atom Pairs and Atom Triplets (AP3D, AT3D)<a class="headerlink" href="#geometrical-atom-pairs-and-atom-triplets-ap3d-at3d" title="Permalink to this headline">¶</a></h5>
+<p>These encodings are implemented similarly as their topological pendants AP2D and AT2D. The only difference is that <sub>ij</sub> Gis used for the distance information. Thus, the geometrical two-point atom pair encoding (AP2D) is defined as</p>
+<p>where <em>i</em> ≠ <em>j</em> and <sub>ij</sub> g≤ <em>d</em>.</p>
+<p>For the three-point relationships AT3D, we have</p>
+<p>where <em>i</em> ≠ <em>j</em> ≠ <em>k</em> and <sub>ij</sub>, g<sub>jk</sub>, g<sub>ki</sub> g≤ <em>d</em>.</p>
+<p>This is a standard encoding implemented in several toolkits; a kernel based on such patterns was published by Mahé et al <a class="footnote-reference" href="#b9" id="id48">[9]</a>.</p>
+</div>
+<div class="section" id="geometrical-cats-fingerprints-cats3d">
+<h5>Geometrical CATS fingerprints (CATS3D)<a class="headerlink" href="#geometrical-cats-fingerprints-cats3d" title="Permalink to this headline">¶</a></h5>
+<p>Our implementation differs from the description of the original CATS3D <a class="footnote-reference" href="#b7" id="id49">[7]</a>, which uses the Molecular Operating Environment (MOE, Chemical Computing Group, <a class="reference external" href="http://www.chemcomp.com/">http://www.chemcomp.com/</a>) patterns to depict surface features of a molecule. The version implemented in jCompoundMapper uses the PPP definitions which were also used in the implementation of the CATS2D vector. Again, let <em>F*(*C</em>) = <em>X</em> be the set of all valid PPP pairs and <em>|nonascii_26|*:sub:`p`(*X</em>) a function which counts a pattern <em>p</em> ∈ <em>X</em>. Then the CATS3D vector is</p>
+<p>where <em>d**D</em><sub>3</sub>(<em>p</em>) returns the geometrical distance of the two atoms, which equals <sub>ij</sub> gbetween any atoms <em>i</em>, <em>j</em> contained in a feature.</p>
+</div>
+<div class="section" id="geometrical-pharmacophore-fingerprints-phap2pt3-d-phap3pt3d">
+<h5>Geometrical pharmacophore fingerprints (PHAP2PT3 D, PHAP3PT3D)<a class="headerlink" href="#geometrical-pharmacophore-fingerprints-phap2pt3-d-phap3pt3d" title="Permalink to this headline">¶</a></h5>
+<p>These fingerprints are derived from their topological variants PHAP2PT2D and PHAP3PT2D by replacing the <sub>ij</sub> Tmatrix by <sub>ij</sub>G. Let <sub>i</sub> Pdenote the set of valid PPP for the <em>i*th atom then :sub:`i` P|nonascii_28| :sub:`ij` g|nonascii_29| :sub:`j` Pis a valid two-point pharmacophores and :sub:`i` P|nonascii_30| :sub:`ij` g|nonascii_31| :sub:`j` P|nonascii_32| :sub:`jk` g|nonascii_33| :sub:`k` P|nonascii_34| :sub:`ki` gis a valid three-point pharmacophore, where :sub:`ij`g, :sub:`jk`g, :sub:`ki` g|nonascii_35| *d</em>.</p>
+<p>The set of valid 2-point pharmacophores is defined as</p>
+<p>and the set of valid 3-point pharmacophores is defined as</p>
+<p>Again, <sub>i</sub> Pdenotes the set of valid PPPs for the <a href="#id50"><span class="problematic" id="id51">*</span></a>i*th atom.</p>
+</div>
+<div class="section" id="geometrical-molprint-like-fingerprints-rad3d">
+<h5>Geometrical Molprint-like fingerprints (RAD3D)<a class="headerlink" href="#geometrical-molprint-like-fingerprints-rad3d" title="Permalink to this headline">¶</a></h5>
+<p>These encodings are the geometrical pendant of the topological RAD2D encoding. Similar to the RAD2D encoding, the atoms with <sub>ij</sub> g= <em>l</em> at a binned geometrical distance are added to a shell descriptor. For each value in 1, 2, ..., <em>l</em>, ..., <em>d</em> a pattern containing all shells up to distance <em>l</em> in a canonical order is created. Therefore, the encoding contains <em>n</em> · <em>d</em> entries.</p>
+</div>
+</div>
+<div class="section" id="example-of-encodings">
+<h4>Example of encodings<a class="headerlink" href="#example-of-encodings" title="Permalink to this headline">¶</a></h4>
+<p>Comparison Table <em class="xref std std-ref">1</em> gives a direct tabular comparison of the features extracted by the encodings together with their count or value. The features are generated from the compound presented in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-3-1.jpg" src="../_images/1758-2946-3-3-1.jpg" />
+<p class="caption">Figure 1. Topology and Geometry of Oxaceprol</p>
+<div class="legend">
+<strong>Topology and Geometry of Oxaceprol</strong>. The geometry and topology of Oxaceprol. Pharmacophore types shown in the 3 D structure are 1 = [L], <strong>3 = [A - [#7H0]]</strong>, 6 = [D - [OH], A - [O]],8 = [L], 9 = [A - [O]],10 = [N], 11 = [A - [O]], 12 = [D - [OH], A - [O]]. The geometry and topology of this compound is the basis for the exemplary fingerprints shown in Table 1. Note that multiple PPPs can be assigned to an atom: In this case atoms 6 and 12 have two valid PPPs.</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="third-party-libraries">
+<h3>Third-party libraries<a class="headerlink" href="#third-party-libraries" title="Permalink to this headline">¶</a></h3>
+<p>The underlying chemical expert system is the Chemistry Development Kit (CDK) <a class="footnote-reference" href="#b3" id="id52">[3]</a><a class="footnote-reference" href="#b26" id="id53">[26]</a> in its current development version 1.35. It provides the basic functionality for parsing, typing, and graph algorithms for molecular data. For the command-line interface we employed the Apache Commons command-line parser 1.2 <a class="reference external" href="http://commons.apache.org/cli/">http://commons.apache.org/cli/</a>. The access via the API or the binary using the command-line interface enables the user to utilize the library for batch processing. The language level is Java 1.6.</p>
+</div>
+<div class="section" id="additional-functionality">
+<h3>Additional functionality<a class="headerlink" href="#additional-functionality" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="import-and-export-of-data">
+<h4>Import and Export of Data<a class="headerlink" href="#import-and-export-of-data" title="Permalink to this headline">¶</a></h4>
+<p>The valid input format is MDL SD format with attached hydrogens for the command-line tool. The CDK molecule objects can be processed using the API.</p>
+<p>There are exporters for various formats of popular machine learning toolboxes. The ARFF format is the native WEKA <a class="footnote-reference" href="#b13" id="id54">[13]</a> format, the support vector machine libraries LIBSVM and LIBLINEAR are supported by their sparse hashed format and precomputed matrix format. Alternatively, there are several comma-separated formats which support hashed or string features, which can be imported into toolboxes like R or MATLAB.</p>
+<p>jCompoundMapper includes a buffered random access reader for parsing the input files. Thus, it can read files of the maximum size supported by the Java runtime environment. The memory requirements are low if the encodings are exported sequentially (such as the sparse LIBSVM format) because only a single encoding has to be stored at a time. If the computation of a similarity matrix is required, all encodings are kept in memory to ensure a fast computation of similarities. For this reason, a matrix computation requires additional memory for large data sets.</p>
+<p>The label or class for learning tasks is read from the SD property and is integrated into the specific output format. As for the ARFF format, a nominal or numeric class label is created, depending on the distribution of labels in the input format. The user may overwrite the default threshold for the number of classes (currently, this is set to five).</p>
+</div>
+<div class="section" id="hashing">
+<h4>Hashing<a class="headerlink" href="#hashing" title="Permalink to this headline">¶</a></h4>
+<p>All decomposition algorithms <em>F*(*C</em>) return the full list of features (the encoding). A feature <em>f</em> has an integer identifier <em>f</em>.*id* ∈ {0, 1, .... 2<sup>32</sup>} which allows the efficient use in hash based collections. Therefore, it is possible to operate on the full set of descriptors and to generate hashed fingerprints. Hashing is useful to generate binary vectors of a fixed size. The hash function <em>H</em></p>
+<p>is used to project the set of features to a binary vector of the dimension <em>h</em>. The size depends on the expected number of features (see Table <em class="xref std std-ref">1</em>). <em>H</em> generates the hashed bit of a pattern depending on the numerical seed <em>f.id</em> assigned to each feature. In most cases, the seed equals a hash code of the string representation. The hashing step is also useful to obtain nominal features for fast comparisons. A nominal feature is a feature <em>f</em> with a finite set of possible values like <em>f</em> ∈ {red, green, blue} or, convenient for chemical graphs, <em>f</em> ∈ {pattern included, pattern not included}.</p>
+</div>
+<div class="section" id="similarity-matrices">
+<h4>Similarity Matrices<a class="headerlink" href="#similarity-matrices" title="Permalink to this headline">¶</a></h4>
+<p>jCompoundMapper offers a <a class="footnote-reference" href="#b27" id="id55">[27]</a>. Thus, it is possible to compute distance matrices within seconds on an average desktop computer. Now, we assume two mappings <em>F</em> (<sub>A</sub>C) = <em>A</em> and <em>F</em> (<sub>B</sub>C) = <em>B</em>. Further, let <sub>p</sub>φ(X) count the number of occurrences of pattern <em>p</em> ∈ <em>X</em>.</p>
+<p>The MinMax similarity is defined as</p>
+<p>The Tanimoto similarity can be used instead if only the occurrence of a pattern is taken into account</p>
+<p>The feature maps permit to compute similarity matrices with jCompoundMapper on the full set of features of a compound <em>C</em>, without introducing noise by hashing. Nevertheless, it is also possible to generate hashed binary fingerprint objects of any of the encodings.</p>
+</div>
+</div>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>Results and Discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="computation-times-benchmarks">
+<h3>Computation Times Benchmarks<a class="headerlink" href="#computation-times-benchmarks" title="Permalink to this headline">¶</a></h3>
+<p>Table <em class="xref std std-ref">2</em> presents the performance of the different encodings as implemented in jCompoundMapper. The computation time for the atom-based approaches varies from the atom pair encodings which can be computed with 332-339 molecules per second to the depth- first search based encodings which have a performance of 68-136 molecules per second. The encodings relying on the typing using the PPP SMARTS definitions are significantly slower with about 7-8 processed molecules per second. The conversion time includes reading, typing, and feature map creation. As benchmark data set, we chose the publicly available ChemDB random background data set published in the virtual screening study by Nasr et al. <a class="footnote-reference" href="#b28" id="id56">[28]</a>. This data set comprises 175,000 random compounds from ChemDB <a class="footnote-reference" href="#b29" id="id57">[29]</a>.</p>
+</div>
+<div class="section" id="machine-learning-performance">
+<h3>Machine Learning Performance<a class="headerlink" href="#machine-learning-performance" title="Permalink to this headline">¶</a></h3>
+<p>A major application of molecular encodings are structure-based machine learning and data mining methods. The aim of such applications is either the prediction of molecular properties or the ranking of compounds according to a trained model. In the following experiments, we wanted to assess the quality of the encodings implemented in jCompoundMapper for several established regression and classification benchmark problems. The encodings were used with the default parameters as given in Table <em class="xref std std-ref">2</em>. The compounds were prepared using CORINA <a class="footnote-reference" href="#b30" id="id58">[30]</a> for initial coordinates and were refined using Schrödinger MacroModel <a class="footnote-reference" href="#b31" id="id59">[31]</a> with the OPLS 2005 force field.</p>
+<div class="section" id="qsar-regression-problems-with-libsvm">
+<h4>QSAR Regression Problems with LIBSVM<a class="headerlink" href="#qsar-regression-problems-with-libsvm" title="Permalink to this headline">¶</a></h4>
+<p>LIBSVM <a class="footnote-reference" href="#b12" id="id60">[12]</a> is a library for support vector machines. For the experiments on the regression benchmarks, we decided to train <a href="#id61"><span class="problematic" id="id62">*</span></a>ϵ<a href="#id63"><span class="problematic" id="id64">*</span></a>-support vector regression on the benchmark compilation of eight pIC50 QSAR problems published by Sutherland et al. <a class="footnote-reference" href="#b14" id="id65">[14]</a>. The Gram matrices were precomputed by the MinMax similarity, which is also a valid kernel function. We conducted these experiments to find out whether there are significant differences between the performances of the different encodings.</p>
+<p>We evaluated the nested cross-validation performance of the different encodings and compared the outcome of the experiments against results from the literature. The parameters <em>C</em> and <em>|nonascii_44|* of the support vector machine were selected in a nested cross-validation. In the experiments, a 10-fold cross-validation was repeated 20 times using an initial seed value. Therefore, the values represent the mean and the standard deviation, computed over 200 models. Based on these statistics, the corrected resampled *t</em>-test of Bouckaert and Frank <a class="footnote-reference" href="#b32" id="id66">[32]</a> can be applied. The results are summarized in Table <em class="xref std std-ref">3</em>. With the exception of THERM and THR, the performance of the best encodings was at least comparable to the mean squared error values for a sophisticated graph kernel given by Fechner et al. <a class="footnote-reference" href="#b33" id="id67">[33]</a> on the same benchmarks.</p>
+<p>An analogue setup was used to compute nested leave-one-out cross-validation results to compare the predictive performance of the support vector machine in combination with the jCompoundMapper encodings to literature results. Again, we optimized the parameters <em>C</em> and <em>|nonascii_45|* (we used a 10-fold cross-validation repeated 2 times to select the best parameter combination in the inner loop) and trained a model for each of the *n</em> leave-one-out sets and predicted the external sample for each model.</p>
+<p>Table <em class="xref std std-ref">4</em> and <em class="xref std std-ref">5</em> summarize the results of the nested leave-one out cross-validation according to the mean squared error and Pearson&#8217;s correlation coefficient. Sutherland et al. used several descriptor-based approaches to model the activity of the benchmark set (presented in Table <em class="xref std std-ref">4</em> and <em class="xref std std-ref">5</em>) using partial least squares (PLS) <a class="footnote-reference" href="#b14" id="id68">[14]</a>. Compared against the results (squared correlation coefficient) given for the best descriptor approach presented in this study, the jCompoundMapper encodings are competitive. The findings are summarized in Table <em class="xref std std-ref">6</em> which shows a similar performance in two cases, a better performance in three cases, and a worse performance in three cases.</p>
+</div>
+<div class="section" id="classification-of-toxic-compounds-with-liblinear">
+<h4>Classification of Toxic Compounds with LIBLINEAR<a class="headerlink" href="#classification-of-toxic-compounds-with-liblinear" title="Permalink to this headline">¶</a></h4>
+<p>Another increasingly important task is to build models on large data sets of chemicals. A machine that can cope with such a setup is LIBLINEAR <a class="footnote-reference" href="#b16" id="id69">[16]</a>, a linear large-scale support vector machine. The large Ames data set was published by Hansen et al. <a class="footnote-reference" href="#b15" id="id70">[15]</a> and contains 6512 compounds and their measured toxicity in an Ames test. We skipped the encodings based on the PPP typer because several compounds do not have any pharmacophore point according to the PPP definition. The results were obtained by tuning the <em>C</em> parameter in log<sub>2</sub> ∈ {-8, -7, ..., 2} within a 2-fold cross-validation on the training set and evaluating the model performance on five defined splits as described in <a class="footnote-reference" href="#b15" id="id71">[15]</a>.</p>
+<p>Table <em class="xref std std-ref">7</em> shows the AUC ROC results for the large Ames toxicity benchmark set. The ECFP and LSTAR encodings achieved the best results, comparable to the results of several supervised classifiers presented by Hansen et al. <a class="footnote-reference" href="#b15" id="id72">[15]</a> using dragonX <a class="footnote-reference" href="#b34" id="id73">[34]</a> descriptors. Hansen et al. applied <em>k</em>-nearest neighbor, support vector machines with a radial basis function, Gaussian processes, and random decision forests to build models on dragonX descriptors for this problem. The approaches were evaluated on the same defined splits. The performance of LIBLINEAR with the best encodings is comparable to the best approaches Gaussian processes and support vector machines. Even the worst performing encodings (AP2D, AP3D, and DFS) were competitive to the <em>k</em>-nearest neighbor classifier on dragonX descriptors.</p>
+</div>
+</div>
+<div class="section" id="java-api-and-command-line-interface">
+<h3>Java API and Command-line Interface<a class="headerlink" href="#java-api-and-command-line-interface" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="java-api-usage-example">
+<h4>Java API Usage Example<a class="headerlink" href="#java-api-usage-example" title="Permalink to this headline">¶</a></h4>
+<p>The core of the library is a Java API. The API enables to process chemical information from an abstract level, similar to a workflow tool. The example given in Appendix 1 reads an MDL SD file, converts the compounds to feature maps and calculates all pairwise similarities.</p>
+</div>
+<div class="section" id="command-line-interface-example">
+<h4>Command-Line Interface Example<a class="headerlink" href="#command-line-interface-example" title="Permalink to this headline">¶</a></h4>
+<p>The following section gives an example of using the binary executable version of jCompoundMapper. As a case in point, this version can be used in shell scripts. Calling the command-line tool using -h gives an overview of possible parameters (see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>).</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-3-2.jpg" src="../_images/1758-2946-3-3-2.jpg" />
+<p class="caption">Figure 2. Command-line Interface</p>
+<div class="legend">
+<strong>Command-line Interface</strong>. The binary can be accessed via a command-line interface, which allows for scripting.</div>
+</div>
+<p>Using the defaults (or via -ff 0), jCompoundMapper generates a hashed LIBSVM output format using the depth-first search encoding with element plus neighbor count atom types.</p>
+<p>In the following, we process the training and the known test set from the environmental toxicity challenge <a class="reference external" href="http://www.cadaster.eu/node/65">http://www.cadaster.eu/node/65</a>) which were converted to MDL SD format. The label (MDL property) to be learned is log(IGC50-1). Using these settings, the structures of the training set were mapped to hashed fingerprints with the default settings.</p>
+<p>After the computation, an overall statistic is plotted showing e.g. the average number of features in the fingerprints. In the next step, we map the test file to the same representation. Bits in the test file were set in exactly the same positions in the vector because the random numbers are generated by using the seed value defined by the features.</p>
+<p>In the next step, a cross-validation is conducted by using the precompiled binary distribution of LIBSVM that can be downloaded from the LIBSVM homepage. The parameters are set as follows: -t 0 sets the linear kernel (dot product), -s 3 sets ∈ regression, and -c 2 sets the error weight to 2. The file for training was produced in the previous step.</p>
+<p>LIBSVM produces no model in cross-validation mode. However, the LIBSVM cross-validations statistics showed that the model has an <em>MSE</em> of 0.32 and an <em>Q</em><sup>2</sup> of 0.71, indicating a reasonable parametrization.</p>
+<p>Finally, the model is trained by omitting the cross-validation flag -v.</p>
+<p>This step produces a separate model file, which can be used to predict the external test set that was generated during the second step. This is conducted by calling svmpredict.</p>
+<p>The results are printed by LIBSVM highlighting that the performance on the external test set is <em>MSE</em> = 0.29 and <em>R</em><sup>2</sup> = 0.74. The result on the known test of the environmental toxicity prediction challenge would be in the top ranks of the competition. The prediction values can be obtained by opening the LIBSVM</p>
+</div>
+</div>
+</div>
+<div class="section" id="id74">
+<h2>Conclusions<a class="headerlink" href="#id74" title="Permalink to this headline">¶</a></h2>
+<p>jCompoundMapper is an open source library for molecular fingerprinting with a focus on machine learning and data mining applications. A command-line interface exists for the user who is not familiar with programming, which allows a simple usage from the shell or the application in scripts. The architecture provides the functionality to derive fingerprints from existing ones or to integrate own encodings. In contrast to closed source fingerprinting toolkits, a scientist knows exactly how the fingerprint is computed (like the labeling function, distance cut-offs) and can even inspect the source code of the generation routine. We compared the performance using linear and non-linear support vector machines on standard machine learning benchmarks in the research field. The results show that the machine learning performance using the encodings with default parameters is already close to more sophisticated state-of-the-art descriptors. The binary version provides a command-line interface allowing for the generation of models from the shell with open source software such as LIBSVM or WEKA in reasonable time on average desktop computers. The library itself uses only functionality of open source software licensed under the LGPL. Therefore, the library can be used in any project compatible with the CDK. Further projects with the library, such as a KNIME node wrapping jCompoundMapper, are planned.</p>
+</div>
+<div class="section" id="availability">
+<h2>Availability<a class="headerlink" href="#availability" title="Permalink to this headline">¶</a></h2>
+<p>The following files are available for download from <a class="reference external" href="http://jcompoundmapper.sourceforge.net/">http://jcompoundmapper.sourceforge.net/</a></p>
+<ol class="arabic simple">
+<li>External library, which can be integrated as Java jar library file</li>
+<li>External library, including sources</li>
+<li>Binary command-line tool (requires a Java runtime environment) and a short tutorial with a prepared data set</li>
+</ol>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>GH wrote most of the code and the manuscript. LR implemented the Molprint-like fingerprints and the extended connectivity fingerprint, helped to design the library, and participated in writing the manuscript. AJ implemented an initial version of the pharmacophore typer and the CATS2D descriptors. NF tested some of the encodings in experiments and helped to develop the atom typing schemes. AZ supervised the study and participated in the discussion of the results. All authors read and approved the final manuscript.</p>
+</div>
+<div class="section" id="appendix">
+<h2>Appendix<a class="headerlink" href="#appendix" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="appendix-1-usage-of-the-api">
+<h3>Appendix 1 - Usage of the API<a class="headerlink" href="#appendix-1-usage-of-the-api" title="Permalink to this headline">¶</a></h3>
+<p>Example of using the API: Read molecules, map the compounds to encodings, and compute a similarity matrix.</p>
+<p><strong>new</strong> RandomAccessMDLReader(<strong>new</strong> File (&#8221; molecules . sdf &#8221; ) );</p>
+<p><strong>new</strong> ArrayList &lt;FeatureMap &gt;( );</p>
+<p><strong>new</strong> Encoding2DAllShortestPaths ( ) ;</p>
+<p><strong>for</strong> (int i = 0; i &lt; reader. getSize ( ); i++) {</p>
+<p><strong>new</strong> FeatureMap (rawFeatures ) ) ;</p>
+<p><strong>new</strong> double [ dim ] [ dim ] ;</p>
+<p><strong>new</strong> DistanceTanimoto ( ) ;</p>
+<p><strong>for</strong> ( int i = 0; i &lt; dim; i++) {</p>
+<p><strong>for</strong> ( int j = i ; j &lt; dim ; j++) {</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id13">2</a>)</em> Chemoinformatics - An Introduction for Computer Scientists</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>Chemical Similarity Searching</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id52">2</a>)</em> The Chemistry Development Kit (CDK): an open-source Java library for Chemo- and Bioinformatics</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[4]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id44">2</a>)</em> Similarity Searching of Chemical Databases Using Atom Environment Descriptors (MOLPRINT 2D): Evaluation of Performance</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[5]</td><td><em>(<a class="fn-backref" href="#id6">1</a>, <a class="fn-backref" href="#id43">2</a>)</em> Extended-connectivity fingerprints</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[6]</td><td><em>(<a class="fn-backref" href="#id7">1</a>, <a class="fn-backref" href="#id32">2</a>)</em> Graph kernels for chemical informatics</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[7]</td><td><em>(<a class="fn-backref" href="#id8">1</a>, <a class="fn-backref" href="#id14">2</a>, <a class="fn-backref" href="#id27">3</a>, <a class="fn-backref" href="#id38">4</a>, <a class="fn-backref" href="#id42">5</a>, <a class="fn-backref" href="#id49">6</a>)</em> Alignment-free Pharmacophore Patterns - A Correlation Vector Approach</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[8]</td><td><em>(<a class="fn-backref" href="#id9">1</a>, <a class="fn-backref" href="#id33">2</a>)</em> Atom Pairs as Features in Structure-Activity Studies: Definition and Applications</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[9]</td><td><em>(<a class="fn-backref" href="#id10">1</a>, <a class="fn-backref" href="#id48">2</a>)</em> The Pharmacophore Kernel for Virtual Screening with Support Vector Machines</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[10]</a></td><td>Molecular Surface Point Environments for Virtual Screening and the Elucidation of Binding Patterns (MOLPRINT 3D)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[11]</a></td><td>Fingal: A Novel Approach to Geometric Fingerprinting and a Comparative Study of Its Application to 3D-QSAR Modelling</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[12]</td><td><em>(<a class="fn-backref" href="#id15">1</a>, <a class="fn-backref" href="#id60">2</a>)</em> NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[13]</td><td><em>(<a class="fn-backref" href="#id16">1</a>, <a class="fn-backref" href="#id54">2</a>)</em> The WEKA Data Mining Software: An Update</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[14]</td><td><em>(<a class="fn-backref" href="#id17">1</a>, <a class="fn-backref" href="#id65">2</a>, <a class="fn-backref" href="#id68">3</a>)</em> A Comparison of Methods for Modeling Quantitative Structure-Activity Relationships</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[15]</td><td><em>(<a class="fn-backref" href="#id18">1</a>, <a class="fn-backref" href="#id70">2</a>, <a class="fn-backref" href="#id71">3</a>, <a class="fn-backref" href="#id72">4</a>)</em> Benchmark Data Set for in Silico Prediction of Ames Mutagenicity</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[16]</td><td><em>(<a class="fn-backref" href="#id19">1</a>, <a class="fn-backref" href="#id69">2</a>)</em> LIBLINEAR: A Library for Large Linear Classification</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[17]</a></td><td>Estimation of the applicability domain of kernel-based machine learning models for virtual screening</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[18]</a></td><td>Graph kernels for chemical compounds using topological and three-dimensional local atom pair environments</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[19]</a></td><td>Chronic Rat Toxicity Prediction of Chemical Compounds Using Kernel Machines</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[20]</a></td><td>Optimal Assignment Methods for Ligand-Based Virtual Screening</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[21]</a></td><td>Probabilistic Modeling of Conformational Space for 3D Machine Learning Approaches</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[22]</a></td><td>Protein function prediction via graph kernels</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id37">[23]</a></td><td>Scaffold-Hopping by Topological Pharmacophore Search: A Contribution to Virtual Screening</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id41">[24]</a></td><td>SHED: Shannon Entropy Descriptors from Topological Feature Distributions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id45">[25]</a></td><td>Screening for Dihydrofolate Reductase Inhibitors Using MOLPRINT 2D, a Fast Fragment-Based Method Employing the Naive Bayesian Classifier: Limitations of the Descriptor and the Importance of Balanced Chemistry in Training and Test Sets</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id53">[26]</a></td><td>Recent developments of the chemistry development kit (CDK) - an open-source java library for chemo- and bioinformatics</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id55">[27]</a></td><td>Kernels for small molecules and the prediction of mutagenicity, toxicity and anti-cancer activity</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id56">[28]</a></td><td>Large scale study of multiple-molecule queries</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id57">[29]</a></td><td>ChemDB: a public database of small molecules and related chemoinformatics resources</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id58">[30]</a></td><td>Automatic Generation of 3D-Atomic Coordinates for Organic Molecules</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id59">[31]</a></td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id66">[32]</a></td><td>Evaluating the Replicability of Significance Tests for Comparing Learning Algorithms</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id67">[33]</a></td><td>Atomic Local Neighborhood Flexibility Incorporation into a Structured Similarity Measure for QSAR</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b34" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id73">[34]</a></td><td>NOTITLE!</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#notation">Notation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fundamental-matrices">Fundamental Matrices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#feature-extraction">Feature Extraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#atom-types-and-pharmacophore-types">Atom Types and Pharmacophore Types</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#encodings">Encodings</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#topological-fingerprints">Topological Fingerprints</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#all-path-encoding-dfs">All-Path Encoding (DFS)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#all-shortest-path-encoding-asp">All-Shortest Path Encoding (ASP)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#topological-atom-pairs-ap2d">Topological Atom Pairs (AP2D)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#topological-atom-triplets-at2d">Topological Atom Triplets (AT2D)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#topological-autocorrelation-keys-cats2d">Topological Autocorrelation Keys (CATS2D)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pharmacophore-pair-and-triplet-encodings-phap2pt2d-phap3pt2d">Pharmacophore Pair and Triplet Encodings (PHAP2PT2D, PHAP3PT2D)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#shed-key-shed">SHED Key (SHED)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#extended-connectivity-fingerprints-ecfp">Extended Connectivity Fingerprints (ECFP)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#topological-molprint-like-fingerprints-rad2d">Topological Molprint-like fingerprints (RAD2D)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#local-path-environments-lstar">Local Path Environments (LSTAR)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#geometrical-fingerprints">Geometrical Fingerprints</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#geometrical-atom-pairs-and-atom-triplets-ap3d-at3d">Geometrical Atom Pairs and Atom Triplets (AP3D, AT3D)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#geometrical-cats-fingerprints-cats3d">Geometrical CATS fingerprints (CATS3D)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#geometrical-pharmacophore-fingerprints-phap2pt3-d-phap3pt3d">Geometrical pharmacophore fingerprints (PHAP2PT3 D, PHAP3PT3D)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#geometrical-molprint-like-fingerprints-rad3d">Geometrical Molprint-like fingerprints (RAD3D)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#example-of-encodings">Example of encodings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#third-party-libraries">Third-party libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#additional-functionality">Additional functionality</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#import-and-export-of-data">Import and Export of Data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hashing">Hashing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#similarity-matrices">Similarity Matrices</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">Results and Discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#computation-times-benchmarks">Computation Times Benchmarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#machine-learning-performance">Machine Learning Performance</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#qsar-regression-problems-with-libsvm">QSAR Regression Problems with LIBSVM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#classification-of-toxic-compounds-with-liblinear">Classification of Toxic Compounds with LIBLINEAR</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#java-api-and-command-line-interface">Java API and Command-line Interface</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#java-api-usage-example">Java API Usage Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#command-line-interface-example">Command-Line Interface Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id74">Conclusions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#availability">Availability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#appendix">Appendix</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#appendix-1-usage-of-the-api">Appendix 1 - Usage of the API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-2.html" title="Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method"
+             >previous</a> |
+          <a href="1758-2946-3-4.html" title="PubChem3D: Conformer generation"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-3.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

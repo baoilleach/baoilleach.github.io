@@ -1,0 +1,295 @@
+The past, present and future of Scientific discourse
+====================================================
+
+Abstract
+********
+
+The science journal is 346 years old in 2011, having evolved continuously but largely incrementally over that period. Its reinvention for an online presence has largely preserved its previously printed nature, in the sense that much of the increased functionality which is potentially offered by this new medium has yet to be exploited. In the present article an attempt is made to discuss two previously published papers, one in 1953 and the other in 2010, and to illustrate how additional functionality can be implemented in the form of accessible data sourced from quantum mechanical calculation and how subsequent discourse in the form of blogs may add to the process. In this sense, the reader of this article is invited to try for themselves whether these enhancements improve their scientific understanding, and whether such enhanced journals are good models for the future evolution of the genre.
+
+Introduction
+************
+
+The first journal devoted exclusively to science is generally accepted to have first appeared in 1665 as the Philosophical Transactions (of the Royal Society). The inaugural issue \ [#B1]_, which famously carries an account by Robert Boyle of "a very odd monstrous calf", is perhaps not science as we know it nowadays, but it does remind one rather of what one might find in a personal blog, a similarity I will return to later. The structure of the scientific journal and the articles published by this means evolved constantly and mostly incrementally during the next 330 years. One of the more significant, but nevertheless still incremental changes was adding an online presence during the late 1990s. Indeed, some journals founded in the late 1990s offered only an online version \ [#B2]_ and there are signs that some older journals may be preparing to abandon the (relatively expensive) printed form. Access to the online versions in 2011 is predominantly *via* a format which is perhaps best described as digital paper (PDF), although most journals also offer the articles in an alternative hypertext (HTML) format. There is no journal yet that has adopted a format increasingly used for books, the epub/epub3 standard \ [#B3]_. On the horizon is also the fifth major evolution of hypertext markup language known as HTML5 \ [#B4]_\ [#B5]_, which strives to offer a richer interactive medium to the reader. Certainly machines (*e.g*. such as those working on behalf of search engines such as Google) now also automatically process the articles published in the modern journal, indexing the full-textual content, adding rich metadata on the topics therein described, and noting (but largely incapable of truly indexing the context of) the images and figures. Software can also usefully replace the old processes of binding the printed journal and the storage of volumes on shelves in a library or an office, a process delightfully described (by biologists, not chemists) as *defrosting the digital library*\ [#B6]_. These processes largely address only the bibliographic issues (*via* rich metadata harvesting) rather than attempting to defrost the scientific or chemical content itself. It is the issues involved in defrosting the latter type of information and data that the present article addresses.
+
+Data has always been the "elephant in the room" of scientific publishing. Because the costs of printing and distributing paper are still significant to this day, print was never really been considered a viable mechanism for distributing the (often very large amounts of) data, whether raw, or partially processed, on which almost all scientific models, theories and their interpretations are based. Instead, starting in the early 1990s and coincident with the first introduction of the Internet, many science journals offered an annex to the main journal in the form of supporting or supplemental information. This was provided in final form by the authors themselves, and the journal itself added little extra value such as indexing to this (often purely visual) content. It was very much up to an interested reader to add their own value to any (visual, textual or numerical) supporting data that might be associated with an article.
+
+The long view over a 350 year period is that these evolutions of the journal could be regarded as largely relating to the production and delivery processes of journals, and arguably have not been matched by similar advances in how scientists *consume* or use journals. In this essay, I will analyze two chemical articles, published in respectively 1953 and 2010, from the point of view of how the original journal presented the scientific discourse, what the limitations of that presentation might have been, and the prospects of how it could evolve into a step-change rather than incremental change in that discourse.
+
+The relationship between a journal article and data
+***************************************************
+
+I start the analysis with article that contains (*inter alia*) what has been described as the most famous scientific diagram of the 20th Century, the representation \ [#B7]_ of the double helical structure of the DNA molecule by Watson and Crick (Figure \ :ref:`1<figure_1>`).
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-46-1.jpg
+   :align: center
+
+   Figure 1. The DNA double helix (reproduced with permission), showing a right handed or B-helix
+
+   **The DNA double helix (reproduced with permission** \ [#B8]_**), showing a right handed or B-helix**.
+
+
+Indeed, this diagram is the **only** one that actually appears in the article, and one would seek in vain any diagrammatic elaboration of what the molecular structure of DNA is (although components such as deoxyribose or guanine are named as such in the text). Anyone seeking to repeat Watson and Crick's model building would certainly have to acquire additional molecular data from another sources. Some of that missing information is shown here in Figure \ :ref:`2<figure_2>`, although this only describes the connectivity of the various atoms in a single strand of DNA, and not the two or three dimensional relationships of the (125 in this example) individual atoms. Note also that this diagram is presented here for visual consumption by a human, who still has to recover additional semantics such as the stereochemistry at the three stereogenic ribose centres, and note carefully that the unit represented must be accompanied by positively charged counter-ions.
+
+.. _figure_2:
+
+.. figure:: ../_static/1758-2946-3-46-2.jpg
+   :align: center
+
+   Figure 2. The molecular basis of one strand of DNA, based on the CG bases
+
+   **The molecular basis of one strand of DNA, based on the CG bases**.
+
+
+Armed only with the one diagram actually published, curiosity might lead one to pose a scientific question such as "How did Watson and Crick assign the helix as right rather than left handed"? In other words, on what data did they base that conclusion? This does matter! For example, some 733 articles have appeared in the science literature over the last 20 years or so where DNA is represented as having left-handed helicity, in most cases certainly erroneously \ [#B8]_. Coincidentally, similar issues of left or right-handedness were to be found when Pauling presented his \ |nonascii_1|\ -helix models of proteins. In fact, almost all protein helices exhibit right-handedness \ [#B9]_. A partial answer to that question is actually given in what is called the *full version* \ [#B10]_ of the preliminary article \ [#B7]_ (published as it happens by the Royal Society). Here we are told the following:
+
+\ |nonascii_2|\  that both chains follow right handed helices ...
+
+\ |nonascii_3|\  because left handed helices can only be constructed by violating permissible van der Waals contacts.
+
+\ |nonascii_4|\  We are informed that such permissible contacts include the approach of any two hydrogen atoms in the molecule to a distance of **no less** than 2.1\ |nonascii_5|\ .
+
+\ |nonascii_6|\  We are not however informed what the violations might be in a left handed helix that excludes this model. In other words, just how close can two hydrogen atoms separated (for intramolecular contacts) by at least four bonds approach? In fact, distances of ~1.85\ |nonascii_7|\  or less have been observed \ [#B11]_.
+
+In this same full article by Watson and Crick \ [#B10]_, we are given a table of numerical (polar) coordinates describing the positions of twelve key atoms, but it would have taken a very determined scientist to have used only this combination of information to easily confirm the assertion that a left-handed helix is excluded. Perhaps the lack of a model with which the reader could experiment might account for the relatively slow recognition of the importance of this article in the immediate years following its publication, and the observation that whilst a physical model of DNA had of course been built, it was only available for viewing (but not modifying) by visiting Cambridge!
+
+One tool that modern chemistry now has at its disposal (which Watson and Crick did not have) are accurate molecular models based on quantum mechanical calculations. Such a molecule is quite a challenge to model, since the computation has to take into account subtle interactions such as dispersion (long range correlation) effects, which are more or less equivalent to the van der Waals contacts referred to by Watson and Crick, the ionic phosphate groups, the planar bases and how they stack, so-called anomeric effects at the base-sugar connecting C-N bond, hydrogen bonds between both the obvious NH...N and NH...O atoms and less obvious ones such as C-H...O, and not least the capacity to deal self-consistently and accurately with the optimal positions of (at least) 250-254 atoms. In reality, such models have only very recently become available \ [#B12]_. To illustrate how this famous article from 1953 \ [#B2]_ could now be published in a journal in 2011, I have taken the liberty of updating the original diagram with the one shown in Figure \ :ref:`3<figure_3>` (see additional file \ [#B6]_. The additional information is made available *via* the figure caption and in Table \ :ref:`1<table_1>` to conform to established practice in more conventional articles.
+
+.. _figure_3:
+
+.. figure:: ../_static/1758-2946-3-46-3.jpg
+   :align: center
+
+   Figure 3. A model of the Z-d(CGCG)\ :sub:`2`\  DNA duplex with a geometry optimized at the \ |nonascii_8|\ B97XD/6-311G(d, p) level and embedded in a continuum solvent field for water
+
+   **\ :sub:`2`\  DNA duplex with a geometry optimized at the \ |nonascii_9|\ B97XD/6-311G(d, p) level and embedded in a continuum solvent field for waterA model of the Z-d(CGCG)**. (a) Load 
+
+
+Additional file 1
+
+**Interactive Jmol-enhanced version of Figure** \ :ref:`3<figure_3>`.
+
+Click here for file
+
+This is a model of a DNA duplex tetramer, built using only the bases CGCG or ATAT in this example, with inclusion of three phosphate groups and calculated for both the left- and right-handed helical form. The first of these was the one deprecated by Watson and Crick on the basis that the model violates permissible van der Waals contacts. The geometry is optimized to high convergence using a recent density functional formalism (\ |nonascii_10|\ B97XD) \ [#B13]_ which incorporates a correction for the attractive dispersion component of the van der Waals interactions. Justification for the use of this functional in describing hydrogen bonding has recently been published \ [#B14]_. A 6-311G(d,p) basis set results in the wavefunction being described by up to 3468 basis functions, close to the practical limit using standard computing resources available in 2010. The ionic nature of the system, deriving from the phosphate groups, was treated using a self-consistent-reaction-field continuum solvent (water) \ [#B15]_\ [#B16]_ as implemented in the Gaussian09 package, revisions A.02 and B.01. 12. In such a model, duplex formation by combining two tri-anionic chains is nevertheless exothermic in the computed free energy (Table \ :ref:`1<table_1>`), which suggests the model is not physically unrealistic. Although in principle a full ion-pair resulting from inclusion of a solvated positive counterion (typically Na\ :sup:`+`\  or NH\ :sub:`4`\ \ :sup:`+`\  with additional water molecules) could also be treated using this method \ [#B17]_, the resulting model is too large and complex for the current available computational resources.
+
+The resulting model is presented in this article using suitable software (Jmol in this instance \ [#B18]_) which itself reads the optimized coordinates of all 250-254 atoms and renders these in suitable form for the reader. Annotation with identified close contacts between pairs of hydrogen atoms or other close contacts can be easily scripted in, and in principle a rich variety of actions and analyses can be built into the figure which are all based on a combination of the underlying data and algorithms implemented by the (Jmol) software. Importantly, the original data used for generating the model can be extracted from the model (the process is described here \ [#B19]_) and can then be re-applied using alternative software which might provide further analysis, or indeed alternative technologies such as stereoscopic processing. These processes now turn the journal from merely a visual information source into an active scientific instrument. We may also speculate at this point on other forms of rendering data. Jmol was written in Java, and requires the browser to support a Java virtual environment. New generations of mobile information devices, which are primarily designed for long battery life, may not continue with this approach. Instead, one favoured alternative is to interface the browser directly to the graphical hardware using e.g. WebGL, and to implement the functionality of something like Jmol using the emerging HTML5 standard and appropriate scripts \ [#B20]_\ [#B21]_. The native ability of a browser to provide such enhanced processing is already apparent in support for SVG, a markup language for vector graphics (examples of which are included in Figure \ :ref:`4<figure_4>` [see additional file 
+
+.. _figure_4:
+
+.. figure:: ../_static/1758-2946-3-46-4.jpg
+   :align: center
+
+   Figure 4. Calculated chiro-optical properties for DNA tetramers
+
+   **Calculated chiro-optical properties for DNA tetramers**. \ :sup:`a`\ Computed at geometries optimised at the \ |nonascii_11|\ B97XD/6-31G(d) level with with application of a SCRF solvent continuum field for water. Chiro-optical properties computed at the CAM-B3LYP/6-31G(d,p) level with application of a SCRF solvent continuum field for water. ECD spectra computed at the TD-DFT level, using Nstates = 25 and a linewidth of 0.14 with application of a SCRF solvent continuum field for water. Click on image to expand the view of the ECD spectrum. Click on expanded view of spectrum to access the digital repository entry for that spectrum. \ :sup:`b`\ ECD spectra are presented as scalable-vector-graphical diagrams (SVG). To view, use an SVG-capable browser.
+
+
+Additional file 2
+
+**Enhanced version of Figure** \ :ref:`4<figure_4>`**containing additional hyper links** (This figure should be viewed with a web browser capable of SVG display, such as  Chrome,  FireFox, Safari or  IE 9).
+
+
+
+Please note: The figure is not currently displayed as intended by the author due to technical issues with the BMC site. This will be resolved as soon as possible.
+
+Click here for file
+
+The reader is invited to load the Z-d(CGCG)\ :sub:`2`\  coordinates in Figure \ :ref:`3<figure_3>`. The lengths of the van der Waals H...H attractions and the nucleophilic O...C attractions from the ribose ether oxygen to the electrophilic carbons on the guanine base have been enumerated. Because of the complex 3D nature of this molecule, they can only be truly perceived if the structure itself can be viewed from any desired angle (something clearly not possible in a conventional journal diagram). It also allows successive layers to be viewed, each perhaps concentrating on a particular aspect, without destroying or overwhelming the initial simple elegance of the overall concept (of a double helix). The identified ~2.8\ |nonascii_12|\  O...C interactions to the guanine are unique to the Z or left handed helical form, and since the sum of the vdW radii \ [#B22]_ of these two contact atoms is ~3.22\ |nonascii_13|\ , these are presumed to be (electrostatically) attractive. The alternative B-d(CGCG) \ :sub:`2`\  stereoisomer reveals these O...C contacts are absent, being instead replaced by hydrogen bonds (~1.9-2.1\ |nonascii_14|\ ) between the ribose ether-oxygen and the NH\ :sub:`2`\  hydrogens of the guanine. The sum of the O and H vdW radii is ~2.64\ |nonascii_15|\ , which suggests these are significantly attractive hydrogen bonds. There are additional C-H...O-P hydrogen bonded contacts of ~2.1-2.2\ |nonascii_16|\ . A similar divergence of attractive interactions emerges for chains built of AT bases. The Z-d(ATAT)\ :sub:`2`\  duplex has only one ~2.8\ |nonascii_17|\  O...C interaction to the adenine, with three others having rather longer lengths (~3.0-3.1\ |nonascii_18|\ ). The B-d(ATAT)\ :sub:`2`\  duplex instead displays C-H...O contacts of ~2.4-2.5\ |nonascii_19|\ .
+
+These differences can be more succinctly summarized as:
+
+1. Z-d(CGCG)\ :sub:`2`\  is stabilized (*inter alia*) by a short contact between a carbon on the guanine and the ribose ether oxygen, of which there are four per four base pairs.
+
+2. These contacts are replaced in B-d(CGCG)\ :sub:`2`\  by NH hydrogen bonded contacts to the ribose ether oxygen.
+
+3. In Z-d(ATAT)\ :sub:`2`\ , the O-contacts to the adenine are much longer, which
+
+4. in B-d(ATAT)\ :sub:`2`\ , are replaced by short CH...O contacts.
+
+By embedding access to accurate coordinate data within Figure \ :ref:`3<figure_3>`, the reader can select whatever level of detail they desire from the diagram. Part of the origins of the relative stability the Z- and B- helical forms is not simply due to the presence (or in this case absence) of "violation of permissible van der Waals contacts", but also to several types of less common but nevertheless attractive interactions which may not have been inferred by building physical models alone. Such additional insights may in turn impact upon *e*. *g*. modeling one remarkable property of the DNA polymer, its ability to be stretched to almost twice its normal length without breaking \ [#B23]_.
+
+It is of course the accumulation of these effects that determines the overall stability of the structure (Table \ :ref:`1<table_1>`). The thermodynamic quantities are computed with inclusion of thermal energies, obtained by solving the appropriate partition functions using calculated vibrational frequencies. Since these require second derivatives of energy with respect to coordinates, a smaller basis set 6-31G(d) was used for the purpose (a calculation time of ~4 days on a 12-core processor is typical). The dispersion corrections were obtained at the slightly higher 6-311G(d,p) basis set level to allow interactions to H to be modelled more realistically.
+
+These energies reveal some surprises. Firstly, the free energy for forming the duplex from the separated chains is significantly exothermic, despite the electrostatic repulsions resulting from each chain carrying a 3- charge. For the resulting helix, the B-d(CGCG)\ :sub:`2`\  form is 11.9 kcal/mol **less** stable in terms of total free energy than the Z-isomer, but is 4.2 kcal/mol **more** stable for the dispersion/van der Waals term, the criterion suggested by Watson and Crick as generally discriminating against the Z-form (although without a specification of the base type used for the model). The greater stability of the Z-form arises from a contribution of 3.9 from the entropy and 8.0 kcal/mol from the (zero-point energy corrected) enthalpy, which dominates the less favourable dispersion term.
+
+The formation of a B-d(ATAT)\ :sub:`2`\  duplex is less exothermic than that of the CG duplex. It is now favoured by 5.2 kcal/mol over the Z-isomer in terms of free energy and by 12.8 kcal/mol in terms of dispersion contributions. The assertion often made \ [#B24]_ that the Z-helix is favoured by CG rich oligomers and the B-helix by AT-rich forms is thus confirmed by these calculations.
+
+\ :sup:`a`\ Thermochemistry computed at geometries optimised at the \ |nonascii_20|\ B97XD/6-31G(d) level with application of a SCRF solvent continuum field for water, with thermal corrections derived from computed vibrational frequencies. The dispersion corrections are computed for geometries optimized at the \ |nonascii_21|\ B97XD/6-311G(d, p) level with application of a SCRF solvent continuum field for water. The display coordinates are those obtained at this level. \ :sup:`a`\ Free energy for the dimerisation of a single strand to a duplex.
+
+Armed with optimized coordinates which include the weaker interactions between atoms one can annotate the basic models revealed in Figure \ :ref:`3<figure_3>` with other (computed) properties. For example the optical rotation [\ |nonascii_22|\ ]\ :sub:`589`\  has the value +62\ |nonascii_23|\  for Z-d(CGCG)\ :sub:`2`\  and -137\ |nonascii_24|\  for the B-diastereomer, perhaps surprisingly small values for such an apparently asymmetric molecule. Also surprisingly, the corresponding experimental measurement does not appear to have been reported. Optical rotations are known to be rather fragile, being sensitive to small variations in conformation and solvation, but the electronic circular dichroism spectrum is regarded as rather more robust. Unlike other forms of spectroscopy such as NMR or IR, which can be used to infer structure from simple rules based on the functional groups present (in other words, local properties), these chiro-optical properties tend to be more characteristic of the global features of the molecule. As a result, they can be very difficult to interpret without a reasonably accurate model based on these global properties. A quantum mechanical computation of the molecular wavefunction is one such model, and it is now increasingly routinely used to help interpret optical rotations, electronic (and vibrational) circular dichroism spectra. Theory can now handle molecules containing ~250-254 atoms, such as the DNA tetramers modelled here. Annotation of the models with the calculated ECD spectra is included here in the hope they might prove useful for the interpretation of the experimental spectra.
+
+This example has illustrated how access to accurate data can help provide additional insights into the factors controlling the stability of molecular structures. In this case, the factors controlling the helical stability of DNA duplexes can be teased out. By incorporating these models directly into the journal article (and providing links to digital repositories where a more complete dataset can be acquired if needed) the readers of the journal have an opportunity to discover their own insights within their own spheres of interest.
+
+The crystal structure of 1,3-dimethylcyclobutadiene
+***************************************************
+
+The second example chosen for discussion is a more contemporary one. In July 2010, a article appeared \ [#B25]_ reporting the single-crystal X-ray structure of 1,3-dimethylcyclobutadiene achieved by confinement in a crystalline matrix (Figure \ :ref:`5<figure_5>` [see additional file *Mona Lisa of molecules*, and its very instability means that conventional experiments on it are very challenging. The article was however conventional in the sense of being made available in (more or less equivalent) HTML and PDF versions.
+
+.. _figure_5:
+
+.. figure:: ../_static/1758-2946-3-46-5.jpg
+   :align: center
+
+   Figure 5. The reaction leading to 1,3-dimethylcyclobutadiene \ [#B25]_
+
+   **The reaction leading to 1,3-dimethylcyclobutadiene** \ [#B25]_. The numbering shown for 4 corresponds to that for the published coordinates. Load coordinates for host-guest structure and just the guest only.
+
+
+Additional file 3
+
+**Interactive Jmol-enhanced version of Figure** \ :ref:`5<figure_5>`.
+
+Click here for file
+
+Much of the scientific insight was carried in the form of four colour figures, all presented conventionally as single layered graphics with the viewpoint selected by the authors. Information on acquisition of the data on which these figures were based was given as citation 28 in that article, which lists deposition numbers (CCDC 764864-764868) and a URL that would enable a CIF file for each entry to be downloaded. Whilst this retrieval process is not entirely automatic, it does take only a few minutes to acquire the data. The usefulness of the file is of course predicated on the reader also having access to appropriate software for analysis of a file in this format. It is also important to note that a CIF file allows inspection only of the refined crystallographic model presented in the article and the statistics associated with that model; it does not allow the user access to the underlying (*hkl*) diffraction data which would allow other models to be refined and assessed.
+
+The reaction scheme reported \ [#B25]_ for photochemical generation of trapped 1,3-dimethylcyclobutadiene is shown below in Figure \ :ref:`5<figure_5>`. It differs from the original in showing a thermally activated reaction arrow connecting the 1,3-dimethylcyclobutadiene **4** to **2**. This last possibility is not explicitly discussed in the original report \ [#B25]_, although there is there an implicit assumption that this process is slow at the temperature of the experiment, 175K. The original article therefore seeks to persuade the reader on the basis of crystallographic evidence that the structure of **3** or **4** has been established, with the aid of the four colour figures included in the article, and (optionally for the reader) with acquisition of the CIF files.
+
+The theme of the present article is to ask how a reader's experience and perception of a scientific article might be enhanced or simply altered by adopting new forms of presentation. In Figure \ :ref:`5<figure_5>`, the relevant CIF file can be loaded as a second layer into the reaction diagram. Because of the relatively large number of host atoms involved, the effect can be somewhat overwhelming when this is done and the interpretation may also be made more complex by the presence of disorder in the guest. A further layer of interpretation can be added by annotating the diagram with selected atom-atom distances; the reader can use the display software to added further such annotations of their own if they wish. There are many other actions the reader can perform at this point \ [#B19]_. A further, this time smaller, alternative layer that contains only the kernel of the scientific problem (as perceived by the present author, which may or may not correspond to the perception of the original \ [#B25]_ authors) has been added here, and again four key measurement annotations made, together with selected bonds highlighted in a different colour.
+
+The scientific problem can now be stated in the form of the following questions.
+
+1. What are the kinetics of the reverse reaction of **4** to give **2** at 175K?
+
+2. Does the crystallographic evidence convince that the guest is best described as 1,3-dimethylcyclobutadiene in close proximity to a detached molecule of carbon dioxide?
+
+3. More specifically, how should the interaction between the labelled atoms C2 and C3 be interpreted? Should it be considered a strong van der Waals contact, as suggested by the original authors \ [#B25]_ or as a covalent bond? The same question might apply to another atom pair, O1 and C6 also connecting carbon dioxide and the cyclobutadiene.
+
+4. Likewise, how should the angles O1-C2-O7 or C2-C3-H10 be interpreted?
+
+The reader may note a common theme emerging between these questions and the origins of helical stability in DNA as discussed above.
+
+The first of these questions was in fact posed in the form of a blog, written by the present author \ [#B26]_ and based on chemical precedent and entropic arguments. It was posted in August 2010, little more than a month after the original report was first published. The precedent for this form of discourse when addressing a scientific issue had already been established \ [#B27]_\ [#B28]_. Questions 2-4 emerged more conventionally and a little later in November 2010 in the same journal as the original article, and took the form of comments submitted by two independent groups \ [#B29]_\ [#B30]_. The original authors have a right of reply to such comments, which they took \ [#B31]_. These various participants in the debate all had access to the same CIF data as is transcluded into Figure \ :ref:`5<figure_5>`. The debate to this point was summarized in a second blog post \ [#B32]_, and this and the original post themselves attracted ~15 responses in the form of appended comments. These posed further questions, on themes such as the computed structure of 1,3-dimethylcyclobutadiene, a debate on how much energy was required for angular distortion of O1=C2=O7 as an isolated molecule, and whether molecule **2** is transparent to light in the 320 to 500nm excitation range employed by the original experiments. This latter point was followed up by calculations of the UV-visible absorption spectrum of **2** inside the host cavity, also appended to the blog, and finally by calculations of the predicted vibrational spectra. The next stage in the discourse occurred in a conventional journal \ [#B12]_, taking the form of a set of calculations on the likely barrier preventing **4** and carbon dioxide from recombining inside the host cavity, and addressing question 1 above in more complete detail. This article did have one less conventional aspect; in the "rich HTML" version, an interactive version of the table of data was made available \ [#B33]_ in very much the manner adopted for Figures \ :ref:`3<figure_3>` and \ :ref:`5<figure_5>` in the present article. Additionally, there were links in this table to digital repository entries \ [#B34]_, which would enable any interested reader to access the complete archived details of all the calculations reported in that article.
+
+Shortly after this last article was published, in December 2010, several publishers chose to highlight this emerging debate with editorial blog posts of their own \ [#B35]_\ [#B36]_\ [#B37]_\ [#B38]_. These posts in turn attracted further comments, including several by one of the original authors. One comment in particular \ [#B39]_ entitled "Request of calculated structure data" highlighted an important aspect concerning the accessibility of previously reported data \ [#B12]_. This alludes to the "rich HTML" table, and the observation that it is important to provide information on the file formats in which data is held, so that appropriate conversions if needed and concomitant visualization can be performed. This particular query was answered in the form of another blog post \ [#B19]_, and applies directly to the issue of how to re-use data associated with the current article (Figures \ :ref:`3<figure_3>` and \ :ref:`5<figure_5>`).
+
+The scientific discourse described above regarding the nature of the species in a host crystal lattice is still ongoing, and so a final consensus (if ever achieved) cannot be reported at the time of writing. It is noteworthy that the primary (*hkl*) crystallographic data relating to the original measurements has been provided upon request \ [#B40]_ and so further analysis of alternative crystallographic refinement models is now possible.
+
+Conclusions
+***********
+
+The two scientific examples discussed in this article span 57 years, a relatively short period in the history of the scientific journal. The first is arguably the most influential scientific article of the 20th century, and clearly the absence of data associated with it has not held back its recognition as such. What is also clear is that addition of such data, albeit 57 years after the original report, may have the potential to reveal further insights into the structure of DNA that may not have hitherto been highlighted. Whether such a data-rich reformulation of the original problem has any measure of impact remains to be established. The second article is only months old, but in that brief period has been subjected to the kind of scrutiny that can only be achieved by having access to rich data sets. One might fairly conclude that the scientific article has evolved to enable that scrutiny. The article that you are now reading I suggest is one model for how such scientific discourse can be both improved and accelerated. It remains to be seen if scientists are prepared to author such articles in the future. There is an early example \ [#B41]_ of an article where both the discourse and the data supporting that discussion were seamlessly integrated into one (XML-based) document, with the presentation being made available to the reader by application of suitable stylesheet-based transformations. The production of an article in this form was however non trivial. Since then tools have appeared to facilitate the process \ [#B42]_\ [#B43]_ and the task now much be to reach both the hearts and the minds of scientific authors to encourage them to start adopting this form of enhanced scientific discourse.
+
+Competing interests
+*******************
+
+The author declares that they have no competing interests.
+
+Acknowledgements
+****************
+
+Derived from a presentation given for a symposium celebrating the career of Peter Murray-Rust, in Cambridge UK on January 17, 2011.
+
+.. [#B1]  An Account of a Very Odd Monstrous Calf
+
+.. [#B2]  The Internet Journal of Chemistry: What Lessons Have We Learned After Our First Year?
+
+.. [#B3]  What to expect in EPUB3
+
+.. [#B4]  Introducing HTML5
+
+.. [#B5]  HTML5
+
+.. [#B6]  Defrosting the Digital Library: Bibliographic Tools for the Next Generation Web
+
+.. [#B7]  Molecular Structure of Nucleic Acids: A Structure for Deoxyribose Nucleic Acid
+
+.. [#B8]  The Left Handed DNA Hall of Fame
+
+.. [#B9]  Pauling's Left-Handed \ |nonascii_25|\ -Helix
+
+.. [#B10]  The Complementary Structure of Deoxyribonucleic Acid
+
+.. [#B11]  Pericyclic reactions of 2-pyrones with nonconjugated dienes. Conformational analysis of the double Diels-Alder adducts by molecular mechanics calculation
+
+.. [#B12]  Can 1,3-dimethylcyclobutadiene and carbon dioxide co-exist inside a supramolecular cavity?
+
+.. [#B13]  Long-range corrected hybrid density functionals with damped atom-atom dispersion corrections
+
+.. [#B14]  Assessment of the Performance of DFT and DFT-D Methods for Describing Distance Dependence of Hydrogen-Bonded Interactions
+
+.. [#B15]  A Smooth Solvation Potential Based on the Conductor-Like Screening Model
+
+.. [#B16]  Continuous surface charge polarizable continuum models of solvation. I. General formalism
+
+.. [#B17]  Successful Computational Modeling of Isobornyl Chloride Ion-Pair Mechanisms
+
+.. [#B18]  Web-Based Molecular Visualization for Chemistry Education in the 21st Century
+
+.. [#B19]  (re)Use of data from chemical journals
+
+.. [#B20]  Learning WebGL
+
+.. [#B21]  WebGL Specification
+
+.. [#B22]  Consistent van der Waals Radii for the Whole Main Group
+
+.. [#B23]  Overstretching DNA at 65 pN Does Not Require Peeling from Free Ends or Nicks
+
+.. [#B24]  On the stability of single- and double-stranded DNA helices: The application of the PPT-MCF method on large fragments of DNA
+
+.. [#B25]  Single-Crystal X-ray Structure of 1,3-Dimethylcyclobutadiene by Confinement in a Crystalline Matrix
+
+.. [#B26]  Reactions in supramolecular cavities - trapping a cyclobutadiene: ! or ?
+
+.. [#B27]  Portals, blogs and co.: the role of the Internet as a medium of science communication
+
+.. [#B28]  NaH as an Oxidant - Liveblogging!
+
+.. [#B29]  Comment on "Single-Crystal X-ray Structure of 1,3-Dimethylcyclobutadiene by Confinement in a Crystalline Matrix"
+
+.. [#B30]  Comment on "Single-Crystal X-ray Structure of 1,3-Dimethylcyclobutadiene by Confinement in a Crystalline Matrix"
+
+.. [#B31]  Response to Comments on "Single-Crystal X-ray Structure of 1,3-Dimethylcyclobutadiene by Confinement in a Crystalline Matrix"
+
+.. [#B32]  Can a cyclobutadiene and carbon dioxide co-exist in a calixarene cavity?
+
+.. [#B33]  Table 1\ :sup:`a`\ Calculated relative free energies (kcal mol\ :sup:`-1`\ ) for various models for the reaction between 4 and carbon dioxide
+
+.. [#B34]  SPECTRa: The Deposition and Validation of Primary Chemistry Research Data in Digital Repositories
+
+.. [#B35]  Crystallographic Confusion
+
+.. [#B36]  Debating cyclobutadiene
+
+.. [#B37]  Doubt cast on X-ray structure of trapped reactive species
+
+.. [#B38]  Has a cyclobutadiene species been isolated?
+
+.. [#B39]  comment entitled "Request of calculated structure data"
+
+.. [#B40]  comment entitled "Some experimental details may be useful in this context"
+
+.. [#B41]  Development of chemical markup language (CML) as a system for handling complex chemical content
+
+.. [#B42]  CINF 115 Chem4Word
+
+.. [#B43]  Chemistry Add-in for Word
+
+.. |nonascii_1| unicode:: 0x3b1
+.. |nonascii_2| unicode:: 0x2022
+.. |nonascii_3| unicode:: 0x2022
+.. |nonascii_4| unicode:: 0x2022
+.. |nonascii_5| unicode:: 0xc5
+.. |nonascii_6| unicode:: 0x2022
+.. |nonascii_7| unicode:: 0xc5
+.. |nonascii_8| unicode:: 0x3c9
+.. |nonascii_9| unicode:: 0x3c9
+.. |nonascii_10| unicode:: 0x3c9
+.. |nonascii_11| unicode:: 0x3c9
+.. |nonascii_12| unicode:: 0xc5
+.. |nonascii_13| unicode:: 0xc5
+.. |nonascii_14| unicode:: 0xc5
+.. |nonascii_15| unicode:: 0xc5
+.. |nonascii_16| unicode:: 0xc5
+.. |nonascii_17| unicode:: 0xc5
+.. |nonascii_18| unicode:: 0xc5
+.. |nonascii_19| unicode:: 0xc5
+.. |nonascii_20| unicode:: 0x3c9
+.. |nonascii_21| unicode:: 0x3c9
+.. |nonascii_22| unicode:: 0x3b1
+.. |nonascii_23| unicode:: 0xb0
+.. |nonascii_24| unicode:: 0xb0
+.. |nonascii_25| unicode:: 0x3b1

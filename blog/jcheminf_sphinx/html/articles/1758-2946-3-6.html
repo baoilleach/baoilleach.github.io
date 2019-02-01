@@ -1,0 +1,552 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FlaME: Flash Molecular Editor - a 2D structure input tool for the web &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models" href="1758-2946-3-7.html" />
+    <link rel="prev" title="Modular Chemical Descriptor Language (MCDL): Stereochemical modules" href="1758-2946-3-5.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-5.html" title="Modular Chemical Descriptor Language (MCDL): Stereochemical modules"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-7.html" title="Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="flame-flash-molecular-editor-a-2d-structure-input-tool-for-the-web">
+<h1>FlaME: Flash Molecular Editor - a 2D structure input tool for the web<a class="headerlink" href="#flame-flash-molecular-editor-a-2d-structure-input-tool-for-the-web" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>So far, there have been no Flash-based web tools available for chemical structure input. The authors herein present a feasibility study, aiming at the development of a compact and easy-to-use 2D structure editor, using Adobe&#8217;s Flash technology and its programming language, ActionScript. As a reference model application from the Java world, we selected the Java Molecular Editor (JME). In this feasibility study, we made an attempt to realize a subset of JME&#8217;s functionality in the Flash Molecular Editor (FlaME) utility. These basic capabilities are: structure input, editing and depiction of single molecules, data import and export in molfile format.</p>
+</div>
+<div class="section" id="implementation">
+<h3>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h3>
+<p>The result of molecular diagram sketching in FlaME is accessible in V2000 molfile format. By integrating the molecular editor into a web page, its communication with the HTML elements on this page is established using the two JavaScript functions, <em>getMol()</em> and <em>setMol()</em>. In addition, structures can be copied to the <em>system clipboard</em>.</p>
+</div>
+<div class="section" id="conclusion">
+<h3>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h3>
+<p>A first attempt was made to create a compact single-file application for 2D molecular structure input/editing on the web, based on Flash technology. With the application examples presented in this article, it could be demonstrated that the Flash methods are principally well-suited to provide the requisite communication between the Flash object (application) and the HTML elements on a web page, using JavaScript functions.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="about-the-project">
+<h3>About the Project<a class="headerlink" href="#about-the-project" title="Permalink to this headline">¶</a></h3>
+<p>At present, there are various tools available for structure input on web pages, for example Marvin Sketch <a class="footnote-reference" href="#b1" id="id2">[1]</a>, PubChem Sketcher <a class="footnote-reference" href="#b2" id="id3">[2]</a>, NIST Molecule Editor <a class="footnote-reference" href="#b3" id="id4">[3]</a> or JME <a class="footnote-reference" href="#b4" id="id5">[4]</a>. The latter one is very popular because of its compact footprint and intuitive use. It has been utilized by many web developers (including the authors of this article) for sites with chemical content. Recently, a comprehensive review article <a class="footnote-reference" href="#b5" id="id6">[5]</a> summarized the developments in this field. Prompted by the statement that so far no Flash-based web tool for structure input is available, we decided to undertake a feasibility study, aiming at the development of a compact and easy-to-use 2D structure editor, using Adobe&#8217;s Flash technology and its programming language, ActionScript. As a reference model application from the Java world, we selected the Java Molecular Editor (JME). In this feasibility study, we made an attempt to realize a subset of JME&#8217;s functionality in the FlaME utility (<em>part I, this article</em>). These basic capabilities are: structure input, editing and depiction of single molecules, data import and export in molfile format. As this is just the beginning of the project, we intend to continue and extend this work with additional features like reaction editing and the implementation of other data exchange formats (e.g., SMILES) (<em>part II, in planning</em>).</p>
+</div>
+<div class="section" id="objectives-and-expectations">
+<h3>Objectives and expectations<a class="headerlink" href="#objectives-and-expectations" title="Permalink to this headline">¶</a></h3>
+<p>The primary objective of this work has been to demonstrate a usable Flash application (written in Flash/ActionScript) for drawing and editing molecules directly within a HTML/JavaScript web page. The goals are as follows: a) we want to achieve the convenience of common structure editors such as ISIS (Symyx) Draw <a class="footnote-reference" href="#b6" id="id7">[6]</a> or Marvin Sketch <a class="footnote-reference" href="#b1" id="id8">[1]</a>, which are easy and intuitive to use; b) at the same time the application should be compact - in other words: small and smart. As the data exchange format (<em>result or output format</em>), the well-documented and proven MDL MOL format V2000 <a class="footnote-reference" href="#b7" id="id9">[7]</a> was chosen. This format is still very popular for structural data exchange and it is used by many databases and cheminformatics applications, despite its inherent limitations, e.g. with respect to the maximum number of atoms. The latter aspect, however, does not affect its suitability for FlaME, as this editor is primarily designed to handle &#8220;small molecules&#8221;.</p>
+</div>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>Results and discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-flame-molecular-editor-features-graphical-user-interface-and-layout">
+<h3>The FlaME Molecular Editor: features - graphical user interface and layout<a class="headerlink" href="#the-flame-molecular-editor-features-graphical-user-interface-and-layout" title="Permalink to this headline">¶</a></h3>
+<p>As mentioned above, the authors were inspired by the JME applet written by P. Ertl <a class="footnote-reference" href="#b4" id="id10">[4]</a> when designing the layout of the graphical user interface (GUI). Nevertheless, we tried to create a typical and unique look-and-feel for our new tool (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>). Actually, there should be no explanation needed for a novice user of FlaME. Users should immediately feel familiar with the buttons and functions in FlaME. Furthermore, tooltips are displayed in the right bottom area of the GUI which are activated by slowly moving the mouse pointer over the various buttons, thus facilitating use of the applet.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-6-1.jpg" src="../_images/1758-2946-3-6-1.jpg" />
+<p class="caption">Figure 1. FlaME graphical user interface</p>
+<div class="legend">
+<strong>FlaME graphical user interface</strong>.</div>
+</div>
+</div>
+<div class="section" id="gui-buttons">
+<h3>GUI buttons<a class="headerlink" href="#gui-buttons" title="Permalink to this headline">¶</a></h3>
+<p>The FlaME GUI is simple and all icons on the buttons should be intuitively understood. Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a> shows the icons and a description of the individual buttons.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-6-2.jpg" src="../_images/1758-2946-3-6-2.jpg" />
+<p class="caption">Figure 2. Description of the GUI buttons</p>
+<div class="legend">
+<strong>Description of the GUI buttons</strong>.</div>
+</div>
+</div>
+<div class="section" id="subjects-and-actions">
+<h3>Subjects and actions<a class="headerlink" href="#subjects-and-actions" title="Permalink to this headline">¶</a></h3>
+<p>Based on the definition of operations (drawing primitives) for molecular structure diagram sketching as discussed by A. M. Clark <a class="footnote-reference" href="#b8" id="id11">[8]</a>, we can define the subjects in FlaME as atoms and bonds. The actions implemented so far are as follows:</p>
+<ul class="simple">
+<li>add or delete atom</li>
+<li>add or delete bond</li>
+<li>add structure fragment (as pre-defined <em>template structure</em>)</li>
+<li>set or change the atom type (as a pre-defined element or as input via X-button)</li>
+<li>set or change the bond order</li>
+<li>set or change the stereo style (<em>stereo marking</em>)</li>
+<li>set or change the ionic charge</li>
+</ul>
+<p>The element or group label will change automatically depending on element and current environment of the particular structure node (<em>node environment</em>).</p>
+</div>
+<div class="section" id="molecular-structure-output">
+<h3>Molecular structure output<a class="headerlink" href="#molecular-structure-output" title="Permalink to this headline">¶</a></h3>
+<p>The result of molecular diagram sketching in FlaME is accessible in V2000 molfile format <a class="footnote-reference" href="#b7" id="id12">[7]</a>. This result can be copied to the <em>system clipboard</em> (by clicking the corresponding button). On the other hand, by integrating the molecular editor into a web page, its communication with the HTML elements on this page must be established. For this purpose, two JavaScript functions are implemented which are described below.</p>
+</div>
+<div class="section" id="flash-methods-javascript-getmol-and-setmol-functions">
+<h3>Flash Methods - JavaScript getMol() and setMol() functions<a class="headerlink" href="#flash-methods-javascript-getmol-and-setmol-functions" title="Permalink to this headline">¶</a></h3>
+<p>The Flash documentation states: &#8220;<em>A Flash method is a JavaScript function that is specific to Flash movies. Use Flash methods to send JavaScript calls to Flash movies from a scripting environment</em>.&#8221; <a class="footnote-reference" href="#b9" id="id13">[9]</a></p>
+<p>Using the Flash methods, two functions (<em>getMol</em> and <em>setMol</em>) were written: the function <em>getMol()</em> ensures that the structure drawn in the molecular editor will be copied as a molfile to a <em>textarea</em> field (<em>id = &#8220;mol&#8221;</em>) within the web page for further use, e.g. as a query structure for a database search. The second JavaScript function <em>setMol()</em> sends the molfile from the web page to the Flash object, in our case to the FlaME molecular editor. The second line in this function just ensures compatibility with all common web browsers, such as Internet Explorer, Firefox, Opera, Chrome, Safari etc.</p>
+<p>While the purpose of the <em>getMol()</em> function could be described as &#8220;<em>export as MOL file</em>&#8221;, the <em>setMol()</em> function could be called &#8220;<em>import MOL file</em>&#8221; and it can be used for structure input in textual form for further structural modification using FlaME (see example 1).</p>
+<p>function getMol() {</p>
+<p>var m = thisMovie(&#8220;flame&#8221;).GetVariable(&#8220;mol&#8221;);</p>
+<p>document.getElementById(&#8220;mol&#8221;).value = m;</p>
+<p>}</p>
+<p>function setMol() {</p>
+<p>var m = document.getElementById(&#8220;mol&#8221;).value;</p>
+<p>m = m.replace(/rn/g, &#8220;r&#8221;);</p>
+<p>thisMovie(&#8220;flame&#8221;).send2Flame(m);</p>
+<p>}</p>
+</div>
+<div class="section" id="drawing-operations-and-template-structures">
+<h3>Drawing operations and template structures<a class="headerlink" href="#drawing-operations-and-template-structures" title="Permalink to this headline">¶</a></h3>
+<p>The actions of FlaME implemented so far do not reflect all of the basic primitives for molecular diagram sketching, described previously <a class="footnote-reference" href="#b8" id="id14">[8]</a>. It was not the purpose of this tool to cover all these possible functionalities, but to provide users (and developers) with an opportunity to use a rather compact input tool for chemistry-related websites. The standard template structures included in FlaME are: cyclopropane, cyclobutane, cyclopentane, cyclohexane, benzene, cycloheptane, and cyclooctane. Once placed in the drawing area, these structures can be edited by changing the bond order (single, double and triple), by changing the atom type (element), or by changing the stereo style (stereo marking).</p>
+</div>
+<div class="section" id="use-of-a-special-key">
+<h3>Use of a special key<a class="headerlink" href="#use-of-a-special-key" title="Permalink to this headline">¶</a></h3>
+<p>The <em>Shift</em> key on the computer keyboard can be used to modify some of the drawing operations of FlaME: whereas ring fusion (annulation) by clicking with a ring template on an existing ring bond normally produces a fully expanded condensed system, pressing the <em>Shift</em> key while clicking will cause the new ring to be flipped to the opposite direction (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>, structure a). Similarly, adding a ring template to an existing ring atom normally produces two rings connected by a single bond, whereas the <em>Shift</em> key modifies this behavior and leads to a spiro ring system (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>, structure b). Furthermore, by pressing the <em>Shift</em> key the user can prevent the delete operation from removing terminal (&#8220;orphan&#8221;) atoms when a bond is deleted (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>, structure c). The latter option can be used to create disconnected structures (e.g., salts) from a single molecule, thus providing a work-around for the current limitation of FlaME to handle only a single connection table.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-6-3.jpg" src="../_images/1758-2946-3-6-3.jpg" />
+<p class="caption">Figure 3. Using the Shift key while editing a molecular structure</p>
+<div class="legend">
+<strong>Using the Shift key while editing a molecular structure</strong>.</div>
+</div>
+</div>
+<div class="section" id="features-which-are-not-yet-implemented">
+<h3>Features which are not yet implemented<a class="headerlink" href="#features-which-are-not-yet-implemented" title="Permalink to this headline">¶</a></h3>
+<p>Compared to the JME applet, FlaME still lacks a number of features which may be implemented in future versions. For instance, there is currently support for only one connection table at a time. Thus, there is no mode available for reaction input and depiction. Special definitions for query atoms are limited to A, Q, and X (see below), while R groups are not yet supported. Moreover, at present the only data exchange format is the MDL molfile format (V2000), whereas SMILES export is still on the to-do list.</p>
+</div>
+</div>
+<div class="section" id="id15">
+<h2>Implementation<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="development-environment">
+<h3>Development environment<a class="headerlink" href="#development-environment" title="Permalink to this headline">¶</a></h3>
+<p>Flash applications are frequently used for advertisements and as games. Very useful applications have been also developed and widely employed for e-learning purposes. Flash as well as Java and JavaScript can be used to add interactivity to web pages using the programming language ActionScriipt, which has a similar syntax and semantics as JavaScript (or, more generally, is a dialect of ECMAScript). The FlaME application itself was developed using Adobe Flash Professional CS4, which provides an integrated development environment. It is equipped with a compiler which can produce either compact SWF files suitable for use on web pages, or so-called Windows-projectors or Macintosh-projectors which are platform-specific executables.</p>
+<p>FlaME is a single-file Flash application. It was written in ActionScript (AS2) and compiled as a Flash 8 SWF file. Thus, this application requires a common web browser (Firefox, IE, Opera, Chrome, Safari etc.) and the Flash Player plug-in at least in version 8. According to Adobe: &#8220;<em>Today, over 86% of Internet-connected computers have adopted the Flash Player version 9</em>&#8221; <a class="footnote-reference" href="#b10" id="id16">[10]</a>.</p>
+<p>Whereas there should be no principal (technical) problem to make use of an Adobe Flash Player also on Apple&#8217;s mobile devices (iPhone, iPad and iPod touch), Apple has decided not to support Flash on these devices and therefore, applications such as FlaME cannot be used on them. However, essentially the same restriction applies to Java on the iPhone/iPad which also prevents Java-based structure editors from being employed on these mobile devices. Although there are some &#8220;inofficial&#8221; ways to install unsupported software on Apple&#8217;s mobile devices, only a change in Apple&#8217;s policy would lead to a general solution of this Flash/Java lack-of-support issue. It should be noted, however, that FlaME was developed for use on typical desktop computers rather than on mobile gadgets.</p>
+</div>
+<div class="section" id="limitations">
+<h3>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
+<p>Because of the inherent limitations of the V2000 MDL molfile format (see the CTfile formats description <a class="footnote-reference" href="#b7" id="id17">[7]</a>) which is used by FlaME for data exchange, the maximum number of atoms is limited to 999.</p>
+</div>
+<div class="section" id="flame-application-examples">
+<h3>FlaME application examples<a class="headerlink" href="#flame-application-examples" title="Permalink to this headline">¶</a></h3>
+<p>In this section, three application examples are presented which have been built around FlaME and which are freely accessible on the web. A common web development practice is to use both an &lt;object&gt; tag and an &lt;embed&gt; tag to display Flash (SWF) content within an HTML page <a class="footnote-reference" href="#b11" id="id18">[11]</a>. The nested-objects method requires a double <em>object</em> definition (the &lt;object&gt; tag targeting older versions of Internet Explorer and the &lt;embed&gt; tag targeting all other browsers), so it is necessary to define the object attributes and nested <em>param</em> elements twice <a class="footnote-reference" href="#b12" id="id19">[12]</a>. The required attributes are: <em>classid</em> (the value is always as shown below), <em>type</em>, <em>width</em>, and <em>height</em>. The required <em>param</em> element is <em>movie</em>, which defines once more the URL of a SWF file. For up-to-date web browsers, one specifies the URL of the Flash application with the <em>src</em> attribute.</p>
+</div>
+<div class="section" id="embedding-swf-content-i-e-the-flame-application-in-html">
+<h3>Embedding SWF content (i.e., the FlaME application) in HTML<a class="headerlink" href="#embedding-swf-content-i-e-the-flame-application-in-html" title="Permalink to this headline">¶</a></h3>
+<p>&lt;object classid=&#8217;clsid:d27cdb6e-ae6d-11cf-96b8-444553540000&#8217;</p>
+<p>id=&#8217;flame&#8217; height=&#8216;438&#8217; width=&#8216;350&#8217; align=&#8217;middle&#8217;&gt;</p>
+<p>&lt;param name=&#8217;allowScriptAccess&#8217; value=&#8217;sameDomain&#8217;/&gt;</p>
+<p>&lt;param name=&#8217;movie&#8217; value=&#8217;flame.swf&#8217;/&gt;</p>
+<p>&lt;param name=&#8217;quality&#8217; value=&#8217;high&#8217;/&gt;</p>
+<p>&lt;param name=&#8217;bgcolor&#8217; value=&#8217;white&#8217;/&gt;</p>
+<p>&lt;embed src=&#8217;flame.swf&#8217; quality=&#8217;high&#8217; bgcolor=&#8217;#ffffff&#8217; width=&#8216;438&#8217; height=&#8216;350&#8217;</p>
+<p>name=&#8217;flame&#8217; align=&#8217;middle&#8217; allowScriptAccess=&#8217;sameDomain&#8217;</p>
+<p>type=&#8217;application/x-shockwave-flash&#8217;</p>
+<p>pluginspage=`&lt;<a class="reference external" href="http://www.macromedia.com/go/getflashplayer">http://www.macromedia.com/go/getflashplayer</a>&gt;`_/&gt;</p>
+<p>&lt;/object&gt;</p>
+</div>
+<div class="section" id="application-example-1-structure-search">
+<h3>Application example 1: Structure Search<a class="headerlink" href="#application-example-1-structure-search" title="Permalink to this headline">¶</a></h3>
+<p>This demonstration page <a class="footnote-reference" href="#b13" id="id20">[13]</a> uses FlaME as a replacement for JME in a modified version of the open-source structure database system MolDB5R <a class="footnote-reference" href="#b14" id="id21">[14]</a><a class="footnote-reference" href="#b15" id="id22">[15]</a><a class="footnote-reference" href="#b16" id="id23">[16]</a>. The latter software employs the <em>checkmol/matchmol</em> program <a class="footnote-reference" href="#b17" id="id24">[17]</a> as the search engine. Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a> shows a run in &#8220;similarity search&#8221; mode (using the Tanimoto index <a class="footnote-reference" href="#b18" id="id25">[18]</a> derived from binary fingerprints as similarity criterion), Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a> shows another example in &#8220;substructure search&#8221; mode. Like with JME, special symbols (to be entered via the X-button) can be used for the definition of query atoms:</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-6-4.jpg" src="../_images/1758-2946-3-6-4.jpg" />
+<p class="caption">Figure 4. MolDB5R similarity search using FlaME for query input</p>
+<div class="legend">
+<strong>MolDB5R similarity search using FlaME for query input</strong>.</div>
+</div>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-6-5.jpg" src="../_images/1758-2946-3-6-5.jpg" />
+<p class="caption">Figure 5. MolDB5R substructure search using FlaME for query input</p>
+<div class="legend">
+<strong>MolDB5R substructure search using FlaME for query input</strong>.</div>
+</div>
+<p><strong>A</strong> for any atom except H</p>
+<p><strong>Q</strong> for any atom except H and C</p>
+<p><strong>X</strong> for any halogen atom</p>
+<p>Explicit <a href="#id26"><span class="problematic" id="id27">**</span></a>H**ydrogens are entered via a separate H button.</p>
+</div>
+<div class="section" id="application-example-2-presentation-of-structure-collections-in-slide-show-mode">
+<h3>Application example 2: Presentation of structure collections in &#8220;slide show&#8221; mode<a class="headerlink" href="#application-example-2-presentation-of-structure-collections-in-slide-show-mode" title="Permalink to this headline">¶</a></h3>
+<p>This web page (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>) uses the JavaScript function <em>setMol()</em> to send the molfile of the selected structure to FlaME. The user can either send any of the listed structures to FlaME by clicking on the respective chemical name in the right area (printed in arbitrary color) or he/she can start a &#8220;slide show&#8221; by selecting the &#8220;play&#8221; button below the list. In the latter case, the data transfer process runs automatically with a pre-defined time interval.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-6-6.jpg" src="../_images/1758-2946-3-6-6.jpg" />
+<p class="caption">Figure 6. FlaME demo page in &#8220;slide show&#8221; mode</p>
+<div class="legend">
+<strong>FlaME demo page in &#8220;slide show&#8221; mode</strong>.</div>
+</div>
+</div>
+<div class="section" id="application-example-3-flame-editor-vs-depiction">
+<h3>Application example 3: FlaME editor vs. depiction<a class="headerlink" href="#application-example-3-flame-editor-vs-depiction" title="Permalink to this headline">¶</a></h3>
+<p>This example (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>) shows the FlaME editor (left side) in combination with a depiction-only version of the software (right side). In the latter incarnation, the &#8220;move structure&#8221; mode is activated by default, as well as &#8220;zoom in&#8221; and &#8220;zoom out&#8221; functions which are accessible on a web page via keyboard shortcuts or via HTML elements (buttons) connected to appropriate JavaScript functions.</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-6-7.jpg" src="../_images/1758-2946-3-6-7.jpg" />
+<p class="caption">Figure 7. FlaME: Molecular Editor vs. Depiction</p>
+<div class="legend">
+<strong>FlaME: Molecular Editor vs. Depiction</strong>.</div>
+</div>
+<p>This depiction-only version of FlaME was compiled separately without any GUI buttons and layout options. By doing so, the size of the SWF file could be reduced to approximately one third (25 kB) of the original file size of the editor version.</p>
+</div>
+</div>
+<div class="section" id="conclusions-and-outlook">
+<h2>Conclusions and Outlook<a class="headerlink" href="#conclusions-and-outlook" title="Permalink to this headline">¶</a></h2>
+<p>A first attempt was made to create a compact single-file application for 2D molecular structure input/editing on the web, based on Flash technology. At present, the project should be regarded as a feasibility study and any feedback (comments and suggestions for further development and extensions) will be welcome.</p>
+<p>With the introduction of the Flash Molecular Editor (FlaME) as an alternative to similar input tools based on Java technology, we would like to start a discussion about the suitability (advantages and limitations) of the Flash environment for interactive chemistry-related websites. With the application examples presented in this article, it could be demonstrated that the Flash methods are principally well-suited to provide the requisite communication between the Flash object (application) and the HTML elements on the web page, using JavaScript functions.</p>
+<p>The next version of FlaME should include a reaction editor and some other extensions, for instance generation of SMILES <a class="footnote-reference" href="#b19" id="id28">[19]</a> output. For future developments, we envisage a separate Flash application for handling spectral data, e.g. for JCAMP-DX spectra viewing/editing. In this field, there are already some nice plug-ins and Java applets available (e.g., MDL Chime <a class="footnote-reference" href="#b20" id="id29">[20]</a>, JSpecView Applet <a class="footnote-reference" href="#b21" id="id30">[21]</a>, or the NIST JCAMP-DX Viewer <a class="footnote-reference" href="#b22" id="id31">[22]</a>), which could be taken as models for writing a comparable Flash-based tool.</p>
+<div class="section" id="use-and-reference">
+<h3>Use and Reference<a class="headerlink" href="#use-and-reference" title="Permalink to this headline">¶</a></h3>
+<p>Developers of chemistry-enabled websites are invited to try FlaME on their pages. The utility [Additional file <a class="footnote-reference" href="#b23" id="id32">[23]</a> would be desirable. However, at present the latter product is still far away from its goal to be a complete web-based animation suite.</p>
+<p>Additional file 1</p>
+<p><strong>FlaME - Flash Molecular Editor</strong>. Platform independent SWF application file</p>
+<p>Click here for file</p>
+</div>
+</div>
+<div class="section" id="availability-and-requirements">
+<h2>Availability and requirements<a class="headerlink" href="#availability-and-requirements" title="Permalink to this headline">¶</a></h2>
+<p>Project name: FlaME: Flash Molecular Editor - a 2D structure input tool for the web</p>
+<p>Project homepage and application examples URL: <a class="reference external" href="http://synthon.pch.univie.ac.at/flame/">http://synthon.pch.univie.ac.at/flame/</a></p>
+<p>Application download URL: <a class="reference external" href="http://synthon.pch.univie.ac.at/flame/flame.swf">http://synthon.pch.univie.ac.at/flame/flame.swf</a></p>
+<p>Operating system(s): Platform independent</p>
+<p>Programming language: Flash, ActionScript 2</p>
+<p>Other requirements: Adobe Flash Player 8 or higher</p>
+<p>License: individual license on request (free of charge).</p>
+<p>Any restrictions to use by non-academics: none</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>PD was involved in the design and programming of the FlaME software, in the implementation of the software and preparation of the application examples, and the manuscript preparation. NH was involved in testing and intellectual guidance during FlaME software development, in preparation of application examples, and manuscript preparation. All authors read and approved the final manuscript.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>We thank all interested colleagues at our department for helpful discussions during the development and suggestions for further extension of FlaME.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id8">2</a>)</em> Marvin Sketch</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>The PubChem Project, PubChem Sketcher</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>NIST Chemistry Webbook. NIST Molecule Editor</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[4]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id10">2</a>)</em> JME Molecular Editor</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td>Molecular structure input on the web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[6]</a></td><td>ISIS (Symyx) Draw/Accelrys Draw</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[7]</td><td><em>(<a class="fn-backref" href="#id9">1</a>, <a class="fn-backref" href="#id12">2</a>, <a class="fn-backref" href="#id17">3</a>)</em> CT file formats (MDL MOL file)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[8]</td><td><em>(<a class="fn-backref" href="#id11">1</a>, <a class="fn-backref" href="#id14">2</a>)</em> Basic primitives for molecular diagram sketching</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[9]</a></td><td>Macromedia Flash Support Center, Publishing and Exporting - Flash Methods</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[10]</a></td><td>Adobe Flash website</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[11]</a></td><td>Adobe Flash Platform - Embedding SWF content in HTML</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[12]</a></td><td>Embedding Adobe Flash Player content using SWFObject</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[13]</a></td><td>FlaME: Flash Molecular Editor, application examples</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[14]</a></td><td>MolDB5 homepage</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[15]</a></td><td>Creating a Web-based, Searchable Molecular Structure Database Using Free Software</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[16]</a></td><td>Functionality Pattern Matching as an Efficient Complementary Structure/Reaction Search Tool: an Open-Source Approach</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[17]</a></td><td>The checkmol/matchmol homepage</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[18]</a></td><td>IBM Internal Report 17th Nov 1957, <em>taken from</em> Daylight Theory: Fingerprints - Screening and Similarity</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id28">[19]</a></td><td>SMILES. 2. Algorithm for Generation of Unique SMILES Notation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[20]</a></td><td>MDL Chime</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[21]</a></td><td>The JSpecView Project: an Open Source Java viewer and converter for JCAMP-DX, and XML spectral data files</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id31">[22]</a></td><td>NIST Chemistry Webbook. NIST JCAMP-DX Viewer</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[23]</a></td><td>AJAX Animator</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Background</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#about-the-project">About the Project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#objectives-and-expectations">Objectives and expectations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">Results and discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-flame-molecular-editor-features-graphical-user-interface-and-layout">The FlaME Molecular Editor: features - graphical user interface and layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gui-buttons">GUI buttons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subjects-and-actions">Subjects and actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#molecular-structure-output">Molecular structure output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#flash-methods-javascript-getmol-and-setmol-functions">Flash Methods - JavaScript getMol() and setMol() functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#drawing-operations-and-template-structures">Drawing operations and template structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-of-a-special-key">Use of a special key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#features-which-are-not-yet-implemented">Features which are not yet implemented</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id15">Implementation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#development-environment">Development environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limitations">Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#flame-application-examples">FlaME application examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#embedding-swf-content-i-e-the-flame-application-in-html">Embedding SWF content (i.e., the FlaME application) in HTML</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#application-example-1-structure-search">Application example 1: Structure Search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#application-example-2-presentation-of-structure-collections-in-slide-show-mode">Application example 2: Presentation of structure collections in &#8220;slide show&#8221; mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#application-example-3-flame-editor-vs-depiction">Application example 3: FlaME editor vs. depiction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusions-and-outlook">Conclusions and Outlook</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#use-and-reference">Use and Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#availability-and-requirements">Availability and requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-5.html" title="Modular Chemical Descriptor Language (MCDL): Stereochemical modules"
+             >previous</a> |
+          <a href="1758-2946-3-7.html" title="Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-6.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

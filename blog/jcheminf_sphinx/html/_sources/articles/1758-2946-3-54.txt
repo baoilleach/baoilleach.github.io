@@ -1,0 +1,358 @@
+New developments on the cheminformatics open workflow environment CDK-Taverna
+=============================================================================
+
+Abstract
+********
+
+Background
+^^^^^^^^^^
+
+The computational processing and analysis of small molecules is at heart of cheminformatics and structural bioinformatics and their application in e.g. metabolomics or drug discovery. Pipelining or workflow tools allow for the Lego\ |nonascii_1|\ -like, graphical assembly of I/O modules and algorithms into a complex workflow which can be easily deployed, modified and tested without the hassle of implementing it into a monolithic application. The CDK-Taverna project aims at building a free open-source cheminformatics pipelining solution through combination of different open-source projects such as Taverna, the Chemistry Development Kit (CDK) or the Waikato Environment for Knowledge Analysis (WEKA). A first integrated version 1.0 of CDK-Taverna was recently released to the public.
+
+Results
+^^^^^^^
+
+The CDK-Taverna project was migrated to the most up-to-date versions of its foundational software libraries with a complete re-engineering of its worker's architecture (version 2.0). 64-bit computing and multi-core usage by paralleled threads are now supported to allow for fast in-memory processing and analysis of large sets of molecules. Earlier deficiencies like workarounds for iterative data reading are removed. The combinatorial chemistry related reaction enumeration features are considerably enhanced. Additional functionality for calculating a natural product likeness score for small molecules is implemented to identify possible drug candidates. Finally the data analysis capabilities are extended with new workers that provide access to the open-source WEKA library for clustering and machine learning as well as training and test set partitioning. The new features are outlined with usage scenarios.
+
+Conclusions
+^^^^^^^^^^^
+
+CDK-Taverna 2.0 as an open-source cheminformatics workflow solution matured to become a freely available and increasingly powerful tool for the biosciences. The combination of the new CDK-Taverna worker family with the already available workflows developed by a lively Taverna community and published on myexperiment.org enables molecular scientists to quickly calculate, process and analyse molecular data as typically found in e.g. today's systems biology scenarios.
+
+Background
+**********
+
+Current problems in the biosciences typically involve several domains of research. They require a scientist to work with different and diverse sets of data. The reconstruction of a metabolic network from sequencing data, for example, employs many of the data types found along the axis of the central dogma, including reconstruction of genome sequences, gene prediction, determination of encoded protein families, and from there to the substrates of enzymes, which then form the metabolic network. In order to work with such a processing pipeline, a scientist has to copy/paste and often transform the data between several bioinformatics web portals by hand. The manual approach involves repetitive tasks and cannot be considered effective or scalable.
+
+Especially the processing and analysis of small molecules comprises tasks like filtering, transformation, curation or migration of chemical data, information retrieval with substructures, reactions, or pharmacophores as well as the analysis of molecular data with statistics, clustering or machine learning to support chemical diversity requirements or to generate quantitative structure activity/property relationships (QSAR/QSPR models). These processing and analysis procedures itself are of increasing importance for research areas like metabolomics or drug discovery. The power and flexibility of the corresponding computational tools become essential success factors for the whole research process.
+
+The workflow paradigm addresses the above issues with the supply of sets of elementary workers (activities) that can be flexibly assembled in a graphical manner to allow complex procedures to be performed in an effective manner - without the need of specific code development or software programming skills. Scientific workflows allow the combination of a wide spectrum of algorithms and resources in a single workspace \ [#B1]_\ [#B2]_\ [#B3]_. Earlier problems with iterations over large data sets \ [#B4]_ are completely resolved in version 2.0 due to new implementations in Taverna. Taverna 2 allows control structures such as "while" loops or "if-then-else" constructs. Termination criteria for loops may now be evaluated by listening to a state port \ [#B5]_. In addition the user interface of the Taverna 2 workbench has clearly improved: The design and manipulation of workflows in a graphical workflow editor is now supported. Features like copy/paste and undo/redo simplify workflow creation and maintenance \ [#B6]_.
+
+The CDK-Taverna project aims at building a free open-source cheminformatics pipelining solution through combination of different open-source projects such as Taverna \ [#B7]_, the Chemistry Development Kit (CDK) \ [#B8]_\ [#B9]_, or the Waikato Environment for Knowledge Analysis (WEKA) \ [#B10]_. A first integrated version 1.0 of CDK-Taverna was recently released to the public \ [#B4]_. To extend usability and power of CDK-Taverna for different molecular research purposes the development of version 2.0 was motivated.
+
+Implementation
+^^^^^^^^^^^^^^
+
+The CDK-Taverna 2.0 plug-in makes use of the Taverna plug-in manager for its installation. The manager fetches all necessary information about the plug-in from a XML file which is located at `<http://www.ts-concepts.de/cdk-taverna2/plugin/>`_. The information provided therein contains the name of the plug-in, its version, the repository location and the required Taverna version. Upon submitting the URL to the plug-in manager it downloads all necessary dependencies automatically from the web. After a subsequent restart the plug-in is enabled and the workers are visible in the services. The plug-in uses Taverna version 2.2.1 \ [#B6]_, CDK version 1.3.8 \ [#B11]_ and WEKA version 3.6.4 \ [#B12]_. Like its predecessor it uses the Maven 2 build system \ [#B13]_ as well as the Taverna workbench for automated dependency management.
+
+CDK-Taverna 2.0 worker implementation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The CDK-Taverna 2.0 plug-in is designed to be easily extendible: The implementation allows to create new workers by simply inheriting from the single abstract class 
+
+\ |nonascii_2|\  
+
+\ |nonascii_3|\  
+
+\ |nonascii_4|\  
+
+\ |nonascii_5|\  
+
+\ |nonascii_6|\  
+
+Finally a new worker has to be registered to be available in the Taverna workbench. For this purpose Taverna offers the class 
+
+Besides the basic implementation it is possible to define a configuration panel for a worker which allows the specification of parameters. A configuration panel has to inherit from the abstract class 
+
+\ |nonascii_7|\  
+
+\ |nonascii_8|\  
+
+\ |nonascii_9|\  
+
+\ |nonascii_10|\  
+
+\ |nonascii_11|\  
+
+The configuration panel has to be registered in the `<http://cdk-taverna-2.ts-concepts.de/wiki/index.php?title=Main_Page>`_.
+
+Requirements
+^^^^^^^^^^^^
+
+CDK-Taverna 2.0 supports 64-bit computing by use with a Java 64-bit virtual machine. The CDK-Taverna 2.0 plug-in is written in Java and requires Java 6 or higher. The latest Java version is available at `<http://www.java.com/de/download/>`_. The CDK-Taverna 2.0 plug-in is developed and tested on Microsoft Windows 7 as well as Linux and Mac OS/X (32 and 64-bit).
+
+Results and Discussion
+**********************
+
+The CDK-Taverna 2.0 plug-in provides 192 workers for input and output (I/O) of various chemical file and line notation formats, substructure filtering, aromaticity detection, atom typing, reaction enumeration, molecular descriptor calculation and data analysis. Parallel computing with multi-core processors by use of multiple concurrent threads is flexibly implemented for many workers where operations scale nearly linear with the number of cores. Especially the machine learning and the molecular descriptor calculation workers benefit from parallel computation. An overview is given in Tables \ :ref:`1<table_1>` and \ :ref:`2<table_2>`. Many workers are described by example workflows available at `<http://cdk-taverna-2.ts-concepts.de/wiki/index.php?title=Main_Page>`_. Additionally, the workflows can be found at `<http://www.myexperiment.org/>`_.
+
+CDK-Taverna 1.0 was confined to 32-bit Java virtual machine and thus was restricted to in-memory processing of data volumes of at most 2 gigabyte in practice. Version 2.0 also supports 64-bit computing by use of a 64-bit Java virtual machine so that the processable data volume is only limited by hardware constraints (memory, speed): 64-bit in-memory workflows were successfully performed with data sets of about 1 million small molecules. Since the memory restrictions of version 1.0 were a main reason to use Pgchem::tigress as a molecular database backend \ [#B4]_ the corresponding version 1.0 workers were not migrated to the current version 2.0 yet.
+
+Advanced reaction enumeration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+CDK-Taverna 1.0 provided basic functions for combinatorial chemistry related reaction enumeration: They supported the use of two reactants, a single product and one generic group per reactant. The new enumeration options used by CDK-Taverna 2.0 offer major enhancements like multi-match detection, any number of reactants, products or generic groups as well as variable R-groups, ring sizes and atom definitions. The extended functionality was developed and applied in industrial cooperation projects. Advanced reaction enumeration features are illustrated in Figure \ :ref:`1<figure_1>`. The *Variable RGroup* feature allows the definition of chemical groups which can be flexibly attached to predefined atoms with syntax [A:B,B,B...-RC] where *A* is a freely selectable identifier, *B* are numbers from an *Atom-to-Atom-Mapping* defining the atoms to which the generic group can be attached and *C* is the chemical group identifier which can be any number. The *Atom Alias* feature offers the possibility to define a wild card for preconfigured elements. The syntax is [A:B,B,B...] where *A* is a freely selectable identifier and *B* are the string representations of the possible elements. The *Expandable Atom* feature enables the definition of freely sizeable rings or aliphatic chains with syntax [A:[]B] where *A* is a freely selectable identifier and *B* is the maximum number of atoms to insert. Figure \ :ref:`2<figure_2>` depicts a workflow for reaction enumeration. The capabilities of the advanced reaction enumerator implementation are summarized in Figure \ :ref:`3<figure_3>` which also demonstrates multi-match detection, i.e. multiple reaction centers within one molecule.
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-54-1.jpg
+   :align: center
+
+   Figure 1. Advanced reaction enumeration features: (left) The *Variable RGroup* feature allows the definition of chemical groups which can be flexibly attached to predefined atoms
+
+   **Variable RGroup Advanced reaction enumeration features: (left) The** . (middle) The Atom Alias feature offers the possibility to define a wild card for preconfigured elements. (right) The Expandable Atom feature enables the definition of freely sizeable rings or aliphatic chains.
+
+
+.. _figure_2:
+
+.. figure:: ../_static/1758-2946-3-54-2.jpg
+   :align: center
+
+   Figure 2. Workflow for reaction enumeration: After loading a generic reaction (
+
+   **Workflow for reaction enumeration: After loading a generic reaction (****, from a MDL RXN file) and two educt lists (****, from MDL SD files) the** **worker performs the enumeration with the results stored as MDL RXN files**. An additional PDF file is created which shows all enumerated reactions in a tabular manner. The results are stored in the output folder determined by the OUT input port.
+
+
+.. _figure_3:
+
+.. figure:: ../_static/1758-2946-3-54-3.jpg
+   :align: center
+
+   Figure 3. Capabilities of the advanced reaction enumerator: The sketched generic reaction contains three different generic groups labelled X, Y and Z
+
+   **Capabilities of the advanced reaction enumerator: The sketched generic reaction contains three different generic groups labelled X, Y and Z**. Group \ |nonascii_12|\  defines a *Variable RGroup* which can freely attach to all atoms of the ring. The *Atom Alias* group labelled Y is a wild card for the elements carbon, oxygen and nitrogen. The *Expandable Atom* group Z defines a variable ring size: The ring can be expanded by up to two additional carbon atoms. The enumerated products with the small letters *a* and *b* originate from *multi-match detection*.
+
+
+Evaluation of small molecules for natural product likeness
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In recent years, computer assisted drug design studies use natural product (NP) likeness as a criterion to screen compound libraries for potential drug candidates \ [#B14]_\ [#B15]_. The reason to estimate NP likeness during candidate screening is to facilitate the selection of those compounds that mimic structural features that are naturally evolved to best interact with biological targets.
+
+Version 2.0 of CDK-Taverna provides two groups of workers that re-implement the work of *Ertl et al* to score small molecules for NP-likeness \ [#B14]_. The workers in the Molecule Curation folder are dedicated to the pre-processing of chemical structures: The Molecule Connectivity Checker worker removes counter ions and disconnects fragments, the Remove Sugar Groups worker removes all sugar rings and linear sugars from structures and the Curate Strange Elements worker discards structures that are composed of elements other than non-metals. This set of curation workers finally creates scaffolds olds and sub structures. From these structures atom signatures \ [#B16]_ are generated using the Generate Atom Signatures worker and exploited as structural descriptors in charting the compound's region in the chemical structure space. The combined workflow of curation and atom signature generation workers is illustrated in Figure \ :ref:`4<figure_4>`. Using this workflow, atom signatures can be generated for user-defined training (Natural products and synthetics) and testing (compound libraries) structural dataset. Workers of the Signature Scoring folder use atom signatures generated from compound libraries and rank them for NP-likeness based on the statistics suggested by *Ertl et al* \ [#B14]_. This scoring workflow is illustrated in Figure \ :ref:`5<figure_5>`. The whole package of workflows is available for free download at `<http://www.myexperiment.org/users/10069/packs>`_. The curation and signature scoring workers may not only be applied in evaluating the NP-likeness of compound libraries but also in evaluating the metabolite-likeness of theoretical metabolites for predicting whole metabolomes. The latter application was the original purpose for the worker development and corresponding results will be presented in a subsequent publication.
+
+.. _figure_4:
+
+.. figure:: ../_static/1758-2946-3-54-4.jpg
+   :align: center
+
+   Figure 4. Molecule curation and atom signature descriptor generation workflow: The 
+
+   **Molecule curation and atom signature descriptor generation workflow: The** **takes the Structure-Data File (SDF) of compounds (****) as input and pass the structures down the workflow for molecule curation and atom signature generation**. The number of structures to be read, and pumped down the workflow can be configured (`<http://www.myexperiment.org/workflows/2120.html>`_.
+
+
+.. _figure_5:
+
+.. figure:: ../_static/1758-2946-3-54-5.jpg
+   :align: center
+
+   Figure 5. NP-likeness scoring workflow: This workflow take inputs of atom signatures file generated from the user defined natural products library (
+
+   **NP-likeness scoring workflow: This workflow take inputs of atom signatures file generated from the user defined natural products library (****) as well as synthetics (****) and compound libraries (****) and score the compound libraries (****) for NP-likeness**. The higher the score the more is the NP-likeness of a molecule. The `<http://www.myexperiment.org/workflows/2121.html>`_.
+
+
+Clustering and machine learning applications
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Unsupervised clustering tries to partition input data into a number of groups smaller than the number of data whereas supervised machine learning tries to construct model functions that map the input data onto their corresponding output data. If the output codes continuous quantities a regression task is defined. Alternatively the output may code classes so that a classification task is addressed. Molecular data sets for clustering consist of input vectors where each vector represents a molecular entity and consists of a set of molecular descriptors itself. Molecular data sets for machine learning add to each input vector a corresponding output vector with features to be learned - thus they consist of I/O pairs of input and output vectors.
+
+The clustering and machine learning workers of CDK-Taverna 2.0 allow the use of distinct WEKA functionality. As far as clustering is concerned the ART-2a worker of version 1.0 is supplemented with five additional WEKA-based workers which offer
+
+\ |nonascii_13|\  \ [#B17]_.
+
+\ |nonascii_14|\  \ [#B18]_.
+
+\ |nonascii_15|\  \ [#B19]_.
+
+\ |nonascii_16|\  \ [#B20]_.
+
+\ |nonascii_17|\  \ [#B21]_.
+
+Machine learning workers support the significance analysis of single components (i.e. features) of an input vector to obtain smaller inputs with a reduced set of components/features, the partitioning of machine learning data into training and test sets, the construction of input/output mapping model functions and model based predictions as well as result visualization. There is a total of six WEKA-based machine learning methods available: Two workers allow regression as well as classification procedures...
+
+\ |nonascii_18|\  \ [#B22]_.
+
+\ |nonascii_19|\  \ [#B23]_.
+
+... two workers do only support regression...
+
+\ |nonascii_20|\  
+
+\ |nonascii_21|\  \ [#B24]_\ [#B25]_.
+
+... and two workers are restricted to classification tasks:
+
+\ |nonascii_22|\  \ [#B26]_.
+
+\ |nonascii_23|\  \ [#B27]_.
+
+For selection of an optimum reduced set of input vector components there are two workers available. The \ :ref:`6<figure_6>` illustrates the procedure. The \ [#B28]_. In each iteration the single component is discarded that has the smallest in influence on the RMSE - up to a last "most significant" component. Figure \ :ref:`7<figure_7>` shows a result of a "leave-one-out" analysis and Figure \ :ref:`8<figure_8>` depicts the related workflow.
+
+.. _figure_6:
+
+.. figure:: ../_static/1758-2946-3-54-6.jpg
+   :align: center
+
+   Figure 6. Genetic algorithm for selection of an optimum reduced set of input vector components: The algorithm starts with a random population in which each chromosome consists of a random distribution of enabled/disabled (on/off) input vector components denoted *A*\ :sub:`1`\  to \ :sub:`n`\  A(where the number of components with "on" status remains fixed during evolution)
+
+   **A\ :sub:`1`\  to \ :sub:`n`\  AGenetic algorithm for selection of an optimum reduced set of input vector components: The algorithm starts with a random population in which each chromosome consists of a random distribution of enabled/disabled (on/off) input vector components denoted** . This distribution is changed by mutation and cross-over. The fitness of each chromosome is evaluated by the inverse square RMSE. The selection process for each generation is performed by Roulette wheel selection where chromosomes are inherited with probabilities that correspond to their particular fitness.
+
+
+.. _figure_7:
+
+.. figure:: ../_static/1758-2946-3-54-7.jpg
+   :align: center
+
+   Figure 7. "Leave-One-Out" analysis to estimate the significance of input vector components: The root mean square error (RMSE) rises with an increasing number of discarded components (i.e. a decreasing number of input vector components used for the machine filearning procedure)
+
+   **"Leave-One-Out" analysis to estimate the significance of input vector components: The root mean square error (RMSE) rises with an increasing number of discarded components (i.e. a decreasing number of input vector components used for the machine filearning procedure)**. The relative RMSE shift from step to step may be correlated with the significance of the discarded component. In this case it is shown that the first fifty components do only have a negligible in influence on the machine learning result and thus may be excluded from further analysis.
+
+
+.. _figure_8:
+
+.. figure:: ../_static/1758-2946-3-54-8.jpg
+   :align: center
+
+   Figure 8. Workflow for "Leave-One-Out" analysis: First a regression dataset is generated from a CSV file with UUID and molecular descriptor input data for each molecule (
+
+   **Workflow for "Leave-One-Out" analysis: First a regression dataset is generated from a CSV file with UUID and molecular descriptor input data for each molecule (****) and a CSV file containing the UUID of the molecule and the corresponding output (regression) value (****)**. Then the 
+
+
+For training and test set partitioning the \ [#B28]_:
+
+\ |nonascii_24|\  
+
+\ |nonascii_25|\  
+
+\ |nonascii_26|\  
+
+Figure \ :ref:`9<figure_9>` shows a workflow using the \ :ref:`10<figure_10>`. Classification workers may be used in an equivalent manner. Figure \ :ref:`11<figure_11>` depicts diagrams and output of a QSPR analysis to predict HPLC retention times for small molecules: The experimental dataset consists of 183 I/O pairs with a set of molecular descriptors for each small molecule as an input and the corresponding retention time as an output. The molecular descriptors were calculated with the 
+
+.. _figure_9:
+
+.. figure:: ../_static/1758-2946-3-54-9.jpg
+   :align: center
+
+   Figure 9. Partitioning into training and test set: A regression dataset is split into a training and a test set which is performed by the 
+
+   **Partitioning into training and test set: A regression dataset is split into a training and a test set which is performed by the** 
+
+
+.. _figure_10:
+
+.. figure:: ../_static/1758-2946-3-54-10.jpg
+   :align: center
+
+   Figure 10. Configuration panel for the 
+
+   **Configuration panel for the Weka Regression worker: The configuration for a three-layer perceptron neural networks is selected**. Each machine learning method consists of a parameter panel for individual configuration.
+
+
+.. _figure_11:
+
+.. figure:: ../_static/1758-2946-3-54-11.jpg
+   :align: center
+
+   Figure 11. Diagrams for machine learning results
+
+   **Diagrams for machine learning results:** (upper left) Scatter plot with experimental versus predicted output values. (upper right) Residuals plot with differences between the predicted and experimental output values. (lower left) Experimental output data are plotted over corresponding sorted predicted output data. (lower right) Characteristic quantities of the predicted model.
+
+
+CDK-Taverna 2.0 Wiki
+^^^^^^^^^^^^^^^^^^^^
+
+Based on the free MediaWiki framework a Wiki was developed for the CDK-Taverna 2.0 project \ [#B29]_. The web page provides general information about the project, documentation about available workers/workflows and on how to create them as well as about installation procedures. The Wiki can be found at `<http://cdk-taverna-2.ts-concepts.de/wiki/index.php?title=Main_Page>`_.
+
+Conclusions
+***********
+
+CDK-Taverna 2.0 provides an enhanced and matured free open cheminformatics workflow solution for the biosciences. It was successfully applied and tested in academic and industrial environments with data volumes of hundreds of thousands of small molecules. Combined with available workers and workflows from bioinformatics, image analysis or statistics CDK-Taverna supports the construction of complex systems biology oriented workflows for processing diverse sets of biological data.
+
+Competing interests
+*******************
+
+The authors declare that they have no competing interests.
+
+Authors' contributions
+**********************
+
+EW initiated the integration of Taverna and CDK and supported deployment and architecture. CS and AZ conceived the project and lead the further development. SN supported the reaction enumeration enhancements. KV provided workers for molecular fragmentation. AT did the majority of CDK-Taverna re-engineering and enhancements and developed the project to its current state. All co-authors contributed to the manuscript. All authors read and approved the final manuscript.
+
+Acknowledgements
+****************
+
+The authors express their gratitude to the teams and communities of Taverna, CDK and WEKA for creating and developing these open tools.
+
+.. [#B1]  Cheminformatics analysis and learning in a data pipelining environment
+
+.. [#B2]  Scientific workflows as productivity tools for drug discovery
+
+.. [#B3]  Taverna/my Grid: Aligning a Workflow System with the Life Sciences Community
+
+.. [#B4]  CDK-Taverna: an open workflow environment for cheminformatics
+
+.. [#B5]  Taverna, Reloaded
+
+.. [#B6]  Taverna 2
+
+.. [#B7]  Taverna: a tool for the composition and enactment of bioinformatics workflows
+
+.. [#B8]  The Chemistry Development Kit (CDK): An open-source Java library for chemo- and bioinformatics
+
+.. [#B9]  Recent Developments of The Chemistry Development Kit (CDK) - An Open-Source Java Library for Chemo- and Bioinformatics
+
+.. [#B10]  The WEKA Data Mining Software: An Update
+
+.. [#B11]  The Chemistry Development Kit(CDK)
+
+.. [#B12]  Waikato Environment for Knowledge Analysis (WEKA)
+
+.. [#B13]  Apache Maven
+
+.. [#B14]  Natural Product-likeness Score and Its Application for Prioritization of Compound Libraries
+
+.. [#B15]  Metabolite-likeness as a criterion in the design and selection of pharmaceutical drug libraries
+
+.. [#B16]  The Signature Molecular Descriptor. 4. Canonizing Molecules Using Extended Valence Sequences
+
+.. [#B17]  Maximum likelihood from incomplete data via the EM algorithm
+
+.. [#B18]  A best possible heuristic for the k-center problem
+
+.. [#B19]  WEKA API Documentation
+
+.. [#B20]  Some methods for classification and analysis of multivariate observations
+
+.. [#B21]  X-means: Extending K-means with an efficient Estimation of the Number of Clusters
+
+.. [#B22]  NOTITLE!
+
+.. [#B23]  LIBSVM: a library for support vector machines
+
+.. [#B24]  Learning with continuous classes
+
+.. [#B25]  Induction of model trees for predicting continuous classes
+
+.. [#B26]  Estimating continuous distributions in Bayesian classifiers
+
+.. [#B27]  NOTITLE!
+
+.. [#B28]  NOTITLE!
+
+.. [#B29]  MediaWiki
+
+.. |nonascii_1| unicode:: 0x2122
+.. |nonascii_2| unicode:: 0x2022
+.. |nonascii_3| unicode:: 0x2022
+.. |nonascii_4| unicode:: 0x2022
+.. |nonascii_5| unicode:: 0x2022
+.. |nonascii_6| unicode:: 0x2022
+.. |nonascii_7| unicode:: 0x2022
+.. |nonascii_8| unicode:: 0x2022
+.. |nonascii_9| unicode:: 0x2022
+.. |nonascii_10| unicode:: 0x2022
+.. |nonascii_11| unicode:: 0x2022
+.. |nonascii_12| unicode:: 0xd7
+.. |nonascii_13| unicode:: 0x2022
+.. |nonascii_14| unicode:: 0x2022
+.. |nonascii_15| unicode:: 0x2022
+.. |nonascii_16| unicode:: 0x2022
+.. |nonascii_17| unicode:: 0x2022
+.. |nonascii_18| unicode:: 0x2022
+.. |nonascii_19| unicode:: 0x2022
+.. |nonascii_20| unicode:: 0x2022
+.. |nonascii_21| unicode:: 0x2022
+.. |nonascii_22| unicode:: 0x2022
+.. |nonascii_23| unicode:: 0x2022
+.. |nonascii_24| unicode:: 0x2022
+.. |nonascii_25| unicode:: 0x2022
+.. |nonascii_26| unicode:: 0x2022

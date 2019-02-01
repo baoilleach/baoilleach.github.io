@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Adventures in public data &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Three stories about the conduct of science: Past, future, and present" href="1758-2946-3-35.html" />
+    <link rel="prev" title="Open Babel: An open chemical toolbox" href="1758-2946-3-33.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-33.html" title="Open Babel: An open chemical toolbox"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-35.html" title="Three stories about the conduct of science: Past, future, and present"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="adventures-in-public-data">
+<h1>Adventures in public data<a class="headerlink" href="#adventures-in-public-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>This article contains the slides and transcript of a talk given by Dan Zaharevitz at the &#8220;Visions of a Semantic Molecular Future&#8221; symposium held at the University of Cambridge Department of Chemistry on 2011-01-19. A recording of the talk is available on the University Computing Service&#8217;s Streaming Media Service archive at <a class="reference external" href="http://sms.cam.ac.uk/media/1095515">http://sms.cam.ac.uk/media/1095515</a> (unfortunately the first part of the recording was corrupted, so the talk appears to begin at slide 6, &#8216;At a critical time&#8217;). We believe that Dan&#8217;s message comes over extremely well in the textual transcript and that it would be poorer for serious editing. In addition we have added some explanations and references of some of the concepts in the slides and text. (Charlotte Bolton; Peter Murray-Rust, University of Cambridge)</p>
+<div class="section" id="editorial-preface">
+<h3>Editorial preface<a class="headerlink" href="#editorial-preface" title="Permalink to this headline">¶</a></h3>
+<p>The following paper is part of a series of publications which arose from a Symposium held at the Unilever Centre for Molecular Informatics at the University of Cambridge to celebrate the lifetime achievements of Peter Murray-Rust. One of the motives of Peter&#8217;s work was and is a better transport and preservation of data and information in scientific publications. In both respects the following publication is relevant: it is about public data and their representation, and the publication represents a non-standard experiment of transporting the content of the scientific presentation. As you will see, it consists of the original slides used by Dan Zaharevitz in his talk &#8220;Adventures in Public Data&#8221; at the Unilever Centre together with a diligent transcript of his speech. The transcribers have gone through great effort to preserve the original spirit of the talk by preserving colloquial language as it is used at such occasions. For reasons known to us, the original speaker was unable to submit the manuscript in a more conventional form. We, the Editors, have discussed in depth whether such a format is suitable for a scientific journal. We have eventually decided to publish this &#8220;as is&#8221;. We did this mostly because it was Peter&#8217;s wish that this talk was published in this form and because we agreed with his notion that this format transmits the message just as well as a formal article as defined by our instructions for authors. We, the Editors, wish to make clear however that this is an exception that we made because we would like to preserve the temporal unity and message of this set of publications. Insisting on a formal publication would have meant losing this historical account as part of the thematic series of papers or disrupting the series. We hope that this will find the consent of our readership.</p>
+</div>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>(Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>) This article contains the slides and transcript of a talk given by Dan Zaharevitz at the &#8220;Visions of a Semantic Molecular Future&#8221; symposium held at the University of Cambridge Department of Chemistry on 2011-01-19. A recording of the talk is available on the University Computing Service&#8217;s Streaming Media Service archive at <a class="reference external" href="http://sms.cam.ac.uk/media/1095515">http://sms.cam.ac.uk/media/1095515</a> (Endnote 1). We believe that Dan&#8217;s message comes over extremely well in the textual transcript and that it would be poorer for serious editing. In addition we have added some explanations and references of some of the concepts in the slides and text. (Charlotte Bolton; Peter Murray-Rust, University of Cambridge)</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-34-1.jpg" src="../_images/1758-2946-3-34-1.jpg" />
+<p class="caption">Figure 1. Introduction</p>
+<div class="legend">
+<strong>Introduction</strong>.</div>
+</div>
+</div>
+<div class="section" id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this headline">¶</a></h2>
+<p>(Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>) The history of the DTP (Developmental Therapeutics Program) starts in 1955 with a US Congress specific appropriation to create a national chemotherapy service centre (Endnote 2). The rationale for this was that at the time there was no interest in attempting to develop anti-cancer drugs within the pharma industry. It was thought not possible to alter the course of the disease. Compounds were screened for anti-cancer activity. The primary screen was transplantable mouse models. Over the course of &gt;50 years that the NCI has been acquiring compounds (Endnote 3), we have registered more than 550,000 compounds. Roughly half of these (280,000) were acquired without confidentiality agreement so that data can be publicly made available.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-34-2.jpg" src="../_images/1758-2946-3-34-2.jpg" />
+<p class="caption">Figure 2. DTP History</p>
+<div class="legend">
+<strong>DTP History</strong>.</div>
+</div>
+<p>(Figures <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> and <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>) What are the sources of data? This is all on the DTP webpage. For the majority of the history, the primary screens were L1210 and P388 mouse leukemias. Some 300,000-400,000 compounds were run through these models. The screens required significant amounts of the compound. We looked at preliminary toxicology, which involved lots of animals and lots of doses, so we needed them to get lots of compound-a gram or two. This has present day implications-if a compound was dropped early (e.g. not enough activity, too much toxicity), a large amount of the compound was left in our inventory. And this material is now publicly available.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-34-3.jpg" src="../_images/1758-2946-3-34-3.jpg" />
+<p class="caption">Figure 3. Assays run</p>
+<div class="legend">
+<strong>Assays run</strong>.</div>
+</div>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-34-4.jpg" src="../_images/1758-2946-3-34-4.jpg" />
+<p class="caption">Figure 4. Assays run (continued)</p>
+<div class="legend">
+<strong>Assays run (continued)</strong>.</div>
+</div>
+<p>In the 1980s it was publicly recognised that the mouse models were not general enough to pick up solid tumor agents that people were interested in. So we developed the human tumor cell-line inhibition screen, known as NCI-60. We&#8217;ve run roughly 100,000 compounds in last 20 years, and this screen is still active. There were a number of secondary screens dating from the mid90s to the present: hollow fibre model, where tumor cells are implanted in a semi-permeable fibre which is implanted in the mouse. Multiple fibres can be implanted in one mouse so it&#8217;s possible to test multiple cell-lines per mouse. This gives us a hint of in vivo activity in an efficient and cost-effective assay. We also use human tumor xenografts in nude mouse: 1500-2000 screens in the last few years.</p>
+<p>Because of the NCI infrastructure for acquiring and testing interesting compounds, with the sources of compounds and the data, and having the infrastructure already set up to test large scale compounds and assays when the AIDS epidemic hit, the screening for anti-HIV compounds ended up in DTP. In roughly 10 years 1990-2000, DTP assayed roughly 100,000 compounds in AIDS antiviral screens, looking for survival of cells in the presence of the virus.</p>
+<p>There was also an attempt to create a yeast anti-cancer screen. This took yeast with known mutations, generally in the DNA repair pathway, and treated them with drugs, looking for toxicity for defined mutations. Specificity for a particular mutation gives mechanistic information.</p>
+<p>Lastly, with the NCI-60 cell-lines, there has been an effort to characterise all the cells in these panels in wide variety of ways. This effort is ongoing. We now have 8-10 separate measures using microarrays of gene expression, so there is lots of this available for NCI-60. It&#8217;s very useful to correlate with growth inhibition patterns.</p>
+<p>(Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>) So all of this created a large amount of data available to the public. Before 1995 the policy was to avoid data release if possible. The thinking behind this was several-fold. It created a lot of extra work. What data format do you use? The representation was not well settled, so it&#8217;s problematic, even if you had a reasonable electronic representation, how was best to transport it to others? There are physical (tapes) and format considerations. It&#8217;s very difficult to conceive of a way for widespread distribution of data without an awful lot of hands-on work. And the extra work doesn&#8217;t help you to accomplish your &#8216;real job&#8217;. The extra work doesn&#8217;t get compounds into the clinic, or give you further information about how to do your job. It just sucks up time and resources.</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-34-5.jpg" src="../_images/1758-2946-3-34-5.jpg" />
+<p class="caption">Figure 5. Data Release Policies (pre 1995)</p>
+<div class="legend">
+<strong>Data Release Policies (pre 1995)</strong>.</div>
+</div>
+<p>And it&#8217;s of limited value anyway. The data was generated to make specific decisions, which are already made. It&#8217;s a production environment, you can&#8217;t easily examine alternate decisions. People from outside might ask-why didn&#8217;t you do this? That&#8217;s not wrong but in the production environment you have to make decisions and move on. The next couple of thousand compounds are on the way, you must move forward. Why look at data just to rehash a decision that couldn&#8217;t be re-examined anyway?</p>
+<p>(Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>) In the mid 1990s there were dramatic changes. These were driven by the development of the internet-now distribution is not an issue. You can quite easily distribute data to hundreds of thousands of people all over world with virtually no effort. The formats for chemical structure were more developed, more useful, embedded in software. It was easier to give people documentation. HTML made it much easier to give people a way to collect data with clear and accessible documentation for that data: what it is, how to use it etc. You could spend less time on the phone having to explain all this!</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-34-6.jpg" src="../_images/1758-2946-3-34-6.jpg" />
+<p class="caption">Figure 6. Things Change</p>
+<div class="legend">
+<strong>Things Change</strong>.</div>
+</div>
+<p>Ken Paull (Endnote 4), former chief of the IT branch, developed COMPARE, which was looking at the NCI-60 cell-line data, not as individual assay results, is one cell-line sensitive another not, but at the overall pattern of activity. If the correlation was high between two compounds, it&#8217;s likely to mean that the compounds shared the mechanism of action. It was a powerful tool to take a gross empirical assay to give a biochemical idea of what&#8217;s going on. Using assay results as a pattern, to give an overall finger print of activity is a very powerful tool compared to looking at these things one at a time.</p>
+<p>(Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>) And so the very detailed review came about. It was a year-long review-forty people-it was massive. And for the purposes here to talk about it I demonstrated searching and displaying structures and data on the DTP web pages and showed that you can also run COMPARE via your web interface. One of the big guns chased me out of the room where the presentation was given, was totally excited, he could see that you could sit in your living room or you could sit in your office and you could explore all kinds of ideas by just logging on to a web page, and in 1997 that wasn&#8217;t exactly the most widespread notion in the world.</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-34-7.jpg" src="../_images/1758-2946-3-34-7.jpg" />
+<p class="caption">Figure 7. At a critical time</p>
+<div class="legend">
+<strong>At a critical time</strong>.</div>
+</div>
+<p>I also presented web stats for how many pages were accessed. The number of hits weren&#8217;t that impressive by today&#8217;s standards but again you&#8217;re talking with people that were used to thinking of contacts as phone, reprint requests, fax requests, something like that and it was clear that your ability to respond to requests for outside information via a website was just enormous compared to the things you could think about in the 1980s. I also point out my boss at the time made the specific challenge to some of the people, the reviewers in the room, talking about the worth of the developmental therapeutics programme and asked them, you know, big drug company guys &#8216;Can you point me to your web page where I can download your data?&#8217;, and so it drives home the point that there was a difference.</p>
+<p>(Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a>) Lessons learned. I&#8217;m gonna call these lessons learned. You might say exaggerated extrapolations from limited knowledge but this is the thing that I take home from it. So if you think narrowly about your job, don&#8217;t be surprised when the broader community thinks narrowly about what your job is worth. On the other hand if you think broadly about what your job is, it can lead to not only better tools for your specific job, you can be better at what you think you need to do but you also end up having better integration into the larger community. And a point that will come back to you time and time again is, infrastructure development is critical to enable the ability to take advantage of this broad thinking. All the good intentions in the world in the mid nineties would not have enabled us to do some of these things without the infrastructure of the internet.</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-34-8.jpg" src="../_images/1758-2946-3-34-8.jpg" />
+<p class="caption">Figure 8. Lessons Learned: I</p>
+<div class="legend">
+<strong>Lessons Learned: I</strong>.</div>
+</div>
+<p>(Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a>) So I go now into some details of the chemical structures we collected (Endnote 5). You can download an SDF file from us and say great I&#8217;ll take my structures and go on. Here is all the stuff I have to deal with to get it to an SDF file. So in 1955 collecting chemical structures meant sort of ink drawings on 3 × 5 cards; that&#8217;s the beginnings of our compound collection. In the 1970s there was this SANSS (Structure and nomenclature search system) which essentially was a connection table format. It gave you the atoms and which atoms were connected and what the bond order was but it had no coordinate information, no display information. This I think was partly due to CAS. There was also the EPA NIH chemical information system that was coming about here. For about twenty years starting about 1980 we had what we called the drug information system. The connection tables were stored in CAS but you also had a picture. The picture was stored in the database as HP plotter pen movement commands, so you can get a picture, you can get a connection table but you couldn&#8217;t put them together at least in any useful way.</p>
+<div class="figure align-center" id="figure-9">
+<img alt="../_images/1758-2946-3-34-9.jpg" src="../_images/1758-2946-3-34-9.jpg" />
+<p class="caption">Figure 9. Data Details Chemical structures</p>
+<div class="legend">
+<strong>Data Details Chemical structures</strong>.</div>
+</div>
+<p>From about 2000 to present we went to a fully integrated relational database, did all those conversions and right now we have an online submission where we only accept the structures at the moment in an MDL molfile format. At least from the beginning we have a computer representation that comes in. I should point out the entire time up to the institution of this online request system, the procedure for asking us to test a compound was the supplier would send in a picture, would send in a piece of paper, a graphic so we did not have an electronic interaction between the requester and our systems; it was all us doing transfers from some kind of picture.</p>
+<p>(Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>) Considerations on what to do; how to get this into something we can make public. There were many, many format inter conversions throughout the fifty years this was going on. One thing to note, and I think it&#8217;s again important, when you see it&#8217;s easy to say here&#8217;s a chemical structure, all chemical structures are alike, they all came from somewhere. If you don&#8217;t understand where they came from you&#8217;re not necessarily gonna understand what the strengths and weaknesses of various sets are. The first computer representation of the SANSS was explicitly for sub-structure searching. In some cases, for example polymers, there was no attempt to have the connection table represent a full molecule. The idea was you don&#8217;t need to all that information if you&#8217;re not gonna model; it was not for modelling, it was not for computing properties, it was for doing sub-structure searching. If you take a polymer, if you had say a dimer: most of the kind of substructure elements that you might search for are probably gonna be represented in the dimer. You can argue trimer or what not, but you don&#8217;t need the whole thing because you&#8217;re not gonna have a sub-structure that says search for a linear chain of 200 atoms or something like that. Most sub-structure searches are more limited so you don&#8217;t need to bother to put the whole molecule in. So what you end up doing now is having perfectly wonderful SANSS files, that look perfectly complete, that in fact never ever had any intention of representing what that molecule was or what that substance was in a vial.</p>
+<div class="figure align-center" id="figure-10">
+<img alt="../_images/1758-2946-3-34-10.jpg" src="../_images/1758-2946-3-34-10.jpg" />
+<p class="caption">Figure 10. Structure Considerations</p>
+<div class="legend">
+<strong>Structure Considerations</strong>.</div>
+</div>
+<p>The display representations also had a fair amount of what you&#8217;d call non-structural features and the one that drives me up the wall today is a structure that comes out as a perfectly legal molfile which has one dummy atom with a label &#8220;no structure available&#8221;. You know, I mean, enough said about that, it still drives me up the wall... But you also have labels so there is a dummy atom that has a label that actually has something that you might want to capture. So, composition of the two parts of the substance: label it as a racemic mixture, label it as something else so maybe you don&#8217;t wanna completely just delete it,&#8217; but at the same time it&#8217;s a pollution of the structure with other information in a format that&#8217;s hard to disentangle.</p>
+<p>(Figure <a class="reference internal" href="1758-2946-3-45.html#figure-11"><em>11</em></a>) Structure release. The first one we put on the NIH page, not a page, just for anonymous FTP. I think it&#8217;s generally called the NCI 127 k. They were open structures for which there was a CAS number. We figured the other thing to realise is that a lot of people say &#8216;can you give us the chemical names of all these structures?&#8217; The vast majority of these structures were not published on, or at least we don&#8217;t know that they were published on: no one ever bothered to name it, there&#8217;s certainly not a trivial name. And so for a lot of the structures the only identifier we had was the NSC number and of course back in 1994 nobody knew what an NSC number was except for a handful of people interacting with NCI. We didn&#8217;t think that was very useful so we sub selected a set where we also had the CAS numbers. Historical aside: CAS was our input contractor for about 6 or 8 years about 1975-1983 or something, so they automatically assigned a CAS number for everything that came in. And so there were CAS numbers: you figured you might be able to search on that and so that&#8217;s where this group came from. Where we got the coordinates-it was actually the SANSS connection tables, they were converted to a SD format and the programme CORINA <a class="footnote-reference" href="#b1" id="id2">[1]</a> from Johann Gasteiger was used to generate 3D coordinates, so that was the first stage of the release.</p>
+<div class="figure align-center" id="figure-11">
+<img alt="../_images/1758-2946-3-34-11.jpg" src="../_images/1758-2946-3-34-11.jpg" />
+<p class="caption">Figure 11. Structure release</p>
+<div class="legend">
+<strong>Structure release</strong>.</div>
+</div>
+<p>We had our major conversion, a program called Kekule <a class="footnote-reference" href="#b2" id="id3">[2]</a> to look at graphics and try and to chemical structure. The internal system was finished in 2000 and so now when we pull from our company database we are actually pulling MDL format files; so at least it&#8217;s a format that tries to recognise chemicals structure. Right now we have releases about once a year; we&#8217;re hoping that in the next year we&#8217;ll go to a little bit more often than that. The latest release was a few weeks ago and 265 almost 266 thousand structures. The other thing I&#8217;ll make a point about is, we&#8217;ve been releasing these sets for a long, long time. A lot of people have pulled them up and we have PubChem <a class="footnote-reference" href="#b3" id="id4">[3]</a> now. A lot of people, their deposition in the PubChem was basically from a file that they pulled from us that&#8217;s not documented, and that&#8217;s fine, it&#8217;s legal but there are certainly inconsistencies and differences in all kind of things in this data. If you go to PubChem and say &#8216;what&#8217;s the structure of &#8220;something-or-other-amycin&#8221;?&#8217;, and you could look it up and maybe you find ten versions in PubChem. Ten depositions for a compound with that name and maybe you say seven of them have the same actual chemical structure but there&#8217;s these others that are different. Well I can believe that if seven people think it&#8217;s this and only two people think it&#8217;s that, it&#8217;s probably the seven people that are correct. But it might be that those seven versions have a mistake in them that are propagated because all of them go back to downloading our structures. So it&#8217;s just a heads up that without the background, without the metadata about where these structures came from, you can potentially get into problems or you can potentially be misled.</p>
+<p>(Figure <a class="reference internal" href="1758-2946-3-45.html#figure-12"><em>12</em></a>) So lessons learned number two. It&#8217;s one of my pet peeves-a fixed set of fields are a disaster. People are gonna find a place for the information that they need to store no matter what, and if you fixed your set of fields to some gigantic number (&#8216;I&#8217;m gonna think of everything possibly people are gonna store&#8217;), there&#8217;s always gonna be something you forgot and there&#8217;s always gonna be a huge number of fields in that case that are never used. So what&#8217;s the problem? Just stick them in as a field that&#8217;s never used...but now all your careful documentation of what that field is for is polluted because people don&#8217;t use it like that! Information will be appended to the expected information in existing fields, so again you have your case when you are plopping some kind of composition data, some kind of stereochemical data into a label on a dummy atom in a structure picture. If that&#8217;s the place where you can put it, people put it there and you&#8217;re not gonna stop them. Use XML!</p>
+<div class="figure align-center" id="figure-12">
+<img alt="../_images/1758-2946-3-34-12.jpg" src="../_images/1758-2946-3-34-12.jpg" />
+<p class="caption">Figure 12. Lessons Learned: II</p>
+<div class="legend">
+<strong>Lessons Learned: II</strong>.</div>
+</div>
+<p>So we go back to, where did I first meet Peter Murray-Rust and why am I so high on XML? It&#8217;s all because of Peter. I think the first time I interacted with Peter was in 1995, maybe one of the earlier attempts at an internet chemistry poster session, having a chemistry meeting over the internet and I put in a presentation about 3D database searching. And Peter started asking questions basically along the lines of &#8216;can we get to the point where we don&#8217;t have to do the experiments?&#8217; Well gee, if you don&#8217;t have all the stereochemical information, this and that, and I said &#8216;well I don&#8217;t think that&#8217;s a real goal&#8217; and I&#8217;m thinking to myself &#8216;good God man be reasonable&#8217;. Of course in the last fifteen years, that&#8217;s simply not a thing you say to Peter! I mean he&#8217;s never gonna be reasonable although he does it in a way that always pushes us. Thinking about this-I&#8217;m not sure 100% comes through in this talk-that a lot of this stuff really is Peter&#8217;s influence, making sure we are driven in directions that are gonna be useful.</p>
+<p>Internal database keys should be internal. When you start to make your internal keys meaningful in the external world you lose your flexibility and maintaining really good internal consistency-you should make that primary. The compound structure is an empirical result; it is not an identifier and again I don&#8217;t know whether PubChem got the terminology right but their distinction between a compound and the substance I think is extraordinarily important when you talk about chemical structure data and bioassay data-I&#8217;ll give an example of that</p>
+<p>The other thing I&#8217;ve learned is identifier equivalencies. So you have a CAS number, you have a NSC number, you have this, you have a name, you have all kinds of stuff. Identifier equivalencies are pivotal too: there are claims people made-NSC27 is the same as CAS number blah blah blah. We can use those labels interchangeably-that&#8217;s a claim, and again various people make various claims and sometimes the claim is wrong and sometimes the claim is misleading. So if you don&#8217;t understand and can&#8217;t manage where those claims come from and have access to them you&#8217;re gonna eventually run into problems. I have an aside:</p>
+<p>(Figure <a class="reference internal" href="1758-2946-3-39.html#figure-13"><em>13</em></a>) Think about the difference of writing in a laboratory notebook &#8216;50 milligrams of methotrexate&#8217; or &#8216;50 milligrams of a powder from vial number 123&#8217;. To give a concrete example, there&#8217;s a paper published in Science about MDMA (3,4-Methylenedioxymethamphetamine, ecstasy). They retracted the paper after they found out the bottle they had used that was labelled with MDMA did not actually contain MDMA, but methamphetamine.</p>
+<div class="figure align-center" id="figure-13">
+<img alt="../_images/1758-2946-3-34-13.jpg" src="../_images/1758-2946-3-34-13.jpg" />
+<p class="caption">Figure 13. Aside</p>
+<div class="legend">
+<strong>Aside</strong>.</div>
+</div>
+<p>The biggest problem when you make mistakes: it&#8217;s embarrassing, you should double check, but the biggest problem here was is they couldn&#8217;t even reliably say which experiments were affected by this bottle because they had done this in their notebooks. They had not identified the bottle, they just said &#8216;yeah we used...&#8217; so chemical structure, chemical name is just a lousy primary identification field, and you&#8217;re really gonna run the risk of corrupting data and not having full control of data if you don&#8217;t understand this difference.</p>
+<p>(Figure <a class="reference internal" href="1758-2946-3-51.html#figure-14"><em>14</em></a>) A couple of these things in the last few slides are labelled community priorities and/or involvement. What I mean by that is these are things I&#8217;ve been thinking of that I think are useful or can potentially be useful, and obviously in this day and age if you can get people to help you actually do it that&#8217;s fantastic, jump in, let&#8217;s go. But for our purposes even expressing a notion &#8216;is this a high priority or low priority&#8217;, &#8216;what kind of thing is useful to us&#8217;, that helps us with our limited resources say &#8216;well gee a whole lot of people wanna do this so maybe that is where we put our cut off&#8217; so when I say this I really would like feedback on any level.</p>
+<div class="figure align-center" id="figure-14">
+<img alt="../_images/1758-2946-3-34-14.jpg" src="../_images/1758-2946-3-34-14.jpg" />
+<p class="caption">Figure 14. Structure Cleanup (Community priorities/involvement)</p>
+<div class="legend">
+<strong>Structure Cleanup (Community priorities/involvement)</strong>.</div>
+</div>
+<p>One of the things I have been worried about is how to make the structure set, the data structure, the chemical structure set, more useful. There are at least eighty different elements in the set so it really does exercise any kind of chemical software. It&#8217;s not just carbon, nitrogen, oxygen, blah blah blah-there&#8217;s I think 300 tin compounds. We currently use the Chemical Development Kit <a class="footnote-reference" href="#b4" id="id5">[4]</a> to compare the molecular weight generated from the molecular formula to the molecular weight generated from the structure. You go back to this problem with SANSS: did it try and represent the complete molecule or not, only some little bit? The molecular formula in our data base was always entered independent of the structure, and so if these two things match you have a little bit of added confidence that the structure that came out really does intend to represent the full structure. If they don&#8217;t match then well maybe you have a problem. A lot of times when they don&#8217;t match, it comes down to this: inconsistencies in formal charge assignments. A lot of times it is easy to see how you would clean that up: the molecular formula says &#8216;dot-CL&#8217;, the structure says &#8216;CL-minus&#8217;: OK, I understand that. Some of them are not so clear. Do you try and use what I mentioned before-do you try and use the information from these dummy atom labels or do you just forget about them?</p>
+<p>How to document the structures-when and how was the data extracted, did it come from us, what kind of algorithms were used to do any kind of clean up or any kind of comparison. Are there beginning to get ways that people would like to see structures standardised more? The most useful way to code this is in the chemical mark-up language-I&#8217;m beginning to think that the best way to just to do it and let things evolve. But if people have strong opinions on how to represent some of this and potentially help and correcting or withdrawing bad structures from the community-we had a student in the summer crank out about 400 compounds in a couple of weeks-it might be something people may be interested in.</p>
+<p>(Figure <a class="reference internal" href="1758-2946-3-5.html#figure-15"><em>15</em></a>) Other data. We have our NCI screening data-this is growth inhibition in human tumour cell lines. We have this both as calculated parameters from a full dose response curve, and as a full dose response curve. I mentioned molecular target data: there&#8217;s microarray of gene expression in vivo in xenografts, which I think could be very important; that data is not quite public yet but it should be soon. We have in vivo survival screens curves from those old mouse model screens, so if anybody&#8217;s interested in developing software or display tools for looking at survival curves we probably have something like 200 or 250 thousand survival curves. That&#8217;s publicly available.</p>
+<div class="figure align-center" id="figure-15">
+<img alt="../_images/1758-2946-3-34-15.jpg" src="../_images/1758-2946-3-34-15.jpg" />
+<p class="caption">Figure 15. Other Data</p>
+<div class="legend">
+<strong>Other Data</strong>.</div>
+</div>
+<p>I probably don&#8217;t have time to talk about this but we have about 65 hundred compounds from our inventories now in the molecular library screening deck, so we have the ability not only to associate NCI-60 data (let&#8217;s say a pattern of activity in the NCI-60 cells) but then in some cases we have 2 or 3 hundred assays in the molecular library in PubChem that can be related to them. We haven&#8217;t really started to develop ways to bring all those things together and try to find ways to best utilise them. Again, they came from us so again we have a guarantee that the NCI-60 data and the molecular library screening data actually all came from the same sample.</p>
+<p>(Figure <a class="reference internal" href="1758-2946-3-5.html#figure-16"><em>16</em></a>) There are other DTP resources. We have a compound repository, as I mentioned before. For a good chunk of our screening, we wanted a couple of grams. If the molecule was abandoned fairly early on we had a gram left, so there are about 80,000 compounds for which I think at least formally we have a gram in our inventory. We have an online sample request for that. We have not for the most part identified to run any analytics on this, although that&#8217;s changing. You can submit compounds to the screen-we have an online submission form. In a few months we&#8217;ll have web services and one of the things I&#8217;m excited about here is talking to, say, Alex [Wade]and a few people about ways to use these web services where you can manage your submissions and accounts in a Word program or something similar. We also have a COMPARE service server set up so you can do these calculations. We have put them up as web services but we haven&#8217;t really taken advantage of that, building alternative interfaces to this and alternative ways of putting it together with other things. We haven&#8217;t really gone beyond that.</p>
+<div class="figure align-center" id="figure-16">
+<img alt="../_images/1758-2946-3-34-16.jpg" src="../_images/1758-2946-3-34-16.jpg" />
+<p class="caption">Figure 16. Other DTP resources</p>
+<div class="legend">
+<strong>Other DTP resources</strong>.</div>
+</div>
+<p>(Figure <a class="reference internal" href="1758-2946-3-5.html#figure-17"><em>17</em></a>) In terms of what my fantasy-well, hopefully it&#8217;s not a fantasy (but you know...)-how about an anti cancer discovery workbench? Sort of a Bioclipse <a class="footnote-reference" href="#b5" id="id6">[5]</a> where you can do structure activity for growth inhibition, connect to COMPARE to look for compounds with similar patterns and mechanism. You could order compounds from DTP, you could connect to COMPARE, you can do correlations to COMPARE, not only look at growth inhibitions versus growth inhibition but growth inhibition versus molecular target data so you can prepare growth inhibition to gene expression, see if a compound has been tested in NCI-60, submit compounds: basically a platform for testing new ways to analyse structure and data, and also to connect people that do computational work with synthetic chemists. If the synthetic chemist is sitting at his bench using this to submit the compounds to NCI the other tools there would be available to them to do ways of hopefully prioritising and maximising their chances of getting good structures submitted.</p>
+<div class="figure align-center" id="figure-17">
+<img alt="../_images/1758-2946-3-34-17.jpg" src="../_images/1758-2946-3-34-17.jpg" />
+<p class="caption">Figure 17. Anti-cancer Discovery Workbench (community priority/involvement)</p>
+<div class="legend">
+<strong>Anti-cancer Discovery Workbench (community priority/involvement)</strong>.</div>
+</div>
+<p>(Figure <a class="reference internal" href="1758-2946-3-5.html#figure-18"><em>18</em></a>) And in the last few minutes just talk a little bit about sort of philosophy. So the it&#8217;s a critical time for the research community-the funding outlook is dismal, everybody knows that grant applications success rates are very low, dissatisfaction with therapeutic pipelines, nobody is happy with the rate and what looks like the therapeutics. You can say &#8216;well, more money could be a big help&#8217;, and it could save some things in some ways but the question is how you justify it.</p>
+<div class="figure align-center" id="figure-18">
+<img alt="../_images/1758-2946-3-34-18.jpg" src="../_images/1758-2946-3-34-18.jpg" />
+<p class="caption">Figure 18. A critical time for the research community</p>
+<div class="legend">
+<strong>A critical time for the research community</strong> .</div>
+</div>
+<p>(Figure <a class="reference internal" href="#figure-19"><em>19</em></a>) Let me give you a specific problem and this is very dear to my heart because this should be exactly what the developmental therapeutics programme is enabling. There is a paper, published in Nature Medicine in 2006, and it looked for genomic signatures to guide the use of chemotherapeutics. They started with our NCI-60 data and our microarray data, fantastic! They downloaded it and they could do something: they went beyond it, they got a Nature Medicine paper and it led to clinical trials. Other questions arose-a letter to Nature Medicine back and forth, but then a group at MD Anderson [Cancer Center] couldn&#8217;t quite figure out how they got the results they got. The group at MD Anderson can download our data as well but couldn&#8217;t quite balance it; the first group would cooperate but they couldn&#8217;t figure things out. It led finally to this Annals of Applied Statistics paper where the group at MD Anderson laid out (they called it &#8216;forensic bioinformatics&#8217;), what they tried to do, how they tried to go about it and the fact that they couldn&#8217;t really be sure in what was going on. In taking public data, publishing a paper but not being able to connect the dots so you know you can... Here&#8217;s one particular URL that has a fairly reasonable overview: resume problems arose, clinical trials halted, a very big mess and it&#8217;s a huge problem.</p>
+<div class="figure align-center" id="figure-19">
+<img alt="../_images/1758-2946-3-34-19.jpg" src="../_images/1758-2946-3-34-19.jpg" />
+<p class="caption">Figure 19. A Specific problem</p>
+<div class="legend">
+<strong>A Specific problem</strong>.</div>
+</div>
+<p>(Figure <a class="reference internal" href="#figure-20"><em>20</em></a>) What you have is an example of what could be a general problem: it&#8217;s a well funded group in a well respected institution, published results in a peer review journal, favourably reviewed clinical trial plan. What do you say to the patients when a clinical trial is halted? &#8216;Oops, sorry, my bad, no problem. By the way can you write your congressman and tell them they got to double our NIH budget?&#8217; There is a real disconnect there. So what kind of answers can you give? Oh you know &#8220;it was a bad apple&#8221;; &#8220;this guy is bad&#8221;; &#8220;he lied so he probably faked it&#8221;; blah blah blah. I don&#8217;t think any of these are acceptable, they are primarily ways to avoid responsibility by making it a specific problem, but there&#8217;s too many interactions with the entire research community here to avoid a more general responsibility. The basic fundamental problem is not any of these (no it&#8217;s not my problem excuses); the problem is the research community did not demand full accountability, the parameters for all this review was not something that was at all able at all to catch this.</p>
+<div class="figure align-center" id="figure-20">
+<img alt="../_images/1758-2946-3-34-20.jpg" src="../_images/1758-2946-3-34-20.jpg" />
+<p class="caption">Figure 20. The General Problem</p>
+<div class="legend">
+<strong>The General Problem</strong>.</div>
+</div>
+<p>(Figure <a class="reference internal" href="#figure-21"><em>21</em></a>) So I call it, Peter says something sometimes about &#8216;take back our scholarship&#8217;, I say &#8216;take responsibility for our scholarship&#8217;: insist the data supporting publications be accessible, useable, documented and complete, and recognise adhering to this standard. Is what science is, it&#8217;s not an add-on, it&#8217;s not an extra burden from on high. I claim if you don&#8217;t understand your data well enough to export it, you don&#8217;t understand your data well enough to use it, and it&#8217;s in all scientists&#8217; interests to prevent sloppy scholarship. I don&#8217;t think anybody in the research community benefits from the mess of the genomic signature paper, whether you were directly a part of it or not. I work in the molecular library. There is, and again this is indirectly a tribute to Peter, the ethos and the setup of how data was handled in the molecular library. I strongly argued for [this] and my arguments were influenced by Peter&#8217;s, but the idea is to make sure that from the beginning the data was released as soon as it was verified. But you need to budget for it and you need to work at it and administratively you need to keep at these people to do it and it&#8217;s been constant: it works but it doesn&#8217;t &#8216;just happen&#8217;.</p>
+<div class="figure align-center" id="figure-21">
+<img alt="../_images/1758-2946-3-34-21.jpg" src="../_images/1758-2946-3-34-21.jpg" />
+<p class="caption">Figure 21. Take responsibility for our scholarship</p>
+<div class="legend">
+<strong>Take responsibility for our scholarship</strong>.</div>
+</div>
+<p>So in general you know I think you need to think broadly and carefully about what is promised to the public in return for their support and you have to make sure that all these community standards policies and procedure work toward that goal first the goal of delivering what you are claiming the public benefits from, and all the other goals are secondary: all the prestige, the money and all that stuff.</p>
+<p>(Figure <a class="reference internal" href="#figure-22"><em>22</em></a>) Concrete steps: Open Scholarship, Open Access. There&#8217;s a lot of people here that are gonna talk more than I about that, but I think that from my perspective, in addition to a kind of philosophical approach, it&#8217;s a very practical approach where you get better error detection, potentially better results, better able to connect.</p>
+<div class="figure align-center" id="figure-22">
+<img alt="../_images/1758-2946-3-34-22.jpg" src="../_images/1758-2946-3-34-22.jpg" />
+<p class="caption">Figure 22. Concrete Steps</p>
+<div class="legend">
+<strong>Concrete Steps</strong>.</div>
+</div>
+<p>The other thing I&#8217;m thinking about is whether can we actually take that [genomic signature] fiasco and turn it around and say &#8216;here&#8217;s how we would do it with Open data&#8217;, &#8216;here&#8217;s how we would do it in a more documented way&#8217; and have maybe an Open Genomic Signature Workbench, so we have in vitro gene expression, we have growth inhibition data, we&#8217;re going to publicly soon have in vivo gene expression data so we have all the pieces. NCI has the xenograft testing possibilities so we have all the pieces for not only generating drug expression, drug sensitivity relations but <em>testing</em> them before you start to go to the clinic and you can do it in a transparent, documented and reproducible way. We can show people how it should be done.</p>
+<p>(Figure <a class="reference internal" href="#figure-23"><em>23</em></a>) So here&#8217;s my email address. All those things-remember whenever your priorities, interests, needs: I&#8217;m from the government, I&#8217;m here to help you.</p>
+<div class="figure align-center" id="figure-23">
+<img alt="../_images/1758-2946-3-34-23.jpg" src="../_images/1758-2946-3-34-23.jpg" />
+<p class="caption">Figure 23. Conclusion</p>
+<div class="legend">
+<strong>Conclusion</strong>.</div>
+</div>
+<p>[Applause]</p>
+<p>Question from Egon Willighagen: Are all the characterizations other than the gene expression data of the NCI-60 publicly available?</p>
+<p>Dan Zaharevitz: Yes-we have lots of other different characterisations so we have metabolomics data we have enzyme activity measurements but in terms of number of data points the largest set of data in the molecular targets set of data is gene expression data just by number but there&#8217;s a lot of other things in there as well</p>
+</div>
+<div class="section" id="endnotes">
+<h2>Endnotes<a class="headerlink" href="#endnotes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="endnote-1">
+<h3>Endnote 1<a class="headerlink" href="#endnote-1" title="Permalink to this headline">¶</a></h3>
+<p>Unfortunately the first part of the recording was corrupted, so the talk appears to begin at slide 6, &#8216;At a critical time&#8217;.</p>
+</div>
+<div class="section" id="endnote-2">
+<h3>Endnote 2<a class="headerlink" href="#endnote-2" title="Permalink to this headline">¶</a></h3>
+<p>PMR: The NCI research was for many years the outstanding example of Open, publicly financed research and data collection. It stemmed from President Nixon&#8217;s &#8220;war on cancer&#8221; which captured the spirit of the moonshots but also shows that biology is tougher than physics.</p>
+</div>
+<div class="section" id="endnote-3">
+<h3>Endnote 3<a class="headerlink" href="#endnote-3" title="Permalink to this headline">¶</a></h3>
+<p>PMR: The systematic testing of public and private compounds was a key strategy for NCI DTP.</p>
+</div>
+<div class="section" id="endnote-4">
+<h3>Endnote 4<a class="headerlink" href="#endnote-4" title="Permalink to this headline">¶</a></h3>
+<p>PMR: Ken Paull&#8217;s contribution to DTP was dramatic. The COMPARE program is one of those archetypal tools which is both very simple and very powerful. It&#8217;s a table &#8220;browser&#8221; for the DTP data with compounds == rows and screens == columns. By tabulating hits compounds can be compared by activity in screens and screen can be compared <a href="#id7"><span class="problematic" id="id8">**</span></a>by activity**of compounds. And it emphasizes the importance of having lots of data, carefully aligned, and the tools to manipulate it.</p>
+</div>
+<div class="section" id="endnote-5">
+<h3>Endnote 5<a class="headerlink" href="#endnote-5" title="Permalink to this headline">¶</a></h3>
+<p>PMR: In the early years data was &#8220;paper&#8221;. Chemical structures were hand drawn.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>CORINA-Fast Generation of High-Quality 3D Molecular Models</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>Kekule: OCR-optical chemical (structure) recognition</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>PubChem</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td>The Chemistry Development Kit</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td>Bioclipse</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Adventures in public data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#editorial-preface">Editorial preface</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#discussion">Discussion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#endnotes">Endnotes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#endnote-1">Endnote 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#endnote-2">Endnote 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#endnote-3">Endnote 3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#endnote-4">Endnote 4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#endnote-5">Endnote 5</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-33.html" title="Open Babel: An open chemical toolbox"
+             >previous</a> |
+          <a href="1758-2946-3-35.html" title="Three stories about the conduct of science: Past, future, and present"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-34.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,630 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PubChem3D: Similar conformers &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Analysis of in vitro bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds" href="1758-2946-3-14.html" />
+    <link rel="prev" title="Multilevel Parallelization of AutoDock 4.2" href="1758-2946-3-12.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-12.html" title="Multilevel Parallelization of AutoDock 4.2"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-14.html" title="Analysis of in vitro bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pubchem3d-similar-conformers">
+<h1>PubChem3D: Similar conformers<a class="headerlink" href="#pubchem3d-similar-conformers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<p>PubChem is a free and open public resource for the biological activities of small molecules. With many tens of millions of both chemical structures and biological test results, PubChem is a sizeable system with an uneven degree of available information. Some chemical structures in PubChem include a great deal of biological annotation, while others have little to none. To help users, PubChem pre-computes &#8220;neighboring&#8221; relationships to relate similar chemical structures, which may have similar biological function. In this work, we introduce a &#8220;Similar Conformers&#8221; neighboring relationship to identify compounds with similar 3-D shape and similar 3-D orientation of functional groups typically used to define pharmacophore features.</p>
+</div>
+<div class="section" id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
+<p>The first two diverse 3-D conformers of 26.1 million PubChem Compound records were compared to each other, using a shape Tanimoto (ST) of 0.8 or greater and a color Tanimoto (CT) of 0.5 or greater, yielding 8.16 billion conformer neighbor pairs and 6.62 billion compound neighbor pairs, with an average of 253 &#8220;Similar Conformers&#8221; compound neighbors per compound. Comparing the 3-D neighboring relationship to the corresponding 2-D neighboring relationship (&#8220;Similar Compounds&#8221;) for molecules such as caffeine, aspirin, and morphine, one finds unique sets of related chemical structures, providing additional significant biological annotation. The PubChem 3-D neighboring relationship is also shown to be able to group a set of non-steroidal anti-inflammatory drugs (NSAIDs), despite limited PubChem 2-D similarity.</p>
+<p>In a study of 4,218 chemical structures of biomedical interest, consisting of many known drugs, using more diverse conformers per compound results in more 3-D compound neighbors per compound; however, the overlap of the compound neighbor lists per conformer also increasingly resemble each other, being 38% identical at three conformers and 68% at ten conformers. Perhaps surprising is that the average count of conformer neighbors per conformer increases rather slowly as a function of diverse conformers considered, with only a 70% increase for a ten times growth in conformers per compound (a 68-fold increase in the conformer pairs considered).</p>
+<p>Neighboring 3-D conformers on the scale performed, if implemented naively, is an intractable problem using a modest sized compute cluster. Methodology developed in this work relies on a series of filters to prevent performing 3-D superposition optimization, when it can be determined that two conformers cannot possibly be a neighbor. Most filters are based on Tanimoto equation volume constraints, avoiding incompatible conformers; however, others consider preliminary superposition between conformers using reference shapes.</p>
+</div>
+<div class="section" id="conclusion">
+<h3>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h3>
+<p>The &#8220;Similar Conformers&#8221; 3-D neighboring relationship locates similar small molecules of biological interest that may go unnoticed when using traditional 2-D chemical structure graph-based methods, making it complementary to such methodologies. The computational cost of 3-D similarity methodology on a wide scale, such as PubChem contents, is a considerable issue to overcome. Using a series of efficient filters, an effective throughput rate of more than 150,000 conformers per second per processor core was achieved, more than two orders of magnitude faster than without filtering.</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>PubChem <a class="footnote-reference" href="#b1" id="id2">[1]</a><a class="footnote-reference" href="#b2" id="id3">[2]</a><a class="footnote-reference" href="#b3" id="id4">[3]</a><a class="footnote-reference" href="#b4" id="id5">[4]</a> is a free and open public resource for the biological activities of small molecules. With more than 30 million unique chemical structures and 120 million biological test results, it is a sizeable system with an uneven degree of available information. Some chemical structures in PubChem have a great deal of biological annotation and literature associated, while many others (<em>e.g</em>., synthesized for high-throughput screening purposes) have little to nothing known about them other than the chemical structure. To help overcome this disparity, PubChem helps users to locate or relate data in the archive by pre-computing &#8220;neighboring&#8221; relationships. One of these, known as &#8220;Similar Compounds&#8221;, associates a pair of chemical structures if they have a Tanimoto <a class="footnote-reference" href="#b5" id="id6">[5]</a><a class="footnote-reference" href="#b6" id="id7">[6]</a><a class="footnote-reference" href="#b7" id="id8">[7]</a> similarity of 0.9 or greater when using the PubChem subgraph binary fingerprint <a class="footnote-reference" href="#b8" id="id9">[8]</a> and Eq. (1).</p>
+<p>where <em>A</em> and <em>B</em> are the respective counts of fingerprint set bits in the compound pair and <em>AB</em> is the count of bits in common.</p>
+<p>The &#8220;Similar Compounds&#8221; relationship is useful to relate analogues that may have similar biological activity or function and additional biological annotation; however, &#8220;Similar Compounds&#8221; is not particularly good at finding chemical structures that can adopt similar 3-D shape and similar 3-D orientation of functional groups typically used to define pharmacophore features (henceforth, these pharmacophore feature functional groups will be referred to as &#8220;pharmacophore features&#8221; or simply as &#8220;features&#8221;), which could indicate, for example, that the molecules bind to a protein in a similar fashion. It may be useful, therefore, to provide a &#8220;Similar Conformers&#8221; relationship in PubChem to help relate relevant conformers of chemical structures.</p>
+<p>Wanting to compute a 3-D neighboring relationship with modest computational capacity on a very large scale and actually being able to do it are two very different things. For 30 million compounds, a neighboring relationship requires a minimum of 10^14 pair-wise similarity computations. The 2-D similarity of chemical structures with binary fingerprints is relatively fast, with rates of 10^6 compound pair similarities per second per processor core achievable. Computing the analogous 3-D pair-wise similarity of conformers is much slower, with rates of 10^2 to 10^3 per second per processor core (depending on the degree of accuracy versus performance tradeoffs one is willing to make), when using atom-centered Gaussians <a class="footnote-reference" href="#b9" id="id10">[9]</a><a class="footnote-reference" href="#b10" id="id11">[10]</a><a class="footnote-reference" href="#b11" id="id12">[11]</a><a class="footnote-reference" href="#b12" id="id13">[12]</a> for the shape description. This difference in 2-D versus 3-D pair-wise similarity overlap computation rate is made yet worse by another factor of 10^1 (or more), when considering that 3-D methods actually need to consider multiple diverse conformers per chemical structure, since a small molecule can typically adopt multiple distinct shapes or orientations of pharmacophore features at room temperature. This puts the comparable rate of computation of 3-D chemical structure pair-wise similarity overlap at least 10^4 to 10^5 slower than that for 2-D. This performance gap has led some to search for alternative approaches for determining 3-D similarity between small molecules.</p>
+<p>In one such approach <a class="footnote-reference" href="#b13" id="id14">[13]</a>, 3-D similarity is recast to use a binary fingerprint to achieve a conformer pair-wise similarity overlap computation speed similar to that of 2-D similarity computation. This scheme determines a set of representative 3-D reference shapes, each corresponding to a binary bit in a fingerprint. When generating the fingerprint for a 3-D chemical structure conformer, a traditional 3-D shape superposition to all reference shapes is performed. If there is sufficient similarity to a reference shape, the corresponding binary bit is set. Besides the pre-computation expense to determine the reference shapes to use and to generate the 3-D fingerprint for all conformers to be searched, this method has an important drawback. Unlike 2-D binary fingerprint methods, when two 3-D chemical structure conformers are deemed to be similar by this approach, it might not be immediately obvious as to why. The reason is simple. The common binary bit values simply identify that the two conformers share a region of shape-space, without the additional requirement that they actually share a sufficient degree of shape similarity.</p>
+<p>An attempt <a class="footnote-reference" href="#b14" id="id15">[14]</a> was made to improve upon the 3-D binary fingerprint approach. In effect, the method was very similar; with a predetermination of reference shapes followed by 3-D shape fingerprint computation. Yet, there were a couple of important distinctions that, in essence, allowed the method to yield conformer superposition results much like &#8220;traditional&#8221; 3-D similarity superposition methods <a class="footnote-reference" href="#b10" id="id16">[10]</a><a class="footnote-reference" href="#b11" id="id17">[11]</a><a class="footnote-reference" href="#b12" id="id18">[12]</a>. First, the alignment of the conformer to the reference shape was retained during shape fingerprint generation. Second, when a fingerprint &#8220;bit&#8221; was in common between two conformers, the retained alignments to the reference shape were used to yield an (approximate) alignment between the conformers. Dubbed &#8220;alignment recycling&#8221;, this approach recognized that conformers with similar shape align to a reference shape in a similar way. By &#8220;replaying&#8221; the alignment to common reference shapes, the best superposition between the conformer pair is the result of the similarity computation. This approach, while not as fast as the method that used only a binary fingerprint, was 10^2 times faster than &#8220;traditional&#8221; 3-D similarity superposition methodology. A major downside to &#8220;alignment recycling&#8221; was that it was only parameterized for relatively small and inflexible chemical structures. It means that additional work is necessary to extend this approach to larger and more flexible structures. In all, the above two 3-D fingerprint approaches showed great promise to dramatically improve the throughput of 3-D similarity computation.</p>
+<p>To harness a 3-D fingerprint to speed 3-D similarity throughput, one must first determine the reference shapes to use. Recent efforts <a class="footnote-reference" href="#b13" id="id19">[13]</a> to describe the shape space of biologically relevant small molecules showed exponential behavior in reference shape count resulting from changes to the minimum shape Tanimoto (ST) distance between reference shapes. However, when examining the growth of shape space per unit volume for a maximum count of reference shapes <a class="footnote-reference" href="#b15" id="id20">[15]</a>, shape space was shown to grow gradually and smoothly as a function of ST. In addition, and generally speaking, it was shown that the shape space of a given unit volume describes 40-70% of the shape space of all chemical structures with a lesser volume. This would suggest that one could group together regions of shape space and describe it with a relatively small number of reference shapes, while avoiding the problem of having too many reference shapes. Reformulating the fingerprint definition with multiple tiers of fingerprints with different minimum ST distances between reference shapes may allow &#8220;alignment recycling&#8221; to be effective for larger and more flexible chemical structures, thus, providing a means to speed computation of a 3-D neighboring relationship on a very large scale.</p>
+<p>In this work, we describe the multi-conformer PubChem &#8220;Similar Conformers&#8221; 3-D neighboring relationship and explain various strategies and approaches that made it a tractable problem, including extending the &#8220;alignment recycling&#8221; methodology to cover the full range of chemical structures considered in the PubChem3D project.</p>
+</div>
+<div class="section" id="results-and-discussion">
+<h2>Results and discussion<a class="headerlink" href="#results-and-discussion" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="description-of-similar-conformers-neighboring-relationship">
+<h3>1. Description of &#8220;Similar Conformers&#8221; neighboring relationship<a class="headerlink" href="#description-of-similar-conformers-neighboring-relationship" title="Permalink to this headline">¶</a></h3>
+<p>PubChem uses two 3-D similarity measures to determine whether two molecules are &#8220;Similar Conformers&#8221;. One of these is the shape Tanimoto (ST) for shape similarity <a class="footnote-reference" href="#b10" id="id21">[10]</a><a class="footnote-reference" href="#b11" id="id22">[11]</a><a class="footnote-reference" href="#b12" id="id23">[12]</a><a class="footnote-reference" href="#b16" id="id24">[16]</a><a class="footnote-reference" href="#b17" id="id25">[17]</a>, given by Eq. (2). The second similarity measure, defined by Eq. (3), is the color Tanimoto (CT) <a class="footnote-reference" href="#b10" id="id26">[10]</a><a class="footnote-reference" href="#b12" id="id27">[12]</a>, which quantifies the 3-D shape similarity of fictitious &#8220;color&#8221; atoms, each representing the 3-D location of a particular pharmacophore feature functional group type: hydrogen-bond donor, hydrogen-bond acceptor, cation, anion, hydrophobe, or ring. The ST and CT values range between 0 (for no similarity) and 1 (for identical).</p>
+<p>where <sub>AA</sub> Vand <sub>BB</sub> Vare the respective self-overlap volume and <sub>AB</sub> Vis the overlap volume of conformers A and B.</p>
+<p>where, for each of the six independent fictitious feature atom types, <sub>AA</sub> Vand <sub>BB</sub> Vare the respective self-overlap volumes and <sub>AB</sub> Vis the overlap volume of conformers A and B.</p>
+<p>Pair-wise shape and feature comparison of conformers takes two basic steps: (1) optimization of the shape superposition between two 3-D chemical structures, to find their maximum shape overlap in terms of ST, and (2) a single-point CT computation at that maximum shape overlay. PubChem 3-D &#8220;Similar Conformers&#8221; neighbors are identified as any pair-wise conformer superposition with ST and CT values of ≥0.8 and ≥0.5 (actually ≥0.795 and ≥0.495, after floating point number rounding is considered), respectively.</p>
+<p>An important issue with 3-D neighboring is the number of conformers considered. Although PubChem generates a conformer ensemble for each molecule, consisting of up to 500 sampled conformations, it is not practical to consider all of these for 3-D neighboring. Therefore, a selection of diverse conformers for each compound is considered for the purposes of 3-D neighboring. A detailed description of how the diverse conformer set is derived can be found in the <strong>Materials and Methods</strong> section (See &#8220;Diverse conformer concept&#8221;).</p>
+<p>It is important to note that 3-D neighboring using a single conformer per compound has a one-to-one correspondence between compound pairs and conformer pairs. When using multiple conformers per compound, it is possible that only a subset of possible conformer pairs per compound pair may satisfy the 3-D neighboring criteria. For clarification, a 3-D <em>conformer neighbor</em> pair is defined as any conformer pair with ST ≥ 0.8 and CT ≥ 0.5. If there is at least one <em>conformer neighbor</em> pair among all possible conformer pairs from a given compound pair, a <em>compound neighbor</em> pair results. In this work, a 3-D neighbor implies a 3-D <em>compound</em> neighbor. If further clarification is necessary, the terms 3-D compound neighbors and 3-D conformer neighbors are used.</p>
+</div>
+<div class="section" id="the-distribution-of-3-d-neighbors">
+<h3>2. The distribution of 3-D neighbors<a class="headerlink" href="#the-distribution-of-3-d-neighbors" title="Permalink to this headline">¶</a></h3>
+<p>At the time of writing, 26,153,061 PubChem Compound records (CIDs) have a &#8220;Similar Conformers&#8221; neighboring relationship using the first two diverse conformers per compound. These identified 6.62 billion unique compound neighbor pairs and 8.16 billion unique conformer neighbor pairs. The average compound neighbor count per compound, after exclusion of self-neighbor pairs, is 253. Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a> shows the frequency of neighbor count per compound, cumulative % CID count, and cumulative % 3-D neighbor count. Although some CIDs have more than 30,000 neighbors, 21.9 million CIDs (87.5%) have less than 1,000 neighbors, and 1.12 million CIDs (4.27%) do not even have a neighbor beyond self. This rather skewed population of the neighbor count per CID is reflected in the plot of % cumulative neighbor count versus % cumulative CID count (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>). One can see that 20% of the chemical structures have more than 80% of the &#8220;Similar Conformer&#8221; neighbor pairs.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-13-1.jpg" src="../_images/1758-2946-3-13-1.jpg" />
+<p class="caption">Figure 1. Count of &#8220;Similar Conformers&#8221; per compound</p>
+<div class="legend">
+<strong>Count of &#8220;Similar Conformers&#8221; per compound</strong>. The frequency of unique 3-D compound neighbors counts per PubChem Compound record (CID) [blue diamond], percent cumulative CID count [red square], and percent cumulative 3-D neighbor count [green triangle].</div>
+</div>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-13-2.jpg" src="../_images/1758-2946-3-13-2.jpg" />
+<p class="caption">Figure 2. Most compounds have few 3-D neighbors</p>
+<div class="legend">
+<strong>Most compounds have few 3-D neighbors</strong>. More than 80% of all CIDs have only 20% of 3-D neighbors.</div>
+</div>
+<p>The chemical structures on the extreme end, with more than 30,000 neighbors each, have a common motif of two substituted aromatic ring systems separated by different linkers. Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a> depicts a single-linkage clustering of all 324 chemical structures with more than 30,000 3-D neighbors performed with the PubChem Structure Clustering tool using the PubChem 2-D dictionary-based binary fingerprint and Eq. (1) to help highlight the different chemical series represented. The most prevalent of these are based on N-phenylbenzamide (CID 7168). Neighboring reflects the contents of PubChem. If there is a large subpopulation of chemical structures very similar to each other, those chemical structures will interrelate; however, one advantage of 3-D &#8220;Similar Conformers&#8221; neighboring is that it relates chemical structures that have similar shape and features, which can be somewhat orthogonal to a chemical series identified by 2-D &#8220;Similar Compound&#8221; neighboring (to be discussed in more detail in the next section).</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-13-3.jpg" src="../_images/1758-2946-3-13-3.jpg" />
+<p class="caption">Figure 3. Compounds with the most 3-D neighbors</p>
+<div class="legend">
+<strong>Compounds with the most 3-D neighbors</strong>. The PubChem Structure Clustering analysis of the 324 PubChem Compound records with more than 30,000 neighbors shows a common structural motif of two (aromatic) rings separated by a linker. N-phenylbenzamide (CID 7168) scaffold is present in the majority of these, with CID 11254065 having the most 3-D neighbors in all of PubChem.</div>
+</div>
+<p>Of the 1.12 million CIDs without a neighbor pair, except for self, these include a large and significant percentage of the total cases where the count of atoms or features is high, as depicted in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>. The lack of 3-D neighbor means that these larger compounds lack a 3-D complement, which is not surprising given that shape space grows exponentially and PubChem3D limits consideration to chemical structures with fifty or fewer non-hydrogen atoms, making it increasingly less likely that a suitable neighbor can be found as a function of volume. Otherwise, the profile of chemical structures without neighbors is much like that for a set of 26,157,365 CIDs that represent the entire &#8220;live&#8221; PubChem3D contents as of October 2010 (designated as the <em>Search</em> set), representing a small minority of chemical structures with unique shape and feature profiles. For the first and second diverse conformers per compound, respectively, there are 1.31 million and 4.77 million cases where only the self neighbor is found. Employing a second diverse conformer allows 0.19 million additional CIDs to have a compound neighbor beyond self. The big increase in self-only neighbor pairs for the second diverse conformer, which represents the conformer most dissimilar to the first in a conformer ensemble, is notable; however, it is too early to say definitively whether these counts of no-neighbor per conformer will remain high, as more diverse conformers per compound are considered.</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-13-4.jpg" src="../_images/1758-2946-3-13-4.jpg" />
+<p class="caption">Figure 4. Molecules without neighbors</p>
+<div class="legend">
+<strong>Molecules without neighbors</strong>. Non-hydrogen atom count and feature atom count profiles for the 1.12 million CIDs without a neighbor pair (other than the self-neighbor pair) compared to those for all 26.1 million neighbored CIDs (<em>Search</em> set), showing &#8220;no neighbor&#8221; cases are found across the entire range but accounting for much of the larger count cases.</div>
+</div>
+</div>
+<div class="section" id="comparison-of-2-d-and-3-d-similarity-neighbors">
+<h3>3. Comparison of 2-D and 3-D similarity neighbors<a class="headerlink" href="#comparison-of-2-d-and-3-d-similarity-neighbors" title="Permalink to this headline">¶</a></h3>
+<p>For a given molecule, PubChem provides a &#8220;Similar Compounds&#8221; 2-D neighboring relationship, computed using a 2-D binary fingerprint and a threshold of 0.9 Tanimoto similarity using Eq. (1). It is interesting to see how one can find related biological annotation information using the 3-D &#8220;Similar Conformers&#8221; neighboring relationship as opposed to the 2-D &#8220;Similar Compounds&#8221;. To demonstrate this, three well known molecules of biomedical interest are selected: caffeine (CID 2519), aspirin (CID 2244), and morphine (CID 5288826). The overlap of three primary types of annotation is examined. The metrics used are unique and common count of neighbors with links to: Medical Subject Heading (MeSH) <a class="footnote-reference" href="#b18" id="id28">[18]</a>, through which one can locate scientific literature about a similar chemical structure in PubMed <a class="footnote-reference" href="#b19" id="id29">[19]</a>; PubChem BioAssay database <a class="footnote-reference" href="#b3" id="id30">[3]</a>, where one can find biological and experimental data, including protein binding inhibition values; and protein 3-D structures <a class="footnote-reference" href="#b20" id="id31">[20]</a>, representing 3-D structures of a discrete protein with a bound ligand, determined by X-ray crystallography or NMR spectroscopy. Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a> gives the overlaps found between 2-D and 3-D neighboring relationships. As one can see, caffeine has 1,231 2-D neighbors, but only 302 of these are in common with its 2,298 3-D neighbors. The non-overlapping parts between the 2-D and 3-D neighboring show how similar, yet unique, chemical space is located. Of the unique 3-D neighbors, they expand, beyond its 2-D counterpart, the available biomedical annotation that may be related and relevant, with an additional 23 MeSH links, 274 biological experiments, and a doubling of the protein 3-D structures to consider. A similar result is found in the case of aspirin and morphine. It appears clear that in these cases 3-D similarity complements 2-D similarity with a mostly unique set of chemical structures that help one to discover connections between small molecules that might otherwise be missed. While this near orthogonality of neighbor sets won&#8217;t be true for all chemical structures, it can be helpful to locate and relate available information in a vast data system such as PubChem.</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-13-5.jpg" src="../_images/1758-2946-3-13-5.jpg" />
+<p class="caption">Figure 5. 2-D neighbors versus 3-D neighbors</p>
+<div class="legend">
+<strong>2-D neighbors versus 3-D neighbors</strong>. Comparison of the 2-D &#8220;Similar Compound&#8221; and 3-D &#8220;Similar Conformer&#8221; neighboring relationships using three well known small molecules, caffeine, aspirin, and morphine, demonstrates how each neighboring relationship can help find related chemical structures with unique biological annotation.</div>
+</div>
+<p>To further emphasize how the 3-D &#8220;Similar Conformers&#8221; neighboring relationship may complement the 2-D &#8220;Similar Compounds&#8221; neighboring relationship, the 2-D and 3-D similarity scores of eight drug molecules with the same mechanism of action are compared in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>, and the 3-D alignment for particular compound pairs, whose 2-D and 3-D similarity difference are relatively large, are depicted in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>. All eight drugs are known inhibitors of prostaglandin synthase <a class="footnote-reference" href="#b21" id="id32">[21]</a><a class="footnote-reference" href="#b22" id="id33">[22]</a><a class="footnote-reference" href="#b23" id="id34">[23]</a><a class="footnote-reference" href="#b24" id="id35">[24]</a><a class="footnote-reference" href="#b25" id="id36">[25]</a> and were carefully selected for illustrative purposes from the PubChem Compound database via the MeSH pharmacological action of &#8220;anti-inflammatory agents, non-steroidal&#8221; (MeSH ID 68000894), also known as NSAIDs. While the 2-D similarity between drug molecules is calculated using the PubChem subgraph fingerprint <a class="footnote-reference" href="#b8" id="id37">[8]</a>, the 3-D similarity scores represent the best ST and CT similarity values from all possible combinations of the first ten diverse conformers of each compound pair. Although all eight molecules inhibit the same target, only one molecule pair (CIDs 3332 and 3394) is identified as a 2-D neighbor, as shown in the lower triangle of the similarity score matrix. The 3-D similarity approach, however, identified 11 molecule pairs as 3-D neighbors. For example, although the 2-D similarity score between CIDs 1302 and 2581 is 0.43, there are significant 3-D shape and feature overlaps (ST = 0.92 and CT = 0.55) between them (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>). If fewer conformers are used, the number of resulting 3-D &#8220;Similar Conformers&#8221; neighbor pairs will be reduced. When using 2, 3, 5, 7, and 10 diverse conformers, a total of 2, 3, 9, 11, and 11 compound pairs and 2, 3, 14, 22, and 27 conformer pairs, respectively, met the 3-D neighboring criteria for the eight drug molecules.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-13-6.jpg" src="../_images/1758-2946-3-13-6.jpg" />
+<p class="caption">Figure 6. Similarity score matrix for selected non-steroidal anti-inflammatory drugs</p>
+<div class="legend">
+<strong>Similarity score matrix for selected non-steroidal anti-inflammatory drugs</strong>. The lower triangle of the score matrix corresponds to the 2-D similarity scores computed using the PubChem fingerprint, and the upper triangle corresponds to the 3-D similarity ST/CT scores. The matrix elements in red indicate the 2-D &#8220;Similar Compounds&#8221; (with a 2-D score of ≥ 0.9) or 3-D &#8220;Similar Conformers&#8221; (with a 3-D score of ST ≥ 0.8 and CT ≥ 0.5). The first ten diverse conformers were used for each molecule.</div>
+</div>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-13-7.jpg" src="../_images/1758-2946-3-13-7.jpg" />
+<p class="caption">Figure 7. 3-D superposition of selected 3-D &#8220;Similar Conformers&#8221; pairs</p>
+<div class="legend">
+<strong>3-D superposition of selected 3-D &#8220;Similar Conformers&#8221; pairs</strong>. Although there is little 2-D similarity, using the PubChem fingerprint, significant 3-D similarity are found between selected non-steroidal anti-inflammatory drugs.</div>
+</div>
+<p>While not all eight selected NSAID drug molecules are 3-D neighbors of each other, examining the 3-D neighbors of the 3-D neighbors shows that each of the eight drug molecules is related to one or more of the eight drug molecules, effectively forming a cluster of related drugs that are highly similar in terms of shape and pharmacophore features but rather dissimilar in terms of 2-D graph similarity. Actually, this &#8220;cluster&#8221; of NSAID drugs presented in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a> is part of a larger 3-D cluster, with only eight of thirteen members being selected for clarity and demonstrative purposes. In addition, this is only one of several NSAID drug &#8220;clusters&#8221; that one can find using 3-D similarity. For the purposes of brevity and focus, only the drug class NSAIDs is explored, but suffice it to say that there are other examples one can find with other drug target classes that are similarly demonstrative.</p>
+<p>If a molecule has known bioactivity, there is a reasonable expectation <a class="footnote-reference" href="#b26" id="id38">[26]</a><a class="footnote-reference" href="#b27" id="id39">[27]</a> that its similarity neighbors may also be similarly bioactive. As demonstrated in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a> and <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>, the 3-D &#8220;Similar Conformers&#8221; relationship can be useful to identify structurally similar molecules that may be completely missed when only the 2-D &#8220;Similar Compounds&#8221; relationship is exploited. Therefore, one might consider to use PubChem&#8217;s precomputed 2-D and 3-D neighboring relationships as complementary virtual screening tools or to help understand how chemical structures relate to each other relative to their biological efficacy.</p>
+</div>
+<div class="section" id="effect-of-using-multiple-conformers">
+<h3>4. Effect of using multiple conformers<a class="headerlink" href="#effect-of-using-multiple-conformers" title="Permalink to this headline">¶</a></h3>
+<p>Taking into account all conformers of each CID for 3-D neighboring using the current methodology is simply not practical. The PubChem &#8220;Similar Conformers&#8221; neighboring relationship described here considers (at the time of writing) only two diverse conformers per compound (with a third conformer per compound soon to be released). One may wonder, as more conformers are considered, does one locate more chemical structures and, if so, to what extent? Is there a point of &#8220;diminishing returns&#8221;, where a plateau forms in the curve of unique neighbor count as a function of diverse conformer count? Indirect evidence addressing aspects of these questions can be found in the 3-D neighboring data PubChem provides.</p>
+<p>PubChem assigns different unique compound identifiers (CIDs) for different isotopomers of the same chemical structure. For example, CID 2244 and CID 450661 are both aspirin (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a>), but they differ from each other in the mass of one of the carbonyl carbon atoms. Although they are effectively identical for 3-D neighboring purposes, the conformer generation processing employed in PubChem3D resulted in different &#8220;default&#8221; conformers that are effectively mirror images of each other, with an insignificant energy difference of less than 0.5 kcal/mol. Superposition of the default conformers of these two CIDs yields a ST of 0.83, meeting the ST neighboring threshold; however, the CT at this superposition is only 0.27, which is not similar enough to satisfy the &#8220;Similar Conformers&#8221; 3-D neighboring threshold. As shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a> and Table <em class="xref std std-ref">1</em>, the neighbors for the first three diverse conformers of CID 2244 and CID 450661 each have some degree of overlap, and, in some cases, this overlap is significant. For example, 62% (775 of 1,251) of the 3-D neighbors for the first diverse conformer of CID 2244 are identical to the 3-D neighbors found for the second diverse conformer of CID 450661. Similarly, 63% (812 out of 1,296) of the 3-D neighbors of the second diverse conformer of CID 2244 overlap with those of the first diverse conformer of CID 450661, while the third diverse conformer of CID 2244 shares 60% (730 out of 1,214) of its neighbors with the third conformer of CID 450661. Although there is a great deal of similarity between different chosen conformers of aspirin, they still identify a sizeable population of unique 3-D neighbors between CID 2244 and CID 450661, and, thus, unique shape/feature space. This demonstrates the sensitivity of the conformers used during neighboring processing, even for simple chemical structures like aspirin; however, considering PubChem is using a diverse conformer scheme, as more conformers are used in neighboring, the coverage of the conformational variation improves. This leaves one to wonder, how many diverse conformers per compound might be necessary to saturate this coverage and moderate the effects of this sensitivity?</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-13-8.jpg" src="../_images/1758-2946-3-13-8.jpg" />
+<p class="caption">Figure 8. Sensitivity of conformer choice in 3-D neighboring</p>
+<div class="legend">
+<strong>Sensitivity of conformer choice in 3-D neighboring</strong>. Independent conformer processing for CID 2244 and CID 450661, which differ by a single isotope, resulted in default conformers that are effectively mirror images. The 3-D neighbors are different, but less so as more diverse conformers are used, illustrating the sensitivity of the input conformers to 3-D neighboring, but also how using multiple conformers during neighboring can help mitigate such effects.</div>
+</div>
+<p>To help address this question more directly, 4,218 compounds were 3-D neighbored against all of PubChem3D. This set of 4,218 compounds were selected using a query of the PubChem Compound database (<em>&#8220;has pharm&#8221;[Filter] AND &#8220;has 3d conformer&#8221;[Filter] AND 0[AtomChiralUndefCount] AND 0[BondChiralUndefCount]</em>). This query means that the queried chemical structures have known pharmacological action as annotated by MeSH <a class="footnote-reference" href="#b18" id="id40">[18]</a>, have a conformer model in PubChem3D, and have zero undefined SP2/SP3 stereo centers. (The last criterion is utilized solely to limit the count of chemical structures considered and should have no bearing on the results of this test.) The PubChem CIDs for the selected chemical structures are available in Additional file</p>
+<p>Additional file 1</p>
+<p><strong>List of PubChem Compound identifiers (CIDs) that were neighbored using different counts of diverse conformers per compound</strong>.</p>
+<p>Click here for file</p>
+<p>These molecules were selected as they are among the most biologically relevant small molecule chemical structures known, being heavily studied in the biomedical literature and consisting, in large part, of most known drugs. Of the very broad range of 367 pharmacological actions defined for the 4,218 small molecules, the three with greatest compound count were enzyme inhibitors (336), anti-bacterial agents (237), and antineoplastic agents (230). These small molecules with known biological action (<em>Query set</em>) were neighbored against 26,157,365 compound records (<em>Search set</em>), representing the entire &#8220;live&#8221; PubChem3D contents as of Oct. 2010, using up to 1, 3, 5, 7, and 10 diverse conformers per compound for both compound sets. As shown in Table <em class="xref std std-ref">2</em>, the average conformer counts between the <em>Query</em> set and <em>Search</em> set are similar, with the query set being slightly less flexible. The non-hydrogen atom count and feature count profiles depicted in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-9"><em>9</em></a> for the <em>Query</em> set are also comparable to those found for the <em>Search</em> set.</p>
+<div class="figure align-center" id="figure-9">
+<img alt="../_images/1758-2946-3-13-9.jpg" src="../_images/1758-2946-3-13-9.jpg" />
+<p class="caption">Figure 9. <em>Query</em> and <em>Search</em> set profile comparison</p>
+<div class="legend">
+<strong>Query Search</strong> . Frequency plot of the counts of non-hydrogen atoms and features for the 4,218 chemical structures with known pharmacological action (<em>Query</em>) and all 26,157,365 PubChem3D Compound records (<em>Search</em>).</div>
+</div>
+<p>Looking at Table <em class="xref std std-ref">2</em>, one can see that the average counts of neighbors per conformer and those per compound increase as a function of diverse conformer count. Interestingly, as shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a>, the average count of compound neighbors per compound appears highly correlated with the logarithm of total conformer pairs considered by neighboring. This suggests one must exponentially increase the count of conformer pairs to achieve a complementary linear increase in unique compound pairs.</p>
+<div class="figure align-center" id="figure-10">
+<img alt="../_images/1758-2946-3-13-10.jpg" src="../_images/1758-2946-3-13-10.jpg" />
+<p class="caption">Figure 10. Compound 3-D neighbor count correlated to Log(Conformer pair count)</p>
+<div class="legend">
+<strong>Compound 3-D neighbor count correlated to Log(Conformer pair count)</strong>. Plot of count of 3-D neighbors per compound and neighbors per conformer [left Y-axis] and a plot of Log<sub>10</sub>(total conformer pairs) [right Y-axis] as a function of diverse conformer count considered during neighboring.</div>
+</div>
+<p>It is not completely clear why this should be so, but one consideration comes to mind. It may be an artefact of the nature of the diverse conformer relationship, whereby a default conformer is chosen as the first, the most diverse conformer to the default conformer is the selected as the second, and each subsequent diverse conformer must be furthest away from the previously selected diverse conformers. This means that the most diverse conformers for a chemical structure are always considered first. Subsequently, each additional diverse conformer will increasingly resemble the previous diverse conformers, potentially yielding compound neighbors found previously by the other conformers for the same chemical structure. This is reflected by the ratio of conformer and compound 3-D neighbors. At three, five, and seven diverse conformers, 38%, 53%, and 61%, respectively, of the conformer neighbors point to the same compound neighbors. By ten diverse conformers, 68% of the conformer neighbors point to the same compound neighbors. With this said, one thing is clear. Neighboring more diverse conformers per compound will result in more compound neighbors per compound; however, the computation effort expended to do this grows exponentially as an increasing ratio of conformer neighbors show you more ways two compounds are interrelated.</p>
+<p>One interesting aspect of Table <em class="xref std std-ref">2</em> and Figure <a class="reference internal" href="1758-2946-3-45.html#figure-10"><em>10</em></a> is that the average conformer neighbor count per conformer grows very slowly. A ten times growth in conformers, corresponding to a 68 times increase in conformer pairs considered, results in only a 70% increase in the average conformer neighbor count. This is somewhat surprising given the argument above. It appears to suggest that each added diverse conformer of a chemical structure is also adding a significant portion of unique shape/feature space. This is seen in Table <em class="xref std std-ref">1</em>, whereby the conformer neighbors of each of the first three diverse conformers of aspirin (CID 2244 or CID 450661) mostly had very little overlap, typically less than 20%, of similar conformer neighbors with other diverse conformers of the same chemical structure. While the degree of unique shape/feature space being added may diminish as more diverse conformers are added, it would still appear to be rather substantial even at ten diverse conformers per compound. Eventually, one may expect, as even more diverse conformers are considered, that the average count of conformer neighbors per conformer may grow substantially, as conformers increasingly yield similar neighbor lists, but clearly this point is not yet reached at ten conformers per compound, as reflected by the continued growth in average count of compound neighbors per compound. Perhaps, for most chemical structures, this point may be reached by twenty diverse conformers. Using the computers and algorithms of today, and as reflected in the total search time in Table <em class="xref std std-ref">2</em>, twenty diverse conformers per compound is still a mountain too high to climb for a collection of the size of PubChem.</p>
+</div>
+<div class="section" id="efficiency-of-3-d-neighboring-scheme">
+<h3>5. Efficiency of 3-D neighboring scheme<a class="headerlink" href="#efficiency-of-3-d-neighboring-scheme" title="Permalink to this headline">¶</a></h3>
+<p>Although the overall speed of 3-D neighboring depends on various factors, such as atom count, use of a precomputed shape grid approach, etc., a modern computer processor core can process on the order of 10^2 to 10^3 3-D conformer pair superpositions per second, when using a Gaussian-based shape definition. In theory, 26.1 million compounds with two diverse conformers per compound would require more than a quadrillion (10^15) pair-wise conformer superposition determinations, corresponding to +40,000 years of processor core computation; however, PubChem 3-D neighboring processing was completed in about two months using ~2,500 computer processing cores (which represents more the throughput achieved in terms of actual time on a somewhat chaotic and somewhat unstable shared compute cluster rather than actual CPU time), meaning it took ~400 years of compute server time. How was this achieved?</p>
+<p>To demonstrate the efficiency of the PubChem3D neighboring system, and reusing the previous example of querying 4,218 known bioactive small molecules against all of PubChem, Table <em class="xref std std-ref">3</em> gives the percentage of conformer pairs excluded by filter type and the percentage of time spent in each stage of the neighboring processing. In the first stage, a series of three filters are utilized to screen out conformer pairs incapable of achieving the ST and CT thresholds of 0.8 and 0.5, respectively, required to be a neighbor. The most effective of these is the CT feature filter with 65% efficiency for this test set, which is to say more than half of all conformer pairs encountered can be effectively ignored. One nice aspect is that this CT feature filter operates on compound pairs, as opposed to conformer pairs. The other two filters at this stage check for incompatible shape or feature volume between conformer pairs. The total CPU time spent performing these three filters is less than 1%, yet they are effective, removing 68% of all conformer pairs from further consideration.</p>
+<p>Alignment recycling is the next stage after filtering. This methodology consists of: comparing a shape fingerprint; locating common reference shapes; and then reuse of the alignment to the common reference, where the shape overlap and the feature overlap are computed at that recycled alignment to the reference shape. This is repeated for each common reference shape and only the best superposition is kept.</p>
+<p>Alignment recycling provides two opportunities to further remove conformer pairs from consideration. If a reference shape cannot be found in common, the conformers are considered to be too different to be a neighbor. This alignment recycling fingerprint filter removes an additional 4% of all conformer pairs (14% of all conformer pairs not already filtered). If the pre-optimized best overlap from alignment recycling is not sufficiently large (yielding an ST of at least 0.735), the conformer pair is considered to be incapable of being a neighbor. This alignment recycling overlap filter removes 27% of all conformer pairs (96% of all conformer pairs not already filtered) but consumes 86% of CPU time. Together, all filtering steps remove 99.8% of conformer pairs prior to optimization of the conformer superposition at the recycled alignment. The final shape optimization step consumes 10% of the CPU time, retaining less than 0.6% of optimized conformer pairs as neighbor pairs. About 66% of conformer pairs shape-optimized are rejected due to an insufficient ST value (&lt;0.795) to become a neighbor and the remainder rejected due to insufficient CT value (&lt;0.495) at the shape-optimized superposition.</p>
+<p>The overall throughput of the 3-D neighboring methodology is consistent across the range of diverse conformers considered, at a rate of ~150,000 conformers per second. The other overhead reported in Table <em class="xref std std-ref">3</em> involves mostly the billions and trillions of timing measurements but also involves some memory allocation aspects. In reality, with timing statistics turned off, there is very little other overhead to the method. While the total size of the input binary data files grows as a function diverse conformer count, ranging from 19 GB to 159 GB, the computational density is more than sufficient to avoid making input of these search files a bottleneck, provided at least four conformers are being queried simultaneously. If fewer than four conformers are queried at a time, and the input binary files are not memory resident, input can be a bottleneck.</p>
+</div>
+<div class="section" id="alignment-recycling">
+<h3>6. Alignment recycling<a class="headerlink" href="#alignment-recycling" title="Permalink to this headline">¶</a></h3>
+<p>The alignment recycling methodology <a class="footnote-reference" href="#b14" id="id41">[14]</a> was extended to cover non-hydrogen atom counts from 0-50 and rotatable bond counts from 0-15. This was achieved by leveraging our recent study on the diversity of shape space <a class="footnote-reference" href="#b15" id="id42">[15]</a>, where shape space was shown to grow gradually as a function of conformer volume and a dynamic shape similarity threshold for a relatively constant count of reference shapes. This curve (the Unique-Shape Tanimoto in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-11"><em>11</em></a>) was used to effectively partition shape space into seven regions. Each fingerprint region has a distinct shape similarity threshold (the Fingerprint Tanimoto in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-11"><em>11</em></a>) and covers the entire shape diversity of a given conformer volume range. As Table <em class="xref std std-ref">4</em> shows, there are a total of 3,311 reference shapes across all seven regions, representing the entire shape diversity of 5.2 billion conformers for the entire contents (live and non-live) of the PubChem3D system (+45.9 million small molecules).</p>
+<div class="figure align-center" id="figure-11">
+<img alt="../_images/1758-2946-3-13-11.jpg" src="../_images/1758-2946-3-13-11.jpg" />
+<p class="caption">Figure 11. Shape fingerprint design</p>
+<div class="legend">
+<strong>Shape fingerprint design</strong>. Plot of conformer count (blue line) [left Y-axis], cumulative % conformers (red line) [right Y-axis], unique-shape Tanimoto (green line) [right Y-axis], and fingerprint Tanimoto (purple line) [right Y-axis] as a function of conformer volume (Å<sup>3</sup>). The fingerprint Tanimoto indicates the seven volume regions of the reference shape and its corresponding ST minimum distance between reference shapes.</div>
+</div>
+<p>When computing the shape fingerprint of a conformer, if a reference shape has a shape optimized superposition that is greater than or equal to the fingerprint shape similarity threshold (<a class="reference internal" href="1758-2946-3-45.html#figure-12"><em>12</em></a>, for the first ten diverse conformers from the 26.1 million compounds (246 million conformers) covered in the study of 4,218 small molecules of biomedical interest, there are at most a total of 129 reference shapes used per conformer, with an average and standard deviation of 39 +/- 13. This sparseness is to be expected as the shape fingerprint primarily identifies a specific region of shape space. Figure <a class="reference internal" href="1758-2946-3-39.html#figure-13"><em>13</em></a> depicts the count of set bits per fingerprint region across the 246 million conformers. As Table <em class="xref std std-ref">4</em> shows, each fingerprint area covers a specific volume range. So, one should not expect a conformer with volume 100 Å<sup>3</sup> to have reference shapes in the conformer volume range 433-999, and vice versa. In fact, while each conformer has at least one reference shape set, many of the 246 million conformers considered do not have any reference shapes set in one of the seven different fingerprint regions. For the fingerprint reference shape volume (Å<sup>3</sup>) ranges 1-165, 166-199, 200-238, 239-285, 286-344, 345-432, and 433-999, a total of 83.2%, 62.4%, 35.1%, 11.6%, 2.4%, 2.6%, and 4.1% of the 246 million conformers, respectively, are not using the fingerprint region. This is reflected in the relatively high counts of conformers with no reference shapes, as depicted in the magnified section of Figure <a class="reference internal" href="1758-2946-3-39.html#figure-13"><em>13</em></a>.</p>
+<div class="figure align-center" id="figure-12">
+<img alt="../_images/1758-2946-3-13-12.jpg" src="../_images/1758-2946-3-13-12.jpg" />
+<p class="caption">Figure 12. Shape fingerprint bits are sparsely set</p>
+<div class="legend">
+<strong>Shape fingerprint bits are sparsely set</strong>. Frequency plot of the total count of fingerprint reference shapes set per conformer for the first ten conformers of the 26,157,365 PubChem3D Compound records in the <em>Search</em> set, corresponding to 246,874,949 conformers.</div>
+</div>
+<div class="figure align-center" id="figure-13">
+<img alt="../_images/1758-2946-3-13-13.jpg" src="../_images/1758-2946-3-13-13.jpg" />
+<p class="caption">Figure 13. Some shape fingerprint volume regions are mostly unused</p>
+<div class="legend">
+<strong>Some shape fingerprint volume regions are mostly unused</strong>. Plot of the frequency of the shape fingerprint bit counts per fingerprint volume region for the first ten conformers of the 26,157,365 PubChem3D Compound records in the <em>Search</em> set, corresponding to 246,874,949 conformers. A significant percentage of the conformers do not use fingerprint reference shapes in the volume ranges 1-165, 166-199, and 200-238.</div>
+</div>
+<p>The relative popularity of each discrete 3,311 reference shapes varies markedly. Depicted in Figure <a class="reference internal" href="1758-2946-3-51.html#figure-14"><em>14</em></a>, one can see the frequency of use of each reference shape defined in a given fingerprint volume range for the 246 million conformers. In each fingerprint volume range, there exist a very small number of reference shapes that clearly stand out as being used most often. Afterwards, the use of individual reference shapes falls off sharply and then gradually, until only peripheral reference shapes that are rarely used are left. This motif is seen for all fingerprint volume regions and may reflect the relative uniqueness (or lack thereof) of shapes across the first ten diverse conformers in PubChem.</p>
+<div class="figure align-center" id="figure-14">
+<img alt="../_images/1758-2946-3-13-14.jpg" src="../_images/1758-2946-3-13-14.jpg" />
+<p class="caption">Figure 14. Frequency of fingerprint reference shape use</p>
+<div class="legend">
+<strong>Frequency of fingerprint reference shape use</strong>. The frequency of use of the 3,311 fingerprint reference shape bits, separated by fingerprint volume region, by the first ten conformers of the 26,157,365 PubChem3D Compound records in the <em>Search</em> set, corresponding to 246,874,949 conformers. Some reference shapes are very popular while others are rarely used.</div>
+</div>
+</div>
+<div class="section" id="superposition-storage">
+<h3>7. Superposition storage<a class="headerlink" href="#superposition-storage" title="Permalink to this headline">¶</a></h3>
+<p>Superposition of two conformers requires modification of the coordinates of one conformer relative to the other. Retention of the rotational matrix and translation vector is a practical approach to retain a superposition between conformers to avoid having to re-compute a superposition or store modified coordinates of a conformer.</p>
+<p>Storage of superposition results in PubChem3D involves identification of: the two conformers involved, often with one of the two conformers implicitly identified (<em>e.g</em>., by storing the superposition as a subordinate property of a conformer); the 3 × 3 rotation matrix; and the 3 × 1 translation vector. The PubChem3D conformer ID is often represented as either a 64-bit unsigned integer (sometimes stored in 16-character hex form), with the 32-high bits representing the PubChem Compound identifier (CID) and the 16-low bits representing the local conformer ID (LID), or two numbers &#8221;.&#8221; separated (e.g., CID.LID). Storage of the rotation and translation parts represents more of a challenge, given there are twelve floating point numbers to convey. To provide for a more compact superposition representation, the ability to pack/unpack the rotation and translation into a 64-bit unsigned integer was developed. While described in more detail in the <strong>Materials and Methods</strong> section below, this involves transforming the rotation matrix into a quaternion and packing each of the four (Q<sub>w</sub>, Q<sub>x</sub>, Q<sub>y</sub>, Q<sub>z</sub>) components into 32-bits, 8 bits each. The remaining 32-bits are used to encode the translation vector.</p>
+<p>To study the loss in accuracy due to encoding/decoding the conformer superposition information into a 64-bit integer, 1.85 billion unique conformer neighbor pairs in the 0-20 million CID range involving conformers that are the first diverse conformer of a compound were used. The chemical structure and 3-D coordinates of each conformer pair were: downloaded from the PubChem3D data system database; the superposition between the conformers was optimized, yielding a before ST/CT value pair; the superposition rotation and translation was encoded, decoded, and applied to the original downloaded conformer pair coordinates; and then a single point ST and CT value was computed, yielding an after ST/CT value pair. The difference in the before/after ST and CT values were binned in 0.001 increments and the population of the occupied bins are plotted in Figure <a class="reference internal" href="1758-2946-3-5.html#figure-15"><em>15</em></a> and summarized in Table <em class="xref std std-ref">5</em>.</p>
+<div class="figure align-center" id="figure-15">
+<img alt="../_images/1758-2946-3-13-15.jpg" src="../_images/1758-2946-3-13-15.jpg" />
+<p class="caption">Figure 15. Effect of superposition packing on ST/CT</p>
+<div class="legend">
+<strong>Effect of superposition packing on ST/CT</strong>. The difference in the ST/CT scores (binned in 0.001 increments) before and after packing superposition translation/rotation information into an unsigned 64-bit integer. A positve difference indicates an enhancement of the ST/CT scores and a negative difference indicates an error in the ST/CT scores.</div>
+</div>
+<p>Perhaps most remarkable, the superposition encode/decode procedure is just as likely to enhance the ST and CT values as detract from them. Also interesting is that the CT error curves are much broader, reflecting, in part, the much greater positional sensitivity of the CT measure. Small deviations in rotation have an increasing effect the further an atom is from the molecule center. Fictitious feature atoms are relatively sparse, have small atomic radii, and are often close to the periphery of the chemical structure. Shape similarity, on the other hand, is not as sensitive, as real atoms are relatively dense and most atoms in the molecule are typically near the steric center, thus, fewer atoms are affected from rotation encoding effects. As a whole, the use of a 64-bit integer to store a conformer pair superposition results in relatively few cases where the Tanimoto difference (after-before) is less than 0.025, with the chances for this to occur for ST and CT being 1 in 14.6 million and 1 in 955, respectively. If the error from being off a small fraction of a degree from the original superposition is too much, one could simply re-optimize the conformer superposition provided by PubChem, as the benefits in terms of the ease of storage are considerable.</p>
+</div>
+</div>
+<div class="section" id="id43">
+<h2>Conclusion<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h2>
+<p>In the present paper, the PubChem 3-D &#8220;Similar Conformers&#8221; neighboring relationship and the methodology used in its computation are described. PubChem 3-D neighbors are defined as any two conformers with a shape-optimized superposition yielding a similar 3-D conformer shape (ST value of ≥ 0.8) and similar 3-D orientation of functional groups typically used to define pharmacophore features (CT value of ≥ 0.5). In the cases of chemical structures without features, a similar 3-D conformer shape with ST value of ≥ 0.93 is used.</p>
+<p>To make the calculation of this 3-D neighboring relationship tractable, a series of filters were designed to avoid the time-consuming shape-superposition computation between conformer pairs that could not possibly be 3-D neighbors. This resulted in an average throughput of 150,000 conformer pairs per second per processor core, a speed sufficient to consider multiple diverse conformers per compound in the 3-D neighboring relationship.</p>
+<p>Neighboring the first two diverse conformers of 26.1 million PubChem Compound records yielded 8.16 billion 3-D conformer neighbor pairs and 6.62 billion 3-D compound neighbor pairs, with an average of 253 &#8220;Similar Conformers&#8221; per PubChem Compound. Comparison of the PubChem 3-D &#8220;Similar Conformers&#8221; neighboring relationship with the PubChem 2-D &#8220;Similar Compounds&#8221; neighboring relationship using three well-known bioactive molecules (aspirin, caffeine, and morphine) showed a considerable degree of uniqueness between the two neighboring relationships and providing a number of related structures with significant biological annotation. This was also illustrated by the ability of the 3-D neighboring relationship to associate eight selected non-steroidal anti-inflammatory drugs (NSAIDs) to each other, despite little 2-D pair-wise similarity between most of the compound pairs. Additional study of 4,218 small molecules of biomedical interest across a range of diverse conformers shows that neighboring more conformers per compound will result in being able to associate more chemical structures to each other; however, an exponential increase in the count of conformer pairs considered results in only a linear increase in additional compound 3-D neighbor pairs.</p>
+</div>
+<div class="section" id="materials-and-methods">
+<h2>Materials and methods<a class="headerlink" href="#materials-and-methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="chemical-structure-3-d-representation">
+<h3>1. Chemical structure 3-D representation<a class="headerlink" href="#chemical-structure-3-d-representation" title="Permalink to this headline">¶</a></h3>
+<p>Theoretical 3-D descriptions of the 26,157,365 chemical structures covered in this work and found in the PubChem Compound database <a class="footnote-reference" href="#b1" id="id44">[1]</a><a class="footnote-reference" href="#b2" id="id45">[2]</a> are generated as described in our previous studies <a class="footnote-reference" href="#b15" id="id46">[15]</a><a class="footnote-reference" href="#b28" id="id47">[28]</a>. It is important to note that these conformers are not energy minima on a potential energy surface, but an ensemble of energetically-accessible (at room temperature), biologically-relevant (able to reproduce most known bioactive conformations), sampled (with a minimum atom pair-wise RMSD separation) conformations that the molecule may cover. In theory, these ensembles describe all relevant molecular shapes (including all important energy minima) within the resolution of the clustering RMSD for the conformer ensemble.</p>
+</div>
+<div class="section" id="molecular-shape-and-features">
+<h3>2. Molecular shape and features<a class="headerlink" href="#molecular-shape-and-features" title="Permalink to this headline">¶</a></h3>
+<p>An atom-centered Gaussian description <a class="footnote-reference" href="#b9" id="id48">[9]</a><a class="footnote-reference" href="#b10" id="id49">[10]</a><a class="footnote-reference" href="#b11" id="id50">[11]</a><a class="footnote-reference" href="#b12" id="id51">[12]</a> using Bondi radii <a class="footnote-reference" href="#b29" id="id52">[29]</a> is utilized to compute 3-D similarity. Fictitious &#8220;feature&#8221; atoms (also known as &#8220;color&#8221; atoms) are defined to represent the pharmacophore feature functional group types present in a chemical structure. The Mills/Deans implicit force-field <a class="footnote-reference" href="#b30" id="id53">[30]</a>, as implemented in the OEShape C++ Toolkit, is employed to identify these features. The six feature types recognized are: anion, cation, hydrogen-bond donor, hydrogen-bond acceptor, hydrophobe, and ring. Feature atom 3-D coordinates are computed relative to the steric center of real &#8220;parent&#8221; atoms that comprise each feature. Post processing of feature atom assignment identifies any features of the same type within 1.0 Å of each other and merges the unique parent atoms that comprise the two features. This post processing step is performed iteratively, until no additional features are merged. The radius used for all feature atoms is 1.08265 Å.</p>
+<p>Shape similarity computation utilizes the shape Tanimoto (ST) via Eq. (2) and only considers the non-hydrogen atoms in the molecule. Feature similarity, unlike shape similarity, involves summing the individual overlaps of the six component feature atom types when computing the <em>A</em>, <em>B</em>, and <em>AB</em> found in Eq. (2); thus, yielding Eq. (3) for the feature similarity measure, color Tanimoto (CT). Otherwise, the feature similarity computation method is identical to the shape similarity computation method.</p>
+<p>When optimizing the shape superposition between a conformer pair, the OpenEye OEShape C++ toolkit is used via the OEBestOverlay object, with the parameters OEOverlapRadii::All and OEOverlapMethod::Analytic. Any other shape or feature computation utilizes in-house implementations using the Grant and Pickup <a class="footnote-reference" href="#b9" id="id54">[9]</a> Gaussian-based shape methodology. For all in-house shape-based approaches, an exponent lookup table of size 6,001 is used in lieu of exponent calculation for the range of (-12.0 to 0.0) in 0.002 increments. Exponent values outside of this range are zero. All other terms in the Grant and Pickup shape-based methodology are computed exactly.</p>
+<p>A grid-based approach is used by parts of the 3-D neighboring methodology to estimate the shape overlap with O(N) computational complexity. In these cases, a 3-D lattice of points separated by 0.25 Å give the shape overlap of a carbon probe-atom at the grid point to the query conformer. A cut-off distance of 4.5 Å is used for each query conformer atom, where no additional contribution to shape overlap is considered.</p>
+</div>
+<div class="section" id="diverse-conformer-concept">
+<h3>3. Diverse conformer concept<a class="headerlink" href="#diverse-conformer-concept" title="Permalink to this headline">¶</a></h3>
+<p>Although the theoretical conformer ensemble for each molecule may have up to 500 conformers (averaging ~110), it is not practical to consider all conformers for PubChem 3-D neighboring. Therefore, a diverse conformer concept is introduced that orders the conformers in the ensemble for a chemical structure by their combined shape and feature dissimilarity, with the most dissimilar conformers first. The lowest-energy conformer in the conformer ensemble is selected as the default, first diverse conformer to seed the process. The conformer with the least combo Tanimoto (being the sum of the ST and CT similarity values for the ST-optimized superposition) to the first conformer is selected as the second most diverse conformer. The conformer with the least sum of combo Tanimoto to the first two conformers is selected as the third, and so on until all conformers are assigned a diverse conformer ordering. In the case of a tie, the conformer with the largest sum of combo Tanimoto to all unassigned conformers is selected. If a tie persists, the conformer with the least LID (local conformer identifier) is selected.</p>
+</div>
+<div class="section" id="shape-fingerprint-definition">
+<h3>4. Shape fingerprint definition<a class="headerlink" href="#shape-fingerprint-definition" title="Permalink to this headline">¶</a></h3>
+<p>Haigh <em>et al</em>. <a class="footnote-reference" href="#b13" id="id55">[13]</a> applied a clustering technique to select a diverse set of reference shapes that cover the overall shape space of possible 3-D shapes, and generated 3-D molecular shape fingerprints using these reference shapes. Comparison of molecular shape fingerprints was shown to be orders of magnitude faster than shape-overlap-based approaches such as ROCS <a class="footnote-reference" href="#b10" id="id56">[10]</a>, illustrating its potential in screening a large 3-D chemical database. Therefore, we applied the 3-D shape fingerprint technique, in conjunction with &#8220;alignment recycling&#8221; <a class="footnote-reference" href="#b14" id="id57">[14]</a>, for use in computing a &#8220;Similar Conformer&#8221; relationship.</p>
+<p>In our recent study <a class="footnote-reference" href="#b15" id="id58">[15]</a>, a dynamic shape similarity threshold (<sup>thresh</sup>ST) was employed in clustering conformers of a particular volume such that the resulting reference shape count became less than or equal to a certain number (200). In this manner, the number of reference shapes per volume can be kept relatively constant while the growth of the shape space as a function of volume is manifest by a decrease in <a class="reference internal" href="1758-2946-3-45.html#figure-11"><em>11</em></a>). The plot of the Unique-Shape Tanimoto versus the conformer volume was used to choose appropriate <a class="reference internal" href="1758-2946-3-45.html#figure-11"><em>11</em></a>). The <a class="footnote-reference" href="#b15" id="id59">[15]</a> were then pooled and clustered at</p>
+<p>The resulting &#8220;unique shape&#8221; count is listed in Table <em class="xref std std-ref">4</em>, with the conformer count that belongs to the shape space represented by the corresponding unique shapes. It indicates that the shape space spanned by 5.24 billion conformers (the entire contents of the PubChem3D archive, live and non-live, from more than 45.9 million unique chemical structures) can be represented in such a manner so as to only require 3,311 unique reference shapes (a number which may grow as a function of time). Figure <a class="reference internal" href="1758-2946-3-51.html#figure-14"><em>14</em></a> shows the frequency of use of the various 3-D fingerprint reference shapes, with some being heavily utilized while others are rarely used. The volume range 433-999 is the largest in both volume spanned and count of reference shapes. We anticipate that this volume range may need to be split into separate regions in the future.</p>
+</div>
+<div class="section" id="pubchem-3-d-neighbor-processing">
+<h3>5. PubChem 3-D neighbor processing<a class="headerlink" href="#pubchem-3-d-neighbor-processing" title="Permalink to this headline">¶</a></h3>
+<p>PubChem Compound (CID) records are partitioned into two sets, &#8220;live&#8221; and &#8220;non-live&#8221;. A &#8220;live&#8221; CID is one that has at least one current version PubChem Substance record pointing to it. The &#8220;non-live&#8221; partition contains all CIDs not considered to be &#8220;live&#8221;. For each record that is contained in the PubChem3D system and considered to be &#8220;live&#8221;, PubChem computes a &#8220;Similar Conformer&#8221; relationship that considers both shape similarity (ST ≥ 0.8) and feature similarity (CT ≥ 0.5). [Chemical structures without features, while rare, can have a similar conformer relationship with other featureless chemical structures provided the ST ≥ 0.93.] Essentially, this amounts to a 3-D similarity search of a given conformer across the first N-diverse conformers of &#8220;live&#8221; CIDs, where at the time of writing &#8220;N&#8221; is two, with a third in the process of being added. This processing we call &#8220;neighboring&#8221;.</p>
+<p>This PubChem3D similarity search is a multistep process designed: to filter out conformer pairs that cannot possibly be neighbors, to generate a near-optimal superposition between conformer pairs, and to perform a final optimization of the superposition to maximize the shape volume overlap between conformer pairs. These distinct stages are described below.</p>
+<div class="section" id="stage-1-filtering">
+<h4>Stage 1: Filtering<a class="headerlink" href="#stage-1-filtering" title="Permalink to this headline">¶</a></h4>
+<p>There are multiple filters used in PubChem3D neighboring, each with different degrees of computational cost and efficiency. The cheapest filters utilize the ST and CT equations [Eq. (2) and Eq. (3)], the pre-computed self-overlap volumes (<em>A</em> and <em>B</em>), the predefined Tanimoto thresholds, and a rearranged Tanimoto equation solving for <em>AB</em>, which now represents the minimum overlap (<sub>min</sub>AB) necessary to meet the threshold criteria (ST or CT). If this <sub>min</sub> ABis greater than either <em>A</em> or <em>B</em>, then the conformer pair may be eliminated from further consideration as the maximum possible overlap between the conformer pair will be smaller than <sub>min</sub>AB, yielding a Tanimoto value less than the respective threshold. The resulting equation for CT, using the threshold of 0.5, is:</p>
+<p>This approach to filtering can be used a second time (although at greater computational cost) for feature similarity by using the individual feature counts. For each feature type, one uses the feature count (<em>A</em> and <em>B</em>) and the common count (either <em>A</em> or <em>B</em>, whichever is the lesser). One can then compute a <sub>max</sub> CTthat must be above the threshold of 0.5 to possibly be a neighbor, as shown in Eq. (5):</p>
+<p>An enormous advantage to this filter is that it operates on compound pairs. This means it applies to all conformers being neighbored for the respective compound pair, unlike the previous CT filter which is per conformer pair. So, as the count of conformers per compound is increased, the utility of this filter is magnified.</p>
+<p>Taking the exact same approach for ST as CT is not possible, as the shape volume <em>AB</em> overlap can be greater than either <em>A</em> or <em>B</em>, due to the Grant and Pickup atom-centered Gaussian-based formulation of molecular shape, the radii used, and the bond distances of atoms. The net effect is such that the <em>AB</em> overlap can be significantly greater than either <em>A</em> or <em>B</em>. The filter for ST (and the threshold of 0.8) becomes:</p>
+<p>The ratios in both Eqs. (6) and (7) must be between 0.75 and 1.50 for the conformer pair to possibly be a neighbor.</p>
+</div>
+<div class="section" id="stage-2-shape-fingerprint-comparison-and-alignment-recycling">
+<h4>Stage 2: Shape fingerprint comparison and alignment recycling<a class="headerlink" href="#stage-2-shape-fingerprint-comparison-and-alignment-recycling" title="Permalink to this headline">¶</a></h4>
+<p>The next stage of filtering utilizes the PubChem3D shape fingerprint computed for each conformer. For a given conformer pair to become neighbors to each other, there must be a common reference. If a common reference cannot be found, the conformer pair cannot be neighbors and no further computation is necessary. For each common reference, the 3 × 3 rotation matrix and 3 × 1 translation vector that aligns the conformer to the reference is utilized. The resulting 3 × 3 rotation matrix and 3 × 1 translation vector are applied to the coordinates of one of the conformers. This provides a superposition of one conformer to the other. A combined shape and feature overlap for the conformer pair using this alignment is then computed as following:</p>
+<p>where <sub>shape</sub> ABis the common shape volume between the conformer pair (using a precomputed shape-grid at 0.25 Å resolution) and <sub>feature</sub> ABis the sum of six component feature overlaps (using a feature atom radius of 1.25 Å, to account for proximate color atoms).</p>
+<p>This approach is repeated for each common reference shape. The reference-shape-derived conformer alignment yielding the largest <sub>combo</sub> ABvalue is used in a final <sub>shape</sub> ABoverlap computation, this time not using a grid-based approach. The final <sub>shape</sub> ABoverlap is used along with the pre-computed self shape overlap values per conformer to compute the ST at this overlap geometry. If the computed ST is not greater than 0.735, the conformer pair is considered to not possibly be a neighbor. [The &#8220;grid&#8221; <sub>shape</sub> ABcan be sufficiently different than the &#8220;exact&#8221; <sub>shape</sub> ABvalue, resulting in the loss of many neighbor relationships.]</p>
+</div>
+<div class="section" id="stage-3-shape-overlay-optimization-and-st-ct-score-computation">
+<h4>Stage 3: Shape overlay optimization and ST/CT score computation<a class="headerlink" href="#stage-3-shape-overlay-optimization-and-st-ct-score-computation" title="Permalink to this headline">¶</a></h4>
+<p>Using the &#8220;alignment recycling&#8221; conformer pair superposition from the previous stage, a final superposition optimization to maximize the shape volume overlap between the conformer pair is performed using the OEShape C++ toolkit <a class="footnote-reference" href="#b12" id="id60">[12]</a>. If the final conformer superposition yields an ST ≥ 0.8 (actually 0.795 after rounding to the nearest 0.01 is considered), the CT is also computed at the same conformer alignment. If CT ≥ 0.5 (actually 0.495 after rounding to the nearest 0.01 is considered), the conformer pair is considered to be a neighbor. As mentioned previously, if both conformers are devoid of features, alternatively, an ST ≥ 0.93 (actually 0.925 after rounding to the nearest 0.01 is considered) is sufficient to be considered a neighbor. The 3 × 3 rotation matrix and 3 × 1 translation vector and the ST/CT similarity values are retained for the conformer pair.</p>
+</div>
+</div>
+<div class="section" id="pubchem-3-d-neighbor-processing-addendum">
+<h3>6. PubChem 3-D neighbor processing addendum<a class="headerlink" href="#pubchem-3-d-neighbor-processing-addendum" title="Permalink to this headline">¶</a></h3>
+<p>There are additional aspects to neighbor processing that are germane to their accuracy and use. To minimize input overhead and memory utilization, all input data is encoded in a highly compact 64-bit aligned binary format (gzip or bzip2 compression reduces file size by only 4%) that contains all information necessary to perform the neighboring computation. One side effect of this encoding is that conformer coordinates are transformed into an integer value with a resolution of +/- 0.0015 Å and restricts coordinates to the range (-50 Å, +50 Å), which is more than sufficient for all conformers in the PubChem3D data system. Another side effect of this encoding scheme is that, to obtain the superposition alignment between neighbored conformers, one must first transform the conformers to their steric center (<em>i.e</em>., subtract the coordinate average per axis) prior to applying the stored 3 × 3 rotation matrix and then the 3 × 1 translation vector (in that order). For conformers stored in the PubChem3D system, conformers are already at the steric center (and rotated into the non-mass weighed inertial frame of reference).</p>
+<p>Another major consideration is that the 3 × 3 rotation matrix and 3 × 1 translation vector for all fingerprints and neighbor pairs are encoded and stored as a 64-bit unsigned number. This involves transforming the 3 × 3 rotation matrix into the quaternion and then encoding these four values (Q<sub>w</sub>, Q<sub>x</sub>, Q<sub>y</sub>, and Q<sub>z</sub>) and the 3 × 1 translation vector. Each quaternion value is encoded in eight bits with a range of (-1, +1) and a resolution of 0.00784. Care must be taken when either encoding or decoding these quaternion values to always normalize, as doing so reduces the encoding error. Encoding the 3 × 1 translation vector uses a slightly different approach to achieve a maximum range of (-100 Å, +100 Å). Three of the remaining 32 bits are used to hold the sign of the X, Y, and Z translation. The remaining 29 bits encode the three absolute values in the following fashion. A value of 1.0 is added and the log of the resulting number is taken and divided by 812 (812^3 = 535387328, which just fits within 29 bits) and rounded to the nearest whole number. The integer encoded X, Y, and Z are then combined as such:</p>
+<p>The result of using a log value provides for a translation encoding that gives the best precision at 0 Å (+/- 0.0028 Å) and the worst at 100 Å (+/- 0.29 Å). Considering the requirement that a conformer pair must be at the steric center prior to encoding, the encoding error due to translation is minimal.</p>
+<p>Validation of the encoding/decoding accuracy as a function of ST and CT values across +1.85 billion unique neighbor pairs show (Table <em class="xref std std-ref">5</em>) that there is nearly an equal possibility to enhance the ST or CT value as it is to detract from it. However, the CT is much more sensitive to encoding/decoding than ST, with a 1 in 38 chance of yielding a value less by 0.01 than that reported. This is to be expected, as the radius used for feature atoms in CT computations is nearly 60% smaller than for carbon atoms, meaning small changes in the alignment can have a big effect on similarity, especially for features that are furthest from the steric center (a &#8220;torque arm&#8221; effect). Additionally, the shape overlap optimization does not consider feature atoms, meaning a small change in rotation or translation may either increase or decrease the CT value, considering no attempt was made to optimize feature alignment.</p>
+</div>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>EEB performed most of the research and SK wrote the first draft. SHB reviewed the final manuscript. All authors read and approved the final manuscript.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>Many thanks to Roger Sayle for providing key insights on ways to improve the rotational/translational matrix pack/unpack scheme. We are grateful to the NCBI Systems staff, especially Ron Patterson, Charlie Cook, and Don Preuss, whose efforts helped make the PubChem3D project possible. This research was supported by the Intramural Research Program of the National Library of Medicine, National Institutes of Health, U.S. Department of Health and Human Services. This study utilized the high-performance computational capabilities of the Biowulf Linux cluster at the National Institutes of Health, Bethesda, Md. (<a class="reference external" href="http://biowulf.nih.gov">http://biowulf.nih.gov</a>).</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id44">2</a>)</em> PubChem: integrated platform of small molecules and biological activities</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id45">2</a>)</em> PubChem: a public information system for analyzing bioactivities of small molecules</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id30">2</a>)</em> An overview of the PubChem BioAssay resource</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td>Database resources of the National Center for Biotechnology Information</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td>Grouping of coefficients for the calculation of inter-molecular similarity and dissimilarity using 2D fragment bit-strings</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[6]</a></td><td>Performance of similarity measures in 2D fragment-based similarity searching: comparison of structural descriptors and similarity coefficients</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[7]</a></td><td>Analysis and display of the size dependence of chemical similarity coefficients</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[8]</td><td><em>(<a class="fn-backref" href="#id9">1</a>, <a class="fn-backref" href="#id37">2</a>)</em> PubChem substructure fingerprint description</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[9]</td><td><em>(<a class="fn-backref" href="#id10">1</a>, <a class="fn-backref" href="#id48">2</a>, <a class="fn-backref" href="#id54">3</a>)</em> A gaussian description of molecular shape</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[10]</td><td><em>(<a class="fn-backref" href="#id11">1</a>, <a class="fn-backref" href="#id16">2</a>, <a class="fn-backref" href="#id21">3</a>, <a class="fn-backref" href="#id26">4</a>, <a class="fn-backref" href="#id49">5</a>, <a class="fn-backref" href="#id56">6</a>)</em> ROCS - Rapid Overlay of Chemical Structures</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[11]</td><td><em>(<a class="fn-backref" href="#id12">1</a>, <a class="fn-backref" href="#id17">2</a>, <a class="fn-backref" href="#id22">3</a>, <a class="fn-backref" href="#id50">4</a>)</em> PAPER—accelerating parallel evaluations of ROCS</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[12]</td><td><em>(<a class="fn-backref" href="#id13">1</a>, <a class="fn-backref" href="#id18">2</a>, <a class="fn-backref" href="#id23">3</a>, <a class="fn-backref" href="#id27">4</a>, <a class="fn-backref" href="#id51">5</a>, <a class="fn-backref" href="#id60">6</a>)</em> ShapeTK-C++</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[13]</td><td><em>(<a class="fn-backref" href="#id14">1</a>, <a class="fn-backref" href="#id19">2</a>, <a class="fn-backref" href="#id55">3</a>)</em> Small molecule shape-fingerprints</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[14]</td><td><em>(<a class="fn-backref" href="#id15">1</a>, <a class="fn-backref" href="#id41">2</a>, <a class="fn-backref" href="#id57">3</a>)</em> Fast 3D shape screening of large chemical databases through alignment-recycling</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[15]</td><td><em>(<a class="fn-backref" href="#id20">1</a>, <a class="fn-backref" href="#id42">2</a>, <a class="fn-backref" href="#id46">3</a>, <a class="fn-backref" href="#id58">4</a>, <a class="fn-backref" href="#id59">5</a>)</em> PubChem3D: diversity of shape</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[16]</a></td><td>A shape-based 3-D scaffold hopping method and its application to a bacterial protein-protein interaction</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[17]</a></td><td>A fast method of molecular shape comparison: a simple application of a Gaussian description of molecular shape</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[18]</td><td><em>(<a class="fn-backref" href="#id28">1</a>, <a class="fn-backref" href="#id40">2</a>)</em> Medical Subject Headings</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[19]</a></td><td>PubMed</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id31">[20]</a></td><td>MMDB: annotating protein sequences with Entrez&#8217;s 3D-structure database</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[21]</a></td><td>DrugBank 3.0: a comprehensive resource for &#8216;Omics&#8217; research on drugs</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id33">[22]</a></td><td>Zomepirac</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[23]</a></td><td>Pharmacologic properties of fenbufen</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[24]</a></td><td>Inhibition of prostaglandin activity and synthesis by fenbufen (a new nonsteroidal antiinflammatory agent) and one of its metabolites</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id36">[25]</a></td><td>Pharmacology of benoxaprofen (2-[4-chlorophenyl]-α-methyl-5-benzoxazole acetic acid), LRCL 3794, a new compound with anti-inflammatory activity apparently unrelated to inhibition of prostaglandin synthesis</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id38">[26]</a></td><td>Molecular shape and medicinal chemistry: a perspective</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id39">[27]</a></td><td>Application of belief theory to similarity data fusion for use in analog searching and lead hopping</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id47">[28]</a></td><td>PubChem3D: conformer generation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id52">[29]</a></td><td>van der Waals volumes and radii</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id53">[30]</a></td><td>Three-dimensional hydrogen-bond geometry and probability information from a crystal survey</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">PubChem3D: Similar conformers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-discussion">Results and discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#description-of-similar-conformers-neighboring-relationship">1. Description of &#8220;Similar Conformers&#8221; neighboring relationship</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-distribution-of-3-d-neighbors">2. The distribution of 3-D neighbors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#comparison-of-2-d-and-3-d-similarity-neighbors">3. Comparison of 2-D and 3-D similarity neighbors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#effect-of-using-multiple-conformers">4. Effect of using multiple conformers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#efficiency-of-3-d-neighboring-scheme">5. Efficiency of 3-D neighboring scheme</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#alignment-recycling">6. Alignment recycling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#superposition-storage">7. Superposition storage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id43">Conclusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#materials-and-methods">Materials and methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#chemical-structure-3-d-representation">1. Chemical structure 3-D representation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#molecular-shape-and-features">2. Molecular shape and features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#diverse-conformer-concept">3. Diverse conformer concept</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#shape-fingerprint-definition">4. Shape fingerprint definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pubchem-3-d-neighbor-processing">5. PubChem 3-D neighbor processing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#stage-1-filtering">Stage 1: Filtering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stage-2-shape-fingerprint-comparison-and-alignment-recycling">Stage 2: Shape fingerprint comparison and alignment recycling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stage-3-shape-overlay-optimization-and-st-ct-score-computation">Stage 3: Shape overlay optimization and ST/CT score computation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pubchem-3-d-neighbor-processing-addendum">6. PubChem 3-D neighbor processing addendum</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-12.html" title="Multilevel Parallelization of AutoDock 4.2"
+             >previous</a> |
+          <a href="1758-2946-3-14.html" title="Analysis of in vitro bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-13.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

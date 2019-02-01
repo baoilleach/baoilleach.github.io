@@ -1,0 +1,278 @@
+Analysis of *in vitro* bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds
+=============================================================================================================================================================================
+
+Abstract
+********
+
+Background
+^^^^^^^^^^
+
+Since the classic Hopkins and Groom druggable genome review in 2002, there have been a number of publications updating both the hypothetical and successful human drug target statistics. However, listings of research targets that define the area between these two extremes are sparse because of the challenges of collating published information at the necessary scale. We have addressed this by interrogating databases, populated by expert curation, of bioactivity data extracted from patents and journal papers over the last 30 years.
+
+Results
+^^^^^^^
+
+From a subset of just over 27,000 documents we have extracted a set of compound-to-target relationships for biochemical *in vitro* binding-type assay data for 1,736 human proteins and 1,654 gene identifiers. These are linked to 1,671,951 compound records derived from 823,179 unique chemical structures. The distribution showed a compounds-per-target average of 964 with a maximum of 42,869 (Factor Xa). The list includes non-targets, failed targets and cross-screening targets. The top-278 most actively pursued targets cover 90% of the compounds. We further investigated target ranking by determining the number of molecular frameworks and scaffolds. These were compared to the compound counts as alternative measures of chemical diversity on a per-target basis.
+
+Conclusions
+^^^^^^^^^^^
+
+The compounds-per-protein listing generated in this work (provided as a supplementary file) represents the major proportion of the human drug target landscape defined by published data. We supplemented the simple ranking by the number of compounds assayed with additional rankings by molecular topology. These showed significant differences and provide complementary assessments of chemical tractability.
+
+Introduction
+************
+
+An important factor in assessing the global progress in drug research is the number of targets for which therapeutic small-molecule modulators have been, are being, or could be, generated. This question was addressed in the landmark publication in 2002 that introduced the "druggable genome" concept \ [#B1]_.
+
+This total of approximately 3,000 human proteins was arrived at by homologous family extrapolation from the targets of approved drugs at that time. The count of successful targets was updated in 2006 and stood then at 324, of which the subset of human proteins was 207 \ [#B2]_. Despite many publications covering this topic, the inclusion of explicit listings of target identifiers, extrinsic to the data sets from which they were derived, are rare, with the partial exception of a poster that included 185 human targets of approved oral drugs \ [#B2]_.
+
+Notwithstanding, there are now public databases from which it is possible to browse and extract targets with explicit links to bioactive compounds. DrugBank is one such resource \ [#B3]_. It has a total of 6,827 drug entries including 1,431 FDA-approved small molecule drugs and 5,212 research compounds linked to 4,477 non-redundant protein sequences. These include primary targets, cross-screening targets, metabolising enzymes and associations inferred from compound name with protein name co-occurrences automatically extracted from the literature. The Therapeutic Targets Database (TTD) contains conceptually similar information to DrugBank but organised into a different data structure \ [#B4]_. It provides sequence subsets of their total of 1,675 targets divided into 348 approved, 260 clinical trial and 1,067 research targets. The BindingDB resource also includes approved and research targets with a focus on measured small-molecule binding affinities and ligands. It currently includes 5,526 protein targets and 271,419 compounds \ [#B5]_. The largest public resource of this type is the ChEMBL database with 8,091 targets and 658,075 compounds extracted from medicinal chemistry journal papers (N.B. a subset of ChEMBL data is now incorporated into BindingDB) \ [#B6]_. Three of the databases above, DrugBank, TTD and ChEMBL, have recently been included in a comparative study of compounds and targets \ [#B7]_.
+
+Databases and Processing
+************************
+
+The company GVKBIO \ [#B8]_ has developed a suite of databases over the last 9 years that are now unified under a single query interface, termed GVKBIO Online Structure Activity Relationships (GOSTAR) \ [#B9]_\ [#B10]_. The results we present are from two of the six GOSTAR components, the Medicinal Chemistry (MCD) and Target (TGD) Databases. Their combined utility for mining drug research data has already been described \ [#B11]_\ [#B12]_\ [#B13]_\ [#B14]_. In addition, the comparison of compound and target content of these with other bioactivity databases has been reported in publications that included the expansion of coverage between 2006 and 2008 \ [#B15]_\ [#B16]_.
+
+The data in MCD and TGD are derived from the large-scale expert extraction of structure-activity relationships (SAR) from patents and journal papers reporting the results of drug discovery research \ [#B9]_. The basic process is familiar to scientists working in this area. By inspecting a document "D" they can identify the description of a biochemical assay "A" (e.g. for enzyme activity) with a quantitative result "R" (e.g. a Ki) for a compound "C" (e.g. a specific chemical structure) that defines it as an activity modulator (e.g. an inhibitor) of protein target "P" (e.g. a protease). An outline of these relationships is shown in Figure \ :ref:`1<figure_1>`.
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-14-1.jpg
+   :align: center
+
+   Figure 1. Depiction of the key entities and the relationships between them (D-A-R-C-P) used to populate the MCD and TGD databases
+
+   **Depiction of the key entities and the relationships between them (D-A-R-C-P) used to populate the MCD and TGD databases**.
+
+
+At GVKBIO the relationships between these five entities of document, assay description, assay result, compound structure and protein target (D-A-R-C-P) are manually abstracted by a team of expert curators and transferred to document-centric relational databases. These contain data predominantly from the research phases of drug discovery but, because this extends back over 30 years, much of the primary data for approved drugs is included. The difference between them is that MCD extracts data from 120 journals selected for their high content of D-A-R-C-P relationships on a per-journal basis. TGD extracts the same relationships from patents covering the "big ten" target classes (kinases, GPCRs, proteases, nuclear hormone receptors, ion-channels, transporters, lipases, phosphatases, oxidoreductases and transferases). The process involves a triage to select a representative of the patent family for extraction. The addition of compounds to the database is limited to exemplified structures linked to quantitative or qualitative assay data. While all structures with quantitative results are extracted, where the activity data is ranged or only qualitative, the number of compounds extracted is capped at 200 or 100 examples, respectively \ [#B10]_.
+
+Details of these databases are described elsewhere but briefly, structures and related metadata for the GOSTAR database records are stored in an Oracle database \ [#B17]_. The compound counts are defined by a unique structure identifier based on the Standard InChIKey \ [#B18]_. Protein information was added using NCBI Entrez Gene as primary source for protein (gene) names and identifiers (EGID) \ [#B19]_. Where documents specified distinct alternative splice forms in assays, the common name used by the authors for that splice form was included with the EGID.
+
+Target classes were assigned according to an internal schema. GVKBIO internally developed tools were also used to generate frameworks, scaffolds, and graph skeletons. The data was mined by running SQL queries against MCD and TGD subsets of the GOSTAR database. Additional filters were species, targets having an Entrez Gene name and assay type. Tables and graphs were generated in Excel.
+
+Results and Discussion
+**********************
+
+The content statistics of the aggregated MCD and TGD sources, with combined and separate numbers for patents and journal papers, are shown in Table \ :ref:`1<table_1>`.
+
+The following aspects can be expanded. The average redundancy (records-per-unique structure) is 1.5 because some compounds, particularly reference reagents and established drugs, have assay data included in many documents. The predominant assay type is termed "type-B" or binding assay because it encompasses the enzyme inhibition and receptor binding assays most commonly reported for compounds tested against molecular targets *in vitro* and, implicitly, with binding specificity. The last three rows show the stringency used to define the final target listing. The target names in row 12 encompass both defined and undefined molecular targets (e.g. protein complexes or unresolved subfamilies) that are linked to compounds via a type-B assay result. These are further restricted in row 13 to only those molecular targets mapping to a protein identifier (e.g. an Entrez Gene ID or a Swiss-Prot accession). We added a final restriction to human sequences (row 14). We made this simplification choice for two reasons. The first was to exclude the many proteins used as cross-screening targets from mouse, rat and other model organisms. The second reason is that resolving anti-infective molecular target protein IDs also comes up against the problem of orthologous redundancy due to the multiplicity of viral, as well as bacterial sub-types, strains and species.
+
+Counting Distinct Human Protein Targets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We used the MCD and TGD databases to compile a list of all human gene identifiers that were linked with compounds via the results of type-B assays. The full list of these protein sequence identifiers, compound counts and document counts is included in Additional file \ :ref:`2<table_2>`.
+
+Additional file 1
+
+**Additional material**. A list of proteins with names, symbols and Entrez Gene identifiers (Microsoft EXCEL). It also includes compound and document counts and the molecular framework breakdown for the compound sets.
+
+Click here for file
+
+To maximise the curatorial specificity of mapping compounds to protein sequences, a number of splice form designations are includes where these names have been used in assays descriptions (mainly from journal papers in MCD). These cases produced 135 entries for 48 Entrez Gene IDs (EGIDs). While, in general, only small numbers of compounds are linked to these non-canonical protein sequences (i.e. alternative splice forms of the UniProt or RefSeq sequences corresponding to the EGID), these are important to capture for pharmacological differences. The human EGID total in Additional file 
+
+The summed number of compounds is 1,673,803. However, because the same compound may be assayed against different targets in the same or different documents, the unique set is 823,179. The average is 964 and the median 41 compounds-per-target. The top-278 proteins cover 90% of the total compounds at a cut-off of just over 1000 compounds-per-target. The summed number of documents is 53,440. The unique totals, 12,764 journal articles and 15,170 patents, are lower because of those that include results for more than one target. A subset of the top-50 targets with a cut-off just below 9,000 compounds-per-target is shown in Table \ :ref:`3<table_3>`. The binned distribution for the complete Additional file \ :ref:`4<table_4>`.
+
+Inspection of our results indicated, not unexpectedly, a correlation between the number of compounds and number of documents. However, this was a very broad distribution because the extraction averages (given in Table \ :ref:`1<table_1>`) of 14 compounds-per-paper and 44 compounds-per-patent, varied by at least one order of magnitude for the former and two orders of magnitude for the latter. In the following section target proteins will thus be referred to by their rank on the basis of compounds. Those within the top-50 are listed in Table \ :ref:`2<table_2>` while any below these in the ranking are listed in Additional file 
+
+Content of *bona fide* Drug Targets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Detailed elaboration of what constitutes a drug target is outside the scope of this work but this has been reviewed \ [#B20]_. We, as do most descriptions for sources of this type, use the term "target" broadly to encompass any compound-to-protein mapping in our large dataset. We consider the target figures and divisions given by TTD to be a good approximation (they include a proportion of authenticated one-to-many mappings) to a set of *bona fide* primary targets (i.e. where the interaction *in vitro* is mechanistically causative for the therapeutic effect *in vivo*). It should be noted that, without inspection of the individual documents or "prior knowledge", it is difficult to discriminate within database records *per se* between a *bona fide* drug target, a protein assay included for the purpose of discerning compound selectivity, off-target effects or modulating multiple targets with the same compound (i.e. polypharmacology) \ [#B21]_. This classification problem is encountered for any large-scale collation of compound-to-protein mappings. It cannot be discerned clearly enough to be specified in the TCD database records because, while journal authors will typically explain the context and objectives of multiple assays, patent applicants often do not.
+
+Nevertheless, it is clear from Table \ :ref:`2<table_2>` that many of the top-50 proteins are not (yet) successful targets of approved drugs. A formal test was applied by determining the gene symbol intersect between Table \ :ref:`2<table_2>` and the 185 targets of approved oral drugs from 2006 \ [#B2]_. Despite there being some new targets for post-2006 approved drugs the result was only 23 in common, indicating that a high compound ranking *per se*, is not necessarily a predictor of successful approval. The targets-in-common across the entire list were 160. Inspection of the 25 targets not matched indicated that, in most cases, the primary literature either included assay data from non-human proteins (e.g. mouse or rat) or that the cell-based receptor pharmacology assays were not classed as "type B". One interesting exception is what could be classified as orphan target, tyrosine-3-hydroxylase, TH [Swiss-Prot 
+
+Cross-screening and Para-targets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The difficulty of discriminating primary targets from cross-screening activities is illustrated at the top of Table \ :ref:`2<table_2>` for factor X, F10 [Swiss-Prot \ :ref:`2<table_2>` is the cannabinoid receptors 1, CNR1 [Swiss-Prot \ [#B22]_. In addition, CNRI provides an example of screening data derived from a specific splice variant with unique pharmacological profile, designated as cannabinoid receptor 1B [Swiss-Prot \ [#B23]_. Other para-target pairs illustrate different aspects. For the beta amyloid cleaving enzymes BACE1 [Swiss-Prot \ [#B24]_.
+
+Anti-targets
+^^^^^^^^^^^^
+
+The first anti-target (i.e. cross-screening for potential liabilities in development) in the list, ranked at 83, is the hERG Kv11.1 potassium channel, KCNH2 [Swiss-Prot \ [#B25]_. Another anti-target is the drug efflux pump, ATP-binding cassette, sub-family B (MDR/TAP) member 1, ABCB1 [Swiss-Prot \ [#B26]_.
+
+Non-targets
+^^^^^^^^^^^
+
+The first non-target (i.e. without an established therapeutic context) is Trypsin, PRSS1 [Swiss-Prot 
+
+Failed Targets
+^^^^^^^^^^^^^^
+
+Target names can be recognised in the list where compounds in Phase III trials have been publically declared as either having safety concerns or did not show efficacy. An example of the former, the cannabinoid receptor 1, CNR1 [Swiss-Prot \ [#B27]_. During the initial drafting of this manuscript we selected the cholesterol ester transfer protein, CETP [Swiss-Prot \ [#B28]_. However, within months, there was a more successful phase III outcome for anacetrapib (CID 11556427) targeting the same protein \ [#B29]_. Thus, the extent to which late-stage failures constitute de-validation remains an open question, given not only that some of those targets can still "make it" but also that efficacy in a pharmacogenetically stratified cohort or repurposing for an alternative indication might still be achievable.
+
+Nevertheless, the ability to flag likely de-validation in the listing we have produced would be valuable. However, the capture of historical data has the limitation that targets can achieve a high ranking if many compounds have been generated during validation and proof-of-concept studies even where these eventually fail. In addition, negative data produced during the research phase is less likely to be published. Our data can be analysed on a per-year basis, so the observation of a sustained decline in compounds (i.e. less publications on that target) can infer that validation has stalled (data not shown).
+
+Tractability Assessment by Molecular Frameworks Analysis
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The upper part of our compounds-per-target distribution (Table \ :ref:`2<table_2>` and Additional file *de facto* chemical tractability ranking. The term is used here as a measure of the probability that a useful level of potency for chemical modulation of the therapeutically relevant biochemical activity of a protein can be readily achieved *in vitro*. While this is likely to be related to the HTS primary hit-rate, it must be remembered that a high proportion of the compounds in MCD and TGD have gone through some hit-to-lead optimisation. We thus choose to differentiate, on a target basis, between chemical tractability and druggability. We consider the latter to be the likelihood of developing compounds with appropriate *in vivo* bioavailability, efficacy and safety profiles \ [#B30]_. These two characteristics are usually related because high chemical tractability facilitates the generation of more compound series *in vitro* which, in turn, provide more optimisation options *in vivo*. The main caveat with ranking targets just by compound numbers (as in Table \ :ref:`3<table_3>`) is that, in order to be useful, a tractability metric needs to factor-in the chemical diversity of the compound set. For example, targets mapped to large numbers of highly similar analogues might actually be less tractable than those with smaller absolute compound numbers but covering a broader range of chemotypes.
+
+We have consequently exploited the compound listing to produce a detailed assessment of chemical diversity by comparing molecular frameworks and scaffolds on a per-target basis. These are well-developed concepts in medicinal chemistry and there are a number of ways in which chemical structures can be abstracted. An approach, initially described by Bemis and Murcko \ [#B31]_, considers such frameworks as a collection of ring systems connected by linkers, after removing side chains. A more detailed hierarchy was used by Xu and Johnson \ [#B32]_ to define Molecular Equivalence Indices (MEQIs) as tools for molecular similarity measures. These approaches have been used for classifying and visualising compound collections \ [#B33]_\ [#B34]_, scaffold-hopping \ [#B35]_, comparing small sets of bioactive molecules \ [#B36]_ and large vendor libraries \ [#B37]_, target selectivity \ [#B38]_ and to differentiate between drugs, clinical candidate and bioactive molecules \ [#B39]_.
+
+For our analysis we generated five levels of frameworks and scaffolds using software developed at GVKBIO:
+
+1. Molecular Framework 1 (MF1): This is generated from the normalised molecular structure by removing all terminal side chains. Exocyclic double bonds (atoms connected to ring systems through multiple bonds) and double bonds directly attached to the linker are kept.
+
+2. Molecular Framework 2 (MF2): This is derived from MF1 by removing exocyclic double bonds and double bonds directly attached to the linker.
+
+3. Carbon Scaffold (CS): This is derived from MF2 by ignoring all atom types other than Carbon.
+
+4. Atom Type Scaffold (ATS): Also derived from MF2 but ignoring bond types.
+
+5. Graph Scaffold (GS): Also derived from MF2 but ignoring bond types or atom types.
+
+An example of the five levels of molecular topology hierarchy is shown for atorvastatin (CID 60823) in Figure \ :ref:`2<figure_2>`. We applied these abstractions to the entire compound set, on a per-target basis, and the results are included in Additional file \ :ref:`5<table_5>`.
+
+.. _figure_2:
+
+.. figure:: ../_static/1758-2946-3-14-2.jpg
+   :align: center
+
+   Figure 2. The molecular topology hierarchy exemplified for Atorvastatin (Lipitor)
+
+   **The molecular topology hierarchy exemplified for Atorvastatin (Lipitor)**.
+
+
+We can see that the metalloprotease MMP1 drops from its original compound ranking at 11 down to 19 when ranked by MF2. The cathepsin CTSS moves in the opposite directed from 28 in the original ranking up to 7 by MF2. In the GS ranking we see the elastase ELNA rising from 49 to 20 but the kinase MAPK14 dropping from 4 to 14. Thus, for an individual target the tractability depends significantly on the molecular framework level used for ranking.
+
+The MF2 level is particularly relevant for medicinal chemistry because it represents a practical scaffold level from which substituents can be permutated for the preparation of analogue series or compound libraries for SAR studies. For this reason, we have extended the analysis in Table \ :ref:`5<table_5>` by plotting top-100 targets from Additional file \ :ref:`3<figure_3>`.
+
+.. _figure_3:
+
+.. figure:: ../_static/1758-2946-3-14-3.jpg
+   :align: center
+
+   Figure 3. Sorted MF2 to number of compounds ratio (a) and Graph Scaffold to number of compounds ratio (b)
+
+   **Sorted MF2 to number of compounds ratio (a) and Graph Scaffold to number of compounds ratio (b)**. This is plotted for all targets with more than 4869 compounds from Additional file 
+
+
+More compounds with fewer MF2 scaffolds indicate lower tractability (e.g. an MF2: compound ratio of 0.13 for ESR2 from a total of 6,695 compounds). A larger ratio indicates higher tractability (e.g. 0.36 for HDAC1 from a total of 6,124 compounds). We suggest this complements the ranking by compounds alone and, in this case, clearly differentiates the relative rankings of 67 for ESR2 and 73 for HDAC1.
+
+The molecular scaffold results can be conceived as collapsing the ensemble of structures mapped to a target in progressive stages of abstraction. Thus, moving from MF2 and GS we see a reduction as more compounds collapse into the latter. The target trends in Figure \ :ref:`3<figure_3>` are different for MF2 and GS. In addition, the spiked shape of the abstractions show these can be highly target-specific. As an example of utility, the visualisation of the chemotype landscape for targets with very large compound sets (e.g. over 10,000) is much easier when the GS ring-type abstractions can be displayed and browsed.
+
+The utility of using public data for examining tractability before embarking on drug discovery project directed against targets and the correlation with ligand-based experimental assessments has recently been pointed out \ [#B40]_.
+
+Conclusions
+***********
+
+We have triaged a commercial database to provide human target protein identifiers ranked by the numbers of compounds linked to them via direct biochemical assay data and the numbers of documents from which these associations were extracted. As far as we are aware, this is the largest published listing of this type and presents a detailed assessment of the major part of the human molecular target landscape that has been, or is, under active investigation \ [#B41]_. The unique of scale of this is exemplified by comparing the equivalent compound-to-target count for F10 in ChEMBL of 5,871 against 42,869 in this work. This is because the process includes the extraction compounds and data not only from journal articles but also from patents.
+
+Nevertheless, there are limitations (beyond our triage choices) that preclude this being a complete capture of the available data. The first is that in the PubChemBioAssay database, while the direct assay methods may have been published as documents, the compound structures, protein identifiers and result sets are only instantiated in *silico* \ [#B42]_\ [#B43]_. The second limitation is the necessity to cap the number of examples extracted from a patent. The third is that patent data extraction is currently limited to the "big ten" target classes and English language applications (but efforts are underway at GVKBIO to expand this). The fourth is journal selection as opposed to all journals. Whilst these pragmatic constraints may bias the extractions, we propose that, in SAR terms, they are selective for higher quality data.
+
+Our complete set of results include many proteins that would not be considered *bona fide* drug target candidates, not only for the reasons already pointed out in the review of the list, but also by being in the tail of the compound distribution. However, the inclusion of even the singletons (one compound from one publication) is useful not only because they have been authenticated by expert extraction but also both the target and the compound may have a wider set of relationships using different species and/or assay type restrictions. Imposing any cut-off for "target likelihood" is clearly arbitrary but taking, a lower limit of 20 compounds-per-target still covers just over 1000 proteins. This brings it into congruence with the data-supported target count of 836 human proteins for which moderately potent small-molecule chemical starting points had previously been reported \ [#B44]_.
+
+Our breakdown of the compound sets into molecular scaffolds provides a useful measure of target-specific chemical tractability. Nevertheless, we can point out factors that may be skewing the ranking upwards. The first is the cross-screening effect already mentioned where many compounds mapped to a target are not being optimised for that target. A second effect is that resources assigned to target projects are determined by factors such as market potential, competitive positioning and unmet clinical need. This skews the distribution away from an objectively neutral ranking of tractability *per se* towards those targets the research community is collectively "working hardest" on. This intense focus also produces patent thickets (in the sense that many of the synthetically feasible chemotypes and analogues that can bind to a particular active site have already been claimed) that will also drive the expansion of chemical diversity for popular targets.
+
+Readers are encouraged to explore their own additional analyses for Additional file 
+
+Endnotes
+********
+
+Protein designations first used in the text are given as their common name followed by the HGNC approved human gene symbol as used in the result tables. These are followed by the Swiss-Prot ID. Drug names are accompanied by their PubChem compound identifiers (CIDs).
+
+Competing interests
+*******************
+
+AstraZeneca and GVKBIO have a business relationship.
+
+Authors' contributions
+**********************
+
+The study was conceived by CS, SM and SARPJ. The data was generated by KB and the manuscript drafted by CS and SM. All authors read and approved the final manuscript.
+
+Acknowledgements
+****************
+
+We would like to thank Niklas Blomberg for his encouragement and perceptive reviewing of the manuscript.
+
+.. [#B1]  The druggable genome
+
+.. [#B2]  How many drug targets are there?
+
+.. [#B3]  DrugBank: a knowledgebase for drugs, drug actions and drug targets
+
+.. [#B4]  TTD: Therapeutic Target Database
+
+.. [#B5]  BindingDB: a web-accessible database of experimentally determined protein-ligand binding affinities
+
+.. [#B6]  ChEMBL
+
+.. [#B7]  Mapping Between Databases of Compounds and Protein Targets
+
+.. [#B8]  GVK BIO
+
+.. [#B9]  About GOSTAR
+
+.. [#B10]  Database Systems for Knowledge-Based Discovery
+
+.. [#B11]  The influence of drug-like concepts on decision-making in medicinal chemistry
+
+.. [#B12]  Physicochemical property profiles of marketed drugs, clinical candidates and bioactive compounds
+
+.. [#B13]  Escape from Flatland: Increasing Saturation as an Approach to Improving Clinical Success
+
+.. [#B14]  Gaining Insight into Off-Target Mediated Effects of Drug Candidates with a Comprehensive Systems Chemical Biology Analysis
+
+.. [#B15]  Complementarity Between Public and Commercial Databases: New Opportunities in Medicinal Chemistry Informatics
+
+.. [#B16]  Quantitative assessment of the expanding complementarity between public and commercial databases of bioactive compounds
+
+.. [#B17]  Curation of inhibitor-target data: process and impact on pathway analysis
+
+.. [#B18]  History of InChI
+
+.. [#B19]  Entrez Gene: gene-centered information at NCBI
+
+.. [#B20]  Drug target central
+
+.. [#B21]  Network pharmacology: the next paradigm in drug discovery
+
+.. [#B22]  Cannabinoid receptors as therapeutic targets
+
+.. [#B23]  Identification and characterisation of a novel splice variant of the human CB1 receptor
+
+.. [#B24]  The role of cathepsins in osteoporosis and arthritis: Rationale for the design of new therapeutics
+
+.. [#B25]  hERG (KCNH2 or Kv11.1) K Channels: Screening for Cardiac Arrhythmia Risk
+
+.. [#B26]  Transporter-Mediated Efflux Influences CNS Side Effects: ABCB1, from Antitarget to Target
+
+.. [#B27]  Efficacy and safety of the weight-loss drug rimonabant: a meta-analysis of randomised trials
+
+.. [#B28]  The end of the road for CETP inhibitors after torcetrapib?
+
+.. [#B29]  Safety of Anacetrapib in Patients with or at High Risk for Coronary Heart Disease
+
+.. [#B30]  A practical view of 'druggability'
+
+.. [#B31]  The Properties of Known Drugs. 1. Molecular Frameworks
+
+.. [#B32]  Using Molecular Equivalence Numbers To Visually Explore Structural Features that Distinguish Chemical Libraries
+
+.. [#B33]  The Scaffold Tree - Visualization of the Scaffold Universe by Hierarchical Scaffold Classification
+
+.. [#B34]  Interactive exploration of chemical space with Scaffold Hunter
+
+.. [#B35]  A 3D similarity method for scaffold hopping from the known drugs or natural ligands to new chemotypes
+
+.. [#B36]  Scaffold Distributions in Bioactive Molecules, Clinical Trials Compounds, and Drugs
+
+.. [#B37]  Managing, profiling and analyzing a library of 2.6 million compounds gathered from 32 chemical providers
+
+.. [#B38]  Investigation of the Relationship between Topology and Selectivity for Druglike Molecules
+
+.. [#B39]  Molecular Topology Analysis of the Differences between Drugs, Clinical Candidate Compounds, and Bioactive Molecules
+
+.. [#B40]  Fragment screening to predict druggability (ligandability) and lead discovery success
+
+.. [#B41]  Visualizing the drug target landscape
+
+.. [#B42]  An overview of the PubChem BioAssay resource
+
+.. [#B43]  PubChem as a public resource for drug discovery
+
+.. [#B44]  Global mapping of pharmacological space
+

@@ -1,0 +1,160 @@
+Linked open drug data for pharmaceutical research and development
+=================================================================
+
+Abstract
+********
+
+There is an abundance of information about drugs available on the Web. Data sources range from medicinal chemistry results, over the impact of drugs on gene expression, to the outcomes of drugs in clinical trials. These data are typically not connected together, which reduces the ease with which insights can be gained. Linking Open Drug Data (LODD) is a task force within the World Wide Web Consortium's (W3C) Health Care and Life Sciences Interest Group (HCLS IG). LODD has surveyed publicly available data about drugs, created Linked Data representations of the data sets, and identified interesting scientific and business questions that can be answered once the data sets are connected. The task force provides recommendations for the best practices of exposing data in a Linked Data representation. In this paper, we present past and ongoing work of LODD and discuss the growing importance of Linked Data as a foundation for pharmaceutical R&D data sharing.
+
+Findings
+********
+
+Pharmaceutical research has a wealth of available data sources to help elucidate the complex biological mechanisms that lead to the development of diseases. However, the heterogeneous nature of these data and their widespread distribution over journal articles, patents and numerous databases makes searching and pattern discovery a tedious and manual task. From the perspective of a pharmaceutical research scientist, the ideal data infrastructure should make it easy to link and search across open data sources in order to identify novel and meaningful correlations and mechanisms. In this paper, we present work from the Linked Open Drug Data (LODD) task force of the World Wide Web Consortium (W3C) Health Care and Life Science Interest Group (HCLS IG) that aims to address these issues by harnessing the power of new web technologies.
+
+The LODD task force works with a set of technologies and conventions that are now commonly referred to as *Linked Data*. The primary goal of the Linked Data movement is to make the World Wide Web not only useful for sharing and interlinking documents, but also for sharing and interlinking *data* at very detailed levels. The movement is driven by the hypothesis that these technologies could revolutionize global data sharing, integration and analysis, just like the classic Web revolutionized information sharing and communication over the last two decades.
+
+Linked Data is based on a set of principles and standard recommendations created by the W3C. Single data points are identified with Hypertext Transfer Protocol (HTTP, \ [#B1]_) Uniform Resource Identifiers (URIs). Similar to how a Web page can be retrieved by resolving its HTTP URI (e.g., '`<http://en.wikipedia.org/wiki/Presenilin>`_'), data about a single entity in the Linked Data space can be retrieved by resolving its HTTP URI (e.g. '`<http://dbpedia.org/resource/Presenilin>`_'). However, instead of Web pages, the primary data model of Linked Data is the Resource Description Framework (*RD*F, \ [#B2]_). In RDF, entities, their relations and properties are described with simple subject-predicate-object *triples*. Out of these simple triples, sophisticated networks of interlinked data can be built, potentially spanning over several different locations on the web. Since every entity in this network can be resolved through HTTP, it is possible to navigate and aggregate the globally distributed data, enabling the important features of transparency and scalability that made the Web successful.
+
+There is a large array of other standard recommendations based on RDF. Networks of RDF data can be queried by an intuitive and powerful query language called *SPARQL* \ [#B3]_. The Web Ontology Language (*OWL*, \ [#B4]_) makes it possible to do complex logical reasoning and consistency checking of RDF/OWL resources. These reasoning capabilities can be used to harmonize heterogeneous data structures. Another related standard is *RDFa* \ [#B5]_, which makes it possible to embed RDF statements into human-readable Web pages, effectively bridging the domains of human-readable and machine-readable data. Chen at al. provide an extensive review of RDF/OWL - based projects relevant to drug discovery in a recent publication \ [#B6]_.
+
+To date, participants of the LODD project have made twelve open-access datasets relevant to pharmaceutical research and development available as Linked Data (table \ :ref:`1<table_1>`). These are DrugBank \ [#B7]_, ClinicalTrials.gov \ [#B8]_\ [#B9]_, DailyMed \ [#B10]_, ChEMBL \ [#B11]_\ [#B12]_, Diseasome \ [#B13]_, TCMGeneDIT \ [#B14]_\ [#B15]_, SIDER \ [#B16]_, STITCH \ [#B17]_, the Medicare formulary and the three most recent additions, RxNorm \ [#B18]_, Unified Medical Language System (UMLS, \ [#B19]_) and the WHO Global Health Observatory \ [#B20]_. To be kept up to date, the original datasets are periodically retrieved and the Linked Data representations are refreshed. The URIs for representing entities in the linked datasets are stable and are chosen by the LODD participants.
+
+Not all of these datasets can currently be considered fully 'open' as outlined by the Panton Principles \ [#B21]_. For example, some of the source have non-commercial clauses in the license agreement. The LODD project is actively exploring the exact conditions for modification and redistribution defined by the data providers, and acknowledges the limitations with respect to openness some of these datasets currently have.
+
+The LODD datasets are linked with each other, as well as with datasets provided by other Linked Data projects, such as Bio2RDF \ [#B22]_ and Chem2Bio2RDF \ [#B23]_, as well as primary data providers that offer their resources in RDF, such as UniProt \ [#B24]_\ [#B25]_ and the Allen Brain Atlas \ [#B26]_. The links between datasets are depicted in Figure \ :ref:`1<figure_1>`. Overall, there are several dozens of biomedically relevant linked datasets available to date.
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-19-1.jpg
+   :align: center
+
+   Figure 1. A graph of some of the LODD datasets (dark grey), related biomedical datasets (light grey), related general-purpose datasets (white) and their interconnections
+
+   **A graph of some of the LODD datasets (dark grey), related biomedical datasets (light grey), related general-purpose datasets (white) and their interconnections**. Line weights correspond to the number of links. The direction of an arrow indicates the dataset that contains the links, e.g., an arrow from A to B means that dataset A contains RDF triples that use identifiers from B. Bidirectional arrows usually indicate that the links are mirrored in both datasets.
+
+
+While the number of linked biomedical datasets has grown significantly over the last years, there is still a marked lack of mature applications that enable end-users to explore and query these datasets. Linked data browsers such as Marbles \ [#B28]_ or Sig.ma \ [#B29]_\ [#B30]_ are currently too generic for most end-users (although they can be very helpful for developers). These shortcomings are addressed by TripleMap (Figure \ :ref:`2,<figure_2,>`\ [#B31]_), a new web-based application that can be used for the navigation, visualization and analysis of the LODD resources and other RDF datasets. To illustrate the use of TripleMap and the LODD resources, the following simple scenario could be imagined: A researcher interested in Alzheimer's Disease decides to find out everything that they can about the disease by querying an integrated version of the Linking Open Drug Data (LODD) sets. They open TripleMap and start their search by typing "Alzheimer's" into the Diseases search box. As they type, TripleMap provides a dynamic auto-complete list of all of the disease related entities across all LODD data sets that match the search string. The researcher selects "Alzheimer's Disease" and drags and drops it into the TripleMap workspace. Now, the researcher can view a range of information known about the properties of the disease in the right-hand "properties panel" including links out to Pubmed, Online Mendelian Inheritance in Man (OMIM, \ [#B32]_), Uniprot \ [#B24]_ and other sources. These sources provide the user with rapid access to overview information about the disease.
+
+.. _figure_2:
+
+.. figure:: ../_static/1758-2946-3-19-2.jpg
+   :align: center
+
+   Figure 2. TripleMap `<https://www.triplemap.com>`_ is a web-based application that provides a rich, dynamic, visual interface to integrated RDF datasets such as the LODD. On the left hand side of the application a researcher uses an icon-based menu representing biomedical entities such as compounds, diseases and assays to search for entities and view their associations
+
+   **TripleMap** `<www.triplemap.com>`_** is a web-based application that provides a rich, dynamic, visual interface to integrated RDF datasets such as the LODD. On the left hand side of the application a researcher uses an icon-based menu representing biomedical entities such as compounds, diseases and assays to search for entities and view their associations**. Entities can be dragged and dropped from the icon menu into the application's zoomable workspace. In the middle of the application the user navigates maps of entities and their associations in the zoomable workspace much like users of Google Maps are able to scan and zoom into and out of geographically based maps. On the right hand side of the application the user can view an integrated set of all of the available properties for a selected entity. As entities are added to the workspace the system automatically generates semantically tagged edges between associated entities.
+
+
+The researcher is now interested in discovering entities that are associated with Alzheimer's Disease. They select the Alzheimer's Disease icon in the workspace and the system automatically shows them a number of associated disease genes provided by Diseasome, compounds provided by DrugBank and DailyMed, and clinical trials provided by LinkedCT. The researcher starts to explore relationships between entities by selecting two genes, presenilin (PSEN1) and amyloid precursor protein (APP), and dragging them into the workspace. In addition to finding genes related to Alzheimer's Disease, the user is interested in compounds known to be related to the disease. The user finds several compounds and pulls them into the workspace. The user is also interested in finding out what clinical trials are currently being run for Alzheimer's Disease and the system shows 200 such trials. With a simple click and drag action they pull all 200 trials into the workspace. As entities are added to the workspace, if there are known associations between them, those associations are also shown to the user as semantically tagged edges. This ability to show a researcher unexpected associations between entities that are related to their field of interest is at the heart of the value of an application like TripleMap and the extensive, rich, interconnected data available in the LODD data sets.
+
+Linked Data as an emerging technology is still not free from shortcomings. A major problem is the heterogeneity in how data is modeled. Even when the entities between datasets are mapped to each other, it can still be difficult to intuitively write queries that span datasets because of this heterogeneity. This problem is being addressed by another task force of the W3C HCLSIG, which aims to bridge the data in the growing number of LODD datasets with a well-engineered top-level ontology, the translational medicine ontology (TMO, \ [#B33]_). Another problem is how to efficiently query RDF in distributed SPARQL databases without requiring the aggregation of RDF data at a central location. Again, this is addressed by ongoing work on query federation by members of the W3C HCLS IG \ [#B34]_. Finally, there has been a lack of applications with good user interfaces to make Linked Data resources accessible to end-users outside the biomedical informatics community. This is addressed by several ongoing endeavors such as the European Khresmoi project \ [#B35]_.
+
+A challenge to creating linked data that is specific to the domain of chemistry is the provision of chemical identifiers. It is for this reason that W3C HCLS IG supports efforts to standardize unique identifiers for chemical compounds such as the IUPAC International Chemical Identifier (InChI, \ [#B36]_).
+
+The pharmaceutical industry is starting to embrace Linked Data with examples of projects being presented by Eli Lilly, Johnson & Johnson and UCB Pharma. While the adoption of Linked Data is still not yet very widespread in individual companies, it is on the agenda of several large-scale cross-pharma projects. An European project, the Open Pharmacological Space (OPS) Open PHACTS (Pharmacological Concept Triple Store) project under the European Innovative Medicines Initiative (IMI, \ [#B37]_) wants to create an open source, open standards and open access infrastructure to enable integration of chemical and biological data to support drug discovery. The project intends to reach this goal by using Linked Data and managing the data in an RDF triple store. Collaboration across several IMI projects should also encourage the coordinated use of Linked Data to enhance data sharing. On the pre-competitive data sharing side of pharmaceutical informatics, the members of the Pistoia Alliance \ [#B38]_ are developing the Semantically Enriched Scientific Literature (SESL) project. The goal of SESL is to test the feasibility of executing federated querying across full text literature and bioinformatics databases by performing SPARQL queries on a triple store of assertions from the chosen data sources. The PRISM Forum \ [#B39]_ has also issued a letter recommending the adoption of Linked Data that has been supported by its membership of 15 of the top 20 pharmaceutical companies. The European OpenTox project \ [#B40]_\ [#B41]_ uses RDF as a standard for the exchange of predictive toxicology related data. The OpenTox framework defines algorithms, models, data sets, and chemical compounds, in a distributed data storage and computing facility.
+
+Proprietary systems for providing integrated pharmaceutical data exist. The Accelrys/Symyx products \ [#B42]_ are popular examples, and can be both accessed online or installed locally. Accessing the data provided by these products often requires proprietary tools and internal installations also require ongoing work to be kept up-to-date. Furthermore, many of these products are based on individual databases that are not linked. Since the amount of data and the number of potential data sources is growing, it will become harder for single software vendors to create all-encompassing solutions. The nascent Linked Data infrastructure could help to make the creation of integrated solution more sustainable, easier to maintain and vendor-neutral.
+
+Over the next years, the LODD group will continue to work jointly with both academic and industry partners. It will aim to become an umbrella for other Linked Data providers and consumers in the pharmaceutical domain, assisting with documentation, interlinking, quality management, and compliance with standard formats and vocabularies. Another strand of work will focus on how to integrate public Linked Data with non-public, in-house datasets of biomedical research institutions and pharmaceutical companies.
+
+The LODD task force is open to new participants and interested individuals or groups are invited to get in contact with the authors of this paper.
+
+Competing interests
+*******************
+
+CB declares association with Entagen, LLC, a for-profit company that is building commercial software for semantic technologies such as TripleMap. All other authors declare no competing interests.
+
+Authors' contributions
+**********************
+
+MS wrote major parts of the manuscript and organized the paper writing process. AJ converted several of the LODD datasets. CB developed the TripleMap software. SS organized the Linked Open Drug Data task force. All authors participated in discussions and developments of the Linked Open Drug Data task force of the W3C Health Care and Life Science Interest Group. All authors read and approved the final manuscript.
+
+Acknowledgements
+****************
+
+We acknowledge the article processing charge for this article that has been partially funded by Pfizer, Inc. Pfizer, Inc. has had no input into the content of the article. The article has been independently prepared by the authors and been subject to the journal's standard peer review process.
+
+.. [#B1]  HTTP Specifications and Drafts
+
+.. [#B2]  RDF - Semantic Web Standards
+
+.. [#B3]  SPARQL Query Language for RDF
+
+.. [#B4]  OWL Web Ontology Language Overview
+
+.. [#B5]  RDFa Primer
+
+.. [#B6]  The use of web ontology languages and other semantic web tools in drug discovery
+
+.. [#B7]  DrugBank: a comprehensive resource for in silico drug discovery and exploration
+
+.. [#B8]  LinkedCT: A Linked Data Space for Clinical Trials
+
+.. [#B9]  Home - ClinicalTrials.gov
+
+.. [#B10]  DailyMed: About DailyMed
+
+.. [#B11]  Role of open chemical data in aiding drug discovery and design
+
+.. [#B12]  ChEMBL
+
+.. [#B13]  The human disease network
+
+.. [#B14]  Publishing Chinese medicine knowledge as Linked Data on the Web
+
+.. [#B15]  TCMGeneDIT: a database for associated traditional Chinese medicine, gene and disease information using text mining
+
+.. [#B16]  A side effect resource to capture phenotypic effects of drugs
+
+.. [#B17]  STITCH: interaction networks of chemicals and proteins
+
+.. [#B18]  RxNorm: prescription for electronic drug information exchange
+
+.. [#B19]  The Unified Medical Language System (UMLS): integrating biomedical terminology
+
+.. [#B20]  WHO | Global Health Observatory (GHO)
+
+.. [#B21]  Panton Principles
+
+.. [#B22]  Bio2RDF: Towards a mashup to build bioinformatics knowledge systems
+
+.. [#B23]  Chem2Bio2RDF: a semantic framework for linking and data mining chemogenomic and systems chemical biology data
+
+.. [#B24]  UniProt
+
+.. [#B25]  The Universal Protein Resource (UniProt) in 2010
+
+.. [#B26]  Allen Brain Atlas: Home
+
+.. [#B27]  HCLSIG/LODD/Data - ESW Wiki
+
+.. [#B28]  Marbles Linked Data Engine
+
+.. [#B29]  Sig.ma: Live views on the Web of Data
+
+.. [#B30]  sig.ma - Semantic Information MAshup
+
+.. [#B31]  TripleMap
+
+.. [#B32]  OMIM Home
+
+.. [#B33]  The Translational Medicine Ontology: Driving personalized medicine by bridging the gap from bedside to bench
+
+.. [#B34]  A journey to Semantic Web query federation in the life sciences
+
+.. [#B35]  Khresmoi - Medical Information Analysis and Retrieval
+
+.. [#B36]  International Union of Pure and Applied Chemistry
+
+.. [#B37]  Home | IMI - Innovative Medicines Initiative
+
+.. [#B38]  Pistoia Alliance | Open standards for data and technology interfaces in the life science research industry
+
+.. [#B39]  The PRISM Forum Association - Home
+
+.. [#B40]  Collaborative development of predictive toxicology applications
+
+.. [#B41]  Welcome to the OpenTox Community site -- OpenTox
+
+.. [#B42]  Scientific Informatics Software for Life Sciences, Materials R&D | Accelrys
+

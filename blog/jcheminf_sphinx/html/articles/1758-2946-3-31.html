@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Statistical filtering for NMR based structure generation &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="PubChem3D: a new resource for scientists" href="1758-2946-3-32.html" />
+    <link rel="prev" title="Structural diversity of biologically interesting datasets: a scaffold analysis approach" href="1758-2946-3-30.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-30.html" title="Structural diversity of biologically interesting datasets: a scaffold analysis approach"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-32.html" title="PubChem3D: a new resource for scientists"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="statistical-filtering-for-nmr-based-structure-generation">
+<h1>Statistical filtering for NMR based structure generation<a class="headerlink" href="#statistical-filtering-for-nmr-based-structure-generation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>The constitutional assignment of natural products by NMR spectroscopy is usually based on 2D NMR experiments like COSY, HSQC, and HMBC. The difficulty of a structure elucidation problem depends more on the type of the investigated molecule than on its size. Saturated compounds can usually be assigned unambiguously by hand using only COSY and <sup>13</sup>C-HMBC data, whereas condensed heterocycles are problematic due to their lack of protons that could show interatomic connectivities. Different computer programs were developed to aid in the structural assignment process, one of them C</p>
+</div>
+<div class="section" id="findings">
+<h2>Findings<a class="headerlink" href="#findings" title="Permalink to this headline">¶</a></h2>
+<p>Nuclear Magnetic Resonance is the most common tool used for the structure elucidation of new compounds. The used 2D NMR experiments like COSY, HSQC, and <sup>13</sup>C-HMBC deliver correlation information between atoms that can be translated into connectivity information. Out of these, correlation information from COSY and HSQC experiments can be transcribed directly into connectivity between atoms. But the <sup>13</sup>C-HMBC correlations need more attention because of their ambiguity and complexity. Hence the difficulty of the structure elucidation problem depends more on the type of the investigated molecule than on its size. Saturated compounds can usually be assigned unambiguously using mainly COSY and some <sup>13</sup>C-HMBC data, whereas condensed heterocycles are problematic due to their lack of protons that could show interatomic connectivities. This ambiguity has driven the development of different software packages to aid in the interpretation of the <sup>13</sup>C-HMBC correlation data <a class="footnote-reference" href="#b1" id="id1">[1]</a><a class="footnote-reference" href="#b2" id="id2">[2]</a><a class="footnote-reference" href="#b3" id="id3">[3]</a><a class="footnote-reference" href="#b4" id="id4">[4]</a><a class="footnote-reference" href="#b5" id="id5">[5]</a><a class="footnote-reference" href="#b6" id="id6">[6]</a><a class="footnote-reference" href="#b7" id="id7">[7]</a><a class="footnote-reference" href="#b8" id="id8">[8]</a><a class="footnote-reference" href="#b9" id="id9">[9]</a><a class="footnote-reference" href="#b10" id="id10">[10]</a><a class="footnote-reference" href="#b11" id="id11">[11]</a><a class="footnote-reference" href="#b12" id="id12">[12]</a><a class="footnote-reference" href="#b13" id="id13">[13]</a><a class="footnote-reference" href="#b14" id="id14">[14]</a><a class="footnote-reference" href="#b15" id="id15">[15]</a><a class="footnote-reference" href="#b16" id="id16">[16]</a><a class="footnote-reference" href="#b17" id="id17">[17]</a><a class="footnote-reference" href="#b18" id="id18">[18]</a><a class="footnote-reference" href="#b19" id="id19">[19]</a> as much as the development of additional correlation experiments <a class="footnote-reference" href="#b20" id="id20">[20]</a><a class="footnote-reference" href="#b21" id="id21">[21]</a>.</p>
+<p>When the observed connectivity information is used as input for the structure generation program C<a class="footnote-reference" href="#b3" id="id22">[3]</a><a class="footnote-reference" href="#b22" id="id23">[22]</a><a class="footnote-reference" href="#b23" id="id24">[23]</a><a class="footnote-reference" href="#b24" id="id25">[24]</a> it will create all compatible constitutional assignments. In the case of unsaturated molecules C<a class="footnote-reference" href="#b25" id="id26">[25]</a><a class="footnote-reference" href="#b26" id="id27">[26]</a> integrated to C`&lt;<a class="reference external" href="http://cocon.nmr.de">http://cocon.nmr.de</a>&gt;`_), since it uses data protected by Intellectual Property. A different way of handling the result set had to be chosen, and the statistical filter was implemented.</p>
+<p>The idea behind the filter is, to compare the suggested constitutions against existing molecules, like the ones contained in the PubChem (PubChem can be found at <a class="reference external" href="http://pubchem.ncbi.nlm.nih.gov/">http://pubchem.ncbi.nlm.nih.gov/</a>) database. For each C`&lt;<a class="reference external" href="http://www.chembiogrid.org/cheminfo/smi23d/">http://www.chembiogrid.org/cheminfo/smi23d/</a>&gt;`_) has been used to generate 3D coordinates for almost 13M compounds contained in PubChem (The corresponding 3D coordinates generated by smi23d can be found at <a class="reference external" href="http://www.chembiogrid.org/cheminfo/p3d/">http://www.chembiogrid.org/cheminfo/p3d/</a>; the error observed is ~ 0.4% (= 53.000) false negatives for 13M compounds) and succeeded on generating coordinates for 99.6% of the molecules contained in the Database. The filtering application actually uses smi23d to generate 3D coordinates for all constitutional assignments generated by C**1** and <strong>2</strong>. For <strong>3</strong> the longest running time was 3 days for the generation of the 523.668 constitutional assignments using COSY, <sup>13</sup>C-HMBC correlations and open atom types. A webpage allowing direct access to the results of the structure generator runs presented here has been set up on the <a class="reference external" href="http://cocon.nmr.de/StatisticalFilter/">http://cocon.nmr.de/StatisticalFilter/</a> (The results are also mirrored at <a class="reference external" href="http://science.jotjot.net/StatisticalFilter/">http://science.jotjot.net/StatisticalFilter/</a>).</p>
+<p>Ascomycin is a well known ethyl derivative of Tacrolimus, it serves as example of a large natural product, featuring 43 Carbon atoms. Using experimental NMR correlation data (COSY and <sup>13</sup>C-HMBC correlations) together with fixed atom types, C</p>
+<p>The results change with the second example molecule, Aflatoxin B1 with 17 Carbon atoms. Using COSY and <sup>13</sup>C-HMBC data alone, C<a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>) all contain oxet-2-one as structural element, that can be found in 6 basic variations in 85 compounds in PubChem (see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>). Until now, no natural product has been described with this substructure. The numbers of results for the different C**1** and <strong>2</strong> are summarized in table <em class="xref std std-ref">1</em>. Oroidin <strong>3</strong> has been frequently used for the demonstration of C<sup>13</sup>C-HMBC correlations lead to a total of 523.668 possible constitutional assignments, out of which only 1904 belong to the correct atom type combination. After the statistical filtering there are still 252.566 respectively 1486 suggestions left. In this case the reliable structure elucidation by NMR needs <sup>15</sup>N-HMBC or 1,1-ADEQUATE correlations. For calculations with open atom types, only when using both kinds of correlation information and filtering, a reasonable amount of 275 suggested constitutions is generated.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-31-1.jpg" src="../_images/1758-2946-3-31-1.jpg" />
+<p class="caption">Figure 1. The constitutions 4-8 shown here are excluded by the statistical filter</p>
+<div class="legend">
+<strong>The constitutions 4-8 shown here are excluded by the statistical filter</strong>. Each constitution appears with two Different <sup>13</sup>C chemical shift assignments in the solution set.</div>
+</div>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-31-2.jpg" src="../_images/1758-2946-3-31-2.jpg" />
+<p class="caption">Figure 2. Basic variations of the structural element Oxet-2-one that is excluded by the statistical filter, as found in 85 hits from PubChem</p>
+<div class="legend">
+<strong>Basic variations of the structural element Oxet-2-one that is excluded by the statistical filter, as found in 85 hits from PubChem</strong>.</div>
+</div>
+<p>When the <sup>15</sup>N-HMBC correlations and fixed atom types are added to the COSY and <sup>13</sup>C-HMBC based calculation the statistical filter excludes only the constitutional assignments containing the 1-nitro-prop-2-en-Z-ylidene substructural element (see Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>). According to Beilstein, this structural element appears only 14 times, always in conjunction with an aromatic ring, as depicted in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>. When 1,1-ADEQUATE correlations are added instead, and atom types are fixed, the filter excludes 16 constitutions, shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>. All resulting numbers of constitutional assignments for the Different combinations of correlation data are summarized in table <em class="xref std std-ref">2</em>.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-31-3.jpg" src="../_images/1758-2946-3-31-3.jpg" />
+<p class="caption">Figure 3. Constitutional assignments excluded by the statistical filter when the structure generator runs with COSY, HMBC, <sup>15</sup>N-HMBC correlation data and atom types for Oroidin</p>
+<div class="legend">
+<strong>:sup:`15`N-HMBC correlation data and atom types for OroidinConstitutional assignments excluded by the statistical filter when the structure generator runs with COSY, HMBC,</strong> .</div>
+</div>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-31-4.jpg" src="../_images/1758-2946-3-31-4.jpg" />
+<p class="caption">Figure 4. The 14 molecules found in Beilstein containing the 1-nitro-prop-2-en-Z-ylidene substructural element all have the substitution pattern of 18 and 19</p>
+<div class="legend">
+<strong>The 14 molecules found in Beilstein containing the 1-nitro-prop-2-en-Z-ylidene substructural element all have the substitution pattern of 18 and 19</strong>. R<sub>2</sub> is either a polyaromatic or polyhalogenic substituent.</div>
+</div>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-31-5.jpg" src="../_images/1758-2946-3-31-5.jpg" />
+<p class="caption">Figure 5. Constitutional assignments excluded by the statistical filter when the structure generator runs with COSY, HMBC, 1,1-ADEQUATE correlation data and atom types for Oroidin</p>
+<div class="legend">
+<strong>Constitutional assignments excluded by the statistical filter when the structure generator runs with COSY, HMBC, 1,1-ADEQUATE correlation data and atom types for Oroidin</strong>.</div>
+</div>
+<p>The results from tables <em class="xref std std-ref">1</em> and <em class="xref std std-ref">2</em> show that the filter excludes more constitutional assignments when the atom types are undefined (45% - 65%) then when the atom types are defined (~ 20%). In neither case the correct constitutions were excluded, and in the case of Ascomycin the filter did not exclude any constitutional assignment. The calculation time increases depending on the number of possible constitutional assignments, as smi23d runs about 0.5 s per structure. This explains the observed 3 days for the generation of the 523,668 constitutional assignments for Oroidin using COSY, <sup>13</sup>C-HMBC correlations and open atom types, C<em class="xref std std-ref">2</em>), looking at a mere 275 constitutional assignments instead of 716 is a considerable improvement. When looking at the excluded constitutions, and checking for the common structural elements, it turns out that they are not stable or do not exist in PubChem. Run times for the filter could be cut down in the future by restricting the MD run to just the generation of the parameters, but this would need changing the existing smi23d software package, and throwing away the possibility of improved visualization of the results with the 3D structures. The new statistical filtering presented here has already been made available in <strong>1</strong>, Aflatoxcin B1 <strong>2</strong> and Oroidin <strong>3</strong> (Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>), example molecules that have already been used on other occasions. The molecules are available as examples on the</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-31-6.jpg" src="../_images/1758-2946-3-31-6.jpg" />
+<p class="caption">Figure 6. Ascomycin 1, Aflatoxcin B1 2 and Oroidin 3 are used to evaluate the statistical filter</p>
+<div class="legend">
+<strong>Ascomycin 1, Aflatoxcin B1 2 and Oroidin 3 are used to evaluate the statistical filter</strong>.</div>
+</div>
+</div>
+<div class="section" id="availability">
+<h2>Availability<a class="headerlink" href="#availability" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="http://cocon.nmr.de">http://cocon.nmr.de</a>.</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The author declares that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>JJ maintains the</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>The authors wishes to thank Rainer Haessner and the Technische Universität München for providing the Hardware for the</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Computer-assisted structure verification and elucidation tools in NMR-based structure elucidation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Computer-assisted structure elucidation: Application of CISOC-SES to the resonance assignment and structure generation of betulinic acid</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id22">2</a>)</em> COCON: From NMR correlation data to molecular constitutions</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Computer-aided structure elucidation of organic compounds: Recent advances</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>Fuzzy structure generation: A new efficient tool for computer-aided structure elucidation (CASE)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td>Computer-aided determination of relative stereochemistry and 3D models of complex organic molecules from 2D NMR spectra</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[7]</a></td><td>Automated structure elucidation of two unexpected products in a reaction of an alpha,beta-unsaturated pyruvate</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[8]</a></td><td>Recent developments in automated structure elucidation of natural products</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[9]</a></td><td>Applications of a HOUDINI-based structure elucidation system</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[10]</a></td><td>SENECA: A platform-independent, distributed, and parallel system for computer-assisted structure elucidation in organic chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[11]</a></td><td>Recent advancements in the development of SENECA, a computer program for Computer Assisted Structure Elucidation based on a stochastic algorithm</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[12]</a></td><td>Computer aided method for chemical structure elucidation using spectral databases and C-13 NMR correlation tables</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[13]</a></td><td>SESAMI: An integrated desktop structure elucidation tool</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[14]</a></td><td>LUCY - A program for structure elucidation from NMR correlation experiments</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[15]</a></td><td>Combinatorial Problems in the Treatment of fuzzy C-13 NMR Spectral Information in the Process of Computer-Aided Structure Elucidation - Estimation of the Carbon-Atom Hybridization and Alpha-Environment States</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[16]</a></td><td>Computer-Assisted Structure Elucidation for Organic-Compound</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[17]</a></td><td>Computer Method of Fragmentary Formula Prediction of an unknown by its Mass and NMR-Spectra</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[18]</a></td><td>Structure Elucidation of organic-compounds aided by the Computer-Program System Scannet</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[19]</a></td><td>Computer-Aided Spectral Assignment in NMR Spectroscopy</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[20]</a></td><td>ADEQUATE, a new set of experiments to determine the constitution of small molecules at natural abundance</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[21]</a></td><td>Impact of the H-1,N-15-HMBC experiment on the constitutional analysis of alkaloids</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[22]</a></td><td>2D-NMR-guided constitutional analysis of organic compounds employing the computer program COCON</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[23]</a></td><td>A COCON analysis of proton-poor heterocycles-Application of carbon chemical shift predictions for the evaluation of structural proposals</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[24]</a></td><td>Computer-assisted constitutional assignment of large molecules: COCON analysis of ascomycin</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id26">[25]</a></td><td>Novel methods of automated structure elucidation based on C-13 NMR spectroscopy</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id27">[26]</a></td><td>Validation of structural proposals by substructure analysis and C-13 NMR chemical shift prediction</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Statistical filtering for NMR based structure generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#findings">Findings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#availability">Availability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-30.html" title="Structural diversity of biologically interesting datasets: a scaffold analysis approach"
+             >previous</a> |
+          <a href="1758-2946-3-32.html" title="PubChem3D: a new resource for scientists"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-31.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

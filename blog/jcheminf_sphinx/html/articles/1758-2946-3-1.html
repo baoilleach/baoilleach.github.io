@@ -1,0 +1,470 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method" href="1758-2946-3-2.html" />
+    <link rel="prev" title="Journal of Cheminformatics Volume 3" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="../index.html" title="Journal of Cheminformatics Volume 3"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-2.html" title="Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="curlysmiles-a-chemical-language-to-customize-and-annotate-encodings-of-molecular-and-nanodevice-structures">
+<h1>CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures<a class="headerlink" href="#curlysmiles-a-chemical-language-to-customize-and-annotate-encodings-of-molecular-and-nanodevice-structures" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>CurlySMILES is a chemical line notation which extends SMILES with annotations for storage, retrieval and modeling of interlinked, coordinated, assembled and adsorbed molecules in supramolecular structures and nanodevices. Annotations are enclosed in curly braces and anchored to an atomic node or at the end of the molecular graph depending on the annotation type. CurlySMILES includes predefined annotations for stereogenicity, electron delocalization charges, extra-molecular interactions and connectivity, surface attachment, solutions, and crystal structures and allows extensions for domain-specific annotations. CurlySMILES provides a shorthand format to encode molecules with repetitive substructural parts or motifs such as monomer units in macromolecules and amino acids in peptide chains. CurlySMILES further accommodates special formats for non-molecular materials that are commonly denoted by composition of atoms or substructures rather than complete atom connectivity.</p>
+</div>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>CurlySMILES (Curly-braces enhanced Smart Material Input Line Entry Specification) is introduced as a chemical language for the specification of chemical materials and supramolecular structures. The CurlySMILES approach provides a flexible format to encode patterns in materials and molecule-based architectures. CurlySMILES includes its own set of symbols, descriptors and rules to denote respective entities and also modifies the well-established SMILES language.</p>
+<p>SMILES is based on a set of rules that allow the representation of a molecular structure as a sequence of atom and bond symbols in a single word or string <a class="footnote-reference" href="#b1" id="id1">[1]</a><a class="footnote-reference" href="#b2" id="id2">[2]</a><a class="footnote-reference" href="#b3" id="id3">[3]</a>. Unique SMILES strings are suitable as database keys while storing the structural information within the key itself <a class="footnote-reference" href="#b4" id="id4">[4]</a>. Since SMILES notations are constructable from molecular principle, namely the molecular graph, notations can be derived for virtual, not-yet-synthesized chemical species. The flexibility and portability of SMILES has been demonstrated by its use in modeling and property estimation software <a class="footnote-reference" href="#b5" id="id5">[5]</a><a class="footnote-reference" href="#b6" id="id6">[6]</a><a class="footnote-reference" href="#b7" id="id7">[7]</a><a class="footnote-reference" href="#b8" id="id8">[8]</a><a class="footnote-reference" href="#b9" id="id9">[9]</a> and combinatorial libraries <a class="footnote-reference" href="#b10" id="id10">[10]</a><a class="footnote-reference" href="#b11" id="id11">[11]</a>.</p>
+<p>SMILES is bridging the opposite ends of human-friendly molecular drawings, achieved with molecule editors <a class="footnote-reference" href="#b12" id="id12">[12]</a><a class="footnote-reference" href="#b13" id="id13">[13]</a>, and computer-friendly connection tables (matrices), both used in representing molecular structures. Molecular information collapsed into a compact SMILES string can efficiently be managed by computer programs and stored in markup language fields, like the <a class="footnote-reference" href="#b14" id="id14">[14]</a>.</p>
+<p>SMILES comes in various dialects with modifications or minor extensions of the originally published language. Implementations of SMILES parsers differ with respect to the treatment and acceptance of additionally introduced symbols and syntax <a class="footnote-reference" href="#b2" id="id15">[2]</a>. SMILES also has been extended to encode a peptide or peptoid sequence on monomer level <a class="footnote-reference" href="#b15" id="id16">[15]</a> and in template format <a class="footnote-reference" href="#b16" id="id17">[16]</a>.</p>
+<p>Recently, the IUPAC International Chemical Identifier (InChI) has been designed as a string-based identifier for chemical substances <a class="footnote-reference" href="#b17" id="id18">[17]</a>. Like a SMILES notation, an InChI string is derived from a molecular structure representations. However, InChI is intended for &#8220;behind-the scenes&#8221; use by computers. It is typically derived from structure representations by software, whereas SMILES handily supports molecular communication between humans and computers.</p>
+<p>The user-friendliness and popularity of SMILES encouraged us to modify this chemical language for communication of molecular architectures that can not adequately be encoded with the current SMILES language and its derivatives. CurlySMILES modifies the SMILES language by including a novel format to encode molecular details and extra-molecular features such as non-covalent interactions and attachment to a biomolecule as well as the surface of a substrate material or nanoparticle. CurlySMILES is designed with an open format to provide users with choices of integrating shorthands such as aliases or compaction of repetitive structural units. In the following, formats and rules for constructing CurlySMILES notations are described. Applications of CurlySMILES for document annotation and chemical search are then discussed.</p>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="curlysmiles-notation">
+<h3>CurlySMILES notation<a class="headerlink" href="#curlysmiles-notation" title="Permalink to this headline">¶</a></h3>
+<p>A CurlySmiles notation is a string of dot-separated component notations. A component notation can either be a plain SMILES, an annotated SMILES, or a special format notation. A plain notation maintains the grammar and rules of the known SMILES language. A plain notation is modified by introducing attributes, such as structural variations, details and decorations, enclosed in curly braces. An annotation can be anchored to a particular atomic node or placed at the end of a SMILES component. A special format notation begins with an opening and ends with a closing curly brace and includes an alias or a notation for a structure that defies molecular-graph encoding. A string with exactly one component notation is referred to as a unary CurlySMILES notation.</p>
+<p>A CurlySMILES notation is typically not unique since the SMILES language allows for alternate notations by selecting a starting atom arbitrarily. Further, CurlySMILES provides flexible annotations formats that leaves it to a user or application software to add and granulate details. The clear separation of attributes from the molecular-graph encoding, however, provides applications with options to match and screen notations in large data sets with precedence to attributes, while deferring molecular-connectivity processing to a later stage, at which only a selected set of candidates will be considered.</p>
+<p>Here, we focus on the core format of CurlySMILES, outlining the basic syntax that can be extended into different domains of future interest. Example notations are supplied for selected molecules and materials, demonstrating how to represent a targeted structure or a generically defined class of structures. More examples are available in Additional file <a class="footnote-reference" href="#b18" id="id19">[18]</a><a class="footnote-reference" href="#b19" id="id20">[19]</a>.</p>
+<p>Additional file 1</p>
+<p><strong>CurlySMILES encoding examples</strong>. The encoding examples illustrate the application of CurlySMILES formats and rules to derive linear notations for selected structures including stereoisomers, fragments, ring molecules with delocalized charge, coordination compounds, macromolecules, nanostructures as well as doped and surface-functionalized materials.</p>
+<p>Click here for file</p>
+<p>Example notations are displayed in monospace font. Parts of a CurlySMILES notation, which are given in <em>italics</em>, present descriptive metalanguage text meant to be replaced by code in CurlySMILES format.</p>
+</div>
+<div class="section" id="multiplier">
+<h3>Multiplier<a class="headerlink" href="#multiplier" title="Permalink to this headline">¶</a></h3>
+<p>A shorthand format is introduced to encode multiple occurrences of the same component notation. The multiplier is an integer greater than one and enclosed in curly braces. It is appended to a component notation as illustrated for cobalt(II) nitrate hexahydrate (Co(NO<sub>3</sub><sub>2</sub><sub>2</sub></p>
+<p>A multiplier is not considered an annotation. If annotations occur at the end of a component notation, they have to precede the multiplier.</p>
+</div>
+<div class="section" id="alias">
+<h3>Alias<a class="headerlink" href="#alias" title="Permalink to this headline">¶</a></h3>
+<p>An alias is a short form for a component notation. An alias is enclosed in curly braces. CurlySMILES distinguishes between predefined and customer-defined aliases.</p>
+<p>This distinction is critical for the implementation of a CurlySMILES parser. Look-up of the replacement notation for an alias is internal for a predefined alias, whereas customer-defined aliases require submission of a look-up dictionary by the customer.</p>
+<p>An alias begins with a letter or a dollar sign followed by zero or more alphanumerical, hyphen, underscore, plus sign and round bracket characters. For example, we use commonly applied short notations for cations and anions of ionic liquids and solids, such as</p>
+<p>A customer-defined alias has to be indicated by a preceding dollar sign, allowing for notations like the following:</p>
+<p><em>myCation</em>}.{$*myAnion*}.{$*mySolvate*}{4}</p>
+</div>
+<div class="section" id="stoichiometric-formula-notation">
+<h3>Stoichiometric formula notation<a class="headerlink" href="#stoichiometric-formula-notation" title="Permalink to this headline">¶</a></h3>
+<p>A stoichiometric formula notation (SFN) is defined to encode materials with known atomic or substructural stoichiometry, but without a discrete pattern of finite atom connectivity (molecular structure) that could be captured in a SMILES notation. SFNs are particularly useful for encoding a broad range of solids. Further, many homo- and hetero-polyatomic clusters with complex atom connectivity can be encoded as SFNs in a compact, yet distinctive manner. CurlySMILES applies an SFN format that resembles the nomenclature typically used to name compounds by their stoichiometric composition <a class="footnote-reference" href="#b20" id="id21">[20]</a>, but eliminates the use of sub- and superscript markup. Multiple entries of the same atomic symbol are allowed and the symbols may occur in any order. A stoichiometric integer directly follows a symbol, whereas an isotope label precedes a symbol and is marked with the ^ character; for example <sup>13</sup>C. Further, selected atomic symbols may be grouped by enclosing them within round braces. If a stoichiometric integer applies to a group, it immediately follows the closing round brace. Finally, a charge notation</p>
+<p>To distinguish an SFN-encoded component from an alias or a composite notation, an asterisk (<em>SFN</em>}</p>
+<p><sub>23</sub>C<sub>6</sub></p>
+<p><sub>5</sub><sup>4+</sup></p>
+<p><sub>3</sub>(CO<sub>3</sub>)<sub>2</sub>(OH)<sub>2</sub> (carbonate mineral)</p>
+<p>Groups in an SFN notation can be nested to any depth level:</p>
+<p><sub>2</sub>)]</p>
+<p>Notice that the SFN format also accommodates structures with molecular connectivity. It is the user&#8217;s choice to encode such structures as SFN or SMILES notations. When in doubt about the topological description of a structure or when isomeric forms should intentionally be included, SFN is the notation of choice.</p>
+<p>An SFN can appear within a special format notation for a component, within a composite notation to encode a constituent (see next section) and within a SMILES annotation.</p>
+</div>
+<div class="section" id="composite-notation">
+<h3>Composite notation<a class="headerlink" href="#composite-notation" title="Permalink to this headline">¶</a></h3>
+<p>Composite or hybrid materials are made from constituents that remain separate and distinct, even on an above-nanoscale level (mesoscale). The constituents should not be encoded by dot-separated notations, a format which should be reserved for compounds in which the different species interact with each other on a molecular/ionic level rather than on an interface or grain-boundary level. CurlySMILES defines a special format for encoding composites and other materials built from interface-connected phases:</p>
+<p><a href="#id22"><span class="problematic" id="id23">*</span></a>constituent*#1/<a href="#id24"><span class="problematic" id="id25">*</span></a>constituent*#2/.../<a href="#id26"><span class="problematic" id="id27">*</span></a>constituent*#n}</p>
+<p>Herein, <a href="#id28"><span class="problematic" id="id29">*</span></a>constituent*#i<a class="footnote-reference" href="#b21" id="id30">[21]</a> is encoded as</p>
+<p><sub>2</sub></p>
+<p>The first constituent is presented as an annotated SMILES notations, using the macromolecule syntax introduced below, and the second constituent is presented as SFN.</p>
+</div>
+<div class="section" id="plain-smiles-notation">
+<h3>Plain SMILES notation<a class="headerlink" href="#plain-smiles-notation" title="Permalink to this headline">¶</a></h3>
+<p>A component notation that does not begin with an opening curly brace is a plain SMILES or an annotated SMILES notation. A plain SMILES notation is encoded with the grammar and rules of the SMILES language <a class="footnote-reference" href="#b1" id="id31">[1]</a>. A plain notation contains atomic node code (ANC) and may contain bond symbols and special characters to denote branching and ring formation. An ANC is either a bare atomic symbol or a square bracket atomic code (SQC) which includes an atomic symbol and, depending on the targeted structure, additional characters to denote the number of adjacent hydrogen atoms, a charge value, and an isotope label. CurlySMILES includes the symbols</p>
+<p>CurlySMILES requires an atomic wildcard always to be encoded as a SQC. For example, the notation <a class="footnote-reference" href="#b22" id="id32">[22]</a> as a wildcard-like any-bond symbol. Unless the bound atoms are encoded by wildcards, a bond is predetermined by the element type of the adjacent atoms and their orbital interactions. Whereas the atomic wildcard is a placeholder for atomic symbols, the symbol for an unspecified bond has not primarily the role of a bond placeholder; rather, it indicates bond-type ambiguity with respect to the limited classification scheme of single, double, triple, quadruple and aromatic bonds. CurlySMILES treats the character ~ as a bond symbol that encodes a bond, which cannot adequately be encoded as a covalent bond with symbols</p>
+</div>
+<div class="section" id="annotated-smiles-notation">
+<h3>Annotated SMILES notation<a class="headerlink" href="#annotated-smiles-notation" title="Permalink to this headline">¶</a></h3>
+<p>A plain notation is annotated by inserting one or more curly-enclosed annotations into the notation. An annotation has to be either anchored at a particular atomic node or appended to the end. An atom-anchored annotation (AAA) directly follows the ANC. The only characters allowed to occur between an AAA and ANC are digits that designate ring-closing. A component-anchored annotation (CAA) follows the last ANC, including its AAAs, but precedes the multiplier, if any is present in the component notation. AAA types include stereodescriptive and structural unit annotations as well as group environment, molecular detail and operational annotations. CAA types include state and shape annotations and miscellaneous interest annotations. In the following text we use the term annotation to refer to the content between the curly braces.</p>
+<p>A stereodescriptive annotation consists of one of the upper-case letters <em>cis</em>/<em>trans</em> isomers by using the <em>E</em>/<em>Z</em> convention. Examples E1 and E2 in Additional file</p>
+<p>A structural unit annotation defines a boundary of a structural unit. This boundary is an open or dangling bond. The annotation consists of a one-character boundary descriptor, which is a CurlySMILES bond symbol (</p>
+<p>Stereodescriptive and structural unit annotations consist of exactly one character, while all other annotation types require a two-character annotation marker (AM), which is optionally followed by an annotation dictionary to specify attributes. The general format for a dictionary-containing annotation,</p>
+<p><em>AMk</em><sub>1</sub>=*v*<sub>1</sub>;*k*<sub>2</sub>=*v*<sub>2</sub>;...;*k*<sub>n</sub>=*v*<sub>n</sub>},</p>
+<p>employs a semicolon-separated list of dictionary entries. An entry is a key/value pair, <em>k</em><sub>i</sub>/<em>v</em><sub>i</sub><a class="footnote-reference" href="#b23" id="id33">[23]</a>.</p>
+<p>A group environment annotation marker (GEAM) starts with a bond symbol (</p>
+<p>A molecular detail annotation starts with an exclamation mark. The second character of a molecular detail annotation marker (MDAM) is</p>
+<p>The first character of an operational annotation marker (OPAM) is a plus sign. The following character is a letter. An upper-case letter indicates formal addition or substitution of a structural part. A lower-case letter indicated formal repetition of an annotated unit. OPAMs</p>
+<p>A state and shape annotation is denoted by a state and shape annotation marker (SSAM) consisting of two lower-case letters. SSAM annotations qualitatively describe the physicochemical state, phase structure and/or the nano- or mesoscale characteristics of a material <a class="footnote-reference" href="#b24" id="id34">[24]</a>. Examples E15 to E18 in Additional file</p>
+<p>A miscellaneous interest annotation is denoted by a two-character miscellaneous annotation marker (MIAM). Examples E19 and E20 in Additional file</p>
+<p>The following two examples demonstrate the combined use of annotations to encode molecular arrangements.</p>
+<p>The imidazolium functionalized SiO<sub>2</sub> surface <a class="footnote-reference" href="#b25" id="id35">[25]</a> in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a> is encoded in CurlySMILES by applying the group environment annotation format. The two O atoms, which attach the molecular species to the material surface, are annotated with the</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-1-1.jpg" src="../_images/1758-2946-3-1-1.jpg" />
+<p class="caption">Figure 1. Alkylimidazolium ionic species immobilized on silica surface</p>
+<div class="legend">
+<strong>Alkylimidazolium ionic species immobilized on silica surface</strong>.</div>
+</div>
+<p>The material is SFN-encoded in a dictionary entry with key</p>
+<p>The functionalized calix[4]arene of the complex shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a> is encoded by combining structural unit, group environment and operational annotations. The molecular ring is encoded as a fragment with two open bonds. The first is encoded as a structural unit annotation and the second as an operational annotation. Corresponding atomic nodes and annotations are given in boldface:</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-1-2.jpg" src="../_images/1758-2946-3-1-2.jpg" />
+<p class="caption">Figure 2. Eu<sup>3+</sup> cation coordinated by a cryptand</p>
+<div class="legend">
+<strong>:sup:`3+` cation coordinated by a cryptandEu</strong>.</div>
+</div>
+<p><strong>c{-}**cc{-R}cc1**C{+rn=4}</strong></p>
+<p>The <sup>3+</sup>/cryptand complex is given by encoding the rare-earth cation in SQC, annotated with the ligand notation:</p>
+<p>The dictionary key</p>
+</div>
+<div class="section" id="software">
+<h3>Software<a class="headerlink" href="#software" title="Permalink to this headline">¶</a></h3>
+<p>A suite of Python modules have been implemented that perform parsing and molecular descriptor generation for CurlySMILES notations. These modules have been wrapped as software package <a class="reference external" href="http://www.axeleratio.com/csm/py/code/downloads.htm">http://www.axeleratio.com/csm/py/code/downloads.htm</a>.</p>
+</div>
+</div>
+<div class="section" id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="comparison-of-curlysmiles-with-other-smiles-modifications">
+<h3>Comparison of CurlySMILES with other SMILES modifications<a class="headerlink" href="#comparison-of-curlysmiles-with-other-smiles-modifications" title="Permalink to this headline">¶</a></h3>
+<p>Versions of SMILES use the symbols <em>Cis</em> and <em>trans</em> isomers are denoted via directional bond symbols</p>
+<p>CurlySMILES introduces a format to mark a fragment or chemical group by using structural unit annotations. This allows distinction between a radical and a group. The SMILES notation [CH3] encodes a methyl radical. CurlySMILES uses the same notation to encode the radical, but encodes a methyl group as</p>
+<p>In a CurlySMILES notation, SMILES code is strictly separated and distinguishable from other parts in the notation by using curly braces. CurlySMILES uses marked annotations to define structures in generic terms or to construct molecular patterns with a tunable depth of information granularity. CurlySMILES provides completely new, extra-molecular patterns, such as</p>
+<p>CurlySMILES is designed for applications in specialized domains and for clients with particular tasks, including repetitive processing of certain structural entities. For this purpose, CurlySMILES includes various shorthand approaches, especially the alias format. Domain-specific abbreviations and codes for structures and materials are frequently used within chemical communities to replace long names and complex structural concepts. The alias format makes it possible to integrate those terms into notations and replace them when needed.</p>
+<p>As a machine-readable code, a CurlySMILES notation (like SMILES or InChI) is a document-neutral representation (ASCII string) of a chemical structure that, supported by the methods in the supplied software package, can automatically be converted into a document specific format. Formula-based names of coordination compounds are a case in point.</p>
+</div>
+<div class="section" id="data-mining-and-semantic-search">
+<h3>Data mining and semantic search<a class="headerlink" href="#data-mining-and-semantic-search" title="Permalink to this headline">¶</a></h3>
+<p>A special feature of CurlySMILES is that it integrates textual parts, acronyms, other encoding schemes and client-defined aliases. Thus, a CurlySMILES notation can be used on various levels in search and data mining. CurlySMILES allows formulation of complex search pattern by using atomic-symbol placeholders and annotations that denote generic functional groups and compound classes. The annotation syntax of CurlySMILES makes it possible to associate a structural part with a specific role such as a structural repeat unit in a polymer, a substituent, ligand, cryptand, dopant, adsorbate or dissolved species. By implementing search and matching algorithm that include the information contained in CurlySMILES annotations, a plethora of search strategies can be envisioned, including precise, needle-in-the-hay-stack search and customer-focused report-and-review style extraction of chemical data.</p>
+</div>
+</div>
+<div class="section" id="conclusions">
+<h2>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h2>
+<p>CurlySMILES is a chemical language for the communication of chemical information related to molecular structure and complex nanoscale architectures. This language offers a versatile approach in encoding material composition and structure by supplementing attention to extra-molecular features. Symbols and grammar of this language allow users to encode structures and to formulate context-annotated queries with variable granularity of molecular or supramolecular details. The open format makes it easy to extend the current version to application-specific tasks.</p>
+</div>
+<div class="section" id="abbreviations">
+<h2>Abbreviations<a class="headerlink" href="#abbreviations" title="Permalink to this headline">¶</a></h2>
+<p>AAA: Atom-Anchored Annotation; AM: Annotation Marker; ANC: Atomic Node Code; CAA: Component-Anchored Annotation; CurlySMILES: Curly-braces enhanced Smart Material Input Line Entry Specification; GEAM: Group Environment Annotation Marker; InChI: IUPAC International Chemical Identifier; MDAM: Molecular Detail Annotation Marker; MIAM: Miscellaneous Interest Annotation Marker; OPAM: OPerational Annotation Marker; SFN: Stoichiometric Formula Notation; SMILES: Simplified Molecular Input Line Entry System; SQC: SQuare bracket atomic Code; SSAM: State and Shape Annotation Marker</p>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The author declares that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>AD designed the CurlySMILES language. AD has implemented software to parse and test CurlySMILES notation and to use them in CurlySMILES-annotated archives of chemical property data and bibliographic collections.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id31">2</a>)</em> SMILES, a Chemical Language and Information System. 1. Introduction to Methodology and Encoding Rules</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id15">2</a>)</em> SMILES line notation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>OpenSMILES Specification</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>SMILES. 2. Algorithm for Generation of Unique SMILES Notation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>Handbook for Estimating Physicochemical Properties of Organic Compounds</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td>SmilogP: A Program for a Fast Evaluation of Theoretical Log P from the SMILES Code of a Molecule</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[7]</a></td><td>QSAR Modeling of Peripheral Versus Central Benzodiazepine Receptor Binding Affinity of 2-Phenylimidazol[1,2-a]pyridineacetamides using Optimal Descriptors Calculated with SMILES</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[8]</a></td><td>Artificial Neural Networks in ADMET Modeling: Prediction of Blood-Brain Barrier Permeation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[9]</a></td><td>Chemical Descriptors Library (CDL): A Generic, Open Source Software Library for Chemical Informatics</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[10]</a></td><td>SMILIB: Rapid Assembly of Combinatorial Libraries in SMILES Notation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[11]</a></td><td>SmiLib v2.0: A Java-Based Tool for Rapid Combinatorial Library Enumeration</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[12]</a></td><td>Molecular structure input on the web</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[13]</a></td><td>The PubChem chemical structure sketcher</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id14">[14]</a></td><td>XML-Based IUPAC Standard for Experimental, Predicted, and Critically Evaluated Thermodynamic Property Data Storage and Capture (ThermoML)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[15]</a></td><td>CHUCKLES: A Method for Representing and Searching Peptide and Peptoid Sequences on Both Monomer and Atomic Levels</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[16]</a></td><td>CHORTLES: A Method for Representing Oligomeric and Template-Based Mixtures</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id18">[17]</a></td><td>The IUPAC International Chemical Identifier (InChI)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id19">[18]</a></td><td>CurlySMILES encoding examples</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[19]</a></td><td>Encoding examples for CurlySMILES notations</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[20]</a></td><td>Nomenclature of Inorganic Chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[21]</a></td><td>Poly(organophosphazene)s and the Sol-gel Technique</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id32">[22]</a></td><td>SMARTS - A Language for Describing Molecular Patterns</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id33">[23]</a></td><td>CurlySMILES: annotation dictionary keys</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[24]</a></td><td>CurlySMILES: state and shape annotation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id35">[25]</a></td><td>Supported ionic liquids: ordered mesoporous silicas containing covalently linked ionic species</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results">Results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#curlysmiles-notation">CurlySMILES notation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiplier">Multiplier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#alias">Alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stoichiometric-formula-notation">Stoichiometric formula notation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#composite-notation">Composite notation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plain-smiles-notation">Plain SMILES notation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#annotated-smiles-notation">Annotated SMILES notation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#software">Software</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#discussion">Discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#comparison-of-curlysmiles-with-other-smiles-modifications">Comparison of CurlySMILES with other SMILES modifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-mining-and-semantic-search">Data mining and semantic search</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abbreviations">Abbreviations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-41.html">OSCAR4: a flexible architecture for chemical text-mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="../index.html" title="Journal of Cheminformatics Volume 3"
+             >previous</a> |
+          <a href="1758-2946-3-2.html" title="Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-1.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

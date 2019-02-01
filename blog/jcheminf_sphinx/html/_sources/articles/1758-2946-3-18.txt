@@ -1,0 +1,1699 @@
+AMBIT RESTful web services: an implementation of the OpenTox application programming interface
+==============================================================================================
+
+Abstract
+********
+
+The AMBIT web services package is one of the several existing independent implementations of the OpenTox Application Programming Interface and is built according to the principles of the Representational State Transfer (REST) architecture. The Open Source Predictive Toxicology Framework, developed by the partners in the EC FP7 OpenTox project, aims at providing a unified access to toxicity data and predictive models, as well as validation procedures. This is achieved by i) an information model, based on a common OWL-DL ontology ii) links to related ontologies; iii) data and algorithms, available through a standardized REST web services interface, where every compound, data set or predictive method has a unique web address, used to retrieve its Resource Description Framework (RDF) representation, or initiate the associated calculations.
+
+The AMBIT web services package has been developed as an extension of AMBIT modules, adding the ability to create (Quantitative) Structure-Activity Relationship (QSAR) models and providing an OpenTox API compliant interface. The representation of data and processing resources in W3C Resource Description Framework facilitates integrating the resources as Linked Data. By uploading datasets with chemical structures and arbitrary set of properties, they become automatically available online in several formats. The services provide unified interfaces to several descriptor calculation, machine learning and similarity searching algorithms, as well as to applicability domain and toxicity prediction models. All Toxtree modules for predicting the toxicological hazard of chemical compounds are also integrated within this package. The complexity and diversity of the processing is reduced to the simple paradigm "read data from a web address, perform processing, write to a web address". The online service allows to easily run predictions, without installing any software, as well to share online datasets and models. The downloadable web application allows researchers to setup an arbitrary number of service instances for specific purposes and at suitable locations. These services could be used as a distributed framework for processing of resource-intensive tasks and data sharing or in a fully independent way, according to the specific needs. The advantage of exposing the functionality via the OpenTox API is seamless interoperability, not only within a single web application, but also in a network of distributed services. Last, but not least, the services provide a basis for building web mashups, end user applications with friendly GUIs, as well as embedding the functionalities in existing workflow systems.
+
+Background
+**********
+
+Most of the common tasks in toxicity prediction consist of several typical steps, such as access to datasets, descriptor calculation and validation procedures. Usually, the components that implement these steps are developed from scratch for every new predictive application and this often leads to undesirable duplication of effort and/or lack of interoperability. The availability of a universal set of interoperable components could facilitate the implementation of new specialized applications that combine algorithms in the most appropriate way and allow fast and rigorous model development and testing.
+
+The OpenTox framework \ [#B1]_ is being built as a collaborative effort by the partners in the OpenTox EC FP7 project, and is an attempt to design and implement a framework of web accessible components, solving common tasks in chemical properties prediction. The design objectives were to build a component based system, independent of programming languages and operating systems, where the components could interoperate between themselves and with external software packages, being able to aggregate data from different sources and staying open for future extensions. OpenTox made two major technological choices in order to keep the developments within these constraints: (i) the REpresentational State Transfer (REST) software architecture style allowing platform and programming language independence and facilitating the implementation of new data and processing components; (ii) a formally defined common information model, based on the W3C Resource Description Framework (RDF) \ [#B2]_ and communication through well-defined interfaces ensuring interoperability of the web components.
+
+REST is a software architecture style for network based applications, defined by Roy T. Fielding by analyzing the properties of the World Wide Web and other network architectures, and deriving the architectural constraints that made the WWW successful \ [#B3]_. There is a plethora of information on RESTful design principles \ [#B4]_, development frameworks and examples. The REST architecture can be briefly summarized as Resource Oriented and the essential architectural constraints are as follows. Every important information entity or collection of entities is considered a resource and is named and addressable (i.e. its content can be retrieved by its address) and supports limited number of operations (e.g. read and write). Any information entity or collection of entities could be considered a resource. A resource may return its content in different formats. The content is regarded as resource "representation". Some operations are safe (have no side effects - e.g. reading a resource) and idempotent (have same effect if executed multiple times), while others are not (e.g. creating new resources). The RESTful API design includes a specification of the allowed representation formats for each resource/operation pair. Another important design constraint is the usage of hyperlinks. It is considered good practice if all resources could be reached via a single or minimum number of entry points. Thus, the representation of a resource should return links to the related resources.
+
+The REST style web services became a popular alternative of SOAP based services and they are considered lighter and easier to use. Contrary to the established WS-* \ [#B5]_ standards, there are currently no standards for RESTful applications, but merely design guides. While the most widely deployed REST applications use the HTTP protocol (and therefore HTTP URIs as identifiers, HTTP methods as operations, and MIME types to specify representation formats), the architecture itself is protocol independent, therefore REST systems that do not use the HTTP protocol could exist, and vice versa. A RESTful application is characterized by complying with the architectural constraints, which are selected to ensure a set of particular properties of a distributed system. It is worthwhile to recall that the REST architecture is envisioned to be a collection of independently deployed and interacting distributed software entities, much like as there are millions of independent web servers, which constitute the WWW. Multiple independent and interacting deployments, is also the intended usage of the OpenTox REST API and AMBIT services as one of its implementations, rather than being a web application made available by a single authority or service provider.
+
+The design of a REST system, based on the HTTP protocol, starts by identifying the domain objects, followed by mapping the objects to resources and defining identifiers (URI patterns) and operations (HTTP verbs) on each resource. In the case of OpenTox, the minimum set of domain objects, identified collaboratively by the partners \ [#B1]_, consists of chemical compounds, properties of chemical compounds, datasets of chemical compounds and their properties (measured or calculated), algorithms (including descriptor calculation, regression, classification, structural alerts, quantum chemistry algorithms, etc.), predictive models (e.g. a model, obtained by applying a machine learning algorithm to a training dataset), validation algorithms, and reports. In addition, tasks are introduced as special resources to allow representation and handling of long running asynchronous jobs. Every resource is identified by a unique web address, following an agreed pattern, specific to the resource type (e.g./algorithm/{id} for algorithms,/compound/{id} for compounds, etc.). The resources can be created (HTTP POST), updated (HTTP PUT) and deleted (HTTP DELETE), or their representations retrieved (HTTP GET). While there are diverging opinions whether POST or PUT should be used for creating resources in a REST application, our view (supported by \ [#B3]_) is that this issue is irrelevant for the characterisation of a system as RESTful, as the design goals of the REST software architecture style (scalability, statelessness, cacheability, uniformity) are not violated by either choice. The particular choice of using POST for creating subordinate resources is a pragmatic one, as it is supported by popular REST frameworks, the HTTP protocol specification \ [#B6]_, and the Atom Publishing Protocol \ [#B7]_, which is often cited as a reference implementation of a REST system. Two additional features of POST's standard defined behaviour have been also accounted for as desirable properties in our design: (i) non-idempotent, meaning that multiple identical requests would probably result in the creation of separate subordinate resources with identical information \ [#B4]_, and (ii) the URIs of the newly created resources are determined by the server, rather than specified by the client. On the other hand, updates of existing resources (PUT) require the client to specify the resource URI, again in full compliance with the HTTP protocol specification \ [#B6]_.
+
+The common information model of the OpenTox domain objects is based on the Resource Description Framework (RDF) and described by the OpenTox ontology \ [#B8]_. It should be noted that the initial design of the OpenTox API (version 1.0) was based on a XML schema, but it was later decided to adopt RDF as a more powerful approach to describe objects and their relationships, as well as to facilitate the reuse of ongoing ontology developments in bioinformatics. Any entity could be described in RDF as a collection of triples (or statements), each triple consisting of a subject, a predicate, and an object. The predicate (also called a property) denotes the relationship between two objects (e.g. *Model1 has_training_dataset Dataset1*). The objects are modelled in RDF as *Classes* (rdf:Class), and Classes have specific *Instances*. Relationships are modelled with *Properties* (rdf:Property).
+
+Thus, the Resource Description Framework allows defining a data model (how the data is organized), instead of specifying data format (how the data is written into a file). Once a data model is defined, it could be serialized into different formats, for example RDF/XML \ [#B9]_, N3 \ [#B10]_, TURTLE \ [#B11]_. The OWL Web Ontology Language \ [#B12]_ is built on top of RDF, and, compared to RDF, imposes restrictions on what is allowed to be represented. Because of such restrictions, the OWL subsets OWL-Lite and OWL-DL (Description Logic) allow performing automated machine reasoning. In OWL, there are Object properties and Data properties (owl:Property, which is a subclass of rdf:Property). An Object property specifies a relation between Instances, while a Data property specifies a relation between an Instance and a simple data value (string, integer, etc.). Properties cannot be used as Classes and vice versa.
+
+Both REST and RDF technologies encourage data model development and consider assigning resource identifiers important. However, there are differences, as REST identifiers are used as addresses of the underlying protocol (e.g. HTTP URIs) and it is essential that URIs are dereferenceable. While the RDF representation allows HTTP URIs as resource identifiers, these are considered names, not addresses, and are not necessarily dereferenceable. HTTP URIs are hierarchical, while RDF does not exploit the hierarchy, and splits HTTP URIs into a prefix and identifier instead. REST resources define clear boundaries between information entities, while data, represented via RDF, is usually perceived as one linked graph. The common usage of RDF for data integration is to convert data coming from diverse sources into a (typically read only) single triple storage and provide a query interface (SPARQL endpoint). On the contrary, web services provide distributed and dynamically generated information. Most REST services define data formats \ [#B13]_ as a means for communication, rather than an explicit data model. The simultaneous use of RDF and REST is not yet widespread and there are ongoing debates on various related topics. Nevertheless, there is an added value of merging both technologies for independent deployments of multiple services, able to dynamically generate linked data with dereferenceable links. This could lead to an enrichment of the information space and scalability, in a manner similar to a deployment of many web servers that provide hypertext documents.
+
+The OpenTox framework integrates both technologies into a distributed web services framework, where both data and processing resources are described by ontologies: either existing ones, or developed within the project. The framework consists of simple modules, developed by different partners and with different programming languages, running on a set of geographically dispersed servers, and communicating via Internet. The modules can be used to build more complex use cases, embed OpenTox web services into workflows, build web mashups, consume the web services via rich client applications, etc.
+
+This paper describes a particular implementation of a subset of OpenTox web services, based on the AMBIT \ [#B14]_\ [#B15]_ project. AMBIT is an open source software for chemoinformatics data management, which consists of a database and functional modules, allowing a variety of queries and data mining of the information stored in a MySQL \ [#B16]_ database. The modules were initially designed and developed to serve as building blocks of a desktop application (AmbitXT), as per the requirements of a CEFIC LRI \ [#B17]_ contract. The AmbitXT application features a Swing graphical user interface, and provides a set of functionalities to facilitate the evaluation and registration of chemicals according to the REACH requirements: for example workflows for analogue identification and assessment of Persistence, Bioaccumulation, and Toxicity (PBT). The downloadable installer includes a large database, covering all REACH registered chemicals, as well as several publicly available datasets featuring toxicity data. Users can also import their own sets of chemical structures and data. Downloading and running the application locally on the user machine is usually considered an advantage, especially when handling confidential data. On the other hand, with the growing popularity of the Web browser as a platform for applications, cumbersome downloads of custom desktop solutions are becoming less convenient nowadays and are even considered obsolete sometimes.
+
+The AMBIT software was considerably enhanced within the framework of the OpenTox project, not only by providing an OpenTox API compliant REST web service interface to most of its functionalities, but also by adding the ability to describe data, algorithms, and model resources via corresponding ontologies and to build QSAR models. AMBIT REST web services are distributed as web archive (*war* file) and can be deployed in an Apache Tomcat \ [#B18]_ application server or any other compatible servlet \ [#B19]_ container. All Toxtree \ [#B20]_\ [#B21]_ modules for predicting the toxicological hazard of chemical compounds are also integrated within this package and available as REST web services via the OpenTox model API. In addition, a separate project \ [#B22]_, implementing an OpenTox Ontology service, has been created. It consists of a simple implementation of a triple storage, exposing a SPARQL endpoint, and allowing RESTful updates via HTTP POST and DELETE commands.
+
+Implementation
+**************
+
+AMBIT is implemented in Java, uses a MySQL database as backend, and relies on The Chemistry Development Kit \ [#B23]_\ [#B24]_\ [#B25]_ for cheminformatics functionality. The OpenTox API implementation introduces two additional major dependencies, namely, the Restlet \ [#B26]_ library for implementation of REST services, and the Jena \ [#B27]_ RDF API. Apache Maven \ [#B28]_ is used for software project management (organizing dependencies and building of executables). The source code is available in a Subversion repository at the SourceForge site \ [#B29]_. There are two top level Maven projects, *ambit2-all* and *ambit2-apps*, consisting of several sub-modules. The first is used to organize and build modules, while *ambit2-apps* uses these modules as dependencies and builds the end user applications. The Toxtree source code \ [#B30]_ also includes dependencies on some of the *ambit-all* modules, and, on the other hand, is itself a dependency of the end user applications, in which it has been incorporated, such as AmbitXT and REST web services. The entire package currently consists of 30 Maven modules. The larger number of modules (30, compared to 21, as reported in the previous publication \ [#B15]_ that describes the standalone application), is mostly due to refactoring towards better organization of dependencies and introduction of new algorithms. The REST services implementation is organized in two modules, *ambit2-rest* and *ambit2-www*; the first one contains generic REST and RDF functionality, while the second is an implementation of the OpenTox API and builds the web application used to run AMBIT REST services.
+
+Table \ :ref:`1<table_1>` provides a non-exhaustive overview of the most important objects and operations of the OpenTox API, implemented by the AMBIT services. The complete description of the API \ [#B1]_ includes specifications of the input parameters and the result codes. An up-to-date version is available from the dedicated wiki at the OpenTox web site \ [#B31]_. Currently, there is no AMBIT implementation of the OpenTox validation and reporting services; however, remote validation and reporting services are compatible, and can be used to validate models created via AMBIT services. Incorporation of the Authentication and Authorization API is under development.
+
+The RDF representation of OpenTox objects is defined by the OpenTox ontology. The current version is available at `<http://www.opentox.org/api/1.1/opentox.owl>`_ The namespace prefix used in this paper is "ot:", e.g. ot:Model refers to the `<http://www.opentox.org/api/1.1/opentox.owl#Modelclass>`_. OpenTox REST resources are instances of the relevant RDF classes (e.g. `<http://apps.ideaconsult.net:8080/ambit2/model/9>`_ is an instance of the ot:Model class). Appendixes 1 and 2 provide examples how to retrieve the representations of an OpenTox model and algorithm, respectively. As a consequence of being exposed as REST web services, all OpenTox objects URIs are dereferenceable. The examples provided in the Appendixes rely on the cURL \ [#B33]_ command line tool for transferring data with URI syntax, which supports all HTTP operations (as well as other protocols). Any tool or programming language library, supporting the HTTP protocol, can be used to communicate with the OpenTox REST services. The examples use live demo instances of the AMBIT implementation of the services, but are also applicable, with minor trivial changes, to any OpenTox compliant service.
+
+Appendix 1: An example how to retrieve the representation of an OpenTox model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+curl -H "Accept:text/n3" `<http://apps.ideaconsult.net:8080/ambit2/model/9>`_
+
+@prefix ot:\ |nonascii_1|\ \ |nonascii_2|\ \ |nonascii_3|\ <`<http://www.opentox.org/api/1.1#>`_>.
+
+@prefix dc:\ |nonascii_4|\ \ |nonascii_5|\ \ |nonascii_6|\ <`<http://purl.org/dc/elements/1.1/>`_>.
+
+@prefix rdfs:\ |nonascii_7|\ \ |nonascii_8|\ \ |nonascii_9|\ <`<http://www.w3.org/2000/01/rdf-schema#>`_>.
+
+<`<http://apps.ideaconsult.net:8080/ambit2/model/9>`_>
+
+\ |nonascii_10|\ \ |nonascii_11|\ \ |nonascii_12|\ a\ |nonascii_13|\ \ |nonascii_14|\ \ |nonascii_15|\ ot:Model ;
+
+\ |nonascii_16|\ \ |nonascii_17|\ \ |nonascii_18|\ dc:title "XLogP" ;
+
+\ |nonascii_19|\ \ |nonascii_20|\ \ |nonascii_21|\ ot:algorithm
+
+<`<http://apps.ideaconsult.net:8080/ambit2/algorithm/org.openscience.cdk.qsar.descriptors.molecular.XLogPDescriptor>`_>;
+
+\ |nonascii_22|\ \ |nonascii_23|\ \ |nonascii_24|\ ot:predictedVariables
+
+\ |nonascii_25|\ \ |nonascii_26|\ \ |nonascii_27|\ \ |nonascii_28|\ \ |nonascii_29|\ \ |nonascii_30|\ <`<http://apps.ideaconsult.net:8080/ambit2/feature/22114>`_>.
+
+<`<http://apps.ideaconsult.net:8080/ambit2/feature/22114>`_>.
+
+\ |nonascii_31|\ \ |nonascii_32|\ \ |nonascii_33|\ a\ |nonascii_34|\ \ |nonascii_35|\ \ |nonascii_36|\ ot:Feature.
+
+<`<http://apps.ideaconsult.net:8080/ambit2/algorithm/org.openscience.cdk.qsar.descriptors.molecular.XLogPDescriptor>`_>
+
+\ |nonascii_37|\ \ |nonascii_38|\ \ |nonascii_39|\ a\ |nonascii_40|\ \ |nonascii_41|\ \ |nonascii_42|\ ot:Algorithm
+
+Appendix 2: An example how to retrieve the representation of an OpenTox algorithm
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+curl -H "Accept:text/n3" \
+
+`<http://apps.ideaconsult.net:8080/ambit2/algorithm/org.openscience.cdk.qsar.descriptors.molecular.XLogPDescriptor>`_
+
+@prefix ot:\ |nonascii_43|\ \ |nonascii_44|\ \ |nonascii_45|\ <`<http://www.opentox.org/api/1.1#>`_>.
+
+@prefix dc:\ |nonascii_46|\ \ |nonascii_47|\ \ |nonascii_48|\ <`<http://purl.org/dc/elements/1.1/>`_>.
+
+@prefix rdfs:\ |nonascii_49|\ \ |nonascii_50|\ \ |nonascii_51|\ <`<http://www.w3.org/2000/01/rdf-schema#>`_>.
+
+@prefix bo:\ |nonascii_52|\ \ |nonascii_53|\ \ |nonascii_54|\ <http://www.blueobelisk.org/ontologies/chemoinformatics-algorithms/#>.
+
+@prefix xsd:\ |nonascii_55|\ \ |nonascii_56|\ \ |nonascii_57|\ <`<http://www.w3.org/2001/XMLSchema#>`_>.
+
+@prefix ota:\ |nonascii_58|\ \ |nonascii_59|\ \ |nonascii_60|\ <http://www.opentox.org/algorithmTypes.owl#>.
+
+<`<http://apps.ideaconsult.net:8080/ambit2/algorithm/org.openscience.cdk.qsar.descriptors.molecular.XLogPDescriptor>`_>
+
+\ |nonascii_61|\ \ |nonascii_62|\ \ |nonascii_63|\ a\ |nonascii_64|\ \ |nonascii_65|\ \ |nonascii_66|\ ot:Algorithm, ota:DescriptorCalculation ;
+
+\ |nonascii_67|\ \ |nonascii_68|\ \ |nonascii_69|\ dc:title "XLogP"^^xsd:string ;
+
+\ |nonascii_70|\ \ |nonascii_71|\ \ |nonascii_72|\ bo:instanceOf bo:xlogP.
+
+The examples provided in Appendixes 3 and 4 illustrate how processing is performed via HTTP operations. The *dataset_uri* parameter refers to the ToxCast \ [#B34]_ dataset, which consists of 320 chemicals, and is essentially an example of batch processing via the OpenTox API.
+
+Appendix 3: An example of launching XLogP prediction for a dataset
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+curl -H "Accept:text/uri-list" -X POST -d "dataset_uri=`<http://apps.ideaconsult.net:8080/ambit2/dataset/112>`_" \
+
+`<http://apps.ideaconsult.net:8080/ambit2/model/9>`_ -v
+
+< HTTP/1.1 202 Accepted
+
+`<http://apps.ideaconsult.net:8080/ambit2/task/232289a2-2ce8-4f2e-9a62-8db02887577b>`_
+
+Note that both the dataset and the models are accessed indirectly via URIs, so the only data transferred on input and output are those URIs, not actual content. The result is a Task URI, and the HTTP return code 202 Accepted is an indicator that the processing has not been completed yet. In case processing was completed, the return code would have been OK 200 and the returned URI - an ot:Dataset, where results could be retrieved.
+
+Appendix 4: An example of polling the status of asynchronous job (Task URI)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+curl -i -H "Accept:text/uri-list" \
+
+http://apps.ideaconsult.net:8080/ambit2/task/232289a2-2ce8-4f2e-9a62-8db02887577b
+
+HTTP/1.1 200 OK
+
+`<http://apps.ideaconsult.net:8080/ambit2/dataset/112?feature_uris[]=http%3A%2F%2Fapps.ideaconsult.net%3A8080 %2Fambit2%2Fmodel%2F9%2Fpredicted>`_
+
+Finally, we retrieve the prediction results from the URI shown in Appendix 4. The prediction results (Appendix 5) are represented as ot:Dataset (e.g. table with variable number of columns), which consists of data entries (ot:DataEntry) relating compounds (e.g. rows) to features (columns, ot:Feature). The table "cells" are represented as instances of the ot:FeatureValue class. A short excerpt, consisting of only two data entries (out of the total of 320 data entries included in this particular dataset), is shown in Appendix 5.
+
+Appendix 5: An example of prediction results retrieval by HTTP GET command on URI, received as shown in Appendix 4
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+curl -H "Accept:text/n3" \
+
+"`<http://apps.ideaconsult.net:8080/ambit2/dataset/112?feature_uris%5B%5D=http%3A%2F%2Fapps.ideaconsult.net%3A8080%2Fambit2%2Fmodel%2F9%2Fpredicted>`_"
+
+@prefix ot:\ |nonascii_73|\ \ |nonascii_74|\ \ |nonascii_75|\ <`<http://www.opentox.org/api/1.1#>`_>.
+
+@prefix dc:\ |nonascii_76|\ \ |nonascii_77|\ \ |nonascii_78|\ <`<http://purl.org/dc/elements/1.1/>`_>.
+
+@prefix:\ |nonascii_79|\ \ |nonascii_80|\ \ |nonascii_81|\ <`<http://apps.ideaconsult.net:8080/ambit2/>`_>.
+
+@prefix rdfs:\ |nonascii_82|\ \ |nonascii_83|\ \ |nonascii_84|\ <`<http://www.w3.org/2000/01/rdf-schema#>`_>.
+
+@prefix owl:\ |nonascii_85|\ \ |nonascii_86|\ \ |nonascii_87|\ <`<http://www.w3.org/2002/07/owl#>`_>.
+
+@prefix xsd:\ |nonascii_88|\ \ |nonascii_89|\ \ |nonascii_90|\ <`<http://www.w3.org/2001/XMLSchema#>`_>.
+
+@prefix rdf:\ |nonascii_91|\ \ |nonascii_92|\ \ |nonascii_93|\ <`<http://www.w3.org/1999/02/22-rdf-syntax-ns#>`_>.
+
+@prefix otee:\ |nonascii_94|\ \ |nonascii_95|\ \ |nonascii_96|\ <`<http://www.opentox.org/echaEndpoints.owl#>`_>.
+
+[] a\ |nonascii_97|\ \ |nonascii_98|\ \ |nonascii_99|\ ot:Dataset ;
+
+\ |nonascii_100|\ \ |nonascii_101|\ \ |nonascii_102|\ ot:dataEntry
+
+\ |nonascii_103|\ \ |nonascii_104|\ \ |nonascii_105|\ \ |nonascii_106|\ \ |nonascii_107|\ \ |nonascii_108|\ [a\ |nonascii_109|\ \ |nonascii_110|\ \ |nonascii_111|\ ot:DataEntry ;
+
+\ |nonascii_112|\ \ |nonascii_113|\ \ |nonascii_114|\ \ |nonascii_115|\ \ |nonascii_116|\ \ |nonascii_117|\ \ |nonascii_118|\ ot:compound `<http://apps.ideaconsult.net:8080/ambit2/compound/147678/conformer/419677>`_> ;
+
+\ |nonascii_119|\ \ |nonascii_120|\ \ |nonascii_121|\ \ |nonascii_122|\ \ |nonascii_123|\ \ |nonascii_124|\ \ |nonascii_125|\ ot:values
+
+\ |nonascii_126|\ \ |nonascii_127|\ \ |nonascii_128|\ \ |nonascii_129|\ \ |nonascii_130|\ \ |nonascii_131|\ \ |nonascii_132|\ \ |nonascii_133|\ \ |nonascii_134|\ [a\ |nonascii_135|\ \ |nonascii_136|\ \ |nonascii_137|\ ot:FeatureValue ;
+
+\ |nonascii_138|\ \ |nonascii_139|\ \ |nonascii_140|\ \ |nonascii_141|\ \ |nonascii_142|\ \ |nonascii_143|\ \ |nonascii_144|\ \ |nonascii_145|\ \ |nonascii_146|\ \ |nonascii_147|\ ot:feature <`<http://apps.ideaconsult.net:8080/ambit2/feature/22114>`_> ;
+
+\ |nonascii_148|\ \ |nonascii_149|\ \ |nonascii_150|\ \ |nonascii_151|\ \ |nonascii_152|\ \ |nonascii_153|\ \ |nonascii_154|\ \ |nonascii_155|\ \ |nonascii_156|\ \ |nonascii_157|\ ot:value "2.74"^^xsd:double
+
+\ |nonascii_158|\ \ |nonascii_159|\ \ |nonascii_160|\ \ |nonascii_161|\ \ |nonascii_162|\ \ |nonascii_163|\ \ |nonascii_164|\ \ |nonascii_165|\ \ |nonascii_166|\ ]
+
+\ |nonascii_167|\ \ |nonascii_168|\ \ |nonascii_169|\ \ |nonascii_170|\ \ |nonascii_171|\ \ |nonascii_172|\ ] ;
+
+\ |nonascii_173|\ \ |nonascii_174|\ \ |nonascii_175|\ ot:dataEntry
+
+\ |nonascii_176|\ \ |nonascii_177|\ \ |nonascii_178|\ \ |nonascii_179|\ \ |nonascii_180|\ \ |nonascii_181|\ [a\ |nonascii_182|\ \ |nonascii_183|\ \ |nonascii_184|\ ot:DataEntry ;
+
+\ |nonascii_185|\ \ |nonascii_186|\ \ |nonascii_187|\ \ |nonascii_188|\ \ |nonascii_189|\ \ |nonascii_190|\ \ |nonascii_191|\ ot:compound <`<http://apps.ideaconsult.net:8080/ambit2/compound/2146/conformer/419678>`_> ;
+
+\ |nonascii_192|\ \ |nonascii_193|\ \ |nonascii_194|\ \ |nonascii_195|\ \ |nonascii_196|\ \ |nonascii_197|\ \ |nonascii_198|\ ot:values
+
+\ |nonascii_199|\ \ |nonascii_200|\ \ |nonascii_201|\ \ |nonascii_202|\ \ |nonascii_203|\ \ |nonascii_204|\ \ |nonascii_205|\ \ |nonascii_206|\ \ |nonascii_207|\ [a\ |nonascii_208|\ \ |nonascii_209|\ \ |nonascii_210|\ ot:FeatureValue ;
+
+\ |nonascii_211|\ \ |nonascii_212|\ \ |nonascii_213|\ \ |nonascii_214|\ \ |nonascii_215|\ \ |nonascii_216|\ \ |nonascii_217|\ \ |nonascii_218|\ \ |nonascii_219|\ \ |nonascii_220|\ ot:feature <`<http://apps.ideaconsult.net:8080/ambit2/feature/22114>`_> ;
+
+\ |nonascii_221|\ \ |nonascii_222|\ \ |nonascii_223|\ \ |nonascii_224|\ \ |nonascii_225|\ \ |nonascii_226|\ \ |nonascii_227|\ \ |nonascii_228|\ \ |nonascii_229|\ \ |nonascii_230|\ ot:value "1.59"^^xsd:double
+
+\ |nonascii_231|\ \ |nonascii_232|\ \ |nonascii_233|\ \ |nonascii_234|\ \ |nonascii_235|\ \ |nonascii_236|\ \ |nonascii_237|\ \ |nonascii_238|\ \ |nonascii_239|\ ]
+
+\ |nonascii_240|\ \ |nonascii_241|\ \ |nonascii_242|\ \ |nonascii_243|\ \ |nonascii_244|\ \ |nonascii_245|\ ].
+
+<`<http://apps.ideaconsult.net:8080/ambit2/algorithm/org.openscience.cdk.qsar.descriptors.molecular.XLogPDescriptor>`_>
+
+\ |nonascii_246|\ \ |nonascii_247|\ \ |nonascii_248|\ a\ |nonascii_249|\ \ |nonascii_250|\ \ |nonascii_251|\ ot:Algorithm.
+
+<`<http://apps.ideaconsult.net:8080/ambit2/feature/22114>`_>
+
+\ |nonascii_252|\ \ |nonascii_253|\ \ |nonascii_254|\ a\ |nonascii_255|\ \ |nonascii_256|\ \ |nonascii_257|\ ot:Feature, ot:NumericFeature ;
+
+\ |nonascii_258|\ \ |nonascii_259|\ \ |nonascii_260|\ dc:title "XLogP" ;
+
+\ |nonascii_261|\ \ |nonascii_262|\ \ |nonascii_263|\ ot:hasSource
+
+<`<http://apps.ideaconsult.net:8080/ambit2/algorithm/org.openscience.cdk.qsar.descriptors.molecular.XLogPDescriptor>`_> ;
+
+\ |nonascii_264|\ \ |nonascii_265|\ \ |nonascii_266|\ =\ |nonascii_267|\ \ |nonascii_268|\ \ |nonascii_269|\ otee:ENDPOINT_Octanol-water_partition_coefficient.
+
+**The Ontology Service** is a separate project, which does not depend on AMBIT modules, and which compiles into a different web application. It currently uses the Jena TDB \ [#B35]_ persistence mechanism, and was initially designed as a proof-of-concept service to illustrate the added value of gathering RDF triples of several remote OpenTox services into the same triple storage and enabling SPARQL queries. According to our experience, the performance of the TDB storage, especially when embedded as a web service and being concurrently accessed by many users, is not optimal, and other available solutions are being evaluated. Currently, it is planned to use the ontology service as a registry of all deployed OpenTox services (both local and remote).
+
+**AMBIT REST services** is a web application that includes all resources listed in Table \ :ref:`1<table_1>` except the ontology service. All OpenTox objects are implemented as subclasses of *org.restlet.resource.ServerResource* \ [#B36]_, and reside in the *ambit-www* module, which compiles into a single web archive (*ambit2.war*). The Algorithm and Task resources are implemented as in-memory objects. Compounds, Features, Datasets, and Models rely on a MySQL database backend. The common architecture is as follows.
+
+GET operations
+--------------
+
+The *ServerResource* receives input parameters and creates a query object, which encapsulates the database query. The query object could be as simple as the definition of a resource retrieval by its primary key or it could represent more complex queries like searching by several parameters, similarity search, or substructure search (SMARTS) pre-screening. The query object is processed by a generic "batch processing" class, which retrieves domain objects (e.g. compounds, features, datasets, dataset entries, or models) one by one, applies further processing if necessary, and serializes back from the server to the client the resource representation in the desired format by a "reporter" class. This setup allows for easy handling of new query types (by adding new query classes) and for adding many serialization formats (by writing new reporter classes). The supported MIME types for datasets (besides the mandatory *application/rdf+xml*) currently are: *chemical/x-mdl-sdfile, text/n3, application/x-turtle, chemical/x-mdl-molfile, chemical/x-cml, chemical/x-daylight-smiles, chemical/x-inchi, text/x-arff, application/pdf, text/uri-list, text/csv, text/plain*. Experimental support for YAML and JSON is also available. The most efficient implementation of a "reporter" class is to serialize the domain objects into the stream immediately after receiving them, without keeping the objects, or any related data, in memory. Unfortunately, when Jena is used to generate a RDF representation of a domain object, it requires building the entire RDF triple model prior to serialization. To avoid this overhead, the dataset RDF/XML serialization was re-implemented to use the Streaming API for XML (StAX) \ [#B37]_, resulting in reduced response time of dataset retrieval (2-10 times improvement, depending on the size of the dataset).
+
+POST and PUT operations
+-----------------------
+
+Instances of *ServerResource* receive input parameters, create a task resource, put it into an execution queue, and immediately return the task URI and representation in the requested MIME type to the client. The execution queue consists of *java.util.concurrent.Ca llable* objects \ [#B38]_, while completed tasks are light objects, containing only input and output URIs. The result, as per the OpenTox REST API, is always a URI: either representing the result, or an intermediate Task object. The tasks are available via the Task service (Table \ :ref:`1<table_1>`), and are used, via GET, for accessing either the status of a unfinished task, or the URI of the results - for the completed ones. This defines a generic processing scheme where, for implementing new type of processing (e.g. integrating a new algorithm), it is sufficient to subclass the *ServerResource* and attach the specific type of *Callable* object that implements the new algorithm.
+
+POST and PUT on datasets, compounds, and feature resources are used to create new resources or update the content of existing ones, and always return the URI of the new resources or the URI of the updated ones. POST on machine learning algorithms (e.g. regression, classification, or clustering) creates a new model resource and returns its URI. The representation of a model URI can be retrieved via GET to inspect the model details (e.g. training dataset, independent variables, specific parameters). POST on a model URI creates a new dataset, containing prediction results, and returns its URI. Returning the URI of a subordinate resource upon POST is in compliance with REST recommendations (and HTTP specifications \ [#B6]_), as the content of the result URI could be later accessed via GET, obeying the cacheability constraint of the architecture. Neither REST nor HTTP strictly defines the meaning of "subordinate" resource; we however consider the OpenTox API interpretation compliant to the REST architecture, because in all of the cases, presented above, POST on a resource creates a new dependent resource, and is defined in a uniform manner. An important difference to remote procedure call (RPC) based architectures is that the client does not send the complete data to be processed; the processing service receives only the data URI, which it uses to retrieve the appropriate representation when it needs the data. The distinction between information resources and their representations, which is considered a key feature of REST, enables the processing resource to choose the most appropriate representation (i.e. no additional data conversion is necessary!) and keep track of the data provenance by simply referring to the data URI and its relevant metadata. This design also allows to dynamically generate predictive models, immediately making them available online, and maintaining in the underlying representation of linked resources all the information required to reproduce the model building process, which was one of the initial design goals of the OpenTox framework.
+
+The results of applying the REST constraints to information processing elements, like data analysis algorithms, leads to a change in the way of thinking, modelling, implementing, and perceiving data processing. From a point of view of the REST architecture, a data processing algorithm is just another resource that retrieves data, given its identifier, and creates a resulting resource with another identifier. The difference between the data and processing elements vanishes.
+
+DELETE operations
+-----------------
+
+Usually implemented by deleting objects from the database backend, the integrity is managed via a standard relational database foreign keys mechanism. Integrity between local and remote objects is not addressed. If a local object refers to a remote OpenTox object, e.g. predictions stored as an AMBIT dataset by a remote model, and the remote model service becomes unreachable, this will not be reflected in any way. This is similar to the generic problem of broken hyperlinks on the Web and might be addressed in future by some suitable keep-alive or synchronization mechanism.
+
+RDF input/output
+----------------
+
+Jena in-memory models are used to read incoming RDF data and to serialize domain objects into RDF formats. The lack of streaming RDF readers and writers is a major disadvantage for the use of RDF for data transfer. A possible workaround is to introduce a persistent RDF storage, but the performance gain has still to be evaluated. Another disadvantage of making domain objects available in RDF is the lack of support from most popular scripting languages, used to build web applications (e.g. JavaScript). As a workaround, JSON (Java Script Object Notation) \ [#B39]_ serialization of RDF is considered, and although many proposals and implementations exist, there is currently no standard for JSON serialization. Two of the existing JSON libraries have been evaluated, with the results not encouraging - the volume of the JSON representation is comparable to that of RDF/XML, and the same is true for the corresponding memory consumption. Possible workarounds are either to build client applications in programming languages with good RDF support or to provide alternative formats with efficient streaming support. Fortunately, the REST architecture natively supports multiple representations per resource, which allows using the most appropriate format for carrying out a particular task.
+
+A clear advantage of the availability of RDF representations for the OpenTox objects, data, algorithms, and models is that it allows to combine easily the RDF representations of remote resources into a standard triple storage, annotating and cross-linking objects with terms from existing ontologies. Publishing a dataset of chemical structures and their properties as linked data becomes as straightforward, as uploading a *sdf* file into an OpenTox dataset service, with optional subsequent annotation of property tags.
+
+Results and Discussion
+**********************
+
+We have implemented a large subset of the OpenTox API in the open source AMBIT REST package, and have made it available both as live demo online services and as a downloadable package, allowing third parties to install and run separate instances of the services, either on Intranet or publicly on the Internet.
+
+The major advantage is the ability of the framework to hide implementation details and offer diverse functionality via a uniform application programming interface, which, while generic, allows encapsulating very diverse data and predictive algorithms and allows seamless integration of remote services. Additionally, representing domain objects via the Resource Description Framework allows to explicitly assert relationships between data and data generation processes.
+
+Uniform access to data
+^^^^^^^^^^^^^^^^^^^^^^
+
+The OpenTox compound and dataset API provide generic means to access chemical compounds and aggregate various data. **Chemical compounds** are assigned unique URIs, and can be retrieved, created, or deleted via HTTP POST, PUT and DELETE commands, submitted to the compound service http://host:port/{service}/compound. The GET command returns a representation of the chemical compound in a specified MIME format (Appendix 6). Changing the MIME format in this example will return the representation of the compound in that format, making the service essentially work as a format converter.
+
+Appendix 6: An example of retrieving a compound in a specified format (Chemical MIME for SMILES in this example)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+curl -H "Accept:chemical/x-daylight-smiles" `<http://apps.ideaconsult.net:8080/ambit2/compound/1>`_
+
+O=C
+
+The concept of a **dataset of chemical compounds** is central to the OpenTox web services functionality. Algorithm services accept a dataset URI in order to build a model or to generate descriptor values. Model services accept a dataset URI in order to apply a model and obtain predictions. Predictions are also returned as a dataset URI, whose contents could be subsequently retrieved (Appendix 5). Search results (by identifiers, similarity, or substructure), are available as datasets as well.
+
+The OpenTox Dataset (ot:Dataset class) can be thought of as a file of chemical compounds, along with their properties, which is identified (and referred to) by a unique web address, instead of a filename, and can be read and written remotely. The dataset POST operation allows uploading datasets in RDF representation, as well as files with chemical structures with arbitrary set of fields. AMBIT services do not restrict entering and uploading data to predefined fields only. Instead, arbitrary data can be imported, and later annotated to establish the semantics of the fields. When uploading data in RDF format, the client has full control of the fields' representation. This is a substantial improvement over most of the current practices with popular chemical formats, which usually involve describing the meaning of the fields in separate documents, targeted at human readers; sadly, this approach tends to lead to quite frequent peculiarities.
+
+Appendix 7: A RDF representation of a single entry from the DSSTox Carcinogenic Potency Database dataset
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+@prefix ot:\ |nonascii_270|\ \ |nonascii_271|\ \ |nonascii_272|\ <`<http://www.opentox.org/api/1.1#>`_>.
+
+@prefix dc:\ |nonascii_273|\ \ |nonascii_274|\ \ |nonascii_275|\ <`<http://purl.org/dc/elements/1.1/>`_>.
+
+@prefix:\ |nonascii_276|\ \ |nonascii_277|\ \ |nonascii_278|\ <`<http://apps.ideaconsult.net:8080/ambit2/>`_>.
+
+@prefix otee:\ |nonascii_279|\ \ |nonascii_280|\ \ |nonascii_281|\ <`<http://www.opentox.org/echaEndpoints.owl#>`_>.
+
+@prefix rdfs:\ |nonascii_282|\ \ |nonascii_283|\ \ |nonascii_284|\ <`<http://www.w3.org/2000/01/rdf-schema#>`_>.
+
+@prefix owl:\ |nonascii_285|\ \ |nonascii_286|\ \ |nonascii_287|\ <`<http://www.w3.org/2002/07/owl#>`_>.
+
+@prefix xsd:\ |nonascii_288|\ \ |nonascii_289|\ \ |nonascii_290|\ <`<http://www.w3.org/2001/XMLSchema#>`_>.
+
+@prefix ac:\ |nonascii_291|\ \ |nonascii_292|\ \ |nonascii_293|\ <`<http://apps.ideaconsult.net:8080/ambit2/compound/>`_>.
+
+@prefix ad:\ |nonascii_294|\ \ |nonascii_295|\ \ |nonascii_296|\ <`<http://apps.ideaconsult.net:8080/ambit2/dataset/>`_>.
+
+@prefix rdf:\ |nonascii_297|\ \ |nonascii_298|\ \ |nonascii_299|\ <`<http://www.w3.org/1999/02/22-rdf-syntax-ns#>`_>.
+
+@prefix af:\ |nonascii_300|\ \ |nonascii_301|\ \ |nonascii_302|\ <`<http://apps.ideaconsult.net:8080/ambit2/feature/>`_>.
+
+af:21611
+
+\ |nonascii_303|\ \ |nonascii_304|\ \ |nonascii_305|\ a\ |nonascii_306|\ \ |nonascii_307|\ \ |nonascii_308|\ ot:Feature ;
+
+\ |nonascii_309|\ \ |nonascii_310|\ \ |nonascii_311|\ dc:title "ActivityOutcome_CPDBAS_Mutagenicity" ;
+
+\ |nonascii_312|\ \ |nonascii_313|\ \ |nonascii_314|\ ot:hasSource ad:10 ;
+
+\ |nonascii_315|\ \ |nonascii_316|\ \ |nonascii_317|\ =\ |nonascii_318|\ \ |nonascii_319|\ \ |nonascii_320|\ otee:Mutagenicity.
+
+af:21604
+
+\ |nonascii_321|\ \ |nonascii_322|\ \ |nonascii_323|\ a\ |nonascii_324|\ \ |nonascii_325|\ \ |nonascii_326|\ ot:Feature ;
+
+\ |nonascii_327|\ \ |nonascii_328|\ \ |nonascii_329|\ dc:title "TD50_Dog_mg" ;
+
+\ |nonascii_330|\ \ |nonascii_331|\ \ |nonascii_332|\ ot:hasSource ad:10 ;
+
+\ |nonascii_333|\ \ |nonascii_334|\ \ |nonascii_335|\ ot:units "mg" ;
+
+\ |nonascii_336|\ \ |nonascii_337|\ \ |nonascii_338|\ =\ |nonascii_339|\ \ |nonascii_340|\ \ |nonascii_341|\ otee:ENDPOINT_Carcinogenicity.
+
+ac:144089
+
+\ |nonascii_342|\ \ |nonascii_343|\ \ |nonascii_344|\ a\ |nonascii_345|\ \ |nonascii_346|\ \ |nonascii_347|\ ot:Compound.
+
+ad:10
+
+\ |nonascii_348|\ \ |nonascii_349|\ \ |nonascii_350|\ a\ |nonascii_351|\ \ |nonascii_352|\ \ |nonascii_353|\ ot:Dataset ;
+
+\ |nonascii_354|\ \ |nonascii_355|\ \ |nonascii_356|\ ot:dataEntry
+
+\ |nonascii_357|\ \ |nonascii_358|\ \ |nonascii_359|\ \ |nonascii_360|\ \ |nonascii_361|\ \ |nonascii_362|\ [ a\ |nonascii_363|\ \ |nonascii_364|\ \ |nonascii_365|\ ot:DataEntry ;
+
+\ |nonascii_366|\ \ |nonascii_367|\ \ |nonascii_368|\ \ |nonascii_369|\ \ |nonascii_370|\ \ |nonascii_371|\ \ |nonascii_372|\ ot:compound ac:144089 ;
+
+\ |nonascii_373|\ \ |nonascii_374|\ \ |nonascii_375|\ \ |nonascii_376|\ \ |nonascii_377|\ \ |nonascii_378|\ \ |nonascii_379|\ ot:values
+
+\ |nonascii_380|\ \ |nonascii_381|\ \ |nonascii_382|\ \ |nonascii_383|\ \ |nonascii_384|\ \ |nonascii_385|\ \ |nonascii_386|\ \ |nonascii_387|\ \ |nonascii_388|\ [a\ |nonascii_389|\ \ |nonascii_390|\ \ |nonascii_391|\ ot:FeatureValue ;
+
+\ |nonascii_392|\ \ |nonascii_393|\ \ |nonascii_394|\ \ |nonascii_395|\ \ |nonascii_396|\ \ |nonascii_397|\ \ |nonascii_398|\ \ |nonascii_399|\ \ |nonascii_400|\ \ |nonascii_401|\ ot:feature af:21604 ;
+
+\ |nonascii_402|\ \ |nonascii_403|\ \ |nonascii_404|\ \ |nonascii_405|\ \ |nonascii_406|\ \ |nonascii_407|\ \ |nonascii_408|\ \ |nonascii_409|\ \ |nonascii_410|\ \ |nonascii_411|\ ot:value "blank"^^xsd:string
+
+\ |nonascii_412|\ \ |nonascii_413|\ \ |nonascii_414|\ \ |nonascii_415|\ \ |nonascii_416|\ \ |nonascii_417|\ \ |nonascii_418|\ \ |nonascii_419|\ \ |nonascii_420|\ ] ;
+
+\ |nonascii_421|\ \ |nonascii_422|\ \ |nonascii_423|\ \ |nonascii_424|\ \ |nonascii_425|\ \ |nonascii_426|\ \ |nonascii_427|\ ot:values
+
+\ |nonascii_428|\ \ |nonascii_429|\ \ |nonascii_430|\ \ |nonascii_431|\ \ |nonascii_432|\ \ |nonascii_433|\ \ |nonascii_434|\ \ |nonascii_435|\ \ |nonascii_436|\ [a\ |nonascii_437|\ \ |nonascii_438|\ \ |nonascii_439|\ ot:FeatureValue ;
+
+\ |nonascii_440|\ \ |nonascii_441|\ \ |nonascii_442|\ \ |nonascii_443|\ \ |nonascii_444|\ \ |nonascii_445|\ \ |nonascii_446|\ \ |nonascii_447|\ \ |nonascii_448|\ \ |nonascii_449|\ ot:feature af:21611 ;
+
+\ |nonascii_450|\ \ |nonascii_451|\ \ |nonascii_452|\ \ |nonascii_453|\ \ |nonascii_454|\ \ |nonascii_455|\ \ |nonascii_456|\ \ |nonascii_457|\ \ |nonascii_458|\ \ |nonascii_459|\ ot:value "active"^^xsd:string
+
+\ |nonascii_460|\ \ |nonascii_461|\ \ |nonascii_462|\ \ |nonascii_463|\ \ |nonascii_464|\ \ |nonascii_465|\ \ |nonascii_466|\ \ |nonascii_467|\ \ |nonascii_468|\ ]
+
+\ |nonascii_469|\ \ |nonascii_470|\ \ |nonascii_471|\ \ |nonascii_472|\ \ |nonascii_473|\ \ |nonascii_474|\ ].
+
+A simple example is representing carcinogenicity data from two public datasets, DSSTox CPDBAS: Carcinogenic Potency Database \ [#B40]_ (Appendix 7) and ISSCAN: Chemical Carcinogens Database \ [#B41]_. Both datasets are available as *sdf* files, with fields described in human readable documents. The outcome of the carcinogenicity study is represented in the "*ActivityOutcome*" field in CPDBAS (with allowed values *"active", "unspecified", "inactive*"), while in ISSCAN, a numeric field named "*Canc*" is used with allowed value of 1, 2, or 3. The description of the numbers (*3 = carcinogen; 2 = equivocal; 1 = noncarcinogen)* is only available in a separate "Guidance for Use" *pdf* file. Ideally, toxicity prediction software should offer comparison between the data and models, derived from both datasets, which is currently impossible without involving human efforts to read the guides and establish the semantic correspondence between the relevant data entries if and when possible. Moreover, every toxicity prediction package has to do the same. The two files in the example are selected only because they are publicly available and widely known. This is a typical scenario of the current state of representing toxicity data. Even if the toxicity data is highly structured within a commercial or in-house database, the usual practice for exchanging it is through export into unstructured file formats. ToxML \ [#B42]_ is a notable example of an attempt of a structured file format for data exchange in toxicology, but it has not yet been adopted beyond its original authors, even though there are ongoing efforts in this direction \ [#B43]_. There are a variety of relevant ontology development efforts \ [#B44]_\ [#B45]_, but these are in most cases done in a different context, and are only partially applicable to representations of toxicology studies.
+
+Being aware of the lack of standards in this area, the authors of the OpenTox API have designed it in a way to provide a generic approach towards data representation, keeping the flexibility of importing arbitrary named fields, but still allowing assignment of computer readable annotations to the fields. This is illustrated in Appendixes 8 and 9.
+
+Appendix 8: A RDF representation of the "Canc" field of the ISSCAN dataset, available via AMBIT services and OpenTox API (prefixes are the same as in Appendix 7, and therefore omitted)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ad:9 a ot:Dataset ;
+
+\ |nonascii_475|\ \ |nonascii_476|\ \ |nonascii_477|\ rdfs:seeAlso "`<http://www.epa.gov/NCCT/dsstox/sdf_isscan_external.html>`_" ;
+
+\ |nonascii_478|\ \ |nonascii_479|\ \ |nonascii_480|\ dc:source "ISSCAN_v3a_1153_19Sept08.1222179139.sdf" ;
+
+\ |nonascii_481|\ \ |nonascii_482|\ \ |nonascii_483|\ dc:title "ISSCAN: Istituto Superiore di Sanita, CHEMICAL CARCINOGENS: STRUCTURES AND EXPERIMENTAL DATA".
+
+af:21573
+
+\ |nonascii_484|\ \ |nonascii_485|\ \ |nonascii_486|\ a ot:Feature ;
+
+\ |nonascii_487|\ \ |nonascii_488|\ \ |nonascii_489|\ dc:title "Canc" ;
+
+\ |nonascii_490|\ \ |nonascii_491|\ \ |nonascii_492|\ ot:hasSource ad:9 ;
+
+\ |nonascii_493|\ \ |nonascii_494|\ \ |nonascii_495|\ =\ |nonascii_496|\ \ |nonascii_497|\ \ |nonascii_498|\ otee:ENDPOINT_Carcinogenicity.
+
+The fields in *sdf* files and other formats can contain arbitrary attributes, which are represented as instances of the ot:Feature class from the OpenTox ontology. Every feature is identified by a unique URI, which is hosted at a feature service (http://host:port/{service}/feature) and is dereferenceable (a representation of the feature can be retrieved through a GET command). The RDF representation includes a feature name (via dc:title property), units (via ot:units property), and a link to the resource (via ot:hasSource) that was used to generate this property or where it was originally read from. Currently, the range of ot:hasSource property is defined to be one of ot:Algorithm, ot:Model, or ot:Dataset. Using the owl:sameAs property, it is possible to assert that an instance of the ot:Feature class is the same as another resource, defined in some other ontology. An example is shown in Appendix 8, where the feature af:21573 is asserted to be the same as the otee:*ENDPOINT_Carcinogenicity* individual from a simple ontology \ [#B1]_ that enables the representation of physicochemical properties and toxicology endpoints as defined in the ECHA guidance document \ [#B46]_. The same approach, as well as using the rdf:type property, can be applied to assign more elaborate representations of toxicity studies to a particular feature, provided that an ontology describing the study exists. This technique is used to represent the ToxCast data in AMBIT services, and enables linking and querying related entries from the GO ontology \ [#B47]_.
+
+Appendix 9: A RDF representation of a subset of fields of the CPDBAS dataset, available via AMBIT services and OpenTox API (prefixes are the same as in Appendix 7, and therefore omitted)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+af:21603
+
+\ |nonascii_499|\ \ |nonascii_500|\ \ |nonascii_501|\ a\ |nonascii_502|\ \ |nonascii_503|\ \ |nonascii_504|\ ot:Feature ;
+
+\ |nonascii_505|\ \ |nonascii_506|\ \ |nonascii_507|\ dc:title "STRUCTURE_MolecularWeight" ;
+
+\ |nonascii_508|\ \ |nonascii_509|\ \ |nonascii_510|\ ot:hasSource ad:10 ;
+
+\ |nonascii_511|\ \ |nonascii_512|\ \ |nonascii_513|\ =\ |nonascii_514|\ \ |nonascii_515|\ \ |nonascii_516|\ <http://example.org#an-ontology-entry-representing-molecular-weight>.
+
+af:21607
+
+\ |nonascii_517|\ \ |nonascii_518|\ \ |nonascii_519|\ a\ |nonascii_520|\ \ |nonascii_521|\ \ |nonascii_522|\ ot:Feature ;
+
+\ |nonascii_523|\ \ |nonascii_524|\ \ |nonascii_525|\ dc:title "STRUCTURE_ChemicalName_IUPAC" ;
+
+\ |nonascii_526|\ \ |nonascii_527|\ \ |nonascii_528|\ ot:hasSource ad:10 ;
+
+\ |nonascii_529|\ \ |nonascii_530|\ \ |nonascii_531|\ =\ |nonascii_532|\ \ |nonascii_533|\ \ |nonascii_534|\ <http://example.org#an-ontology-entry-representing-IUPAC name>.
+
+af:21610
+
+\ |nonascii_535|\ \ |nonascii_536|\ \ |nonascii_537|\ a\ |nonascii_538|\ \ |nonascii_539|\ \ |nonascii_540|\ ot:Feature ;
+
+\ |nonascii_541|\ \ |nonascii_542|\ \ |nonascii_543|\ dc:title "ActivityOutcome_CPDBAS_Rat" ;
+
+\ |nonascii_544|\ \ |nonascii_545|\ \ |nonascii_546|\ ot:hasSource ad:10 ;
+
+\ |nonascii_547|\ \ |nonascii_548|\ \ |nonascii_549|\ =\ |nonascii_550|\ \ |nonascii_551|\ \ |nonascii_552|\ otee:ENDPOINT_Carcinogenicity.
+
+ad:10
+
+\ |nonascii_553|\ \ |nonascii_554|\ \ |nonascii_555|\ a\ |nonascii_556|\ \ |nonascii_557|\ \ |nonascii_558|\ ot:Dataset ;
+
+\ |nonascii_559|\ \ |nonascii_560|\ \ |nonascii_561|\ rdfs:seeAlso "`<http://www.epa.gov/NCCT/dsstox/sdf_cpdbas.html>`_" ;
+
+\ |nonascii_562|\ \ |nonascii_563|\ \ |nonascii_564|\ dc:title "CPDBAS: Carcinogenic Potency Database Summary Tables - All Species".
+
+Instances of the ot:Feature class (Appendix 9) are used to represent arbitrary properties, including chemical identifiers (e.g. *STRUCTURE_ChemicalName_IUPAC*), properties like molecular weight (e.g. *STRUCTURE_MolecularWeight*), or calculated descriptors (Appendix 5) and model predictions (Appendix 11). If ot:hasSource points to an OpenTox algorithm or model URI, it could be directly used to launch the calculations for any new compound or dataset by simply initiating a HTTP POST to this URI, with an input parameter, pointing to the compound or dataset. This ensures keeping track of all the processing steps performed by the OpenTox services, and provides sufficient information to reproduce or repeat the calculations (Appendix 5). Features can be deleted by sending a DELETE command to the feature service, and created or updated via POST and PUT commands by providing a RDF representation as an input parameter. AMBIT services automatically create features when a dataset is being uploaded. If the uploaded dataset is not in RDF format, the features are generated with dc:title equal to the field name in the file and ot:hasSource property linking to the dataset, the combination of both properties used as a unique key. The features representation can be modified and annotated later by sending an appropriate RDF representation to the feature URI via a HTTP PUT command.
+
+The use of dynamically generated and dereferenceable URIs for RDF resource identifiers differs from the classic recommendation of using "stable" identifiers from a predefined ontology. However, we consider the dynamically generated RDF graph an advantage of OpenTox services, and, moreover, it does not preclude linking dynamically generated resources with equivalent resources that have stable identifiers, if such exist. For example, features are expected to be associated via owl:sameAs links with stable identifiers, describing specific chemical properties. Arbitrary RDF statements, including both dynamically generated and stable resources could be added as well. The dynamically generated RDF representations allow quickly publishing information in RDF format and making it available online. Models and predictions also immediately become available as RDF resources online, and include live local and remote links, keeping track of the provenance (how predictions have been calculated and where the data came from). Given the availability of the OpenTox services as open source, anybody interested could run an instance of the services themselves, for as long as necessary. Because of the interoperable and distributed design, multiple instances of services running at multiple places could communicate and generate dynamically linked data. The URIs and addresses of networking resources generally don't have infinite lifetime, but this is not considered disadvantage for the World Wide Web, where, if any piece of the dynamic infrastructure is perceived important - for economic or any other reasons - it will certainly remain available for longer than average. The fact that HTTP URIs are transient and dependent on the service location is a consequence of the early Internet design as a medium for host-to-host communication, rather than one for data access, and also of the lack of location independent application names in Internet protocols \ [#B48]_. Revising the current status of network resources naming towards persistent and self-certifying names and content-oriented networking is a field of active research nowadays, and may render the disputes about dereferenceability and stability of resource identifiers irrelevant in future.
+
+Finally, it is trivial to retrieve the RDF representations from an arbitrary set of geographically distributed services. It is equally easy to create a snapshot of the content of a given subset of services of particular interest, either for archiving purposes, or in order to import it into a RDF triple storage and expose it via a SPARQL endpoint.
+
+We support the view \ [#B49]_\ [#B50]_ that the current practice of aggregating data via loading RDF dumps into a single triple store is not always the best approach, but rather a temporary solution, until emerging technologies for distributed querying and reasoning become more efficient and scalable enough to eliminate the need of centralized data stores. Meanwhile, web services as the OpenTox REST ones, that provide dynamically generated RDF data via resolvable identifiers, can be crawled in a similar way as search engines crawl the web. However, there is the additional benefit of results being retrieved and reasoning performed over structured data, instead of just analysing keywords and links as popular search engines typically operate today.
+
+Uniform approach to data processing, model building, and predictions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ability to represent data in a generic way, as explained above, greatly simplifies **data processing**. The latter can be described as the following three simple steps:
+
+1. Read data from a web address, representing an ot:Compound or an ot:Dataset instance;
+
+2. Perform processing; store results as ot:Dataset representation (e.g. ot:FeatureValue instances);
+
+3. Write the ot:Dataset RDF representation to an OpenTox data service; return the URI of the resulting dataset.
+
+The OpenTox API specifies two classes that perform processing - ot:Algorithm and ot:Model, supported by http://host:port/{service}/algorithm and http://host:port/{service}/model services, respectively. The lists of available algorithms can be retrieved by a GET command. The type of the algorithm is specified by sub-classing the algorithm instance from the respective class in the Algorithm types ontology \ [#B1]_. Two major types of algorithms are data processing ones and model building algorithms.
+
+Models are generated by the respective algorithms, given specific parameters and data. The process of **model creation** (e.g. using statistical algorithm to build a model) is initiated by sending a POST command to the algorithm service (example available in the Supporting Information [Additional file 
+
+Additional file 1
+
+**Supporting Information**. Examples of accessing various AMBIT REST services via the cURL tool.
+
+Click here for file
+
+1. Optionally read data from a web address, representing an ot:Dataset instance;
+
+2. Create a model; describe it as an ot:Model instance; this includes specifying ot:Feature instances that contain the results, via the ot:predictedVariables property, as well as linking any independent and target variables via the ot:independentVariables and the ot:dependent variables properties;
+
+3. Assign a unique URI to the model, and return the URI;
+
+4. A POST command to the model URI, with a dataset or compound URI as input parameter, could be later used to calculate predictions.
+
+This architecture turns out to be successful in encapsulating different algorithms and models in a single API. A summary of the algorithms, included in AMBIT REST services, is shown in Table \ :ref:`2<table_2>` and the full list can be retrieved originally from `<http://apps.ideaconsult.net:8080/ambit2/algorithm>`_ or from http://host:port/ambit2/algorithm in any other installation of the *ambit2.war*.
+
+Most of the algorithms (except Weka and Toxtree) are considered data processing algorithms, and accept a dataset URI as input parameter, returning URI of the resulting dataset. The calculated values are included as feature values, as explained above. The structure optimization algorithm returns a dataset with links to the new 3D structures. SMARTCyp and SOME algorithms return their results as features as well, but the features represent calculated atomic properties. The MCSS algorithm accepts a dataset and creates a model, containing a set of maximum common substructures. The model could be further applied to new datasets or compounds. The superservice is an algorithm, which encapsulates descriptor calculation and model prediction, by automatically identifying which descriptors are required by a given model, launching the calculation, and, when results are available, applying the model itself. Toxtree algorithms are implemented as a model building algorithm, although being fixed rules and not requiring a training dataset. Thus, upon installation of the web application, the Toxtree model needs to be created by sending a HTTP POST to the corresponding algorithm. The Weka algorithms are selected to be representative of regression, classification, and clustering algorithms. They accept a dataset URI and a feature URI (referring to the target variable), and generate a model URI, as specified in the API. The implementation of Weka algorithms as OpenTox REST services is a generic one; inclusion of all algorithms, available in the Weka package, is just a matter of configuration, and the list will be extended in future releases. The RDF representation of all algorithms and models can be retrieved by submitting a GET command.
+
+Registering data, algorithms and models; SPARQL query
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The OpenTox ontology service provides a place for registering OpenTox resources, running at remote places, as well as searching capabilities via SPARQL. Registering a resource into the ontology service requires sending a POST command to the service, with a parameter, pointing to the resource being registered (see Supporting Information [Additional file 
+
+Appendix 10: An example of retrieving information about a specific model (X and Y variables; learning algorithm; variables, containing the predictions; endpoints)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+PREFIX ot:\ |nonascii_565|\ \ |nonascii_566|\ \ |nonascii_567|\ <`<http://www.opentox.org/api/1.1#>`_>
+
+PREFIX ota:\ |nonascii_568|\ \ |nonascii_569|\ \ |nonascii_570|\ <http://www.opentox.org/algorithms.owl#>
+
+PREFIX owl:\ |nonascii_571|\ \ |nonascii_572|\ \ |nonascii_573|\ <`<http://www.w3.org/2002/07/owl#>`_>
+
+PREFIX dc:\ |nonascii_574|\ \ |nonascii_575|\ \ |nonascii_576|\ <`<http://purl.org/dc/elements/1.1/>`_>
+
+PREFIX rdfs:\ |nonascii_577|\ \ |nonascii_578|\ \ |nonascii_579|\ <`<http://www.w3.org/2000/01/rdf-schema#>`_>
+
+PREFIX rdf:\ |nonascii_580|\ \ |nonascii_581|\ \ |nonascii_582|\ <`<http://www.w3.org/1999/02/22-rdf-syntax-ns#>`_>
+
+PREFIX otee:\ |nonascii_583|\ \ |nonascii_584|\ \ |nonascii_585|\ <`<http://www.opentox.org/echaEndpoints.owl#>`_>
+
+\ |nonascii_586|\ \ |nonascii_587|\ \ |nonascii_588|\ SELECT ?Model ?algorithm ?xvars ?descriptorAlgorithms ?yvars ?endpoints ?predicted
+
+\ |nonascii_589|\ \ |nonascii_590|\ \ |nonascii_591|\ \ |nonascii_592|\ \ |nonascii_593|\ \ |nonascii_594|\ WHERE {
+
+\ |nonascii_595|\ \ |nonascii_596|\ \ |nonascii_597|\ \ |nonascii_598|\ \ |nonascii_599|\ \ |nonascii_600|\ ?Model rdf:type ot:Model.
+
+\ |nonascii_601|\ \ |nonascii_602|\ \ |nonascii_603|\ OPTIONAL {?Model dc:title ?title }.
+
+\ |nonascii_604|\ \ |nonascii_605|\ \ |nonascii_606|\ OPTIONAL {
+
+\ |nonascii_607|\ \ |nonascii_608|\ \ |nonascii_609|\ \ |nonascii_610|\ \ |nonascii_611|\ \ |nonascii_612|\ ?Model ot:algorithm ?algorithm.
+
+\ |nonascii_613|\ \ |nonascii_614|\ \ |nonascii_615|\ \ |nonascii_616|\ \ |nonascii_617|\ \ |nonascii_618|\ ?algorithm rdf:type <http://www.opentox.org/algorithmTypes.owl/#Regression>.
+
+\ |nonascii_619|\ \ |nonascii_620|\ \ |nonascii_621|\ }.
+
+\ |nonascii_622|\ \ |nonascii_623|\ \ |nonascii_624|\ OPTIONAL {
+
+\ |nonascii_625|\ \ |nonascii_626|\ \ |nonascii_627|\ \ |nonascii_628|\ \ |nonascii_629|\ \ |nonascii_630|\ ?Model ot:independentVariables ?xvars.
+
+\ |nonascii_631|\ \ |nonascii_632|\ \ |nonascii_633|\ \ |nonascii_634|\ \ |nonascii_635|\ \ |nonascii_636|\ OPTIONAL {?xvars ot:hasSource ?descriptorAlgorithms. }.
+
+\ |nonascii_637|\ \ |nonascii_638|\ \ |nonascii_639|\ }.
+
+\ |nonascii_640|\ \ |nonascii_641|\ \ |nonascii_642|\ OPTIONAL {
+
+\ |nonascii_643|\ \ |nonascii_644|\ \ |nonascii_645|\ \ |nonascii_646|\ \ |nonascii_647|\ \ |nonascii_648|\ ?Model ot:dependentVariables ?yvars.
+
+\ |nonascii_649|\ \ |nonascii_650|\ \ |nonascii_651|\ \ |nonascii_652|\ \ |nonascii_653|\ \ |nonascii_654|\ OPTIONAL {?yvars owl:sameAs ?endpoints. }.
+
+\ |nonascii_655|\ \ |nonascii_656|\ \ |nonascii_657|\ }.
+
+\ |nonascii_658|\ \ |nonascii_659|\ \ |nonascii_660|\ OPTIONAL {
+
+\ |nonascii_661|\ \ |nonascii_662|\ \ |nonascii_663|\ \ |nonascii_664|\ \ |nonascii_665|\ \ |nonascii_666|\ ?Model ot:predictedVariables ?predicted.
+
+\ |nonascii_667|\ \ |nonascii_668|\ \ |nonascii_669|\ \ |nonascii_670|\ \ |nonascii_671|\ \ |nonascii_672|\ OPTIONAL {?predictions owl:sameAs ?endpoints. }.
+
+\ |nonascii_673|\ \ |nonascii_674|\ \ |nonascii_675|\ }.
+
+}
+
+Any number of ontology services can be installed, thus allowing clustering and querying resources of interest to specific applications. Policies and access rights for protecting the resources are currently under development. Alternatively, a RDF triple storage of choice could be used to aggregate resources, generated by different implementations of OpenTox services.
+
+A RDF graph, describing two models (tumm:TUMOpenToxModel_kNN_92 and am:33), running on remote services and using the same training dataset (ot:trainingDataset ad:R545) and descriptors (ot:independentVariables af:22213, af:22137, af:22252, af:22127; the link to the descriptor calculation service shown only for the af:22127), hosted and calculated by AMBIT services, is provided in Appendix 11.
+
+Appendix 11: A RDF graph, representing two remote models, using the same training dataset (the RDF content was aggregated by retrieving the RDF representations of multiple web services, and is available as Supporting Information [Additional file 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Additional file 2
+
+**Supporting Information**. RDF graph, representing two remote models, using the same training dataset.
+
+Click here for file
+
+@prefix:\ |nonascii_676|\ \ |nonascii_677|\ \ |nonascii_678|\ <`<http://apps.ideaconsult.net:8080/ambit2/>`_>.
+
+@prefix ot:\ |nonascii_679|\ \ |nonascii_680|\ \ |nonascii_681|\ <`<http://www.opentox.org/api/1.1#>`_>.
+
+@prefix dc:\ |nonascii_682|\ \ |nonascii_683|\ \ |nonascii_684|\ <`<http://purl.org/dc/elements/1.1/>`_>.
+
+@prefix tuma:\ |nonascii_685|\ \ |nonascii_686|\ \ |nonascii_687|\ <http://opentox.informatik.tu-muenchen.de:8080/OpenTox-dev/algorithm/>.
+
+@prefix tumm:\ |nonascii_688|\ \ |nonascii_689|\ \ |nonascii_690|\ <http://opentox.informatik.tu-muenchen.de:8080/OpenTox-dev/model/>.
+
+@prefix ota:\ |nonascii_691|\ \ |nonascii_692|\ \ |nonascii_693|\ <http://www.opentox.org/algorithmTypes.owl#>.
+
+@prefix otee:\ |nonascii_694|\ \ |nonascii_695|\ \ |nonascii_696|\ <`<http://www.opentox.org/echaEndpoints.owl#>`_>.
+
+@prefix bo:\ |nonascii_697|\ \ |nonascii_698|\ \ |nonascii_699|\ <http://www.blueobelisk.org/ontologies/chemoinformatics-algorithms/#>.
+
+@prefix rdfs:\ |nonascii_700|\ \ |nonascii_701|\ \ |nonascii_702|\ <`<http://www.w3.org/2000/01/rdf-schema#>`_>.
+
+@prefix am:\ |nonascii_703|\ \ |nonascii_704|\ \ |nonascii_705|\ <`<http://apps.ideaconsult.net:8080/ambit2/model/>`_>.
+
+@prefix owl:\ |nonascii_706|\ \ |nonascii_707|\ \ |nonascii_708|\ <`<http://www.w3.org/2002/07/owl#>`_>.
+
+@prefix xsd:\ |nonascii_709|\ \ |nonascii_710|\ \ |nonascii_711|\ <`<http://www.w3.org/2001/XMLSchema#>`_>.
+
+@prefix ac:\ |nonascii_712|\ \ |nonascii_713|\ \ |nonascii_714|\ <`<http://apps.ideaconsult.net:8080/ambit2/compound/>`_>.
+
+@prefix rdf:\ |nonascii_715|\ \ |nonascii_716|\ \ |nonascii_717|\ <`<http://www.w3.org/1999/02/22-rdf-syntax-ns#>`_>.
+
+@prefix ad:\ |nonascii_718|\ \ |nonascii_719|\ \ |nonascii_720|\ <`<http://apps.ideaconsult.net:8080/ambit2/dataset/>`_>.
+
+@prefix ag:\ |nonascii_721|\ \ |nonascii_722|\ \ |nonascii_723|\ <`<http://apps.ideaconsult.net:8080/ambit2/algorithm/>`_>.
+
+@prefix af:\ |nonascii_724|\ \ |nonascii_725|\ \ |nonascii_726|\ <`<http://apps.ideaconsult.net:8080/ambit2/feature/>`_>.
+
+tumm:TUMOpenToxModel_kNN_92
+
+\ |nonascii_727|\ \ |nonascii_728|\ \ |nonascii_729|\ a\ |nonascii_730|\ \ |nonascii_731|\ \ |nonascii_732|\ ot:Model ;
+
+\ |nonascii_733|\ \ |nonascii_734|\ \ |nonascii_735|\ dc:title "OpenTox model created with TUM's kNNregression model learning web service." ; ot:algorithm tuma:kNNregression ;
+
+\ |nonascii_736|\ \ |nonascii_737|\ \ |nonascii_738|\ ot:dependentVariables
+
+\ |nonascii_739|\ \ |nonascii_740|\ \ |nonascii_741|\ \ |nonascii_742|\ \ |nonascii_743|\ \ |nonascii_744|\ af:22200 ;
+
+\ |nonascii_745|\ \ |nonascii_746|\ \ |nonascii_747|\ ot:independentVariables
+
+\ |nonascii_748|\ \ |nonascii_749|\ \ |nonascii_750|\ \ |nonascii_751|\ \ |nonascii_752|\ \ |nonascii_753|\ af:22213, af:22137, af:22252, af:22127 ;
+
+\ |nonascii_754|\ \ |nonascii_755|\ \ |nonascii_756|\ ot:predictedVariables
+
+\ |nonascii_757|\ \ |nonascii_758|\ \ |nonascii_759|\ \ |nonascii_760|\ \ |nonascii_761|\ \ |nonascii_762|\ af:27501 ;
+
+\ |nonascii_763|\ \ |nonascii_764|\ \ |nonascii_765|\ ot:trainingDataset ad:R545.
+
+am:33
+
+\ |nonascii_766|\ \ |nonascii_767|\ \ |nonascii_768|\ a\ |nonascii_769|\ \ |nonascii_770|\ \ |nonascii_771|\ ot:Model ;
+
+\ |nonascii_772|\ \ |nonascii_773|\ \ |nonascii_774|\ dc:title "Caco-2 Cell Permeability" ;
+
+\ |nonascii_775|\ \ |nonascii_776|\ \ |nonascii_777|\ ot:algorithm ag:LR ;
+
+\ |nonascii_778|\ \ |nonascii_779|\ \ |nonascii_780|\ ot:dependentVariables
+
+\ |nonascii_781|\ \ |nonascii_782|\ \ |nonascii_783|\ \ |nonascii_784|\ \ |nonascii_785|\ \ |nonascii_786|\ af:22200 ;
+
+\ |nonascii_787|\ \ |nonascii_788|\ \ |nonascii_789|\ ot:independentVariables
+
+\ |nonascii_790|\ \ |nonascii_791|\ \ |nonascii_792|\ \ |nonascii_793|\ \ |nonascii_794|\ \ |nonascii_795|\ af:22213, af:22137, af:22252, af:22127 ;
+
+\ |nonascii_796|\ \ |nonascii_797|\ \ |nonascii_798|\ ot:predictedVariables
+
+\ |nonascii_799|\ \ |nonascii_800|\ \ |nonascii_801|\ \ |nonascii_802|\ \ |nonascii_803|\ \ |nonascii_804|\ af:26182 ;
+
+\ |nonascii_805|\ \ |nonascii_806|\ \ |nonascii_807|\ ot:trainingDataset ad:R545.
+
+ag:LR
+
+\ |nonascii_808|\ \ |nonascii_809|\ \ |nonascii_810|\ a\ |nonascii_811|\ \ |nonascii_812|\ \ |nonascii_813|\ ot:Algorithm, ota:Supervised, ota:EagerLearning, ota:SingleTarget, ota:Regression;
+
+\ |nonascii_814|\ \ |nonascii_815|\ \ |nonascii_816|\ dc:title "Linear regression"^^xsd:string.
+
+af:22127
+
+\ |nonascii_817|\ \ |nonascii_818|\ \ |nonascii_819|\ a\ |nonascii_820|\ \ |nonascii_821|\ \ |nonascii_822|\ ot:Feature ;
+
+\ |nonascii_823|\ \ |nonascii_824|\ \ |nonascii_825|\ dc:title "FPSA-2" ;
+
+\ |nonascii_826|\ \ |nonascii_827|\ \ |nonascii_828|\ ot:hasSource
+
+<`<http://apps.ideaconsult.net:8080/ambit2/algorithm/org.openscience.cdk.qsar.descriptors.molecular.CPSADescriptor>`_ >.
+
+Linked resources
+^^^^^^^^^^^^^^^^
+
+Uploading data and running calculations via the OpenTox API and its implementation by AMBIT services generates a multitude of linked resources, all available via their RDF representations. The links could span many remote sites, running various implementations of OpenTox services. For example, a model, built by model services running at site A, will be accessible via its web address, but the representation could include links to the training dataset and prediction variables, hosted at OpenTox services running at site B. The features, representing predicted variables, contain links back to the remote model. An illustration of linked resources, generated by OpenTox services, is provided on Figure \ :ref:`1<figure_1>` and Additional file 
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-18-1.jpg
+   :align: center
+
+   Figure 1. Illustration of linked resources, generated by OpenTox services
+
+   **Illustration of linked resources, generated by OpenTox services**.
+
+
+Comparison with similar systems
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The design of the OpenTox REST API and its implementation started at the beginning of the OpenTox FP7 project in 2008. At that moment we were not aware of any API with comparable functionality and design. There were examples of REST services in cheminformatics, but usually designed as a monolithic system and not available for download and installation elsewhere. The OpenTox framework is designed and developed collaboratively with the intention to be a modular and interoperable distributed system. The SADI framework \ [#B58]_\ [#B59]_ is the only other existing system which combines REST and RDF technologies to perform bio- and cheminformatics tasks. It should be noted, though, that these systems have been developed independently, without mutual awareness, until quite recently. While both approaches might seem similar to some extent, there are significant differences in their design and implementation.
+
+The main goal of the OpenTox framework is to provide distributed means for building, using, and validating predictive models. We are not fully aware whether SADI services support generating and validating new predictive models via machine learning techniques or other methods. OpenTox services are independent, and can be mashed up or invoked in serial or parallel fashion by explicit invocation of command tools, existing workflow systems, or custom user interface. SADI's strong point is in the usage of implicit invocation of web services, given a SPARQL query. The SHARE engine \ [#B60]_ decides which services to invoke in order to fill in the missing data. The SADI services use HTTP, but define HTTP resources only for the processing elements, not for the data elements. The calculations are initiated by a POST command, and the data is returned in the body, resembling a typical processing by a remote procedure call, rather than a REST resource. Input data is subsumed into the output data, and neither of the data has its own dereferenceable identifier. OpenTox services work by accepting a URI of an input resource and return a URI of the resulting resource. The content of the latter could be retrieved by a subsequent GET operation if necessary - as a whole or in parts. This allows processing of datasets of arbitrary number of entries. Dataset is a central type of resource in OpenTox, while we are not aware of a corresponding concept in SADI. Implementation-wise, SADI services require a RDF triple storage as a backend, while OpenTox services do not mandate any particular backend representation; it is sufficient only to serialize resources to RDF on input/output in order to be compatible with the OpenTox API. Another difference exists due to the requirement to define a custom input/output format for each SADI processing service, while OpenTox services have a uniform interface, which resembles conceptually the standard input and output streams in UNIX operating systems, and brings proven flexibility when composing services into arbitrary workflows. Finally, SADI strives to provide a single ontology, describing all cheminformatics services. We believe that this is hardly achievable in a truly distributed system, and therefore designed OpenTox in a different way; we provide a skeleton ontology, allowing representation of a few basic classes, generate dynamic resources, and link/annotate them with all relevant third party ontologies.
+
+Applications
+^^^^^^^^^^^^
+
+Although all AMBIT REST services support HTML MIME format and could be accessed through a web browser, the intended use is via custom client applications, which would consume the web services, and provide a friendly user interface, tailored to specific use cases. An example is the ToxPredict\ [#B1]_\ [#B61]_ web application, which provides a customized user interface for searching data, selecting and applying models, and displaying prediction results. Integration of REST services into workflow systems and rich client applications are other options, subject to further work.
+
+Installation
+^^^^^^^^^^^^
+
+\ |nonascii_829|\  Download the web application archive (*war*) file from `<http://ambit.sourceforge.net/>`_
+
+\ |nonascii_830|\  Deploy the *war* file into a servlet container
+
+\ |nonascii_831|\  Ensure MySQL is installed and running at the default port
+
+\ |nonascii_832|\  Create an empty database by issuing a POST request to http://host:8080/ambit2/admin/database URI as shown in the command below. Note: *mysqlprivuser* should be an existing MySQL user with sufficient privileges to create a database.
+
+curl -X POST -d "dbname = ambit2" -d "user = mysqlprivuser" -d "pass = mysqlprivpass" \ http://host:8080/ambit2/admin/database
+
+\ |nonascii_833|\  On success, reading the URI http://host:8080/ambit2/admin/database will return the database name
+
+\ |nonascii_834|\  Import your own data by sending a POST command to http://host:8080/ambit2/dataset or using the web interface. Use the OpenTox API to run algorithms and models.
+
+**Plans for future developments** include protecting resources via the OpenTox Authentication and Authorization API \ [#B62]_, which relies on a customized OpenAM \ [#B63]_ service; extend dataset and feature representations to accommodate hierarchical data; develop applications with specialized user interfaces that would consume the services; improve and refactor the services' implementation in order to provide a skeleton code for easy deployment of third party algorithms and models, compliant with the OpenTox API; provide a client library for accessing the OpenTox API.
+
+Conclusions
+***********
+
+The AMBIT REST services package has been developed as an extension of AMBIT modules, wrapping their functionalities as REST web services, and adding some new ones. This implementation covers a large subset of the functionality, specified by the OpenTox API, and is available both as live demo online web services and as a downloadable web application, which can be deployed in a compatible servlet container. The services, implementing the OpenTox API for compounds, datasets, and features, enable importing arbitrary files with chemical structures and their properties, allowing linking to computer readable information about the data fields, as well as keeping provenance information. In addition, they support multiple structures of the same compound, which is useful for storing and working with multiple conformations, as well as for comparing structures, originally residing in different source databases. Uploading a file with chemical structures and data makes it automatically available in several formats, including the mandatory RDF representation, defined by the OpenTox ontology. The services, implementing the OpenTox API for algorithms and models, provide a unified web service interface to several descriptor calculation, machine learning, and similarity searching algorithms, as well as to applicability domain and toxicity prediction models. The complexity and diversity of the processing is reduced to the simple paradigm "read data from a web address, perform processing, write to a web address". The online service allows running predictions without installing any software, as well sharing datasets and models between online users. The downloadable web application allows researchers to set up their own systems of chemical compounds, calculated and experimental data, and to run existing algorithms and create new models. The advantage of exposing the functionality via the OpenTox API is that all these resources could interoperate seamlessly, not only within a single web application, but also in a network of many cooperating distributed services.
+
+Exposing functionalities through a web application programming interface allows to hide the implementation details of both data storage (different database types vs. memory vs. file system backend) and processing (descriptor calculation algorithms using CDK, OpenBabel, commercial or in-house implementations). The availability of data and processing resources as RDF facilitates integrating the resources as Linked Data \ [#B64]_. The distributed algorithm and model resources automatically generate RDF representations, making the linked data dynamic, and not relying on a single traditional triple storage. The classes in the OpenTox ontology are designed to cover the minimum number of building blocks, necessary to create predictive toxicology applications. The OpenTox ontology relies on external ontologies to represent descriptor calculation algorithms, machine learning methods, and toxicity studies. We believe that such modularity better reflects how any particular domain is described in reality \ [#B65]_, compared to monolithic ontologies, which could be difficult or even impossible to reach consensus on, and would be hard to maintain. RDF natively provides means to link multiple concepts to a same resource, either by multiple inheritance, or owl:sameAs links, and we intend to use these techniques, together with the current dataset representation, to describe complex toxicological studies.
+
+The AMBIT REST services package is one of the several independent implementations of the OpenTox Application Programming Interface, being developed within the OpenTox project. While creating an ontology (even for a rather limited domain) by consensus is a challenge by itself, the value of having multiple independent implementations of services using the ontology is enormous, as it clearly highlights components that have not been explicitly described, and are thus open to diverging and possibly conflicting interpretations. This demonstrates that the OpenTox API could be implemented equally well either as a completely new project or as an extension of an existing software. It also demonstrates OpenTox API's ability to provide a unified interface to diverse algorithms and data, and to encourage defining explicit relationships between data and processing routines. Last but not least, the services provide a sound basis for building web mashups, end user applications with friendly GUIs, as well as embedding the functionalities in existing workflow systems.
+
+Availability and requirements
+*****************************
+
+\ |nonascii_835|\  **Project name**: AMBIT implementation of OpenTox REST web services
+
+\ |nonascii_836|\  **Project home page**: `<http://ambit.sourceforge.net/>`_
+
+\ |nonascii_837|\  **Operating system(s)**: Platform independent
+
+\ |nonascii_838|\  **Programming language**: Java
+
+\ |nonascii_839|\  **Other requirements**: Java 1.6 or higher, Tomcat 6.0 or higher, MySQL 5.1 or higher
+
+\ |nonascii_840|\  **License**: GNU LGPL (ambit2-all modules), GNU GPL (web services)
+
+\ |nonascii_841|\  **Any restrictions to use by non-academics**: None
+
+\ |nonascii_842|\  **Online web services**: `<http://apps.ideaconsult.net:8080/ambit2/>`_
+
+Abbreviations
+*************
+
+API: Application Programming Interface; CDK: The Chemistry Development Kit; HTTP: Hypertext Transfer Protocol; MIME: Multipurpose Internet Mail Extensions: (Q)SAR: (Quantitative) Structure Activity Relationship; REST: REpresentational State Transfer; RDF: Resource Description Framework; URI: Universal Resource Identifier.
+
+Competing interests
+*******************
+
+The authors declare that they have no competing interests.
+
+Authors' contributions
+**********************
+
+NJ performed most of the AMBIT web services software development, coordinated the OpenTox framework implementation, and provided valuable insights on a range of important aspects of the manuscript. VJ contributed to the design and testing of the webservices, performed data gathering and curation, and helped drafting the manuscript. All authors read and approved the final manuscript.
+
+Authors' information
+********************
+
+Nina Jeliazkova (NJ): Nina received a M.Sc. in Computer Science from the Institute for Fine Mechanics and Optics, St. Petersburg, Russia in 1991, followed by a PhD in Computer Science (thesis "Novel computer methods for molecular modelling") in 2001 in Sofia, Bulgaria, and a PostDoc at the Central Product Safety department, Procter & Gamble, Brussels, Belgium (2002 - 2003). Her professional career started as a software developer first at the oil refinery Neftochim at Burgas, Bulgaria (1991 - 1995), then at the Laboratory for Mathematical Chemistry, Burgas, Bulgaria (1996 - 2001). She joined the Bulgarian Academy of Sciences in 1996 as a researcher and network engineer at the Network Operating Centre of the Bulgarian National Research and Education Network. She is founder and co-owner of Ideaconsult Ltd, and is technical manager of the company since 2009. She participated in a number of R&D projects in Belgium and Bulgaria, authored and co-authored about 40 scientific papers in Bulgarian and international journals, as well as several book chapters.
+
+Vedrin Jeliazkov (VJ): Vedrin received a M.Sc. in Computer Science from the University Paris VII - Denis Diderot, Paris, France in 1998. From 1996 to 1998 he worked for the R&D department of Electricit\ |nonascii_843|\  de France, Clamart, France, as a software developer, and was responsible for the design of quality assurance tests. From 2001 to 2002 Vedrin had been employed by the European Commission as an advisor to the director of "Essential Technologies and Infrastructures" at the Information Society Directorate-General. From 2003 to 2007 he was researcher at the Bulgarian Academy of Sciences and network engineer at the Network Operating Centre of the Bulgarian National Research and Education Network. Vedrin is one of the founders and owners of Ideaconsult Ltd, and is a full-time researcher at the company since 2007. He participated in a number of R&D projects in France, Belgium, and Bulgaria, authored ten research papers, co-authored one book and has given several talks in scientific conferences.
+
+Acknowledgements and Funding
+****************************
+
+The AMBIT software was initially developed within the framework of the CEFIC LRI project EEM-9 'Building blocks for a future (Q)SAR decision support system: databases, applicability domain, similarity assessment and structure conversions', `<http://www.cefic-lri.org/projects/1202813618/21/EEM9-PGEU-Quantitative-Structure-Activity-Relationships-software-for-data-management/?cntnt01template=display_list_test>`_, and further extended under a subsequent CEFIC LRI contract for developing AmbitXT, `<http://www.cefic-lri.org/lri-toolbox/ambit.>`_ The AMBIT web services package was developed within the OpenTox project - An Open Source Predictive Toxicology Framework, `<http://www.opentox.org/>`_ funded under the EU Seventh Framework Programme: HEALTH-2007-1.3-3 Promotion, development, validation, acceptance and implementation of QSARs (Quantitative Structure-Activity Relationships) for toxicology, Project Reference Number Health-F5-2008-200787 (2008-2011). Support for applicability domain algorithms has been integrated into the AMBIT web services package in the framework of the CADASTER project - Case studies on the development and application of in-silico techniques for environmental hazard and risk assessment, `<http://www.cadaster.eu/>`_, funded under the EU Seventh Framework Programme: ENV.2007.3.3.1.1 In-silico techniques for hazard-, safety-, and environmental risk-assessment, Project Reference Number 212668 (2009-2012).
+
+We acknowledge the article processing charge for this article that has been partially funded by Pfizer, Inc. Pfizer, Inc. has had no input into the content of the article. The article has been independently prepared by the authors and been subject to the journal's standard peer review process.
+
+.. [#B1]  Collaborative Development of Predictive Toxicology Applications
+
+.. [#B2]  Resource Description Framework
+
+.. [#B3]  R. Fielding, Representational State Transfer (REST)
+
+.. [#B4]  RESTful Web Services
+
+.. [#B5]  OASIS Standards
+
+.. [#B6]  RFC 2616 Hypertext Transfer Protocol -- HTTP/1.1
+
+.. [#B7]  RFC 5023 The Atom Publishing Protocol
+
+.. [#B8]  OpenTox ontology
+
+.. [#B9]  RDF/XML Syntax Specification
+
+.. [#B10]  Notation 3 (N3) A Readable RDF Syntax
+
+.. [#B11]  Turtle - Terse RDF Triple Language
+
+.. [#B12]  OWL Web Ontology Language Guide
+
+.. [#B13]  Microformats
+
+.. [#B14]  AMBIT project
+
+.. [#B15]  Chapter 17. Open Source Tools for Read-Across and Category Formation
+
+.. [#B16]  MySQL
+
+.. [#B17]  CEFIC Long Range research initiative
+
+.. [#B18]  Apache Tomcat
+
+.. [#B19]  Java Servlet Technology
+
+.. [#B20]  Toxtree
+
+.. [#B21]  An evaluation of the implementation of the Cramer classification scheme in the Toxtree software
+
+.. [#B22]  Implementation of simple OpenTox Ontology service
+
+.. [#B23]  The Chemistry Development Kit
+
+.. [#B24]  The Chemistry Development Kit (CDK): An Open-Source Java Library for Chemo- and Bioinformatics
+
+.. [#B25]  Recent Developments of the Chemistry Development Kit (CDK) - An Open-Source Java Library for Chemo-and Bioinformatics
+
+.. [#B26]  Restlet, REST framework for Java
+
+.. [#B27]  Jena - A Semantic Web Framework for Java
+
+.. [#B28]  Apache Maven
+
+.. [#B29]  AMBIT source code
+
+.. [#B30]  Toxtree - Toxic Hazard Estimation by decision tree approach, source code
+
+.. [#B31]  OpenTox API wiki site
+
+.. [#B32]  Chemical MIME
+
+.. [#B33]  cURL tool
+
+.. [#B34]  ToxCast - Predicting Hazard, Characterizing Toxicity Pathways, and Prioritizing the Toxicity Testing of Environmental Chemicals
+
+.. [#B35]  TDB - A SPARQL Database for Jena
+
+.. [#B36]  Restlet documentation on ServerResource class
+
+.. [#B37]  The Streaming API for XML
+
+.. [#B38]  JDK Documentation
+
+.. [#B39]  JSON (JavaScript Object Notation)
+
+.. [#B40]  CPDBAS: Carcinogenic Potency Database Summary Tables
+
+.. [#B41]  ISSCAN: Chemical Carcinogens Database
+
+.. [#B42]  ToxML
+
+.. [#B43]  ToxML project
+
+.. [#B44]  The Open Biological and Biomedical Ontologies
+
+.. [#B45]  MIBBI: Minimum Information for Biological and Biomedical Investigations
+
+.. [#B46]  Guidance on information requirements and chemical safety assessment Chapter R.6: QSARs and grouping of chemicals
+
+.. [#B47]  GO Ontology
+
+.. [#B48]  NOTITLE!
+
+.. [#B49]  An evaluation of approaches to federated query processing over linked data
+
+.. [#B50]  Active Knowledge: Dynamically Enriching RDF Knowledge Bases by Web Services, Proceeding
+
+.. [#B51]  WEKA - Machine learning in Java
+
+.. [#B52]  SMARTCyp: A 2D Method for Prediction of Cytochrome P450-Mediated Drug Metabolism
+
+.. [#B53]  pKa Prediction of Monoprotic Small Molecules the SMARTS Way
+
+.. [#B54]  How can structural similarity analysis help in category formation
+
+.. [#B55]  QSAR Applicability Domain Estimation by Projection of the Training Set in Descriptor Space: A Review
+
+.. [#B56]  Current status of methods for defining the applicability domain of (quantitative) structure-activity relationships. The report and recommendations of ECVAM Workshop 52
+
+.. [#B57]  Site of metabolism prediction for six biotransformations mediated by cytochromes P450
+
+.. [#B58]  SADI framework
+
+.. [#B59]  SADI, SHARE, and the in silico scientific method
+
+.. [#B60]  SHARE: A Semantic Web Query Engine for Bioinformatics
+
+.. [#B61]  ToxPredict demo application
+
+.. [#B62]  OpenTox Authentication and Authorisation API
+
+.. [#B63]  OpenAM
+
+.. [#B64]  Wikipedia entry for Linked Data
+
+.. [#B65]  Possible Ontologies: How Reality Constrains the Development of Relevant Ontologies
+
+.. |nonascii_1| unicode:: 0xa0
+.. |nonascii_2| unicode:: 0xa0
+.. |nonascii_3| unicode:: 0xa0
+.. |nonascii_4| unicode:: 0xa0
+.. |nonascii_5| unicode:: 0xa0
+.. |nonascii_6| unicode:: 0xa0
+.. |nonascii_7| unicode:: 0xa0
+.. |nonascii_8| unicode:: 0xa0
+.. |nonascii_9| unicode:: 0xa0
+.. |nonascii_10| unicode:: 0xa0
+.. |nonascii_11| unicode:: 0xa0
+.. |nonascii_12| unicode:: 0xa0
+.. |nonascii_13| unicode:: 0xa0
+.. |nonascii_14| unicode:: 0xa0
+.. |nonascii_15| unicode:: 0xa0
+.. |nonascii_16| unicode:: 0xa0
+.. |nonascii_17| unicode:: 0xa0
+.. |nonascii_18| unicode:: 0xa0
+.. |nonascii_19| unicode:: 0xa0
+.. |nonascii_20| unicode:: 0xa0
+.. |nonascii_21| unicode:: 0xa0
+.. |nonascii_22| unicode:: 0xa0
+.. |nonascii_23| unicode:: 0xa0
+.. |nonascii_24| unicode:: 0xa0
+.. |nonascii_25| unicode:: 0xa0
+.. |nonascii_26| unicode:: 0xa0
+.. |nonascii_27| unicode:: 0xa0
+.. |nonascii_28| unicode:: 0xa0
+.. |nonascii_29| unicode:: 0xa0
+.. |nonascii_30| unicode:: 0xa0
+.. |nonascii_31| unicode:: 0xa0
+.. |nonascii_32| unicode:: 0xa0
+.. |nonascii_33| unicode:: 0xa0
+.. |nonascii_34| unicode:: 0xa0
+.. |nonascii_35| unicode:: 0xa0
+.. |nonascii_36| unicode:: 0xa0
+.. |nonascii_37| unicode:: 0xa0
+.. |nonascii_38| unicode:: 0xa0
+.. |nonascii_39| unicode:: 0xa0
+.. |nonascii_40| unicode:: 0xa0
+.. |nonascii_41| unicode:: 0xa0
+.. |nonascii_42| unicode:: 0xa0
+.. |nonascii_43| unicode:: 0xa0
+.. |nonascii_44| unicode:: 0xa0
+.. |nonascii_45| unicode:: 0xa0
+.. |nonascii_46| unicode:: 0xa0
+.. |nonascii_47| unicode:: 0xa0
+.. |nonascii_48| unicode:: 0xa0
+.. |nonascii_49| unicode:: 0xa0
+.. |nonascii_50| unicode:: 0xa0
+.. |nonascii_51| unicode:: 0xa0
+.. |nonascii_52| unicode:: 0xa0
+.. |nonascii_53| unicode:: 0xa0
+.. |nonascii_54| unicode:: 0xa0
+.. |nonascii_55| unicode:: 0xa0
+.. |nonascii_56| unicode:: 0xa0
+.. |nonascii_57| unicode:: 0xa0
+.. |nonascii_58| unicode:: 0xa0
+.. |nonascii_59| unicode:: 0xa0
+.. |nonascii_60| unicode:: 0xa0
+.. |nonascii_61| unicode:: 0xa0
+.. |nonascii_62| unicode:: 0xa0
+.. |nonascii_63| unicode:: 0xa0
+.. |nonascii_64| unicode:: 0xa0
+.. |nonascii_65| unicode:: 0xa0
+.. |nonascii_66| unicode:: 0xa0
+.. |nonascii_67| unicode:: 0xa0
+.. |nonascii_68| unicode:: 0xa0
+.. |nonascii_69| unicode:: 0xa0
+.. |nonascii_70| unicode:: 0xa0
+.. |nonascii_71| unicode:: 0xa0
+.. |nonascii_72| unicode:: 0xa0
+.. |nonascii_73| unicode:: 0xa0
+.. |nonascii_74| unicode:: 0xa0
+.. |nonascii_75| unicode:: 0xa0
+.. |nonascii_76| unicode:: 0xa0
+.. |nonascii_77| unicode:: 0xa0
+.. |nonascii_78| unicode:: 0xa0
+.. |nonascii_79| unicode:: 0xa0
+.. |nonascii_80| unicode:: 0xa0
+.. |nonascii_81| unicode:: 0xa0
+.. |nonascii_82| unicode:: 0xa0
+.. |nonascii_83| unicode:: 0xa0
+.. |nonascii_84| unicode:: 0xa0
+.. |nonascii_85| unicode:: 0xa0
+.. |nonascii_86| unicode:: 0xa0
+.. |nonascii_87| unicode:: 0xa0
+.. |nonascii_88| unicode:: 0xa0
+.. |nonascii_89| unicode:: 0xa0
+.. |nonascii_90| unicode:: 0xa0
+.. |nonascii_91| unicode:: 0xa0
+.. |nonascii_92| unicode:: 0xa0
+.. |nonascii_93| unicode:: 0xa0
+.. |nonascii_94| unicode:: 0xa0
+.. |nonascii_95| unicode:: 0xa0
+.. |nonascii_96| unicode:: 0xa0
+.. |nonascii_97| unicode:: 0xa0
+.. |nonascii_98| unicode:: 0xa0
+.. |nonascii_99| unicode:: 0xa0
+.. |nonascii_100| unicode:: 0xa0
+.. |nonascii_101| unicode:: 0xa0
+.. |nonascii_102| unicode:: 0xa0
+.. |nonascii_103| unicode:: 0xa0
+.. |nonascii_104| unicode:: 0xa0
+.. |nonascii_105| unicode:: 0xa0
+.. |nonascii_106| unicode:: 0xa0
+.. |nonascii_107| unicode:: 0xa0
+.. |nonascii_108| unicode:: 0xa0
+.. |nonascii_109| unicode:: 0xa0
+.. |nonascii_110| unicode:: 0xa0
+.. |nonascii_111| unicode:: 0xa0
+.. |nonascii_112| unicode:: 0xa0
+.. |nonascii_113| unicode:: 0xa0
+.. |nonascii_114| unicode:: 0xa0
+.. |nonascii_115| unicode:: 0xa0
+.. |nonascii_116| unicode:: 0xa0
+.. |nonascii_117| unicode:: 0xa0
+.. |nonascii_118| unicode:: 0xa0
+.. |nonascii_119| unicode:: 0xa0
+.. |nonascii_120| unicode:: 0xa0
+.. |nonascii_121| unicode:: 0xa0
+.. |nonascii_122| unicode:: 0xa0
+.. |nonascii_123| unicode:: 0xa0
+.. |nonascii_124| unicode:: 0xa0
+.. |nonascii_125| unicode:: 0xa0
+.. |nonascii_126| unicode:: 0xa0
+.. |nonascii_127| unicode:: 0xa0
+.. |nonascii_128| unicode:: 0xa0
+.. |nonascii_129| unicode:: 0xa0
+.. |nonascii_130| unicode:: 0xa0
+.. |nonascii_131| unicode:: 0xa0
+.. |nonascii_132| unicode:: 0xa0
+.. |nonascii_133| unicode:: 0xa0
+.. |nonascii_134| unicode:: 0xa0
+.. |nonascii_135| unicode:: 0xa0
+.. |nonascii_136| unicode:: 0xa0
+.. |nonascii_137| unicode:: 0xa0
+.. |nonascii_138| unicode:: 0xa0
+.. |nonascii_139| unicode:: 0xa0
+.. |nonascii_140| unicode:: 0xa0
+.. |nonascii_141| unicode:: 0xa0
+.. |nonascii_142| unicode:: 0xa0
+.. |nonascii_143| unicode:: 0xa0
+.. |nonascii_144| unicode:: 0xa0
+.. |nonascii_145| unicode:: 0xa0
+.. |nonascii_146| unicode:: 0xa0
+.. |nonascii_147| unicode:: 0xa0
+.. |nonascii_148| unicode:: 0xa0
+.. |nonascii_149| unicode:: 0xa0
+.. |nonascii_150| unicode:: 0xa0
+.. |nonascii_151| unicode:: 0xa0
+.. |nonascii_152| unicode:: 0xa0
+.. |nonascii_153| unicode:: 0xa0
+.. |nonascii_154| unicode:: 0xa0
+.. |nonascii_155| unicode:: 0xa0
+.. |nonascii_156| unicode:: 0xa0
+.. |nonascii_157| unicode:: 0xa0
+.. |nonascii_158| unicode:: 0xa0
+.. |nonascii_159| unicode:: 0xa0
+.. |nonascii_160| unicode:: 0xa0
+.. |nonascii_161| unicode:: 0xa0
+.. |nonascii_162| unicode:: 0xa0
+.. |nonascii_163| unicode:: 0xa0
+.. |nonascii_164| unicode:: 0xa0
+.. |nonascii_165| unicode:: 0xa0
+.. |nonascii_166| unicode:: 0xa0
+.. |nonascii_167| unicode:: 0xa0
+.. |nonascii_168| unicode:: 0xa0
+.. |nonascii_169| unicode:: 0xa0
+.. |nonascii_170| unicode:: 0xa0
+.. |nonascii_171| unicode:: 0xa0
+.. |nonascii_172| unicode:: 0xa0
+.. |nonascii_173| unicode:: 0xa0
+.. |nonascii_174| unicode:: 0xa0
+.. |nonascii_175| unicode:: 0xa0
+.. |nonascii_176| unicode:: 0xa0
+.. |nonascii_177| unicode:: 0xa0
+.. |nonascii_178| unicode:: 0xa0
+.. |nonascii_179| unicode:: 0xa0
+.. |nonascii_180| unicode:: 0xa0
+.. |nonascii_181| unicode:: 0xa0
+.. |nonascii_182| unicode:: 0xa0
+.. |nonascii_183| unicode:: 0xa0
+.. |nonascii_184| unicode:: 0xa0
+.. |nonascii_185| unicode:: 0xa0
+.. |nonascii_186| unicode:: 0xa0
+.. |nonascii_187| unicode:: 0xa0
+.. |nonascii_188| unicode:: 0xa0
+.. |nonascii_189| unicode:: 0xa0
+.. |nonascii_190| unicode:: 0xa0
+.. |nonascii_191| unicode:: 0xa0
+.. |nonascii_192| unicode:: 0xa0
+.. |nonascii_193| unicode:: 0xa0
+.. |nonascii_194| unicode:: 0xa0
+.. |nonascii_195| unicode:: 0xa0
+.. |nonascii_196| unicode:: 0xa0
+.. |nonascii_197| unicode:: 0xa0
+.. |nonascii_198| unicode:: 0xa0
+.. |nonascii_199| unicode:: 0xa0
+.. |nonascii_200| unicode:: 0xa0
+.. |nonascii_201| unicode:: 0xa0
+.. |nonascii_202| unicode:: 0xa0
+.. |nonascii_203| unicode:: 0xa0
+.. |nonascii_204| unicode:: 0xa0
+.. |nonascii_205| unicode:: 0xa0
+.. |nonascii_206| unicode:: 0xa0
+.. |nonascii_207| unicode:: 0xa0
+.. |nonascii_208| unicode:: 0xa0
+.. |nonascii_209| unicode:: 0xa0
+.. |nonascii_210| unicode:: 0xa0
+.. |nonascii_211| unicode:: 0xa0
+.. |nonascii_212| unicode:: 0xa0
+.. |nonascii_213| unicode:: 0xa0
+.. |nonascii_214| unicode:: 0xa0
+.. |nonascii_215| unicode:: 0xa0
+.. |nonascii_216| unicode:: 0xa0
+.. |nonascii_217| unicode:: 0xa0
+.. |nonascii_218| unicode:: 0xa0
+.. |nonascii_219| unicode:: 0xa0
+.. |nonascii_220| unicode:: 0xa0
+.. |nonascii_221| unicode:: 0xa0
+.. |nonascii_222| unicode:: 0xa0
+.. |nonascii_223| unicode:: 0xa0
+.. |nonascii_224| unicode:: 0xa0
+.. |nonascii_225| unicode:: 0xa0
+.. |nonascii_226| unicode:: 0xa0
+.. |nonascii_227| unicode:: 0xa0
+.. |nonascii_228| unicode:: 0xa0
+.. |nonascii_229| unicode:: 0xa0
+.. |nonascii_230| unicode:: 0xa0
+.. |nonascii_231| unicode:: 0xa0
+.. |nonascii_232| unicode:: 0xa0
+.. |nonascii_233| unicode:: 0xa0
+.. |nonascii_234| unicode:: 0xa0
+.. |nonascii_235| unicode:: 0xa0
+.. |nonascii_236| unicode:: 0xa0
+.. |nonascii_237| unicode:: 0xa0
+.. |nonascii_238| unicode:: 0xa0
+.. |nonascii_239| unicode:: 0xa0
+.. |nonascii_240| unicode:: 0xa0
+.. |nonascii_241| unicode:: 0xa0
+.. |nonascii_242| unicode:: 0xa0
+.. |nonascii_243| unicode:: 0xa0
+.. |nonascii_244| unicode:: 0xa0
+.. |nonascii_245| unicode:: 0xa0
+.. |nonascii_246| unicode:: 0xa0
+.. |nonascii_247| unicode:: 0xa0
+.. |nonascii_248| unicode:: 0xa0
+.. |nonascii_249| unicode:: 0xa0
+.. |nonascii_250| unicode:: 0xa0
+.. |nonascii_251| unicode:: 0xa0
+.. |nonascii_252| unicode:: 0xa0
+.. |nonascii_253| unicode:: 0xa0
+.. |nonascii_254| unicode:: 0xa0
+.. |nonascii_255| unicode:: 0xa0
+.. |nonascii_256| unicode:: 0xa0
+.. |nonascii_257| unicode:: 0xa0
+.. |nonascii_258| unicode:: 0xa0
+.. |nonascii_259| unicode:: 0xa0
+.. |nonascii_260| unicode:: 0xa0
+.. |nonascii_261| unicode:: 0xa0
+.. |nonascii_262| unicode:: 0xa0
+.. |nonascii_263| unicode:: 0xa0
+.. |nonascii_264| unicode:: 0xa0
+.. |nonascii_265| unicode:: 0xa0
+.. |nonascii_266| unicode:: 0xa0
+.. |nonascii_267| unicode:: 0xa0
+.. |nonascii_268| unicode:: 0xa0
+.. |nonascii_269| unicode:: 0xa0
+.. |nonascii_270| unicode:: 0xa0
+.. |nonascii_271| unicode:: 0xa0
+.. |nonascii_272| unicode:: 0xa0
+.. |nonascii_273| unicode:: 0xa0
+.. |nonascii_274| unicode:: 0xa0
+.. |nonascii_275| unicode:: 0xa0
+.. |nonascii_276| unicode:: 0xa0
+.. |nonascii_277| unicode:: 0xa0
+.. |nonascii_278| unicode:: 0xa0
+.. |nonascii_279| unicode:: 0xa0
+.. |nonascii_280| unicode:: 0xa0
+.. |nonascii_281| unicode:: 0xa0
+.. |nonascii_282| unicode:: 0xa0
+.. |nonascii_283| unicode:: 0xa0
+.. |nonascii_284| unicode:: 0xa0
+.. |nonascii_285| unicode:: 0xa0
+.. |nonascii_286| unicode:: 0xa0
+.. |nonascii_287| unicode:: 0xa0
+.. |nonascii_288| unicode:: 0xa0
+.. |nonascii_289| unicode:: 0xa0
+.. |nonascii_290| unicode:: 0xa0
+.. |nonascii_291| unicode:: 0xa0
+.. |nonascii_292| unicode:: 0xa0
+.. |nonascii_293| unicode:: 0xa0
+.. |nonascii_294| unicode:: 0xa0
+.. |nonascii_295| unicode:: 0xa0
+.. |nonascii_296| unicode:: 0xa0
+.. |nonascii_297| unicode:: 0xa0
+.. |nonascii_298| unicode:: 0xa0
+.. |nonascii_299| unicode:: 0xa0
+.. |nonascii_300| unicode:: 0xa0
+.. |nonascii_301| unicode:: 0xa0
+.. |nonascii_302| unicode:: 0xa0
+.. |nonascii_303| unicode:: 0xa0
+.. |nonascii_304| unicode:: 0xa0
+.. |nonascii_305| unicode:: 0xa0
+.. |nonascii_306| unicode:: 0xa0
+.. |nonascii_307| unicode:: 0xa0
+.. |nonascii_308| unicode:: 0xa0
+.. |nonascii_309| unicode:: 0xa0
+.. |nonascii_310| unicode:: 0xa0
+.. |nonascii_311| unicode:: 0xa0
+.. |nonascii_312| unicode:: 0xa0
+.. |nonascii_313| unicode:: 0xa0
+.. |nonascii_314| unicode:: 0xa0
+.. |nonascii_315| unicode:: 0xa0
+.. |nonascii_316| unicode:: 0xa0
+.. |nonascii_317| unicode:: 0xa0
+.. |nonascii_318| unicode:: 0xa0
+.. |nonascii_319| unicode:: 0xa0
+.. |nonascii_320| unicode:: 0xa0
+.. |nonascii_321| unicode:: 0xa0
+.. |nonascii_322| unicode:: 0xa0
+.. |nonascii_323| unicode:: 0xa0
+.. |nonascii_324| unicode:: 0xa0
+.. |nonascii_325| unicode:: 0xa0
+.. |nonascii_326| unicode:: 0xa0
+.. |nonascii_327| unicode:: 0xa0
+.. |nonascii_328| unicode:: 0xa0
+.. |nonascii_329| unicode:: 0xa0
+.. |nonascii_330| unicode:: 0xa0
+.. |nonascii_331| unicode:: 0xa0
+.. |nonascii_332| unicode:: 0xa0
+.. |nonascii_333| unicode:: 0xa0
+.. |nonascii_334| unicode:: 0xa0
+.. |nonascii_335| unicode:: 0xa0
+.. |nonascii_336| unicode:: 0xa0
+.. |nonascii_337| unicode:: 0xa0
+.. |nonascii_338| unicode:: 0xa0
+.. |nonascii_339| unicode:: 0xa0
+.. |nonascii_340| unicode:: 0xa0
+.. |nonascii_341| unicode:: 0xa0
+.. |nonascii_342| unicode:: 0xa0
+.. |nonascii_343| unicode:: 0xa0
+.. |nonascii_344| unicode:: 0xa0
+.. |nonascii_345| unicode:: 0xa0
+.. |nonascii_346| unicode:: 0xa0
+.. |nonascii_347| unicode:: 0xa0
+.. |nonascii_348| unicode:: 0xa0
+.. |nonascii_349| unicode:: 0xa0
+.. |nonascii_350| unicode:: 0xa0
+.. |nonascii_351| unicode:: 0xa0
+.. |nonascii_352| unicode:: 0xa0
+.. |nonascii_353| unicode:: 0xa0
+.. |nonascii_354| unicode:: 0xa0
+.. |nonascii_355| unicode:: 0xa0
+.. |nonascii_356| unicode:: 0xa0
+.. |nonascii_357| unicode:: 0xa0
+.. |nonascii_358| unicode:: 0xa0
+.. |nonascii_359| unicode:: 0xa0
+.. |nonascii_360| unicode:: 0xa0
+.. |nonascii_361| unicode:: 0xa0
+.. |nonascii_362| unicode:: 0xa0
+.. |nonascii_363| unicode:: 0xa0
+.. |nonascii_364| unicode:: 0xa0
+.. |nonascii_365| unicode:: 0xa0
+.. |nonascii_366| unicode:: 0xa0
+.. |nonascii_367| unicode:: 0xa0
+.. |nonascii_368| unicode:: 0xa0
+.. |nonascii_369| unicode:: 0xa0
+.. |nonascii_370| unicode:: 0xa0
+.. |nonascii_371| unicode:: 0xa0
+.. |nonascii_372| unicode:: 0xa0
+.. |nonascii_373| unicode:: 0xa0
+.. |nonascii_374| unicode:: 0xa0
+.. |nonascii_375| unicode:: 0xa0
+.. |nonascii_376| unicode:: 0xa0
+.. |nonascii_377| unicode:: 0xa0
+.. |nonascii_378| unicode:: 0xa0
+.. |nonascii_379| unicode:: 0xa0
+.. |nonascii_380| unicode:: 0xa0
+.. |nonascii_381| unicode:: 0xa0
+.. |nonascii_382| unicode:: 0xa0
+.. |nonascii_383| unicode:: 0xa0
+.. |nonascii_384| unicode:: 0xa0
+.. |nonascii_385| unicode:: 0xa0
+.. |nonascii_386| unicode:: 0xa0
+.. |nonascii_387| unicode:: 0xa0
+.. |nonascii_388| unicode:: 0xa0
+.. |nonascii_389| unicode:: 0xa0
+.. |nonascii_390| unicode:: 0xa0
+.. |nonascii_391| unicode:: 0xa0
+.. |nonascii_392| unicode:: 0xa0
+.. |nonascii_393| unicode:: 0xa0
+.. |nonascii_394| unicode:: 0xa0
+.. |nonascii_395| unicode:: 0xa0
+.. |nonascii_396| unicode:: 0xa0
+.. |nonascii_397| unicode:: 0xa0
+.. |nonascii_398| unicode:: 0xa0
+.. |nonascii_399| unicode:: 0xa0
+.. |nonascii_400| unicode:: 0xa0
+.. |nonascii_401| unicode:: 0xa0
+.. |nonascii_402| unicode:: 0xa0
+.. |nonascii_403| unicode:: 0xa0
+.. |nonascii_404| unicode:: 0xa0
+.. |nonascii_405| unicode:: 0xa0
+.. |nonascii_406| unicode:: 0xa0
+.. |nonascii_407| unicode:: 0xa0
+.. |nonascii_408| unicode:: 0xa0
+.. |nonascii_409| unicode:: 0xa0
+.. |nonascii_410| unicode:: 0xa0
+.. |nonascii_411| unicode:: 0xa0
+.. |nonascii_412| unicode:: 0xa0
+.. |nonascii_413| unicode:: 0xa0
+.. |nonascii_414| unicode:: 0xa0
+.. |nonascii_415| unicode:: 0xa0
+.. |nonascii_416| unicode:: 0xa0
+.. |nonascii_417| unicode:: 0xa0
+.. |nonascii_418| unicode:: 0xa0
+.. |nonascii_419| unicode:: 0xa0
+.. |nonascii_420| unicode:: 0xa0
+.. |nonascii_421| unicode:: 0xa0
+.. |nonascii_422| unicode:: 0xa0
+.. |nonascii_423| unicode:: 0xa0
+.. |nonascii_424| unicode:: 0xa0
+.. |nonascii_425| unicode:: 0xa0
+.. |nonascii_426| unicode:: 0xa0
+.. |nonascii_427| unicode:: 0xa0
+.. |nonascii_428| unicode:: 0xa0
+.. |nonascii_429| unicode:: 0xa0
+.. |nonascii_430| unicode:: 0xa0
+.. |nonascii_431| unicode:: 0xa0
+.. |nonascii_432| unicode:: 0xa0
+.. |nonascii_433| unicode:: 0xa0
+.. |nonascii_434| unicode:: 0xa0
+.. |nonascii_435| unicode:: 0xa0
+.. |nonascii_436| unicode:: 0xa0
+.. |nonascii_437| unicode:: 0xa0
+.. |nonascii_438| unicode:: 0xa0
+.. |nonascii_439| unicode:: 0xa0
+.. |nonascii_440| unicode:: 0xa0
+.. |nonascii_441| unicode:: 0xa0
+.. |nonascii_442| unicode:: 0xa0
+.. |nonascii_443| unicode:: 0xa0
+.. |nonascii_444| unicode:: 0xa0
+.. |nonascii_445| unicode:: 0xa0
+.. |nonascii_446| unicode:: 0xa0
+.. |nonascii_447| unicode:: 0xa0
+.. |nonascii_448| unicode:: 0xa0
+.. |nonascii_449| unicode:: 0xa0
+.. |nonascii_450| unicode:: 0xa0
+.. |nonascii_451| unicode:: 0xa0
+.. |nonascii_452| unicode:: 0xa0
+.. |nonascii_453| unicode:: 0xa0
+.. |nonascii_454| unicode:: 0xa0
+.. |nonascii_455| unicode:: 0xa0
+.. |nonascii_456| unicode:: 0xa0
+.. |nonascii_457| unicode:: 0xa0
+.. |nonascii_458| unicode:: 0xa0
+.. |nonascii_459| unicode:: 0xa0
+.. |nonascii_460| unicode:: 0xa0
+.. |nonascii_461| unicode:: 0xa0
+.. |nonascii_462| unicode:: 0xa0
+.. |nonascii_463| unicode:: 0xa0
+.. |nonascii_464| unicode:: 0xa0
+.. |nonascii_465| unicode:: 0xa0
+.. |nonascii_466| unicode:: 0xa0
+.. |nonascii_467| unicode:: 0xa0
+.. |nonascii_468| unicode:: 0xa0
+.. |nonascii_469| unicode:: 0xa0
+.. |nonascii_470| unicode:: 0xa0
+.. |nonascii_471| unicode:: 0xa0
+.. |nonascii_472| unicode:: 0xa0
+.. |nonascii_473| unicode:: 0xa0
+.. |nonascii_474| unicode:: 0xa0
+.. |nonascii_475| unicode:: 0xa0
+.. |nonascii_476| unicode:: 0xa0
+.. |nonascii_477| unicode:: 0xa0
+.. |nonascii_478| unicode:: 0xa0
+.. |nonascii_479| unicode:: 0xa0
+.. |nonascii_480| unicode:: 0xa0
+.. |nonascii_481| unicode:: 0xa0
+.. |nonascii_482| unicode:: 0xa0
+.. |nonascii_483| unicode:: 0xa0
+.. |nonascii_484| unicode:: 0xa0
+.. |nonascii_485| unicode:: 0xa0
+.. |nonascii_486| unicode:: 0xa0
+.. |nonascii_487| unicode:: 0xa0
+.. |nonascii_488| unicode:: 0xa0
+.. |nonascii_489| unicode:: 0xa0
+.. |nonascii_490| unicode:: 0xa0
+.. |nonascii_491| unicode:: 0xa0
+.. |nonascii_492| unicode:: 0xa0
+.. |nonascii_493| unicode:: 0xa0
+.. |nonascii_494| unicode:: 0xa0
+.. |nonascii_495| unicode:: 0xa0
+.. |nonascii_496| unicode:: 0xa0
+.. |nonascii_497| unicode:: 0xa0
+.. |nonascii_498| unicode:: 0xa0
+.. |nonascii_499| unicode:: 0xa0
+.. |nonascii_500| unicode:: 0xa0
+.. |nonascii_501| unicode:: 0xa0
+.. |nonascii_502| unicode:: 0xa0
+.. |nonascii_503| unicode:: 0xa0
+.. |nonascii_504| unicode:: 0xa0
+.. |nonascii_505| unicode:: 0xa0
+.. |nonascii_506| unicode:: 0xa0
+.. |nonascii_507| unicode:: 0xa0
+.. |nonascii_508| unicode:: 0xa0
+.. |nonascii_509| unicode:: 0xa0
+.. |nonascii_510| unicode:: 0xa0
+.. |nonascii_511| unicode:: 0xa0
+.. |nonascii_512| unicode:: 0xa0
+.. |nonascii_513| unicode:: 0xa0
+.. |nonascii_514| unicode:: 0xa0
+.. |nonascii_515| unicode:: 0xa0
+.. |nonascii_516| unicode:: 0xa0
+.. |nonascii_517| unicode:: 0xa0
+.. |nonascii_518| unicode:: 0xa0
+.. |nonascii_519| unicode:: 0xa0
+.. |nonascii_520| unicode:: 0xa0
+.. |nonascii_521| unicode:: 0xa0
+.. |nonascii_522| unicode:: 0xa0
+.. |nonascii_523| unicode:: 0xa0
+.. |nonascii_524| unicode:: 0xa0
+.. |nonascii_525| unicode:: 0xa0
+.. |nonascii_526| unicode:: 0xa0
+.. |nonascii_527| unicode:: 0xa0
+.. |nonascii_528| unicode:: 0xa0
+.. |nonascii_529| unicode:: 0xa0
+.. |nonascii_530| unicode:: 0xa0
+.. |nonascii_531| unicode:: 0xa0
+.. |nonascii_532| unicode:: 0xa0
+.. |nonascii_533| unicode:: 0xa0
+.. |nonascii_534| unicode:: 0xa0
+.. |nonascii_535| unicode:: 0xa0
+.. |nonascii_536| unicode:: 0xa0
+.. |nonascii_537| unicode:: 0xa0
+.. |nonascii_538| unicode:: 0xa0
+.. |nonascii_539| unicode:: 0xa0
+.. |nonascii_540| unicode:: 0xa0
+.. |nonascii_541| unicode:: 0xa0
+.. |nonascii_542| unicode:: 0xa0
+.. |nonascii_543| unicode:: 0xa0
+.. |nonascii_544| unicode:: 0xa0
+.. |nonascii_545| unicode:: 0xa0
+.. |nonascii_546| unicode:: 0xa0
+.. |nonascii_547| unicode:: 0xa0
+.. |nonascii_548| unicode:: 0xa0
+.. |nonascii_549| unicode:: 0xa0
+.. |nonascii_550| unicode:: 0xa0
+.. |nonascii_551| unicode:: 0xa0
+.. |nonascii_552| unicode:: 0xa0
+.. |nonascii_553| unicode:: 0xa0
+.. |nonascii_554| unicode:: 0xa0
+.. |nonascii_555| unicode:: 0xa0
+.. |nonascii_556| unicode:: 0xa0
+.. |nonascii_557| unicode:: 0xa0
+.. |nonascii_558| unicode:: 0xa0
+.. |nonascii_559| unicode:: 0xa0
+.. |nonascii_560| unicode:: 0xa0
+.. |nonascii_561| unicode:: 0xa0
+.. |nonascii_562| unicode:: 0xa0
+.. |nonascii_563| unicode:: 0xa0
+.. |nonascii_564| unicode:: 0xa0
+.. |nonascii_565| unicode:: 0xa0
+.. |nonascii_566| unicode:: 0xa0
+.. |nonascii_567| unicode:: 0xa0
+.. |nonascii_568| unicode:: 0xa0
+.. |nonascii_569| unicode:: 0xa0
+.. |nonascii_570| unicode:: 0xa0
+.. |nonascii_571| unicode:: 0xa0
+.. |nonascii_572| unicode:: 0xa0
+.. |nonascii_573| unicode:: 0xa0
+.. |nonascii_574| unicode:: 0xa0
+.. |nonascii_575| unicode:: 0xa0
+.. |nonascii_576| unicode:: 0xa0
+.. |nonascii_577| unicode:: 0xa0
+.. |nonascii_578| unicode:: 0xa0
+.. |nonascii_579| unicode:: 0xa0
+.. |nonascii_580| unicode:: 0xa0
+.. |nonascii_581| unicode:: 0xa0
+.. |nonascii_582| unicode:: 0xa0
+.. |nonascii_583| unicode:: 0xa0
+.. |nonascii_584| unicode:: 0xa0
+.. |nonascii_585| unicode:: 0xa0
+.. |nonascii_586| unicode:: 0xa0
+.. |nonascii_587| unicode:: 0xa0
+.. |nonascii_588| unicode:: 0xa0
+.. |nonascii_589| unicode:: 0xa0
+.. |nonascii_590| unicode:: 0xa0
+.. |nonascii_591| unicode:: 0xa0
+.. |nonascii_592| unicode:: 0xa0
+.. |nonascii_593| unicode:: 0xa0
+.. |nonascii_594| unicode:: 0xa0
+.. |nonascii_595| unicode:: 0xa0
+.. |nonascii_596| unicode:: 0xa0
+.. |nonascii_597| unicode:: 0xa0
+.. |nonascii_598| unicode:: 0xa0
+.. |nonascii_599| unicode:: 0xa0
+.. |nonascii_600| unicode:: 0xa0
+.. |nonascii_601| unicode:: 0xa0
+.. |nonascii_602| unicode:: 0xa0
+.. |nonascii_603| unicode:: 0xa0
+.. |nonascii_604| unicode:: 0xa0
+.. |nonascii_605| unicode:: 0xa0
+.. |nonascii_606| unicode:: 0xa0
+.. |nonascii_607| unicode:: 0xa0
+.. |nonascii_608| unicode:: 0xa0
+.. |nonascii_609| unicode:: 0xa0
+.. |nonascii_610| unicode:: 0xa0
+.. |nonascii_611| unicode:: 0xa0
+.. |nonascii_612| unicode:: 0xa0
+.. |nonascii_613| unicode:: 0xa0
+.. |nonascii_614| unicode:: 0xa0
+.. |nonascii_615| unicode:: 0xa0
+.. |nonascii_616| unicode:: 0xa0
+.. |nonascii_617| unicode:: 0xa0
+.. |nonascii_618| unicode:: 0xa0
+.. |nonascii_619| unicode:: 0xa0
+.. |nonascii_620| unicode:: 0xa0
+.. |nonascii_621| unicode:: 0xa0
+.. |nonascii_622| unicode:: 0xa0
+.. |nonascii_623| unicode:: 0xa0
+.. |nonascii_624| unicode:: 0xa0
+.. |nonascii_625| unicode:: 0xa0
+.. |nonascii_626| unicode:: 0xa0
+.. |nonascii_627| unicode:: 0xa0
+.. |nonascii_628| unicode:: 0xa0
+.. |nonascii_629| unicode:: 0xa0
+.. |nonascii_630| unicode:: 0xa0
+.. |nonascii_631| unicode:: 0xa0
+.. |nonascii_632| unicode:: 0xa0
+.. |nonascii_633| unicode:: 0xa0
+.. |nonascii_634| unicode:: 0xa0
+.. |nonascii_635| unicode:: 0xa0
+.. |nonascii_636| unicode:: 0xa0
+.. |nonascii_637| unicode:: 0xa0
+.. |nonascii_638| unicode:: 0xa0
+.. |nonascii_639| unicode:: 0xa0
+.. |nonascii_640| unicode:: 0xa0
+.. |nonascii_641| unicode:: 0xa0
+.. |nonascii_642| unicode:: 0xa0
+.. |nonascii_643| unicode:: 0xa0
+.. |nonascii_644| unicode:: 0xa0
+.. |nonascii_645| unicode:: 0xa0
+.. |nonascii_646| unicode:: 0xa0
+.. |nonascii_647| unicode:: 0xa0
+.. |nonascii_648| unicode:: 0xa0
+.. |nonascii_649| unicode:: 0xa0
+.. |nonascii_650| unicode:: 0xa0
+.. |nonascii_651| unicode:: 0xa0
+.. |nonascii_652| unicode:: 0xa0
+.. |nonascii_653| unicode:: 0xa0
+.. |nonascii_654| unicode:: 0xa0
+.. |nonascii_655| unicode:: 0xa0
+.. |nonascii_656| unicode:: 0xa0
+.. |nonascii_657| unicode:: 0xa0
+.. |nonascii_658| unicode:: 0xa0
+.. |nonascii_659| unicode:: 0xa0
+.. |nonascii_660| unicode:: 0xa0
+.. |nonascii_661| unicode:: 0xa0
+.. |nonascii_662| unicode:: 0xa0
+.. |nonascii_663| unicode:: 0xa0
+.. |nonascii_664| unicode:: 0xa0
+.. |nonascii_665| unicode:: 0xa0
+.. |nonascii_666| unicode:: 0xa0
+.. |nonascii_667| unicode:: 0xa0
+.. |nonascii_668| unicode:: 0xa0
+.. |nonascii_669| unicode:: 0xa0
+.. |nonascii_670| unicode:: 0xa0
+.. |nonascii_671| unicode:: 0xa0
+.. |nonascii_672| unicode:: 0xa0
+.. |nonascii_673| unicode:: 0xa0
+.. |nonascii_674| unicode:: 0xa0
+.. |nonascii_675| unicode:: 0xa0
+.. |nonascii_676| unicode:: 0xa0
+.. |nonascii_677| unicode:: 0xa0
+.. |nonascii_678| unicode:: 0xa0
+.. |nonascii_679| unicode:: 0xa0
+.. |nonascii_680| unicode:: 0xa0
+.. |nonascii_681| unicode:: 0xa0
+.. |nonascii_682| unicode:: 0xa0
+.. |nonascii_683| unicode:: 0xa0
+.. |nonascii_684| unicode:: 0xa0
+.. |nonascii_685| unicode:: 0xa0
+.. |nonascii_686| unicode:: 0xa0
+.. |nonascii_687| unicode:: 0xa0
+.. |nonascii_688| unicode:: 0xa0
+.. |nonascii_689| unicode:: 0xa0
+.. |nonascii_690| unicode:: 0xa0
+.. |nonascii_691| unicode:: 0xa0
+.. |nonascii_692| unicode:: 0xa0
+.. |nonascii_693| unicode:: 0xa0
+.. |nonascii_694| unicode:: 0xa0
+.. |nonascii_695| unicode:: 0xa0
+.. |nonascii_696| unicode:: 0xa0
+.. |nonascii_697| unicode:: 0xa0
+.. |nonascii_698| unicode:: 0xa0
+.. |nonascii_699| unicode:: 0xa0
+.. |nonascii_700| unicode:: 0xa0
+.. |nonascii_701| unicode:: 0xa0
+.. |nonascii_702| unicode:: 0xa0
+.. |nonascii_703| unicode:: 0xa0
+.. |nonascii_704| unicode:: 0xa0
+.. |nonascii_705| unicode:: 0xa0
+.. |nonascii_706| unicode:: 0xa0
+.. |nonascii_707| unicode:: 0xa0
+.. |nonascii_708| unicode:: 0xa0
+.. |nonascii_709| unicode:: 0xa0
+.. |nonascii_710| unicode:: 0xa0
+.. |nonascii_711| unicode:: 0xa0
+.. |nonascii_712| unicode:: 0xa0
+.. |nonascii_713| unicode:: 0xa0
+.. |nonascii_714| unicode:: 0xa0
+.. |nonascii_715| unicode:: 0xa0
+.. |nonascii_716| unicode:: 0xa0
+.. |nonascii_717| unicode:: 0xa0
+.. |nonascii_718| unicode:: 0xa0
+.. |nonascii_719| unicode:: 0xa0
+.. |nonascii_720| unicode:: 0xa0
+.. |nonascii_721| unicode:: 0xa0
+.. |nonascii_722| unicode:: 0xa0
+.. |nonascii_723| unicode:: 0xa0
+.. |nonascii_724| unicode:: 0xa0
+.. |nonascii_725| unicode:: 0xa0
+.. |nonascii_726| unicode:: 0xa0
+.. |nonascii_727| unicode:: 0xa0
+.. |nonascii_728| unicode:: 0xa0
+.. |nonascii_729| unicode:: 0xa0
+.. |nonascii_730| unicode:: 0xa0
+.. |nonascii_731| unicode:: 0xa0
+.. |nonascii_732| unicode:: 0xa0
+.. |nonascii_733| unicode:: 0xa0
+.. |nonascii_734| unicode:: 0xa0
+.. |nonascii_735| unicode:: 0xa0
+.. |nonascii_736| unicode:: 0xa0
+.. |nonascii_737| unicode:: 0xa0
+.. |nonascii_738| unicode:: 0xa0
+.. |nonascii_739| unicode:: 0xa0
+.. |nonascii_740| unicode:: 0xa0
+.. |nonascii_741| unicode:: 0xa0
+.. |nonascii_742| unicode:: 0xa0
+.. |nonascii_743| unicode:: 0xa0
+.. |nonascii_744| unicode:: 0xa0
+.. |nonascii_745| unicode:: 0xa0
+.. |nonascii_746| unicode:: 0xa0
+.. |nonascii_747| unicode:: 0xa0
+.. |nonascii_748| unicode:: 0xa0
+.. |nonascii_749| unicode:: 0xa0
+.. |nonascii_750| unicode:: 0xa0
+.. |nonascii_751| unicode:: 0xa0
+.. |nonascii_752| unicode:: 0xa0
+.. |nonascii_753| unicode:: 0xa0
+.. |nonascii_754| unicode:: 0xa0
+.. |nonascii_755| unicode:: 0xa0
+.. |nonascii_756| unicode:: 0xa0
+.. |nonascii_757| unicode:: 0xa0
+.. |nonascii_758| unicode:: 0xa0
+.. |nonascii_759| unicode:: 0xa0
+.. |nonascii_760| unicode:: 0xa0
+.. |nonascii_761| unicode:: 0xa0
+.. |nonascii_762| unicode:: 0xa0
+.. |nonascii_763| unicode:: 0xa0
+.. |nonascii_764| unicode:: 0xa0
+.. |nonascii_765| unicode:: 0xa0
+.. |nonascii_766| unicode:: 0xa0
+.. |nonascii_767| unicode:: 0xa0
+.. |nonascii_768| unicode:: 0xa0
+.. |nonascii_769| unicode:: 0xa0
+.. |nonascii_770| unicode:: 0xa0
+.. |nonascii_771| unicode:: 0xa0
+.. |nonascii_772| unicode:: 0xa0
+.. |nonascii_773| unicode:: 0xa0
+.. |nonascii_774| unicode:: 0xa0
+.. |nonascii_775| unicode:: 0xa0
+.. |nonascii_776| unicode:: 0xa0
+.. |nonascii_777| unicode:: 0xa0
+.. |nonascii_778| unicode:: 0xa0
+.. |nonascii_779| unicode:: 0xa0
+.. |nonascii_780| unicode:: 0xa0
+.. |nonascii_781| unicode:: 0xa0
+.. |nonascii_782| unicode:: 0xa0
+.. |nonascii_783| unicode:: 0xa0
+.. |nonascii_784| unicode:: 0xa0
+.. |nonascii_785| unicode:: 0xa0
+.. |nonascii_786| unicode:: 0xa0
+.. |nonascii_787| unicode:: 0xa0
+.. |nonascii_788| unicode:: 0xa0
+.. |nonascii_789| unicode:: 0xa0
+.. |nonascii_790| unicode:: 0xa0
+.. |nonascii_791| unicode:: 0xa0
+.. |nonascii_792| unicode:: 0xa0
+.. |nonascii_793| unicode:: 0xa0
+.. |nonascii_794| unicode:: 0xa0
+.. |nonascii_795| unicode:: 0xa0
+.. |nonascii_796| unicode:: 0xa0
+.. |nonascii_797| unicode:: 0xa0
+.. |nonascii_798| unicode:: 0xa0
+.. |nonascii_799| unicode:: 0xa0
+.. |nonascii_800| unicode:: 0xa0
+.. |nonascii_801| unicode:: 0xa0
+.. |nonascii_802| unicode:: 0xa0
+.. |nonascii_803| unicode:: 0xa0
+.. |nonascii_804| unicode:: 0xa0
+.. |nonascii_805| unicode:: 0xa0
+.. |nonascii_806| unicode:: 0xa0
+.. |nonascii_807| unicode:: 0xa0
+.. |nonascii_808| unicode:: 0xa0
+.. |nonascii_809| unicode:: 0xa0
+.. |nonascii_810| unicode:: 0xa0
+.. |nonascii_811| unicode:: 0xa0
+.. |nonascii_812| unicode:: 0xa0
+.. |nonascii_813| unicode:: 0xa0
+.. |nonascii_814| unicode:: 0xa0
+.. |nonascii_815| unicode:: 0xa0
+.. |nonascii_816| unicode:: 0xa0
+.. |nonascii_817| unicode:: 0xa0
+.. |nonascii_818| unicode:: 0xa0
+.. |nonascii_819| unicode:: 0xa0
+.. |nonascii_820| unicode:: 0xa0
+.. |nonascii_821| unicode:: 0xa0
+.. |nonascii_822| unicode:: 0xa0
+.. |nonascii_823| unicode:: 0xa0
+.. |nonascii_824| unicode:: 0xa0
+.. |nonascii_825| unicode:: 0xa0
+.. |nonascii_826| unicode:: 0xa0
+.. |nonascii_827| unicode:: 0xa0
+.. |nonascii_828| unicode:: 0xa0
+.. |nonascii_829| unicode:: 0x2022
+.. |nonascii_830| unicode:: 0x2022
+.. |nonascii_831| unicode:: 0x2022
+.. |nonascii_832| unicode:: 0x2022
+.. |nonascii_833| unicode:: 0x2022
+.. |nonascii_834| unicode:: 0x2022
+.. |nonascii_835| unicode:: 0x2022
+.. |nonascii_836| unicode:: 0x2022
+.. |nonascii_837| unicode:: 0x2022
+.. |nonascii_838| unicode:: 0x2022
+.. |nonascii_839| unicode:: 0x2022
+.. |nonascii_840| unicode:: 0x2022
+.. |nonascii_841| unicode:: 0x2022
+.. |nonascii_842| unicode:: 0x2022
+.. |nonascii_843| unicode:: 0xe9

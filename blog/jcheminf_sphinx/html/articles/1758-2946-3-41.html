@@ -1,0 +1,653 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OSCAR4: a flexible architecture for chemical text-mining &mdash; Papers 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Papers 1.0 documentation" href="../index.html" />
+    <link rel="next" title="The semantic architecture of the World-Wide Molecular Matrix (WWMM)" href="1758-2946-3-42.html" />
+    <link rel="prev" title="Mining chemical information from open patents" href="1758-2946-3-40.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../index.html">Papers 1.0 documentation</a></div>
+        <div class="rel">
+          <a href="1758-2946-3-40.html" title="Mining chemical information from open patents"
+             accesskey="P">previous</a> |
+          <a href="1758-2946-3-42.html" title="The semantic architecture of the World-Wide Molecular Matrix (WWMM)"
+             accesskey="N">next</a> |
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="oscar4-a-flexible-architecture-for-chemical-text-mining">
+<h1>OSCAR4: a flexible architecture for chemical text-mining<a class="headerlink" href="#oscar4-a-flexible-architecture-for-chemical-text-mining" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>The Open-Source Chemistry Analysis Routines (OSCAR) software, a toolkit for the recognition of named entities and data in chemistry publications, has been developed since 2002. Recent work has resulted in the separation of the core OSCAR functionality and its release as the OSCAR4 library. This library features a modular API (based on reduction of surface coupling) that permits client programmers to easily incorporate it into external applications. OSCAR4 offers a domain-independent architecture upon which chemistry specific text-mining tools can be built, and its development and usage are discussed.</p>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p><em>In keeping with the historical and methodological aspects of this special issue, we recount the history and motivation of OSCAR</em>.</p>
+<p>A large amount of factual data in chemistry and neighbouring disciplines is published in the form of text and components within text rather than as structured semantic information. If we can discover and extract this information, the textual literature becomes an enormous additional chemical resource. As an example, we estimate that about 10 million chemical syntheses per year are published in the public literature (articles, patents, theses) and the conventional method is a natural language narrative (most commonly in English). It is extremely tedious and error-prone to extract information from this narrative manually, and for this reason many chemical abstracting services limit their scope and also frequently lag behind the current publication list.</p>
+<p>The discipline of text-mining has now reached a state where much natural language in textual form can be analysed rapidly and with high precision and recall. Methodologies applied to the problem of chemical named entity recognition include dictionary- and rule-based methods, as well as machine learning and hybrid approaches <a class="footnote-reference" href="#b1" id="id1">[1]</a><a class="footnote-reference" href="#b2" id="id2">[2]</a><a class="footnote-reference" href="#b3" id="id3">[3]</a><a class="footnote-reference" href="#b4" id="id4">[4]</a><a class="footnote-reference" href="#b5" id="id5">[5]</a><a class="footnote-reference" href="#b6" id="id6">[6]</a><a class="footnote-reference" href="#b7" id="id7">[7]</a><a class="footnote-reference" href="#b8" id="id8">[8]</a><a class="footnote-reference" href="#b9" id="id9">[9]</a><a class="footnote-reference" href="#b10" id="id10">[10]</a><a class="footnote-reference" href="#b11" id="id11">[11]</a>. We have been working in this area for approximately 10 years and the OSCAR4 software, together with OPSIN (the Open Parser for Systematic IUPAC Nomenclature) <a class="footnote-reference" href="#b12" id="id12">[12]</a><a class="footnote-reference" href="#b13" id="id13">[13]</a> and ChemicalTagger <a class="footnote-reference" href="#b14" id="id14">[14]</a><a class="footnote-reference" href="#b15" id="id15">[15]</a>, represent the public state-of-the-art in chemical text analysis and extraction.</p>
+<p>The OSCAR (Open-Source Chemistry Analysis Routines) software has been developed over a period of years and a number of projects. Between 2002 and 2004, sponsors including the Royal Society of Chemistry (RSC), Nature and the International Union of Crystallography (IUCr) supported a number of summer studentships. These projects were focused on the development of software with limited capacity for the automated interpretation of chemical documents, and resulted in two main software components-the Experimental Data Checker <a class="footnote-reference" href="#b16" id="id16">[16]</a><a class="footnote-reference" href="#b17" id="id17">[17]</a> and OSCAR2.</p>
+<p>The Experimental Data Checker was conceived as a tool to be used as part of the RSC&#8217;s publication process. The tool is capable of recognising sections of reported experimental data within plain text input using regular expressions to match the highly-stylised and journal-mandated formats in which they are reported in the literature (as shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-1"><em>1</em></a>). Once this information has been identified and interpreted, the tool performs elementary checks on the characterisation data (spectra, analytical) where molecular structures are reported, and attempts to ensure that the data does not conflict with the structure.</p>
+<div class="figure align-center" id="figure-1">
+<img alt="../_images/1758-2946-3-41-1.jpg" src="../_images/1758-2946-3-41-1.jpg" />
+<p class="caption">Figure 1. A screenshot of the Experimental Data Checker (OSCAR-Data) showing identification and markup of plain text experimental data</p>
+<div class="legend">
+<strong>A screenshot of the Experimental Data Checker (OSCAR-Data) showing identification and markup of plain text experimental data</strong>. The initial application of OSCAR was to parse the highly stylised data used to report spectra and other analytical proofs of synthesis. This functionality is very widely-used (pers. comm. from RSC staff) and has been re-integrated into OSCAR4 rather than being a separate application.</div>
+</div>
+<p>The Experimental Data Checker application relied upon a core library of analysis routines, and it was this library that was the first to bear the name OSCAR. Further development of this library in the summer of 2004 resulted in OSCAR2, which used XML formatting to represent the document undergoing processing, and applied XML annotations to the document to indicate recognised sections of text. OSCAR2 implemented a naïve Bayesian system based on <em>n</em>-grams and a simple grammar in order to identify chemical names within a text. These improvements were later extended as part of the OSCAR3 project.</p>
+<p>In 2005, the EPSRC awarded a grant (&#8220;Sciborg&#8221;) to develop natural language processing (NLP) tools for chemistry and science. The chemistry component of this project focused on the development of the OSCAR2 methodology and resulted in the creation of OSCAR3 <a class="footnote-reference" href="#b18" id="id18">[18]</a>. OSCAR3 focuses on the recognition of and, where appropriate, the resolution of connection tables for chemical named entities. OSCAR3 employs a naïve Bayesian model to identify &#8220;chemical&#8221; tokens in text and offers a choice of two methods for the identification of multi-token named entities. The first of these, the PatternRecogniser, uses predetermined regular-expression style heuristics while the second, the MEMMRecogniser <a class="footnote-reference" href="#b19" id="id19">[19]</a>, employs machine learning in the form of a Maximum Entropy Markov Model (MEMM). OSCAR3 uses these methods to identify four classes of named entity (Chemical, Reaction, Chemical Adjective and Enzyme) as well as dictionary lookup to identify a pre-determined set of ontology terms and a discrete finite automaton based method to identify chemical prefixes.</p>
+<p>In order to convert chemical names to connection tables (Figure <a class="reference internal" href="1758-2946-3-46.html#figure-2"><em>2</em></a>), OSCAR3 uses dictionary-based methods and, where this is not successful, OPSIN. Early versions of OSCAR directly included the OPSIN code, but this was later re-factored into a separate library.</p>
+<div class="figure align-center" id="figure-2">
+<img alt="../_images/1758-2946-3-41-2.jpg" src="../_images/1758-2946-3-41-2.jpg" />
+<p class="caption">Figure 2. OSCAR3 markup displaying recognised chemical entities (CM)</p>
+<div class="legend">
+<strong>OSCAR3 markup displaying recognised chemical entities (CM)</strong>. A mouse-over action on an annotated term displays the associated metadata, in this case for 2,5-dichlorobenzylamine, and displays an image representing the structure generated by the Chemistry Development Kit (CDK) <a class="footnote-reference" href="#b35" id="id20">[35]</a><a class="footnote-reference" href="#b36" id="id21">[36]</a><a class="footnote-reference" href="#b37" id="id22">[37]</a> (right). OSCAR3 concentrated on the identification and interpretation of chemical entities in text (named entity recognition, NER). The primary purpose was to identify and extract the following types of object: chemicals (CM), ontology terms (ONT; looked-up from ChEBI <a class="footnote-reference" href="#b38" id="id23">[38]</a><a class="footnote-reference" href="#b39" id="id24">[39]</a><a class="footnote-reference" href="#b40" id="id25">[40]</a>, FIX <a class="footnote-reference" href="#b41" id="id26">[41]</a> and REX [#B42]_*etc*.), reactions (RN; as identified by linguistic constructs, <em>e.g</em>. &#8220;methylated&#8221;), chemical adjectives (CJ) mainly formed from chemical nouns), enzymes (ASE) and chemical prefixes (CPR), highlighted in different colours. These concepts are maintained in OSCAR4.</div>
+</div>
+<p>By 2008, OSCAR was in common use in many laboratories for the identification and extraction of chemical terms (chemical named entities) in a variety of texts. Our original metrics <a class="footnote-reference" href="#b18" id="id27">[18]</a> showed that the precision and recall were domain-dependent and varied considerably with the purpose and style of chemical texts. Feedback from users was informal but it was clear that they were modifying OSCAR for their particular purposes both in vocabulary and recognition methods. As a result we embarked on a major re-factoring program in order to robustify the OSCAR software and simplify the API, and this paper describes the results.</p>
+<div class="section" id="historical-funding-and-collaboration">
+<h3>Historical Funding and Collaboration<a class="headerlink" href="#historical-funding-and-collaboration" title="Permalink to this headline">¶</a></h3>
+<p>It is very difficult to get funding for software engineering projects, especially when apparently little changes on the surface. We are grateful to the following bodies for their funding and interest:</p>
+<ol class="arabic simple">
+<li>OMII-UK. This organisation existed to support and robustify the products of the UK eScience program. Many of these were middleware products but OSCAR was seen by the UK eScience community as an example of a widely-deployable component that could be used in a modern manner in many branches of science. The OMII-UK project carried out an initial scoping and re-factoring of the OSCAR3 source.</li>
+<li>The OSCAR-ChEBI project. This was a competitive funding resource for eScience products and we worked with the European Bioinformatics Institute (EBI) to develop OSCAR as an appropriate tool for the extraction and verification of chemistry in the ChEBI ontology.</li>
+<li>CheTA. This was a JISC-funded project led by our group in conjunction with the National Centre for Text Mining (NaCTeM) to evaluate the relative merits of human annotation and machine annotation of documents. Part of this project involved OSCAR running under the UIMA <a class="footnote-reference" href="#b20" id="id28">[20]</a>/U-Compare <a class="footnote-reference" href="#b21" id="id29">[21]</a><a class="footnote-reference" href="#b22" id="id30">[22]</a> framework and required a re-factoring <a class="footnote-reference" href="#b23" id="id31">[23]</a>.</li>
+</ol>
+<p>As a result of these projects, which probably amounted to two person-years of effort in the re-factoring, OSCAR4 has now been released in a usable form.</p>
+</div>
+<div class="section" id="limitation-of-oscar3-and-design-goals-for-oscar4">
+<h3>Limitation of OSCAR3 and design goals for OSCAR4<a class="headerlink" href="#limitation-of-oscar3-and-design-goals-for-oscar4" title="Permalink to this headline">¶</a></h3>
+<p>OSCAR3 is a powerful tool for chemical natural language processing, but early attempts to develop software using it as a library rather than as a standalone application-the ChemicalTagger <a class="footnote-reference" href="#b14" id="id32">[14]</a> and PatentEye <a class="footnote-reference" href="#b24" id="id33">[24]</a><a class="footnote-reference" href="#b25" id="id34">[25]</a> projects-exposed weaknesses in the code in this regard. The architecture of the software was built around the principle that the software would be running as a server on the user&#8217;s local machine. In order to function correctly, it required a properly configured workspace. Many key components were implemented as mutable singletons (static objects), compromising the thread-safety of the application and meaning that safe reconfiguration of a workflow required a complete shutdown and restart of the Java virtual machine (JVM). Furthermore, the implementations of the various OSCAR components required that a document be formatted in SciXML as it underwent processing. Consequently, the use of OSCAR3 by a client programmer to build secondary applications was unintuitive, and the distribution and successful use of such applications was found, as part of the Green Chain Reaction, to require an unacceptably high level of support.</p>
+<p>Early attempts to resolve these problems <a class="footnote-reference" href="#b23" id="id35">[23]</a> involved the extraction of the OSCAR3 tokeniser, MEMMRecogniser and PatternRecogniser components from the main OSCAR3 codebase and their conversion into modules suitable for use in the popular text-mining framework U-Compare. This work allowed the use of OSCAR as part of a drag-and-drop workflow, but not its direct integration into another application. Consequently, a comprehensive overhaul of the OSCAR3 code began in autumn 2010 with the aim of producing a well-engineered, simple, modularised version of OSCAR that retained the core OSCAR3 functionality and could be easily integrated into external applications. This most recent development has been designated OSCAR4 and is discussed in the remainder of this paper.</p>
+<p>The development of OSCAR4 sought to address a number of specific issues. These are summarised below (and in Appendix A) and subsequently discussed in greater detail.</p>
+<ol class="arabic simple">
+<li>To produce an OSCAR library with a simple API, suitable for use by client programmers who may not be familiar with the internal workings of OSCAR. Consequently, while it is desirable for users to be able to customise the behaviour of OSCAR in a number of ways, initialisation of OSCAR components must by default produce configurations that &#8220;just work&#8221;-the &#8216;convention over configuration&#8217; paradigm (Appendix B).</li>
+<li>In order to run, OSCAR3 required the existence of a properly configured workspace-a directory on the executing machine that contains the OSCAR chemical name dictionary, the InChI <a class="footnote-reference" href="#b26" id="id36">[26]</a><a class="footnote-reference" href="#b27" id="id37">[27]</a> binary file and a properties file along with subdirectories intended to contain further resource files. When OSCAR3 is first run this workspace is automatically created, and when OSCAR3 is used as a library the workspace is automatically created in the working directory. This behaviour was deemed undesirable, unnecessary and found to be a cause of difficulties in producing distributable OSCAR-dependent software. Consequently, the removal of the requirement for a workspace was considered a high priority of the OSCAR4 project.</li>
+<li>Much of the OSCAR3 code required that a document undergoing processing is formatted in SciXML. Though converters are provided to transform HTML into plain text and plain text into SciXML, the requirement to perform this transformation is frustrating to the client programmer in that it prevents him from working directly with plain text or with a custom XML format which may very well be the native format of a document that he wishes to process. Consequently, the removal of this SciXML dependence was considered important.</li>
+<li>In addition to its core functionality-the recognition and interpretation of chemical named entities-OSCAR3 included a wide range of secondary functions including the OSCAR3 server. This server runs on the local machine and provides an interactive demonstration of the capacity of OSCAR3 for text processing as well as a number of other utilities including the capacity to manually annotate a text from within a browser window, a servlet for the interconversion and depiction of chemical names and formats and an experimental Hearst pattern <a class="footnote-reference" href="#b28" id="id38">[28]</a> based system for the extraction of chemical relations from text. The OSCAR3 codebase had the resemblance of a &#8216;treasure trove&#8217; which made code maintenance a more complex task than necessary. The separation of a library containing the core OSCAR functionality from these secondary functions was therefore considered desirable.</li>
+<li>Much of the architecture of OSCAR3 lacked clear definition. Excessive use is made of mutable singletons which, while aiding performance by eliminating the need for re-initialisation of components, allows for complex interactions in the code, making it difficult to understand, debug and re-factor. This problem was compounded by the manner in which program logic is partially controlled by a properties object backed by a serialised file. Some of the property values can be modified at runtime while others, once accessed by the objects that rely upon them, are duplicated in memory and cannot be further changed. Attempts to resolve these complex interactions can have unintended consequences since the unit test coverage in OSCAR3 is sparse. Consequently, the improvement of the architecture of the OSCAR software was considered a vital part of the OSCAR4 project.</li>
+<li>It has been known for some time that the speed of OSCAR3 operation could be improved by introducing certain optimisations into the code. Using the YourKit Java profiler <a class="footnote-reference" href="#b29" id="id39">[29]</a>, a number of performance blackspots were identified and subsequently eliminated. This work was started after the final version of OSCAR3 (OSCAR3 alpha 5 <a class="footnote-reference" href="#b30" id="id40">[30]</a>) and continued as part of the OSCAR4 project.</li>
+</ol>
+</div>
+<div class="section" id="library-as-a-design">
+<h3>Library as a design<a class="headerlink" href="#library-as-a-design" title="Permalink to this headline">¶</a></h3>
+<p>OSCAR4 has been deliberately written as a Java library, rather than an application or service. Consequently, the decoupling of the core OSCAR functionality from applications that use this functionality has been achieved. The usage of the library has been simplified as much as possible with the introduction of the Oscar API object-a class intended to wrap the functionality of the wider library and provide default implementations of the various components. As a result, OSCAR4 can be called from external software, as shown in the examples in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>.</p>
+<div class="figure align-center" id="figure-3">
+<img alt="../_images/1758-2946-3-41-3.jpg" src="../_images/1758-2946-3-41-3.jpg" />
+<p class="caption">Figure 3. Java code using the OSCAR4 API to a) identify chemical named entities (CNEs) in a block of text and b) identify CNEs and resolve their connection tables where possible</p>
+<div class="legend">
+<strong>Java code using the OSCAR4 API to a) identify chemical named entities (CNEs) in a block of text and b) identify CNEs and resolve their connection tables where possible</strong>.</div>
+</div>
+<p>In the first of the examples in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-3"><em>3</em></a>, OSCAR4 is used to detect named entities in an input string, returning a List of NamedEntity objects. In the second, it is used to both detect named entities and, where these named entities correspond to chemical names, to resolve these names to chemical structures-returning a List of ResolvedNamedEntity objects. The ResolvedNamedEntity class links a NamedEntity to a list of chemical structures in a number of formats-SMILES, InChI and CML-while the NamedEntity class stores such information as the surface (raw text) and type (<em>e.g</em>. compound or reaction) of the named entity and the indices that define its position within the source text. The outputs of these examples are illustrated in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-4"><em>4</em></a>.</p>
+<div class="figure align-center" id="figure-4">
+<img alt="../_images/1758-2946-3-41-4.jpg" src="../_images/1758-2946-3-41-4.jpg" />
+<p class="caption">Figure 4. Graphic representing the structure of the OSCAR4 API output object</p>
+<div class="legend">
+<strong>Graphic representing the structure of the OSCAR4 API output object</strong>. Named entities reference their position in the input text, the confidence in their identification and resolved structures in various formats (SMILES <a class="footnote-reference" href="#b43" id="id41">[43]</a><a class="footnote-reference" href="#b44" id="id42">[44]</a>, InChI, CML [#B45]_*etc*.).</div>
+</div>
+<p>The examples above show how OSCAR4 can be used without the need for any understanding of the underlying technology or implementations. An overview of the workflow managed by the Oscar API object is shown in Figure <a class="reference internal" href="1758-2946-3-46.html#figure-5"><em>5</em></a>.</p>
+<div class="figure align-center" id="figure-5">
+<img alt="../_images/1758-2946-3-41-5.jpg" src="../_images/1758-2946-3-41-5.jpg" />
+<p class="caption">Figure 5. Workflow of the OSCAR4 API object</p>
+<div class="legend">
+<strong>Workflow of the OSCAR4 API object</strong>.</div>
+</div>
+<p>The input is first passed to the Tokeniser to produce a list of TokenSequence objects, each of which roughly corresponds to a paragraph of text and contains a list of Token objects. The Token represents a string of characters that mostly correspond to words but also to punctuation or other discrete units of text <em>e.g</em>. &#8220;C<sub>2</sub>H<sub>6</sub>O&#8221; or &#8220;42&#8221;. In NLP tools, tokenisation commonly occurs at whitespace or punctuation boundaries, however due to the form of some of the domain-specific entities found in chemical texts such as &#8220;C-H&#8221; a custom Tokeniser is used. The TokenSequences are then passed to a ChemicalEntityRecogniser-an interface for a class capable of identifying a list of NamedEntities, which are subsequently passed to the ChemNameDictRegistry to create a list of ResolvedNamedEntities if required.</p>
+<p>This workflow can be customised by the user, who can use the set() methods of the Oscar class to replace the components of the default configuration with suitable customised or custom-built alternatives. Specifically, the user can select which implementation of ChemicalEntityRecogniser to use or can specify which set of ontology terms are to be recognised and which model the default ChemicalEntityRecogniser should use, and which dictionary registry, <em>i.e</em>. set of chemical name dictionaries, to use for name to structure resolution. In addition to this, the public APIs of the individual components can be used to assume a greater degree of control over the execution of the workflow.</p>
+<p>OSCAR4 provides three implementations of the ChemicalEntityRecogniser. The first, the RegexRecogniser, finds terms that match a given regular expression and is intended to find serial numbers corresponding to compounds <em>e.g</em>. &#8220;NSC-2648&#8221;. The others, the PatternRecogniser and the MEMMRecogniser, use more complex strategies to identify chemical named entities and feature subcomponents that can be customised by the user to produce the desired behaviour.</p>
+<p>The architecture of the PatternRecogniser is shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-6"><em>6</em></a>. A list of &#8220;chemical&#8221; words is drawn from an internal dictionary composed mostly of words derived from the ChEBI database and from a corpus of manually-annotated documents, while a list of &#8220;non-chemical&#8221; words is determined by removing those words that occur in the chemical word list from a standard English dictionary. These lists are used to build an <em>n</em>-gram model which is used by a naïve Bayesian classifier to determine whether novel tokens are &#8220;chemical&#8221; or &#8220;non-chemical&#8221;. Multi-token named entities, <em>e.g</em>. &#8220;ethyl acetate&#8221;, that occur within the input text are then identified by regex-style matching of chemical tokens to a set of pre-specified pattern definitions such as &#8220;<a href="#id43"><span class="problematic" id="id44">*</span></a>yl <a href="#id45"><span class="problematic" id="id46">*</span></a>ate&#8221;.</p>
+<div class="figure align-center" id="figure-6">
+<img alt="../_images/1758-2946-3-41-6.jpg" src="../_images/1758-2946-3-41-6.jpg" />
+<p class="caption">Figure 6. PatternRecogniser architecture</p>
+<div class="legend">
+<strong>PatternRecogniser architecture</strong>.</div>
+</div>
+<p>The architecture of the MEMMRecogniser is shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-7"><em>7</em></a>, in which chemical named entities are identified using a Maximum Entropy Markov Model (MEMM). The feature set that is generated for each token includes features that describe the token in question, such as the <em>n</em>-grams that describe it and the probability that it is chemical as predicted by the <em>n</em>-gram model as previously, as well as contextual features that describe its neighbouring tokens. Using these features, the MEMM model assigns a chemical token as being either the first token in a named entity or a subsequent token in a named entity. Given these assignments, multi-token named entities can be constructed. Novel MEMM models can be built from a corpus of hand-annotated documents by the user, and OSCAR4 is supplied with two pre-generated models. One of these models was built from a set of papers from RSC journals <a class="footnote-reference" href="#b31" id="id47">[31]</a>, while the other was built from a set of abstracts retrieved from PubMed <a class="footnote-reference" href="#b19" id="id48">[19]</a>.</p>
+<div class="figure align-center" id="figure-7">
+<img alt="../_images/1758-2946-3-41-7.jpg" src="../_images/1758-2946-3-41-7.jpg" />
+<p class="caption">Figure 7. MEMMRecogniser architecture</p>
+<div class="legend">
+<strong>MEMMRecogniser architecture</strong>.</div>
+</div>
+</div>
+<div class="section" id="architecture-and-tests">
+<h3>Architecture and tests<a class="headerlink" href="#architecture-and-tests" title="Permalink to this headline">¶</a></h3>
+<p>The OSCAR4 library has been separated into a number of modules with each performing a defined role in the operation of the OSCAR code, such as the tokenisation of text or the provision of chemical name dictionaries. This allows client programmers to use as much or as little of OSCAR in their applications as required, without the need to unnecessarily pull in a large, comprehensive, single JAR. The process of creating the sub-projects had the additional advantage of highlighting the ways in which the separate components interact. During this process, the readability of the OSCAR code was improved by imposing a number of the idioms of &#8216;clean code&#8217;, and the reliability of the code was improved by the creation of appropriate unit and regression tests. At the time of writing, OSCAR4 has nearly 500 tests. As a result, the OSCAR4 code is far more robust than OSCAR3, so a developer can work both with and on the core OSCAR code with a far greater degree of confidence.</p>
+<p>The mutable singletons that were commonplace in OSCAR3 have been largely removed. Instead, when setting up custom workflows, a user has the choice of either calling the getDefaultInstance() method or the default constructor as appropriate-each of which returns a preconfigured instance of the class-or using the custom constructor which uses dependency injection to supply the OSCAR components upon which the class depends. For example, the OntologyTerms class represents a set of ontology terms and their corresponding ontology IDs. The following two methods of obtaining an OntologyTerms object are available:</p>
+<p>OntologyTerms.getDefaultInstance();</p>
+<p>new OntologyTerms(ListMultimap &lt; String, String &gt; terms);</p>
+<p>The first method returns the default OSCAR4 OntologyTerms object, which contains an amalgamation of the terms from the ChEBI, FIX and REX ontologies while the second supplies a multimap of ontology terms to IDs. The use of this design pattern throughout the codebase permits, but by no means requires, a user to assume a high degree of control over the functioning of OSCAR.</p>
+<p>The use of the properties file and object to control elements of the program execution has been removed. Instead, the required information is either specified as part of a constructor&#8217;s signature or using a set() method on the object in question. This improves the thread-safety of OSCAR, particularly in a multiuser environment, and contributes to its usability since a user can now trivially see what features may be customised from the outline of the class as opposed to needing to know which and how properties are used by which components.</p>
+</div>
+<div class="section" id="input-and-output-formats">
+<h3>Input and Output Formats<a class="headerlink" href="#input-and-output-formats" title="Permalink to this headline">¶</a></h3>
+<p>As previously discussed, OSCAR3 required that input documents be converted into SciXML before processing can occur, using the document formatting as a base against which annotations for identified named entities can be referenced-whether as inline or standoff annotations. XML input turned out to be overly complex as NLP tools require &#8220;flat&#8221; relatively sequential tokens. The XML markup adds little useful context. OSCAR4 removes this requirement by operating on plain text and producing NamedEntity and DataAnnotation objects to represent recognised sections of text and does not currently produce serialised output, though some support for the serialisation of annotations into XML documents is planned for future releases. It should be realised, however, that there is no single, fool-proof approach to this problem. Different XML schema may use different methods to indicate where in the document section breaks and even text content occur, while it cannot be guaranteed that well-formed inline annotations can be generated for a given input document. Client programmers are therefore recommended to consume NamedEntity objects directly rather than rely upon serialised output, though it is realised that users are likely to want to be able to create serialised, marked-up copies of their documents as well.</p>
+</div>
+<div class="section" id="non-core-functionality">
+<h3>Non-core functionality<a class="headerlink" href="#non-core-functionality" title="Permalink to this headline">¶</a></h3>
+<p>Non-critical code (particularly downstream applications) has been removed from the OSCAR4 codebase to reflect the philosophy that OSCAR4 should act as a library. While some minor supporting code remains, such as that required for generation of key resource files, the majority has been removed entirely as it is envisaged that much of the former functionality could be better implemented by developers with specific use cases.</p>
+<p>A number of useful non-core functions are provided in dependent libraries developed at the Unilever Centre in Cambridge. Specifically, subsidiary modules exist to provide the capacity to run OSCAR4 from the command-line, as part of UIMA or Taverna <a class="footnote-reference" href="#b32" id="id49">[32]</a> workflows and from the Bioclipse <a class="footnote-reference" href="#b33" id="id50">[33]</a> scripting interface, as shown in Figure <a class="reference internal" href="1758-2946-3-45.html#figure-8"><em>8</em></a>.</p>
+<div class="figure align-center" id="figure-8">
+<img alt="../_images/1758-2946-3-41-8.jpg" src="../_images/1758-2946-3-41-8.jpg" />
+<p class="caption">Figure 8. OSCAR4 run within Bioclipse&#8217;s scripting interface (centre pane) identifying named entities in a block of text and saving the connection tables to file (extractedMols.sdf) for viewing (right pane)</p>
+<div class="legend">
+<strong>OSCAR4 run within Bioclipse&#8217;s scripting interface (centre pane) identifying named entities in a block of text and saving the connection tables to file (extractedMols.sdf) for viewing (right pane)</strong>.</div>
+</div>
+</div>
+<div class="section" id="performance">
+<h3>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h3>
+<p>A number of modifications were introduced to the OSCAR code with the aim of reducing the time required to process documents. Performance hotspots were identified using the YourKit Java profiler and where possible eliminated. Some such improvements focused on the time taken to initialise the various OSCAR components, such as supplying a pre-calculated, serialised copy of the <em>n</em>-gram models used for named entity recognition rather than regenerating them each time OSCAR is loaded. Others improved the speed at which OSCAR can process a document by optimising extremely tight loops in the code, such as eliminating unnecessary string declaration while calculating <em>n</em>-gram features and avoiding recompilation of regular expressions. Further improvements were made <em>ad hoc</em>, as the OSCAR4 developers encountered obvious bottlenecks while working on the code.</p>
+<p>In order to quantify the improvement in speed of operation, the time taken by both OSCAR4 version 4.0.1 and OSCAR3 alpha 5 to perform two tasks was measured. The first task measured the time taken to initialise the software to the point that it was ready to begin the task of finding named entities in text; the second task aimed to measure the speed at which the software could process bulk text and consisted of processing the full text of the 68 patents published by the European Patent Office in the week of 2009-05-06-a total of 11468 paragraphs of text. All the tasks were run on a desktop computer equipped with an Intel Pentium 4 (3.00 GHz) CPU and 1 GB of RAM, purchased <em>c</em>. 2005, running openSUSE 11.1 and using the Java 1.6.0_22 32-bit virtual machine with a maximum heap size of 512 MB. The results are summarised in Table <em class="xref std std-ref">1</em> and Table <em class="xref std std-ref">2</em>.</p>
+<p>From these data, it can be seen that OSCAR4 performs significantly faster than OSCAR3. Initialisation times for the MEMMRecogniser and PatternRecogniser have been reduced by 17% and 20% respectively, while bulk processing times have been reduced by 18% and 46% respectively. The OSCAR4 MEMMRecogniser and PatternRecogniser processed approximately 26 and 76 paragraphs per second respectively, demonstrating that bulk processing of text is achievable on an acceptable timescale on desktop computers.</p>
+</div>
+<div class="section" id="deployment">
+<h3>Deployment<a class="headerlink" href="#deployment" title="Permalink to this headline">¶</a></h3>
+<p>OSCAR4 has generated significant interest in the community, and has been the subject of two meetings at the Unilever Centre for Molecular Science Informatics in Cambridge. The talks from the second of these are available to view online <a class="footnote-reference" href="#b34" id="id51">[34]</a>. To our knowledge, the software is in use at the National Centre for Text Mining (NaCTeM), the European Bioinformatics Institute (EBI) and the European Patent Office (EPO) as well as various pharmaceutical companies.</p>
+<p>We are aware of successful and straightforward integrations into the Bioclipse and Taverna frameworks, and believe that this is similarly straightforward for other Java environments. We were also pleased to see that at the recent MIOSS meeting at the EBI, OSCAR and OPSIN had been integrated into the .NET environment. For example, OPSIN was demonstrated as running within the JVM in Microsoft Excel, which is acceptable to commercial organisations as the JVM is of proven security.</p>
+</div>
+<div class="section" id="future-prospects">
+<h3>Future Prospects<a class="headerlink" href="#future-prospects" title="Permalink to this headline">¶</a></h3>
+<p>This is a useful opportunity to reflect on the high cost of producing robust, re-usable software. OSCAR3, and OPSIN, were produced as a continuing activity by a mixture of summer students, PhDs and PDRAs and, until <em>ca</em>. 2009, evolved rather than having a top-down software design. When the project became valuable to the world, it was a clear indication that re-factoring was going to be essential, and it is important to realise the necessary but high cost of doing this. In times of lean funding, it will become increasingly difficult to obtain this type of support, and therefore it is always tempting to transfer academic code to commercial entities which can raise revenue.</p>
+<p>The downside of this is that we know of very few commercial codes, and certainly none in chemical text analysis, that provide public metrics let alone expose the architecture on which the program is based. Text-mining as an academic subject requires metrics and increasingly requires Openness of the components of the system, as we have done in OSCAR and OPSIN. We are investigating continuing business models where we can continue to re-factor and improve the product while not closing the code and therefore reducing scientific credibility and innovation.</p>
+<p>Very recently we have been exploring the use of OSCAR for areas other than organic and biological chemistry. Because OSCAR can be customised by different dictionaries, we have been able to adapt it to process reports of atmospheric chemistry and, more generally, atmospheric science. In conjunction with the European Geosciences Union (EGU, which publishes Open Access papers), we have analysed abstracts and full text for chemical entities and related numerical quantities (<em>e.g</em>. amounts, conditions <em>etc</em>.) This has led to a design where the domain-independent parts of OSCAR4 can be applied to many physical sciences with bespoke dictionaries and ChemicalTagger rules. We have submitted grants in both the biosciences (&#8220;OSCAR-BIO&#8221;) and physical sciences (&#8220;OSCAR-PHYS&#8221;). As part of this work, we will be actively addressing generic tools for metrics and training.</p>
+</div>
+</div>
+<div class="section" id="competing-interests">
+<h2>Competing interests<a class="headerlink" href="#competing-interests" title="Permalink to this headline">¶</a></h2>
+<p>The authors declare that they have no competing interests.</p>
+</div>
+<div class="section" id="authors-contributions">
+<h2>Authors&#8217; contributions<a class="headerlink" href="#authors-contributions" title="Permalink to this headline">¶</a></h2>
+<p>DMJ wrote the manuscript and was lead developer in the OSCAR4 re-factoring.</p>
+<p>SEA was the architect and project manager for the OSCAR4 re-factoring and was involved in the original Experimental Data Checker project.</p>
+<p>ELW contributed to the OSCAR4 re-factoring and investigated its use in Bioclipse.</p>
+<p>LH contributed to the OSCAR4 re-factoring and was involved in the CheTA project.</p>
+<p>PMR had the overall vision for, and was involved in, all stages of the various OSCAR projects, and wrote the manuscript.</p>
+<p>All authors have read and approved the final version.</p>
+</div>
+<div class="section" id="appendixes">
+<h2>Appendixes<a class="headerlink" href="#appendixes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="appendix-a-additional-oscar4-resources">
+<h3>Appendix A: Additional OSCAR4 resources<a class="headerlink" href="#appendix-a-additional-oscar4-resources" title="Permalink to this headline">¶</a></h3>
+<p>The source code, mailing list, tutorials, documentation and support are available at</p>
+<p><a class="reference external" href="https://bitbucket.org/wwmm/oscar4/wiki/Home">https://bitbucket.org/wwmm/oscar4/wiki/Home</a></p>
+<p>This page also includes instructions for accessing pre-compiled JAR files from the Unilever Centre&#8217;s Maven repository.</p>
+<p>The source code used to measure OSCAR performance is available at <a class="reference external" href="https://bitbucket.org/dmj30/oscar-performance">https://bitbucket.org/dmj30/oscar-performance</a></p>
+<p>The OSCAR4 Javadoc is available at <a class="reference external" href="http://apidoc.ch.cam.ac.uk/oscar4-4.0.1">http://apidoc.ch.cam.ac.uk/oscar4-4.0.1</a></p>
+</div>
+<div class="section" id="appendix-b-building-on-the-oscar4-api">
+<h3>Appendix B: Building on the OSCAR4 API<a class="headerlink" href="#appendix-b-building-on-the-oscar4-api" title="Permalink to this headline">¶</a></h3>
+<p>The core methods are given in each case. In some cases it will be valuable to extract further information recursively from the results.</p>
+<ol class="loweralpha simple">
+<li>Searching a given text for Named Entities. These can then be displayed, computed <em>etc</em>.</li>
+</ol>
+<p>Oscar <strong>oscar</strong> = new Oscar();</p>
+<p>List &lt; NamedEntity &gt;**namedEntities**</p>
+<p>= <strong>oscar</strong>.**findNamedEntities**(<strong>text</strong>);</p>
+<ol class="loweralpha simple" start="2">
+<li>Where the named entity can be resolved to a chemical structure, extract it:</li>
+</ol>
+<p>Oscar <strong>oscar</strong> = newOscar();</p>
+<p>List &lt; ResolvedNamedEntity &gt;**entities**</p>
+<p>= <strong>oscar</strong>.**findAndResolveNamedEntities**(<strong>s</strong>);</p>
+<p>for (ResolvedNamedEntity <strong>entity</strong> : <strong>entities</strong>) {</p>
+<p>ChemicalStructure <strong>structure</strong> = <strong>entity</strong>.**getFirstChemicalStructure**`&lt;<a class="reference external" href="http://">http://</a>&gt;`_(FormatType.INCHI));</p>
+<p>...</p>
+<p>}</p>
+<ol class="loweralpha simple" start="3">
+<li>Find only those entities which are resolvable to structures (<em>e.g</em>. &#8220;benzene&#8221; but not &#8221; the methyl ester&#8221;:</li>
+</ol>
+<p>Oscar <strong>oscar</strong> = newOscar();</p>
+<p>List &lt; ResolvedNamedEntity &gt;**entities**</p>
+<p>= <strong>oscar.findResolvableEntities(s)</strong>;</p>
+<ol class="loweralpha simple" start="4">
+<li>Tailor the system to use different recognizers and dictionaries:</li>
+</ol>
+<p>ChemicalEntityRecogniser <strong>myRecogniser</strong> = newPatternRecogniser()</p>
+<p>Oscar <strong>oscar</strong> = newOscar();</p>
+<p><strong>oscar.setRecogniser(myRecogniser)</strong>;</p>
+<p><strong>oscar.setDictionaryRegistry(myDictionaryRegistry)</strong>;</p>
+<p>List &lt; ResolvedNamedEntity &gt;**entities** = <strong>oscar.findResolvableEntities(s)</strong>;</p>
+</div>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>We gratefully acknowledge OMII-UK, JISC (ChETA project) and EPSRC (Sciborg, Pathways to Impact awards) for funding and Dr Charlotte Bolton for her assistance in the preparation of this article.</p>
+<table class="docutils footnote" frame="void" id="b1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Extraction of Information from the Text of Chemical Patents. 1. Identification of Specific Chemical Names</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Analysis of Biomedical Text for Chemical Names: A Comparison of Three Methods</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>A scalable machine-learning approach to recognize chemical names within large text databases</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Detection of IUPAC and IUPAC-like chemical names</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>A dictionary to identify small molecules and drugs in free text</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td>Extraction of CYP Chemical Interactions from Biomedical Literature Using Natural Language Processing Methods</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[7]</a></td><td>Chemical Names: Terminological Resources and Corpora Annotation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[8]</a></td><td>Identification of Chemical Entities in Patent Documents</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id9">[9]</a></td><td>Automatic vs manual curation of a multi-source chemical dictionary: the impact on text mining</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[10]</a></td><td>Abstracts versus Full Texts and Patents: A Quantitative Analysis of Biomedical Entities</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id11">[11]</a></td><td>Identifying, Indexing and Ranking Chemical Formulae and Chemical Names in Digital Documents</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[12]</a></td><td>Chemical name to structure: OPSIN, an open source solution</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id13">[13]</a></td><td>OPSIN, Open Parser for Systematic IUPAC Nomenclature</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[14]</td><td><em>(<a class="fn-backref" href="#id14">1</a>, <a class="fn-backref" href="#id32">2</a>)</em> ChemicalTagger: A tool for semantic text-mining in chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[15]</a></td><td>ChemicalTagger</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b16" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id16">[16]</a></td><td>Experimental data checker: better information for organic chemists</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id17">[17]</a></td><td>RSC Experimental Data Checker</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[18]</td><td><em>(<a class="fn-backref" href="#id18">1</a>, <a class="fn-backref" href="#id27">2</a>)</em> High-Throughput Identification of Chemistry in Life Science Texts</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[19]</td><td><em>(<a class="fn-backref" href="#id19">1</a>, <a class="fn-backref" href="#id48">2</a>)</em> Cascaded classifiers for confidence-based chemical named entity recognition</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id28">[20]</a></td><td>UIMA</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b21" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id29">[21]</a></td><td>U-Compare</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b22" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id30">[22]</a></td><td>U-compare: Share and compare text mining tools with UIMA</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b23" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[23]</td><td><em>(<a class="fn-backref" href="#id31">1</a>, <a class="fn-backref" href="#id35">2</a>)</em> Using workflows to explore and optimise named entity recognition for chemistry</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b24" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id33">[24]</a></td><td>Information extraction from chemical patents</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b25" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id34">[25]</a></td><td>Mining chemical information from Open patents</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b26" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id36">[26]</a></td><td>The IUPAC International Chemical Identifier</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b27" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id37">[27]</a></td><td>IUPAC International Chemical Indentifier</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b28" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id38">[28]</a></td><td>Automatic acquisition of hyponyms from large text corpora</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b29" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id39">[29]</a></td><td>YourKit java profiler</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b30" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id40">[30]</a></td><td>OSCAR3 alpha 5</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b31" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id47">[31]</a></td><td>Annotation of Chemical Named Entities</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b32" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id49">[32]</a></td><td>Taverna</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b33" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id50">[33]</a></td><td>Bioclipse</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b34" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id51">[34]</a></td><td>OSCAR4 Launch</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b35" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id20">[35]</a></td><td>Recent Developments of the Chemistry Development Kit (CDK)-An Open-Source Java Library for Chemo- and Bioinformatics</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b36" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id21">[36]</a></td><td>The Chemistry Development Kit (CDK): An Open-Source Java Library for Chemo- and Bioinformatics</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b37" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id22">[37]</a></td><td>Chemical Development Kit (CDK)</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b38" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id23">[38]</a></td><td>ChEBI: a database and ontology for chemical entities of biological interest</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b39" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id24">[39]</a></td><td>Chemical Entities of Biological Interest: an update</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b40" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id25">[40]</a></td><td>ChEBI</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b41" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id26">[41]</a></td><td>FIX ontology</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b42" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[42]</td><td>REX ontology</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b43" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id41">[43]</a></td><td>SMILES, a chemical language and information system. 1. Introduction to methodology and encoding rules</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b44" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id42">[44]</a></td><td>SMILES. 2. Algorithm for generation of unique SMILES notation</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="b45" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[45]</td><td>Chemical Markup, XML and the Worldwide Web. 1. Basic Principles</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-1.html">CurlySMILES: a chemical language to customize and annotate encodings of molecular and nanodevice structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-2.html">Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-3.html">jCompoundMapper: An open source Java library and command-line tool for chemical fingerprints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-4.html">PubChem3D: Conformer generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-5.html">Modular Chemical Descriptor Language (MCDL): Stereochemical modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-6.html">FlaME: Flash Molecular Editor - a 2D structure input tool for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-7.html">Use of structure-activity landscape index curves and curve integrals to evaluate the performance of multiple machine learning prediction models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-8.html">Confab - Systematic generation of diverse low-energy conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-9.html">PubChem3D: Diversity of shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-11.html">Interpreting linear support vector machine models with heat map molecule coloring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-12.html">Multilevel Parallelization of AutoDock 4.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-13.html">PubChem3D: Similar conformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-14.html">Analysis of <em>in vitro</em> bioactivity data extracted from drug discovery literature and patents: Ranking 1654 human protein targets by assayed compounds and molecular scaffolds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-15.html">Resource description framework technologies in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-16.html">Semantic Web integration of Cheminformatics resources with the SADI framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-17.html">ChemicalTagger: A tool for semantic text-mining in chemistry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-18.html">AMBIT RESTful web services: an implementation of the OpenTox application programming interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-19.html">Linked open drug data for pharmaceutical research and development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-20.html">Chemical Entity Semantic Specification: Knowledge representation for efficient semantic cheminformatics and facile data integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-21.html">Consistent two-dimensional visualization of protein-ligand complex series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-22.html">Predicting a small molecule-kinase interaction map: A machine learning approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-23.html">4D Flexible Atom-Pairs: An efficient probabilistic conformational space comparison for ligand-based virtual screening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-24.html">Data governance in predictive toxicology: A review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-25.html">PubChem3D: Shape compatibility filtering using molecular shape quadrupoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-26.html">PubChem3D: Biologically relevant 3-D similarity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-27.html">Theoretical NMR correlations based Structure Discussion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-28.html">AZOrange - High performance open source machine learning for QSAR modeling in a graphical programming environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-29.html">Multiple search methods for similarity-based virtual screening: analysis of search overlap and precision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-30.html">Structural diversity of biologically interesting datasets: a scaffold analysis approach</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-31.html">Statistical filtering for NMR based structure generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-32.html">PubChem3D: a new resource for scientists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-33.html">Open Babel: An open chemical toolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-34.html">Adventures in public data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-35.html">Three stories about the conduct of science: Past, future, and present</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-36.html">Openness as infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-37.html">Open Data, Open Source and Open Standards in chemistry: The Blue Obelisk five years on</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-38.html">The Quixote project: Collaborative and Open Quantum Chemistry data management in the Internet age</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-39.html">CMLLite: a design philosophy for CML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-40.html">Mining chemical information from open patents</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">OSCAR4: a flexible architecture for chemical text-mining</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#historical-funding-and-collaboration">Historical Funding and Collaboration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limitation-of-oscar3-and-design-goals-for-oscar4">Limitation of OSCAR3 and design goals for OSCAR4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#library-as-a-design">Library as a design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#architecture-and-tests">Architecture and tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input-and-output-formats">Input and Output Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#non-core-functionality">Non-core functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#performance">Performance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deployment">Deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#future-prospects">Future Prospects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#competing-interests">Competing interests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authors-contributions">Authors&#8217; contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#appendixes">Appendixes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#appendix-a-additional-oscar4-resources">Appendix A: Additional OSCAR4 resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#appendix-b-building-on-the-oscar4-api">Appendix B: Building on the OSCAR4 API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-42.html">The semantic architecture of the World-Wide Molecular Matrix (WWMM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-43.html">The semantics of Chemical Markup Language (CML): dictionaries and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-44.html">CML: Evolution and design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-45.html">Ami - The chemist&#8217;s amanuensis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-46.html">The past, present and future of Scientific discourse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-47.html">Open Bibliography for Science, Technology, and Medicine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-48.html">Semantic science and its communication - a personal view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-49.html">Molecular dynamics simulations and in silico peptide ligand screening of the Elk-1 ETS domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-50.html">2D-Qsar for 450 types of amino acid induction peptides with a novel substructure pair descriptor having wider scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-51.html">An investigation into pharmaceutically relevant mutagenicity data and the influence on Ames predictive potential</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-52.html">Automated annotation of chemical names in the literature with tunable accuracy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-53.html">MyChemise: A 2D drawing program that uses morphing for visualisation purposes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1758-2946-3-54.html">New developments on the cheminformatics open workflow environment CDK-Taverna</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="1758-2946-3-40.html" title="Mining chemical information from open patents"
+             >previous</a> |
+          <a href="1758-2946-3-42.html" title="The semantic architecture of the World-Wide Molecular Matrix (WWMM)"
+             >next</a> |
+          <a href="../genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="../_sources/articles/1758-2946-3-41.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2012, Noel O&#39;Boyle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

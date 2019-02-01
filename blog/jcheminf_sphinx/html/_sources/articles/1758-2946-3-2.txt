@@ -1,0 +1,397 @@
+Prediction of cyclin-dependent kinase 2 inhibitor potency using the fragment molecular orbital method
+=====================================================================================================
+
+Abstract
+********
+
+Background
+^^^^^^^^^^
+
+The reliable and robust estimation of ligand binding affinity continues to be a challenge in drug design. Many current methods rely on molecular mechanics (MM) calculations which do not fully explain complex molecular interactions. Full quantum mechanical (QM) computation of the electronic state of protein-ligand complexes has recently become possible by the latest advances in the development of linear-scaling QM methods such as the *ab initio* fragment molecular orbital (FMO) method. This approximate molecular orbital method is sufficiently fast that it can be incorporated into the development cycle during structure-based drug design for the reliable estimation of ligand binding affinity. Additionally, the FMO method can be combined with approximations for entropy and solvation to make it applicable for binding affinity prediction for a broad range of target and chemotypes.
+
+Results
+^^^^^^^
+
+We applied this method to examine the binding affinity for a series of published cyclin-dependent kinase 2 (CDK2) inhibitors. We calculated the binding affinity for 28 CDK2 inhibitors using the *ab* *initio* FMO method based on a number of X-ray crystal structures. The sum of the pair interaction energies (PIE) was calculated and used to explain the gas-phase enthalpic contribution to binding. The correlation of the ligand potencies to the protein-ligand interaction energies gained from FMO was examined and was seen to give a good correlation which outperformed three MM force field based scoring functions used to appoximate the free energy of binding. Although the FMO calculation allows for the enthalpic component of binding interactions to be understood at the quantum level, as it is an *in vacuo* single point calculation, the entropic component and solvation terms are neglected. For this reason a more accurate and predictive estimate for binding free energy was desired. Therefore, additional terms used to describe the protein-ligand interactions were then calculated to improve the correlation of the FMO derived values to experimental free energies of binding. These terms were used to account for the polar and non-polar solvation of the molecule estimated by the Poisson-Boltzmann equation and the solvent accessible surface area (SASA), respectively, as well as a correction term for ligand entropy. A quantitative structure-activity relationship (QSAR) model obtained by Partial Least Squares projection to latent structures (PLS) analysis of the ligand potencies and the calculated terms showed a strong correlation (*r*\ :sup:`2`\  = 0.939, *q*\ :sup:`2`\  = 0.896) for the 14 molecule test set which had a Pearson rank order correlation of 0.97. A training set of a further 14 molecules was well predicted (*r*\ :sup:`2`\  = 0.842), and could be used to obtain meaningful estimations of the binding free energy.
+
+Conclusions
+^^^^^^^^^^^
+
+Our results show that binding energies calculated with the FMO method correlate well with published data. Analysis of the terms used to derive the FMO energies adds greater understanding to the binding interactions than can be gained by MM methods. Combining this information with additional terms and creating a scaled model to describe the data results in more accurate predictions of ligand potencies than the absolute values obtained by FMO alone.
+
+Background
+**********
+
+A major goal in computational structure-based drug design and virtual screening protocols is to accurately predict the free energy of ligand binding to a receptor in a timescale that is amenable to drug discovery \ [#B1]_. This is attractive for reducing costs in the discovery process by replacing wet-lab experiments with computer simulation, accelerating the discovery process and assisting in lead optimisation \ [#B2]_. A popular procedure to identify possible lead compounds is to run a virtual screening campaign by docking a large number of diverse compounds to a receptor binding site \ [#B3]_. A score is then given to the docked pose based on a potential function which relates the spatial orientation of a ligand in a binding site to the free energy of binding. The scoring functions are generally used in a qualitative manner to rank ligand binding poses and in doing so estimate the free energy of binding. Docking programmes are generally recognised for making reasonably successful predictions of binding modes, however, the scoring functions used to predict the binding affinity are less reliable \ [#B4]_\ [#B5]_\ [#B6]_. There must be a balance between the attempted accuracy of the scoring function and the computational time required to perform that calculation. A compromise for improved accuracy at greater computational expense can result in overly complicated and slower functions illsuited for the turn-around times required within a medicinal chemistry program. Methods to develop a physically satisfying model to estimate the free energy of ligand binding to a receptor accurately enough to be predictive and useful, in a reasonable amount of time, has proven challenging \ [#B7]_\ [#B8]_.
+
+The most rigorous theoretical methods that have been developed to estimate the free energy of binding from a thermodynamic standpoint are based on free-energy perturbation (FEP), thermodynamic integration (TI) and similar methodologies \ [#B9]_. These methods are still limited by their use of MM force fields, and are further limited by high computational expense and are best suited to examining relative binding affinities of a small number of similar ligands. A number of approximate methods based on structural sampling, have been developed, to find appropriate stable structures and to cover enough conformational space for entropy estimations to be possible. These methods include linear-response approximation (LRA), the semi-macroscopic version of the protein-dipole Langevin-dipole approach (PDLD/S-LRA), the linear interaction energy (LIE) and molecular mechanics Poisson-Boltzmann surface area (MM-PBSA) approaches \ [#B10]_\ [#B11]_\ [#B12]_\ [#B13]_\ [#B14]_\ [#B15]_. Also, there has been some validation for the use of a single molecular conformation, where the estimation of binding affinities is based on either physical or statistical measures \ [#B8]_\ [#B16]_\ [#B17]_.
+
+The physical methods mentioned are based on calculations with a MM force field, enabling fast energy determination through the utilisation of extensive phase space sampling \ [#B18]_\ [#B19]_. Additionally, the system can be parameterised to account for solvation effects. However, the accuracy of the underlying force field underpins any estimation of binding free energies \ [#B20]_. Conventional force fields are limited in that electronic effects are not accounted for adequately. It is becoming increasingly apparent that there are numerous kinds of non-classical intermolecular forces, such as cation-\ |nonascii_1|\  \ [#B21]_\ [#B22]_, dipole-\ |nonascii_2|\  \ [#B23]_, halogen-\ |nonascii_3|\  \ [#B24]_, carbonyl n-\ |nonascii_4|\ * \ [#B25]_, and so-called "non-conventional hydrogen bonds", are playing an important role in inter- and intra-molecular interactions. Implementation of QM chemical calculations can significantly improve the accuracy of conventional force fields by accounting for charge transfer, polarisation effects, dispersion and other bonding interactions with greater rigor \ [#B26]_\ [#B27]_\ [#B28]_. QM chemical calculations explicitly describe these non-classical interactions whereas they are not accounted for by MM force fields. Such QM methods are typically based on either semi-empirical calculations \ [#B29]_ or *ab initio* methods using fractional approaches, *e.g*., the fragment molecular orbital (FMO) method or the molecular fractionation with conjugate caps (MFCC) and related methods \ [#B30]_\ [#B31]_. The QM/MM method is another method that attempts to overcome the system size and sampling limitations of QM methods. In QM/MM simulations, a region that requires accurate analysis is studied quantum-mechanically, and other regions are studied by classical force field calculations.
+
+Binding interaction energies can be studied in a new light using QM methods. The charge transfer and polarisation effects are particularly important when studying hydrogen bonding \ [#B32]_. Many force fields treat hydrogen bond effects through their van der Waals (vdW) and fixed electrostatic contributions, however, hydrogen bonding interactions are complex. Hydrogen bonds are highly directional. There are however varying amounts of charge transfer and polarisation energy components that contribute to hydrogen bonding \ [#B33]_\ [#B34]_\ [#B35]_. QM methods account for dispersion forces more adequately than MM force fields because the electronic correlation effects are taken into account appropriately \ [#B36]_. Only one of these previous studies has been performed at a level (MP2/6-311(+)G(2 d.p)) for which there is hope that dispersion and polarisation effects are treated in a balanced and satisfactory way \ [#B37]_.
+
+QM methods have begun to demonstrate their usefulness as scoring functions for calculating ligand binding free energies. Semi-empirical methods have been used to build PLS models to describe protein-ligand interactions \ [#B38]_\ [#B39]_, and as computer power has increased *ab initio* QM methods have also been used \ [#B30]_\ [#B40]_\ [#B41]_. Historically QM methods were primarily limited to smaller systems because of the computational expense, but these methods are now tenable for larger systems because of the advent of fractional QM methods. However, in order to provide reliable ligand-binding energies, additional terms accounting for solvent effects, entropy, and sampling need to be considered. Only recently has an estimate of ligand-binding energies with realistic QM methods, which considered these factors, been published \ [#B42]_.
+
+The FMO method is an attractive method for dealing with large biomolecular systems quantum mechanically. In the FMO method, a large molecular system is divided into smaller fragments, and the conventional molecular orbital calculations are performed for each fragment and fragment pair. This QM method is gaining attention as an accurate and fast method to correlate binding affinity to calculated values \ [#B43]_\ [#B44]_\ [#B45]_\ [#B46]_. We compare our results to MM-based scoring functions and show the importance of high level QM methods to obtain reasonable binding energy predictions. Using only the FMO method resulted in values for the gas phase binding interactions, however protein-ligand interactions are more complex than this, as illustrated in the thermodynamic cycle shown in Figure \ :ref:`1<figure_1>`. An alternative approach was then taken to account for all aspects of the binding phenomenon at various levels of approximation. In an effort to account for solvation and entropic binding events further terms were included, together with the enthalpic contribution of ligand binding calculated from the FMO method, to form a scoring function. The electrostatic interactions between the ligand and the protein and between the solvent and the protein-ligand complex are determined by solving the Poisson-Boltzmann equation. An entropic term was derived from the number of rotatable bonds present in the ligand. These terms were then used to build a PLS model as a scoring function to estimate the free energy of binding. The results show that consideration of other contributing terms pertaining to the thermodynamic cycle greatly enhances the predictability of free energy binding models. This was validated using a series of CDK2 inhibitors.
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-2-1.jpg
+   :align: center
+
+   Figure 1. Schematic view of the thermodynamic cycle used to in the derivation of the binding affinity
+
+   **Schematic view of the thermodynamic cycle used to in the derivation of the binding affinity**. The cycle calculates the receptor (R), ligand (L), and complex (C) in vacuum and then transfers them to solvent to find the solvation free energy.
+
+
+Computational and Experimental Details
+**************************************
+
+Data Set Preparation
+^^^^^^^^^^^^^^^^^^^^
+
+A database of 28 CDK2 inhibitors with experimental binding affinity available in the literature was compiled \ [#B47]_\ [#B48]_. The reported IC\ :sub:`50`\  (\ |nonascii_5|\ M) values were converted to -ln(IC\ :sub:`50`\ ) values and the free energy of binding (\ |nonascii_6|\ \ :sub:`bind`\ G) was calculated according to the Eq. (1) at 310 K.
+
+
+
+The compounds with known X-ray structures were selected as the training set to compare the various methods used to predict the free energy of binding. In order to effectively validate the PLS model, compounds that were not included in the data set to obtain the model were placed into a separate test set to assess the predictive potential of the model. The distribution of the data set into training and test sets is shown in Table \ :ref:`1<table_1>`.
+
+Structure Preparation
+^^^^^^^^^^^^^^^^^^^^^
+
+The 14 X-ray structures, corresponding to the 14 ligands in the training set were obtained from the PDB (Table \ :ref:`1<table_1>`). The remaining 14 ligands for which the X-ray structure data was not available were modelled into one of the 14 reported PDB structures based on ligand structural similarity (Table \ :ref:`1<table_1>`). The protein-ligand complexes were aligned in PyMOL \ [#B49]_. Hydrogen atoms were added and the protonation state of the acidic and basic amino acid residues were adjusted at pH 7 using the Protonate3 D tool within MOE \ [#B50]_. An inclusion sphere with a 4.5 \ |nonascii_7|\  radius was projected around the bound ligands. This area defined the residues which were to be included in the QM and MM calculations. All water molecules were removed. The N-terminals of the residues were capped with acetyl groups and the C-terminal ends were N-methyl capped using the geometry of the cleaved neighbouring residue as a vector to place the capping group. Partial charges were initially calculated to optimise the system using MM. The partial charges for the ligand binding site were calculated using the MMFF94x force field and the ligand partial charges were calculated with AM1BCC charges \ [#B51]_\ [#B52]_. The system was geometry optimized using MMFF94x force field in the presence of the Born continuous implicit water model, with an internal dielectric constant of 3 and an external dielectric constant of 80. The coordinates of the heavy atoms of the protein and the ligand were held fixed and the protons were energy minimised using the other default settings in MOE. The 14 modelled ligands were built by manually modifying the reference ligand and then energy minimising the ligand whilst keeping the reference heavy atoms fixed according to the method detailed above. Where appropriate, charged amino acid residues were neutralised with either a chloride anion or a lithium cation.
+
+The FMO input files for GAMESS were prepared using Facio (version 14.2.4) \ [#B53]_\ [#B54]_ following preprocessing of the structure in MOE. An example of the protein-ligand system is shown in Figure \ :ref:`2<figure_2>`.
+
+.. _figure_2:
+
+.. figure:: ../_static/1758-2946-3-2-2.jpg
+   :align: center
+
+   Figure 2. Orientation of the CDK2 active site in the PDB structure 
+
+   **Orientation of the CDK2 active site in the PDB structure** ** showing the amino acid residues (grey lines) used for the QM and MM calculations**. Ligand **33** is shown as grey sticks.
+
+
+The FMO Method
+^^^^^^^^^^^^^^
+
+The FMO method has previously been thoroughly described \ [#B30]_\ [#B55]_\ [#B56]_\ [#B57]_. Therefore, we provide only a short summary of the method. The FMO calculations were used to perform high-level *ab initio* quantum chemical calculations at MP2/6-31G* (6-31G 3df for Cl and S) theory level using the one-residue-per-fragment fragmentation scheme. All calculations were run using the GAMESS implementation (either April 2008 or January 2009 version) \ [#B58]_\ [#B59]_\ [#B60]_.
+
+The principle behind the FMO method is to divide a large biomolecular system into a collection of small FMO fragments and then perform molecular orbital calculations for each fragment (called monomer) and fragment pair (called dimer). Generally the system is fragmented into amino acids residues and ligands. It should be noted that FMO fragments differ from the standard assignment for amino acids residues. Here, amino acids are fragmented along the sp\ :sup:`3`\  bond joining the C\ :sub:`\ |nonascii_8|\ `\  carbon to the peptide-bond carbonyl carbon. This simple calculation scheme significantly reduces computational time. It may be possible that this method impairs the computational accuracy because the covalent bonds are detached. However, in the FMO method, the accuracy is kept by employing projection operators made from the sp\ :sup:`3`\  hybrid orbital.
+
+One of the great advantages of the FMO method is that it can be combined with a number of current quantum chemical techniques. Thus, an appropriate method for each system can be chosen. It was noted that incorporation of vdW interactions is an important consideration in studying protein-ligand interactions. Here, the FMO method provides a useful calculation scheme for dealing with these effects. Dispersion energy, which can dominant in vdW interactions, is not considered by Hartree-Fock (HF) and poorly modelled by Density Functional Theory (DFT). To achieve accurate dispersion energies correlated *ab inito* methods are required. Here, the second-order M\ |nonascii_9|\ ller-Plesset (MP2) perturbation method was used as it is the least expensive non-empirical approach. The MP2 method has been implemented in the FMO method (FMO-MP2).
+
+The molecular system is divided into a number of monomer fragments and the *ab inito* molecular orbital calculations on the monomers are solved repeatedly at the HF level until all monomer densities become self-consistent. Then the FMO-MP2 method begins with MP2 calculations of monomers, followed by MP2 calculations of dimers. The results are used to calculate the total energy of a system following the formula:
+
+
+
+where *I* and *J* run over all the of the fragments, *N*. The term \ :sub:`I`\  Eis the self-consistent field (SCF) energy of the *I*th fragment in the external Coulomb field of the other *N* - 1 fragments. The \ :sub:`IJ`\  Eterm is the SCF energy of the *I* + *J* dimer in the external Coulomb field of the other *N* - 2 fragments. The FMO calculations can provide PIEs, also known as inter-fragment interaction energies (IFIE), between fragments. The PIEs are used during the analysis of interaction between protein residues and the bound ligand and is derived from the FMO calculation:
+
+
+
+where \ |nonascii_10|\ **D***IJ* \ :sub:``\ and **V***IJ* \ :sub:``\ are the difference density matrix and the environmental electrostatic potential for dimmer *IJ* from other fragments, \ [#B40]_\ [#B61]_\ [#B62]_\ [#B63]_.
+
+Scoring Function Used to Estimate Free Energy of Binding
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The values of the free energy of binding in solvent (\ |nonascii_11|\ \ :sub:`bind`\ G) of each inhibitor were calculated according to Eq. (4) following thermodynamic cycle shown in Figure \ :ref:`1<figure_1>`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+The solution-phase 
+
+The enthalpic binding energy of interaction term is derived from the FMO method at the MP2/6-31G* level. The breakdown of this interaction energy can be expressed as relating to electrostatic interactions (ES), exchange repulsion (EX), dispersion contributions (DI) and charge transfer (CT) with higher order mixed terms, Eq. (6) \ [#B64]_\ [#B65]_. Evaluation of the enthalpic ligand binding energy is commonly performed by the supermolecule method. Here, the difference between the energy of the receptor-ligand complex and the sum of the energies of the apo-receptor and the isolated ligand is considered, Eq. (10).
+
+
+
+Thus three separate calculations are required to obtain the total ligand binding energy. However, in the FMO calculation, as all the PIEs between fragments are calculated by default, the ligand binding energy can be conveniently estimated by simply taking the sum of all the PIEs between the ligand and receptor fragments. Although the sum of PIE does not include the effect of electron redistribution in the complex as a result of ligand-protein binding, it is known that there is good qualitative agreement between the binding energy calculated by the supermolecule method and the sum of PIE \ [#B44]_.
+
+Entropy plays an important role in binding. During receptor-ligand complex formation, there are changes in the degrees of rotational, translational and conformational freedom, which make the process entropically unfavourable \ [#B66]_\ [#B67]_\ [#B68]_. The number of rotatable bonds in a ligand \ [#B69]_\ [#B70]_\ [#B71]_ or the receptor and ligand together \ [#B67]_\ [#B72]_ has previously been used as a measure for conformational entropy. More complex measures of determining entropy using vibrational frequencies of a ligand when complexed to a receptor have been shown to correlate well to the number of rotatable bonds \ [#B73]_. However, vibrational entropy is not a component of conformational entropy, and do not make significant contributions to the overall entropy of the system \ [#B74]_. The calculation of the number of rotatable bonds is also an attractive estimation for conformational ligand entropy as it is significantly less computationally demanding than other methods. Therefore we chose this method and assigned a conformational penalty of 1 kcal/mol for each rotatable bond in the ligand according to published work \ [#B73]_.
+
+The other term of the binding free energy is the solvation free energy \ [#B66]_. The solvation free energy was described by a polar solvation term 
+
+The polar solvation term estimated by solving the Poisson-Boltzmann (PB) equation using MOE \ [#B50]_. The system was parameterised as described in the Structure Preparation section. The nonpolar solvation term was estimated from the solvent-accessible surface area (SASA) of the molecule, Eq. (9). This was computed in MOE with a solvent probe radius of 1.4 \ |nonascii_12|\ . The values taken for *\ |nonascii_13|\ * and *b* were 5.0 cal/mol\ |nonascii_14|\ \ |nonascii_15|\ \ :sup:`2`\  and 0.86 kcal/mol, respectively, as described in the literature \ [#B75]_\ [#B76]_. In order to speed up the calculation of the free energy of solvation we chose to use a single energy-minimised structure which has been reported in the literature to be a reasonable estimation to molecular dynamics simulations \ [#B16]_\ [#B17]_.
+
+Multivariate Analysis
+^^^^^^^^^^^^^^^^^^^^^
+
+The statistical program SIMCAP, version 11.0.0.0, from Umetrics was used to build a PLS model \ [#B77]_\ [#B78]_. The X-variables originate from the components used to derive the free energy of binding in solvent, see above. The dependent Y-variable was the experimental binding affinity in -ln(IC\ :sub:`50`\ ), Eq. (1). The variables were mean-centred and scaled to unit variance. The non-cross-validated variance coefficient (*r*\ :sup:`2`\ ) and the cross-validated variance coefficient (*q*\ :sup:`2`\ ) were used to describe how well a model can reproduce the data under analysis and the predictive ability of the model. Cross-validation was performed by dividing the training sets into 7 groups and developing a number of parallel models for the data devoid of one group. The omitted group then became the test set for the reduced model and residuals for the test set were calculated. A measure of the predictivity of the models, termed predictive residual sum of squares was derived from the sum of squares of these differences for all parallel models. The *q*\ :sup:`2`\  value that resulted in the optimum number of components and lowest predictive residual sum of squares was used. The root mean square error of estimation (RMSEE) of the fit for observations in the model and the root mean square error of prediction (RMSEP) were also calculated.
+
+Results and Discussion
+**********************
+
+Ligand and Protein Preparation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A series of 14 X-ray crystal structures of CDK2-ligand complexes with known experimental binding affinities and with resolutions of better than 2.3 \ |nonascii_16|\  were downloaded from the PDB \ [#B48]_. A further 14 ligands from the same chemical series were manually docked to either one of 4 known ligand X-ray structures which had the closest chemical similarity as indicated in Table \ :ref:`1<table_1>`. Details of the proteins and the ligand structures, data set clustering into training and test sets, the resolution of the PDB structures and the experimental binding affinities are detailed in Table \ :ref:`1<table_1>`. The well resolved X-ray crystal structures meant that we were confident of the initial conformation of the complexes. Our experiments focussed primarily in the binding pocket, which for CDK2 is well resolved, particularly the residues which constitute the gate keeper and the Hinge region (residues Phe80 - Gln85 Figure \ :ref:`2<figure_2>`). Our rationale for only using minimised X-ray structures as a single protein-ligand structure in preference to the averaging over a number of molecular dynamics snapshots is that this conformation can be considered to contribute significantly to and thus dominate the Boltzmann-averaged potentials for the free energy estimation. This is particularly true when the bound conformation of the ligand corresponds to a particular stable conformation of the unbound ligand. Also, a good single point calculation is more likely to be a good representation of the system than one from which the phase space is poorly sampled. Other studies have used MM/MD simulations ascertain an optimal system conformation before further analysis using FMO \ [#B79]_. For the 14 X-ray structures examined the average local strain energy (the potential energy of the X-ray structure minus the value of the energy at a near local minimum) was 6 kcal/mol, which is an acceptably reasonable energy \ [#B80]_. Therefore, it can be argued that the energetic penalties coming from ligand conformational strain are minimal as the ligand is already in a good binding conformation \ [#B81]_. Using a single-point calculation is also more amenable to virtual screening. The method is not only a comparably accurate alternative to averaged snap shots over a molecular dynamics simulation, but is less time-consuming to setup and compute. It follows then that the remaining 14 ligands can be modelled by slight modifications to the X-ray solved ligands whilst maintaining the geometry of the common chemical scaffold, followed by a minimisation step (see Methods) would be a reasonable approximation of actual binding pose.
+
+Although the structural sampling was not performed in the FMO calculation of the enthalpic contributions to binding free energy, a good correlation (*r*\ :sup:`2`\  of 0.68) was obtained to the experimental free energy of binding, Figure \ :ref:`3<figure_3>`. The binding pocket in CDK2 is not exposed to solvent and important hydrogen bonding interactions within the active site are of limited flexibility \ [#B82]_. Under these conditions, enthalpic binding contributes significantly to the free energy of binding, and this therefore accounts for the good correlation to the FMO sum of PIE. For this target it appears that structural sampling is not crucial in order to obtain good correlations. However, the appropriate selection of atomic coordinates is an important factor to obtain well correlated data. A consideration of the optimal binding pose for the modelled ligands was out of the scope of this work, and further validations regarding conformational refinement of docked or aligned poses using the FMO method are in progress.
+
+.. _figure_3:
+
+.. figure:: ../_static/1758-2946-3-2-3.jpg
+   :align: center
+
+   Figure 3. Calculated versus observed free energy of binding for 14 CDK2 inhibitors assessed using seven different methods
+
+   **Calculated versus observed free energy of binding for 14 CDK2 inhibitors assessed using seven different methods**. Methods include a) FMO (green diamonds), *r*\ :sup:`2`\  = 0.68; b) GBVI (orange diamonds), *r*\ :sup:`2`\  = 0.03; c) London dG (purple diamonds), *r*\ :sup:`2`\  = 0.73; d) Affinity dG (green triangles), *r*\ :sup:`2`\  = 0.31; e) Alpha HB (red diamonds), *r*\ :sup:`2`\  = 0.61; f) ASE (black diamonds) *r*\ :sup:`2`\  = 0.75; and g) QM-based scoring function (red squares) together with the 14 compound test set (blue diamonds) for the QM-scoring function, and h) the calculated versus the experimental pIC\ :sub:`50`\  values for the QM-scoring function, *r*\ :sup:`2`\  = 0.94. For graphs a-f, and g, the line of best fit is shown in black. Graph h shows the line of best fit as a dotted red line and the two dotted yellow lines correspond to 1 log unit boundaries.
+
+
+Correlation Between MM-Based Scoring Functions and Biochemical Activity
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The performance of the FMO method was compared with that of several MM scoring functions implemented in MOE, including the Generalized Born solvation model VI, London dG, Affinity dG, Alpha HB, and ASE scoring functions (Figure \ :ref:`3<figure_3>`). In each of these MM methods, the protein was parameterised using the MMFF94x force field and ligand charges calculated using AM1-BCC. The 14 X-ray structures used to build the PLS model were used to compare the 6 scoring functions. The FMO method clearly outperformed three of the scoring functions and was similar to the London dG and the Alpha HB score. A good correlation was observed (*r*\ :sup:`2`\  of 0.68) for the FMO sum of PIE and the best performing MM scoring function was the ASE score (*r*\ :sup:`2`\  of 0.75). The ASE score has terms for the overlap of the ligand pose with alpha spheres and the overlap between ligand and receptor atom volumes approximated by Gaussians, and therefore can be thought of as mimicking dispersion interactions of ligand binding. As the CDK2 binding pocket is very hydrophobic this generalisation may be sufficient to get a good correlation to experimental binding energy. The Generalized Born solvation model VI failed to correlate the data (*r*\ :sup:`2`\  of 0.03). The Affinity dG scoring function only considers enthalpy of ligand binding in a simplistic fashion (*r*\ :sup:`2`\  of 0.31). This function is improved by terms to account for hydrogen bonding in the Alpha HB function (*r*\ :sup:`2`\  of 0.61). The London dG scoring function has further improvements, adding rotational and translational entropy and a desolvation term which resulted in a good estimation of binding free energy (*r*\ :sup:`2`\  of 0.73). The two methods that yield free energy binding predictions close to the actual values are the ASE and the London dG scoring functions.
+
+The main purpose of a scoring function though is to rank binding poses, and here the MOE scoring functions are effective. A Pearson rank order analysis for London dG, Alpha HB and ASE score all gave a value of 0.76, the FMO method performing less well with a Pearson value of 0.64. However, an important consideration in drug development is the identification of active compounds, thus good correlations to experimental binding free energy is of more value than the rank ordering of compounds. To effectively account for other components pertaining to binding additional terms were introduced, the results of which are detailed below.
+
+Data Preparation
+^^^^^^^^^^^^^^^^
+
+The four X-variables used to build and test the PLS model were derived from the sum of the enthalpic contributions *G**psolv*\ :sub:``\ ), the nonpolar solvation term (\ |nonascii_17|\ *G**npsolv*\ :sub:``\ ), and the entropic term \ [#B48]_. The PLS model was tested against the 14 modelled complexes.
+
+PLS Analysis Results
+^^^^^^^^^^^^^^^^^^^^
+
+The optimum number of components in the PLS model was two which gave a very high *q*\ :sup:`2`\  of 0.896, and the RMSEE of the fit for observations was 0.632. The *r*\ :sup:`2`\  value was 0.939 for this model. The 4 X-variables contributed similarly to the model, and there were no outliers in the observations used to build the model. The model rank orders the compounds extremely well, with a Pearson correlation of 0.97. This robust model predicted the test set well, the *r*\ :sup:`2`\  of the test set was 0.824, and the RMSEP was 1.005. The plot of computed and experimentally determined binding free energies is shown in Figure \ :ref:`3<figure_3>` and together with the residual differences between these values for each of the ligands is shown in Table \ :ref:`2<table_2>`. The majority of the data (Figure \ :ref:`3<figure_3>`) lies within the two yellow-dashed lines, indicating errors of less than 1 order of magnitude. There are two ligands, **12** and **15** that fall well outside this boundary. An examination of the 4 components which make up the free energy term does not reveal any strong trend resulting in the large residual values. All the ligands used to train and test the model were well within the 95% confidence intervals for the predicted Y-values and there were no observations that deviated significantly from the model in X-space.
+
+QMbased Scoring Function
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+FMO has been used previously to generate a charge transfer term for a quantitative structure-activity relationship (QSAR) model \ [#B44]_. Here, we aimed at producing a QM-based scoring function which would take into consideration complex binding interactions, solvation effects and ligand binding entropy on a timescale amenable to drug discovery. The FMO methods allows for accurate treatment of charge transfer and polarisation effects. It has been noted previously that the majority of polarisation energy is within 5 \ |nonascii_18|\  of a ligand \ [#B83]_. This observation justifies the 4.5 \ |nonascii_19|\  residue inclusion radius used to describe the binding pocket and allows for this polarisation to be incorporated into the enthalpy of binding energy term. The contribution of charge transfer effects on ligand binding have already been mentioned, and represent an important addition to a scoring function particularly when examining particular ligand-residue interactions \ [#B44]_. However, the contribution of charge transfer on the enthaplic binding term is dependent on the wave function used. The FMO contribution to the binding free energy has a very broad range (-28 to -178), this may be a result of using the MP2 method which is known to overestimate charge transfer interactions \ [#B33]_. Energy decomposition analysis from the FMO calculation reveals that the majority of the energy comes from the charge transfer contribution of charged atoms. The approximations for other terms in the scoring function make this overestimation less significant compared to the absolute binding energy determined by the FMO method when used in isolation.
+
+The binding free energy is a combination of enthalpic and entropic terms. Indeed, a thorough understanding of enthalpy/entropy compensation is needed to accurately predict binding energies \ [#B84]_\ [#B85]_. Ligand conformational entropy contributions are also significant, and neglecting this will adversely affect binding energy predictions \ [#B86]_. As a very simplistic method to account for this we chose to examine how the number of rotational bonds in the ligand would influence the predicted binding free energy. The good correlation obtained with our data, in this test case, indicates that this extremely fast method is adequate for this purpose. More detailed studies of entropy could be performed by normal mode analysis of molecular dynamics simulations. The lack of an adequate protein entropy term can result in an overestimation of binding free energy, and more work is needed to examine the effect of this on such calculations.
+
+The solvation free energy is divided into polar and nonpolar terms. The nonpolar term is dependent upon the size of the ligand, which is scaled by the two constants \ |nonascii_20|\  and *b*. This scaling makes the nonpolar term small and negative, allowing the polar terms to dominate the solvation free energy of binding. Recently, the polarisable continuum model (PCM) implemented in the GAMESS program was used to calculate solvation energies and were compared to those obtained with PB+SASA \ [#B42]_. It was found that PCM exaggerated the nonpolar contribution substantially, and therefore a QM treatment of solvation was not advantageous. Solvation calculations with the PCM have been implemented with the FMO method \ [#B87]_ and although this does increase computational time, more accurate treatment of solvation from a single point calculation would be possible. Solvation effects have also been developed for FMO using the PB equation to account for ion concentrations \ [#B88]_. Further studies need to be performed to assess the effects these advances in treating solvation effects brings to the determination of binding free energy and the computational cost of the method.
+
+Conclusions
+***********
+
+The results show that a single point QM calculation using the FMO method gives a good correlation to experimentally determined free energies of ligand binding calculated from ligand potencies. The FMO method outperformed 3 other methods used to estimate the free energy of binding by MM-based methods. We conclude that the additional terms which treat charge transfer, polarisation and dispersion effects during ligand binding in this QM method significantly improves the estimation of ligand potency compared to MM-based procedures. Methods were then introduced to further improve upon the initial estimates. This paper presents the first attempt to calculate ligand-binding free energies using a combination of high-level *ab inito* FMO methods together with PBSA techniques to derive reasonable estimations of enthalpy, entropy and solvation energies. We used a PLS QSAR model to correlate the 4 components of our scoring function to build a model which was very robust and highly predictive. The data set was composed of ligands from a lead development program that resulted in a clinical candidate against CDK2, thus testing the QSAR model against a range of ligand potencies. The need to run a PLS model stems from the poor absolute prediction of free binding energies and therefore the need to adjust the data. This QM-based scoring function represents a new protocol to estimate ligand potencies in a congeneric series of compounds whereby single point changes can be performed on a known X-ray crystal structure to guide medicinal chemistry.
+
+Competing interests
+*******************
+
+The authors declare that they have no competing interests.
+
+Authors' contributions
+**********************
+
+MPM and OI ran the FMO calculations and MPM wrote the scripts for FMO analysis and developed the QSAR method. MPM and OI tested the presented methods and prepared the manuscript for this publication. RJL supervised the project. All authors have read and approved of the final manuscript.
+
+Acknowledgements
+****************
+
+The authors acknowledge Dmitri Fedorov for his support in implementing the FMO method.
+
+.. [#B1]  The Many Roles of Computation in Drug Discovery
+
+.. [#B2]  Lead discovery using molecular docking
+
+.. [#B3]  Structure-based virtual screening protocols
+
+.. [#B4]  Evaluation of Docking Performance: Comparative Data on Docking Algorithms
+
+.. [#B5]  Detailed Analysis of Scoring Functions for Virtual Screening
+
+.. [#B6]  A Critical Assessment of Docking Programs and Scoring Functions
+
+.. [#B7]  AutoDock Vina: Improving the speed and accuracy of docking with a new scoring function, efficient optimization, and multithreading
+
+.. [#B8]  Approaches to the Description and Prediction of the Binding Affinity of Small-Molecule Ligands to Macromolecular Receptors
+
+.. [#B9]  Free Energy Via Molecular Simulation: Applications to Chemical and Biomolecular Systems
+
+.. [#B10]  Ligand binding affinity prediction by linear interaction energy methods
+
+.. [#B11]  Examining Methods for Calculations of Binding Free Energies: LRA, LIE, PDLD-LRA, and PDLD/S-LRA Calculations of Ligands Binding to an HIV Protease
+
+.. [#B12]  Calculations of antibody-antigen interactions: microscopic and semi-microscopic evaluation of free energies of binding of phosphorylcholine analogs to McPC603
+
+.. [#B13]  Modeling electrostatic effects in proteins
+
+.. [#B14]  Calculating Structures and Free Energies of Complex Molecules:? Combining Molecular Mechanics and Continuum Models
+
+.. [#B15]  Protein-protein interactions from linear-scaling first-principles quantum-mechanical calculations
+
+.. [#B16]  Validation and Use of the MM-PBSA Approach for Drug Discovery
+
+.. [#B17]  Fast and accurate predictions of binding free energies using MM-PBSA and MM-GBSA
+
+.. [#B18]  A Multistep Approach to Structure-Based Drug Design:? Studying Ligand Binding at the Human Neutrophil Elastase
+
+.. [#B19]  Binding of a Diverse Set of Ligands to Avidin and Streptavidin: An Accurate Quantitative Prediction of Their Relative Affinities by a Combination of Molecular Mechanics and Continuum Solvent Models
+
+.. [#B20]  Are Free Energy Calculations Useful in Practice? A Comparison with Rapid Scoring Functions for the p38 MAP Kinase Protein System
+
+.. [#B21]  Cation-pi interactions in aromatics of biological and medicinal interest: electrostatic potential surfaces as a useful qualitative guide
+
+.. [#B22]  Cation-\ |nonascii_21|\  interactions in structural biology
+
+.. [#B23]  Origin of the Attraction and Directionality of the NH/p Interaction:? Comparison with OH/p and CH/p Interactions
+
+.. [#B24]  Cl-\ |nonascii_22|\  Interactions in Protein-Ligand Complexes
+
+.. [#B25]  On the Nature of Bonding in Lone Pair\ |nonascii_23|\ p-Electron Complexes: CCSD(T)/Complete Basis Set Limit Calculations
+
+.. [#B26]  Quantum Chemical Benchmark Energy and Geometry Database for Molecular Clusters and Complex Molecular Systems: A Users Manual and Examples
+
+.. [#B27]  The role of quantum mechanics in structure-based drug design
+
+.. [#B28]  The Role of Polarization and Charge Transfer in the Solvation of Biomolecules
+
+.. [#B29]  Large-Scale Validation of a Quantum Mechanics Based Scoring Function:? Predicting the Binding Affinity and the Binding Mode of a Diverse Set of Protein-Ligand Complexes
+
+.. [#B30]  Fragment molecular orbital method: an approximate computational method for large molecules
+
+.. [#B31]  Quantum computational analysis for drug resistance of HIV-1 reverse transcriptase to nevirapine through point mutations
+
+.. [#B32]  The Origin of Hydrogen Bonding. An Energy Decomposition Study
+
+.. [#B33]  Computation of charge-transfer energies by perturbation theory
+
+.. [#B34]  A general treatment of solvent effects based on screened Coulomb potentials
+
+.. [#B35]  Divide and conquer interaction energy decomposition
+
+.. [#B36]  Benchmark database of accurate (MP2 and CCSD(T) complete basis set limit) interaction energies of small model complexes, DNA base pairs, and amino acid pairs
+
+.. [#B37]  On the accurate reproduction of *ab initio* interaction energies between an enzyme and substrate
+
+.. [#B38]  QMQSAR: Utilization of a semiempirical probe potential in a field-based QSAR method
+
+.. [#B39]  Semiempirical Comparative Binding Energy Analysis (SE-COMBINE) of a Series of Trypsin Inhibitors
+
+.. [#B40]  Ab initio fragment molecular orbital (FMO) method applied to analysis of the ligand-protein interaction in a pheromone-binding protein
+
+.. [#B41]  Quantum mechanical map for protein-ligand binding with application to *\ |nonascii_24|\ *-trypsin/benzamidine complex
+
+.. [#B42]  Ligand Affinities Estimated by Quantum Chemical Calculations
+
+.. [#B43]  Comparison of binding affinity evaluations for FKBP ligands with state-of-the-art computational methods: FMO, QM/MM, MM-PB/SA and MP-CAFEE approaches
+
+.. [#B44]  QSAR Study of Cyclic Urea Type HIV-1 PR Inhibitors Using Ab Initio MO Calculation of Their Complex Structures with HIV-1 PR
+
+.. [#B45]  Novel Quantitative Structure-Activity Studies of HIV-1 Protease Inhibitors of the Cyclic Urea Type Using Descriptors Derived from Molecular Dynamics and Molecular Orbital Calculations
+
+.. [#B46]  Correlation analyses on binding affinity of Substituted benzenesulfonamides with carbonic anhydrase using ab initio MO calculations on their Complex structures
+
+.. [#B47]  Recent Developments in Fragment-Based Drug Discovery
+
+.. [#B48]  Identification of N-(4-Piperidinyl)-4-(2,6-dichlorobenzoylamino)-1H-pyrazole-3-carboxamide (AT7519), a Novel Cyclin Dependent Kinase Inhibitor Using Fragment-Based X-Ray Crystallography and Structure Based Drug Design\ |nonascii_25|\ 
+
+.. [#B49]  The PyMOL Molecular Graphics System. (v0.99rc6)
+
+.. [#B50]  MOE (The Molecular Operating Environment). (2009.10)
+
+.. [#B51]  Fast, efficient generation of high-quality atomic charges. AM1-BCC model: I. Method
+
+.. [#B52]  Fast, efficient generation of high-quality atomic charges. AM1-BCC model: II. Parameterization and validation
+
+.. [#B53]  Facio: New Computational Chemistry Environment for PC GAMESS
+
+.. [#B54]  Development of GUI for GAMESS/FMO Calculation
+
+.. [#B55]  Pair interaction molecular orbital method: an approximate computational method for molecular interactions
+
+.. [#B56]  Fragment molecular orbital method: application to polypeptides
+
+.. [#B57]  Fragment molecular orbital method: use of approximate electrostatic potential
+
+.. [#B58]  General Atomic and Molecular Electronic Structure System
+
+.. [#B59]  General Atomic and Molecular Electronic Structure System
+
+.. [#B60]  Advances in electronic structure theory: GAMESS a decade later
+
+.. [#B61]  Visualization analysis of inter-fragment interaction energies of CRP-cAMP-DNA complex based on the fragment molecular orbital method
+
+.. [#B62]  VISCANA: Visualized Cluster Analysis of Protein-Ligand Interaction Based on the ab Initio Fragment Molecular Orbital Method for Virtual Ligand Screening
+
+.. [#B63]  Intra- and intermolecular interactions between cyclic-AMP receptor protein and DNA: Ab initio fragment molecular orbital study
+
+.. [#B64]  Pair interaction energy decomposition analysis
+
+.. [#B65]  A new energy decomposition scheme for molecular interactions within the Hartree-Fock approximation
+
+.. [#B66]  Can the calculation of ligand binding free energies be improved with continuum solvent electrostatics and an ideal-gas entropy correction?
+
+.. [#B67]  The consequences of translational and rotational entropy lost by small molecules on binding to proteins
+
+.. [#B68]  Contribution of Conformer Focusing to the Uncertainty in Predicting Free Energies for Protein-Ligand Binding
+
+.. [#B69]  Empirical scoring functions: I. The development of a fast empirical scoring function to estimate the binding affinity of ligands in receptor complexes
+
+.. [#B70]  The development of a simple empirical scoring function to estimate the binding constant for a protein-ligand complex of known three-dimensional structure
+
+.. [#B71]  SMall Molecule Growth 2001 (SMoG2001): An Improved Knowledge-Based Scoring Function for Protein-Ligand Interactions
+
+.. [#B72]  A Quantum Mechanics-Based Scoring Function:? Study of Zinc Ion-Mediated Ligand Binding
+
+.. [#B73]  Mixed Quantum Mechanics/Molecular Mechanics Scoring Function To Predict Protein-Ligand Binding Affinity
+
+.. [#B74]  Using a Convenient, Quantitative Model for Torsional Entropy To Establish Qualitative Trends for Molecular Processes That Restrict Conformational Freedom
+
+.. [#B75]  Theory of hydrophobic bonding. II. Correlation of hydrocarbon solubility in water with solvent cavity surface area
+
+.. [#B76]  Macroscopic models of aqueous solutions: biological and chemical applications
+
+.. [#B77]  SIMCAP (11.0.0.0)
+
+.. [#B78]  PLS-regression: a basic tool of chemometrics
+
+.. [#B79]  Correlation Analyses on Binding Affinity of Sialic Acid Analogues with Influenza Virus Neuraminidase-1 Using ab Initio MO Calculations on Their Complex Structures
+
+.. [#B80]  Conformational Analysis of Drug-Like Molecules Bound to Proteins:? An Extensive Study of Ligand Reorganization upon Binding
+
+.. [#B81]  Calculation of Protein-Ligand Binding Affinities
+
+.. [#B82]  A Study of CDK2 Inhibitors Using a Novel 3D-QSAR Method Exploiting Receptor Flexibility
+
+.. [#B83]  The effect of MM polarization on the QM/MM transition state stabilization: application to chorismate mutase
+
+.. [#B84]  Compensating Enthalpic and Entropic Changes Hinder Binding Affinity Optimization
+
+.. [#B85]  Do enthalpy and entropy distinguish first in class from best in class?
+
+.. [#B86]  Ligand configurational entropy and protein binding
+
+.. [#B87]  The polarizable continuum model (PCM) interfaced with the fragment molecular orbital method (FMO)
+
+.. [#B88]  Incorporation of solvation effects into the fragment molecular orbital calculations with the Poisson-Boltzmann equation
+
+.. |nonascii_1| unicode:: 0x3c0
+.. |nonascii_2| unicode:: 0x3c0
+.. |nonascii_3| unicode:: 0x3c0
+.. |nonascii_4| unicode:: 0x3c0
+.. |nonascii_5| unicode:: 0x3bc
+.. |nonascii_6| unicode:: 0x394
+.. |nonascii_7| unicode:: 0xc5
+.. |nonascii_8| unicode:: 0x3b1
+.. |nonascii_9| unicode:: 0xf8
+.. |nonascii_10| unicode:: 0x394
+.. |nonascii_11| unicode:: 0x394
+.. |nonascii_12| unicode:: 0xc5
+.. |nonascii_13| unicode:: 0x3b3
+.. |nonascii_14| unicode:: 0xb7
+.. |nonascii_15| unicode:: 0xc5
+.. |nonascii_16| unicode:: 0xc5
+.. |nonascii_17| unicode:: 0x394
+.. |nonascii_18| unicode:: 0xc5
+.. |nonascii_19| unicode:: 0xc5
+.. |nonascii_20| unicode:: 0x3b3
+.. |nonascii_21| unicode:: 0x3c0
+.. |nonascii_22| unicode:: 0x3c0
+.. |nonascii_23| unicode:: 0x22ef
+.. |nonascii_24| unicode:: 0x3b2
+.. |nonascii_25| unicode:: 0x2020

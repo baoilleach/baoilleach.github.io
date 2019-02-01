@@ -1,0 +1,383 @@
+PubChem3D: Shape compatibility filtering using molecular shape quadrupoles
+==========================================================================
+
+Abstract
+********
+
+Background
+^^^^^^^^^^
+
+PubChem provides a 3-D neighboring relationship, which involves finding the maximal shape overlap between two static compound 3-D conformations, a computationally intensive step. It is highly desirable to avoid this overlap computation, especially if it can be determined with certainty that a conformer pair cannot meet the criteria to be a 3-D neighbor. As such, PubChem employs a series of pre-filters, based on the concept of volume, to remove approximately 65% of all conformer neighbor pairs prior to shape overlap optimization. Given that molecular volume, a somewhat vague concept, is rather effective, it leads one to wonder: can the existing PubChem 3-D neighboring relationship, which consists of billions of shape similar conformer pairs from tens of millions of unique small molecules, be used to identify additional shape descriptor relationships? Or, put more specifically, can one place an upper bound on shape similarity using other "fuzzy" shape-like concepts like length, width, and height?
+
+Results
+^^^^^^^
+
+Using a basis set of 4.18 billion 3-D neighbor pairs identified from single conformer per compound neighboring of 17.1 million molecules, shape descriptors were computed for all conformers. These steric shape descriptors included several forms of molecular volume and shape quadrupoles, which essentially embody the length, width, and height of a conformer. For a given 3-D neighbor conformer pair, the volume and each quadrupole component (Q\ :sub:`x`\ , Q\ :sub:`y`\ , and Q\ :sub:`z`\ ) were binned and their frequency of occurrence was examined. Per molecular volume type, this effectively produced three different maps, one per quadrupole component (Q\ :sub:`x`\ , Q\ :sub:`y`\ , and Q\ :sub:`z`\ ), of allowed values for the similarity metric, shape Tanimoto (ST) \ |nonascii_1|\  0.8.
+
+The efficiency of these relationships (in terms of true positive, true negative, false positive and false negative) as a function of ST threshold was determined in a test run of 13.2 billion conformer pairs not previously considered by the 3-D neighbor set. At an ST \ |nonascii_2|\  0.8, a filtering efficiency of 40.4% of true negatives was achieved with only 32 false negatives out of 24 million true positives, when applying the separate Q\ :sub:`x`\ , Q\ :sub:`y`\ , and Q\ :sub:`z`\  maps in a series (Q\ :sub:`xyz`\ ). This efficiency increased linearly as a function of ST threshold in the range 0.8-0.99. The Q\ :sub:`x`\  filter was consistently the most efficient followed by Q\ :sub:`y`\  and then by Q\ :sub:`z`\ . Use of a monopole volume showed the best overall performance, followed by the self-overlap volume and then by the analytic volume.
+
+Application of the monopole-based Q\ :sub:`xyz`\  filter in a "real world" test of 3-D neighboring of 4,218 chemicals of biomedical interest against 26.1 million molecules in PubChem reduced the total CPU cost of neighboring by between 24-38% and, if used as the initial filter, removed from consideration 48.3% of all conformer pairs at almost negligible computational overhead.
+
+Conclusion
+^^^^^^^^^^
+
+Basic shape descriptors, such as those embodied by size, length, width, and height, can be highly effective in identifying shape incompatible compound conformer pairs. When performing a 3-D search using a shape similarity cut-off, computation can be avoided by identifying conformer pairs that cannot meet the result criteria. Applying this methodology as a filter for PubChem 3-D neighboring computation, an improvement of 31% was realized, increasing the average conformer pair throughput from 154,000 to 202,000 per second per CPU core.
+
+Background
+**********
+
+PubChem is an open and free resource of the biological activities of small molecules \ [#B1]_\ [#B2]_\ [#B3]_\ [#B4]_. PubChem has an integrated theoretical 3-D layer, PubChem3D \ [#B5]_\ [#B6]_\ [#B7]_, which provides a precomputed 3-D neighboring relationship called "Similar Conformers" \ [#B7]_ to help users locate and relate data in the archive. "Similar Conformers" identifies chemicals with similar 3-D shape and similar 3-D orientation of functional groups typically used to define pharmacophores (defined here simply as "features"), complementing a PubChem 2-D neighboring relationship called "Similar Compounds", which identifies closely related chemical analogs using the PubChem 2-D subgraph fingerprint \ [#B8]_. Effectively, for each PubChem chemical structure, this 3-D neighboring relationship provides (at the time of writing) the results of a 3-D similarity search against 28.9 million compound records using three diverse conformers per molecule.
+
+The PubChem3D neighboring uses as a measure of molecular shape similarity the shape Tanimoto (ST) \ [#B9]_\ [#B10]_, given as the following equation:
+
+
+
+where \ :sub:`AA`\  Vand \ :sub:`BB`\  Vare the self-overlap volumes of conformers A and B, respectively, and \ :sub:`AB`\  Vis the common overlap volume between A and B. The 3-D neighboring requires finding the maximum shape similarity between static compound 3-D conformations, as dictated by \ :sub:`AB`\  Vin **Equation 1**, to calculate ST, a computationally intensive step. It is highly desirable to avoid this overlap computation, especially if it can be determined with certainty that a conformer pair cannot meet the criteria to be a 3-D neighbor. As such, PubChem employs a series of filters, based on the concept of volume, to effectively ignore approximately 65% of all conformer neighbor pairs during 3-D neighboring, thus dramatically accelerating processing \ [#B7]_.
+
+Volume, although a rather fuzzy concept, is rather effective as a filter between conformers dissimilar in shape and features \ [#B7]_. Conceivably there are other aspects of molecular shape beyond volume to "recognize" when two shapes are (dis)similar. A characteristic one can readily imagine are descriptors associated with aspects of length, width, and height. Steric shape quadrupoles embody such a concept and attempts have been made to use their differences as a shape similarity metric \ [#B11]_\ [#B12]_. This leads to the question: can additional simple shape descriptor relationships be identified that improve upon the volume-based filtering efficacy? Or, put another way, can one place an upper bound on shape similarity by identification of some (additional) crude shape compatibility between conformers?
+
+In this paper, we examine the use of shape descriptors as a means to rapidly identify "dissimilar" molecule shapes. As a part of this, we attempt to answer the critical questions: are vague shape descriptors representing the concepts of length, width, and height good discriminators of molecular shape? Can 3-D similarity searching speed be further accelerated using shape descriptors more sophisticated than volume? Is it possible to create a "shape compatibility" mapping indexed to shape similarity?
+
+Results and Discussion
+**********************
+
+1. Distribution of shape descriptor components and their volume dependency
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The molecular shape quadrupoles in the principal-axes frame \ [#B9]_\ [#B13]_ are given as the following:
+
+
+
+where, \ :sub:`x`\ , Q\ :sub:`y`\ Q, and \ :sub:`z`\  Qare the x, y, and z components of the quadrupole moment, respectively. The x, y, and z components are conceptually equivalent to the length, width, and height of a molecule, respectively, with the largest quadrupole component defined as \ :sub:`x`\  Qand the smallest as \ :sub:`z`\ Q, by convention. An assumption underlying this study is that there is a point whereby, if the shape quadrupole difference between two conformers is too large, they cannot meet the ST \ |nonascii_3|\  0.8 threshold required by PubChem3D neighboring, as illustrated in Figure \ :ref:`1<figure_1>`. This relationship, if it actually exists, would allow conformer pairs to be filtered out, avoiding the time-consuming shape superposition optimization step for those pairs and enhancing the throughput of the PubChem 3-D neighboring. To attempt to determine if a relationship can be found, the shape quadrupole differences for known 3-D "Similar Conformers" were analyzed.
+
+.. _figure_1:
+
+.. figure:: ../_static/1758-2946-3-25-1.jpg
+   :align: center
+
+   Figure 1. Small changes in dimensions can result in large changes in overlap
+
+   **Small changes in dimensions can result in large changes in overlap**. Using a 2-D rectangle shape with constant area (0.4 in\ :sup:`2`\ ), one can see that small changes in shape dimensions (length and width) can result in large changes in shape overlap (ST). Note that, for two shapes to be considered similar to each other (with a ST score of \ |nonascii_4|\  0.8, indicated in red), the difference in length and width between them should be smaller than a certain threshold.
+
+
+At the time of quadrupole filter project initiation (in October, 2008), 3-D neighboring of 17,143,181 unique molecules, effectively covering the CID range 1-25,000,000, had been completed using a single conformer per compound, yielding 4,182,412,802 3-D neighbors. Table \ :ref:`1<table_1>` shows the statistics of the three quadrupole components for those 17.1 million molecules. The mean and standard deviation for \ :sub:`x`\ , Q\ :sub:`y`\ Q, and \ :sub:`z`\  Qwere 15.01 \ |nonascii_5|\  8.07 \ |nonascii_6|\ \ :sup:`5`\ , 3.81 \ |nonascii_7|\  1.80 \ |nonascii_8|\ \ :sup:`5`\ , and 1.52 \ |nonascii_9|\  0.65 \ |nonascii_10|\ \ :sup:`5`\ , respectively. Figure \ :ref:`2<figure_2>` and \ :ref:`3<figure_3>` display the distributions of \ :sub:`x`\ , Q\ :sub:`y`\ Q, and \ :sub:`z`\ Q, after they were binned into units of 2.5 \ |nonascii_11|\ \ :sup:`5`\ , 0.5 \ |nonascii_12|\ \ :sup:`5`\ , and 0.1 \ |nonascii_13|\ \ :sup:`5`\ , respectively. All three components showed strongly skewed distributions; however, most of the molecules were populated near the mean and relatively few molecules had quadrupole components much larger than the mean values.
+
+.. _figure_2:
+
+.. figure:: ../_static/1758-2946-3-25-2.jpg
+   :align: center
+
+   Figure 2. Quadrupole distribution
+
+   **Quadrupole distribution**. The frequency of occurance of the three quadrupole moment components for 17.1 million molecules from the PubChem Compound database, where (a) \ :sub:`x`\ Q, (b) \ :sub:`y`\ Q, and (c) \ :sub:`z`\  Qwere binned into units of 2.5 \ |nonascii_14|\ \ :sup:`5`\ , 0.5 \ |nonascii_15|\ \ :sup:`5`\ , and 0.1 \ |nonascii_16|\ \ :sup:`5`\ , respectively.
+
+
+.. _figure_3:
+
+.. figure:: ../_static/1758-2946-3-25-3.jpg
+   :align: center
+
+   Figure 3. Quadrupole interdependence
+
+   **Quadrupole interdependence**. The distribution of 17.1 million molecules from the PubChem Compound database as a function of (a) \ :sub:`x`\  Qand \ :sub:`y`\ Q, (b) \ :sub:`x`\  Qand \ :sub:`z`\ Q, and (c) \ :sub:`y`\  Qand \ :sub:`z`\ Q, respectively. \ :sub:`x`\ , Q\ :sub:`y`\ Q, and \ :sub:`z`\  Qwere binned into units of 2.5 \ |nonascii_17|\ \ :sup:`5`\ , 0.5 \ |nonascii_18|\ \ :sup:`5`\ , and 0.1 \ |nonascii_19|\ \ :sup:`5`\ , respectively. The legend indicates the frequency of observation.
+
+
+The molecular volume and quadrupole moments are correlated with each other according to the following equation:
+
+
+
+where \ :sub:`g`\  Ris the radius of gyration and \ :sub:`mp`\  Vis the monopole volume, which corresponds to the monopole in the shape multipole expansion \ [#B13]_. **Equation 3** implies that the size of a molecule (represented by the molecular volume) is not completely independent of its quadrupole moment. Therefore, at the beginning of this study, the correlation between molecular volume and quadrupole moment was investigated. Note that, because the molecular volume is not a measurable quantity with a clear, unanimous definition, there are many ways to estimate it \ [#B13]_\ [#B14]_\ [#B15]_\ [#B16]_\ [#B17]_\ [#B18]_. Therefore, in addition to the monopole volume, the PubChem 3-D information includes two other volumes computed in different ways. One is the analytic volume and the other is the self-overlap volume. The analytic volume is considered to be most consistent to other definitions of molecular volume among the three, but its computation is also the slowest. For this reason, evaluation of the ST score given in **Equation 1** uses the self-overlap volume, whose evaluation is considerably faster than the analytic volume; however, it typically overestimates the molecular volume by a factor of three greater than the analytic volume, as shown in Table \ :ref:`2<table_2>`. Each compound conformer record in the PubChem provides all three volumes and they can be downloaded: individually from the Compound Summary pages, using a list from the PubChem Download Facility (`<http://pubchem.ncbi.nlm.nih.gov/pc_fetch>`_), or in bulk from the PubChem FTP site (`<ftp://ftp.ncbi.nlm.nih.gov/pubchem>`_). To avoid confusion about these three different volumes used in the present paper, we denote the monopole volume, self-overlap volume, and analytic volume as *V*\ :sub:`mp`\ , *V*\ :sub:`so`\ , and *V*\ :sub:`an`\ , respectively, whereas the volume in a general sense is denoted as *V* (without any subscript).
+
+Figure \ :ref:`4<figure_4>` displays the distribution of the three different volumes of the 17.1 million molecules from the PubChem Compound database. In general, *V*\ :sub:`so`\  is the largest, and *V*\ :sub:`an`\  is the smallest. As shown in Figure \ :ref:`5<figure_5>`, the quadrupole moment increases with molecular size, implying that the effect of quadrupole difference between two molecules upon their shape similarity may depend on their relative molecular sizes. Therefore, the quadrupole differences of 3-D "Similar Conformer" neighbors as a function of volume need to be considered.
+
+.. _figure_4:
+
+.. figure:: ../_static/1758-2946-3-25-4.jpg
+   :align: center
+
+   Figure 4. Volume distribution
+
+   **Volume distribution**. The frequency of occurance of the three different volume types, analytic volume (\ :sub:`an`\ V, blue), monopole volume (\ :sub:`mp`\ V, red), and self-overlap volume (\ :sub:`so`\ V, green), for 17.1 million molecules from the PubChem Compound database, where all three volumes were binned into units of 5.0 \ |nonascii_20|\ \ :sup:`3`\ .
+
+
+.. _figure_5:
+
+.. figure:: ../_static/1758-2946-3-25-5.jpg
+   :align: center
+
+   Figure 5. Volume-quadrupole interdependence
+
+   **Volume-quadrupole interdependence**. The distribution of 17.1 million molecules from the PubChem Compound database as a function of the molecular volume type and quadrupole component. \ :sub:`an`\  V[in panel (a)-(c)], \ :sub:`mp`\  V[in panel (d)-(f)], and \ :sub:`so`\  V[in panel (g)-(i)] indicate the analytic volume, monopole volume, and self-overlap volume, respectively. \ :sub:`x`\  Q[in panel (a), (d) and (g)], \ :sub:`y`\  Q[in panel (b), (e) and (h)], and \ :sub:`z`\  Q[in panel (c), (f) and (i)] indicate the three components of the quadrupole moment. All three volumes were binned into units of 5.0 \ |nonascii_21|\ \ :sup:`3`\  and the \ :sub:`x`\ , Q\ :sub:`y`\ Q, and \ :sub:`z`\  Qwere binned into units of 2.5 \ |nonascii_22|\ \ :sup:`5`\ , 0.5 \ |nonascii_23|\ \ :sup:`5`\ , and 0.1 \ |nonascii_24|\ \ :sup:`5`\ , respectively. The legend indicates the frequency of observation.
+
+
+2. Design of 3-D neighbor filters using quadrupole moment differences
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As a general premise, if two molecules with the same volume also have identical values for the quadrupole components, they are likely to be shape similar to each other. In addition, as the quadrupole moment difference deviates from zero, the maximum shape similarity is expected to decrease (see Figure \ :ref:`1<figure_1>`). When the quadrupole (and volume) difference becomes greater than some value or threshold, the shape dissimilarity is such that the molecule conformer pair cannot possibly meet the criteria to be a PubChem 3-D neighbor (ST \ |nonascii_25|\  0.8). Therefore, if we know these quadrupole difference thresholds for a given volume pair, one may be able to preclude conformer pairs that are not sufficiently shape similar, using only knowledge of the volume and quadrupole moments.
+
+In the present study, the quadrupole moment differences of the 4.18 billion 3-D neighbors, identified from the 3-D neighboring of 17.1 million molecules, were analyzed to find the maximum possible quadrupole differences for two molecules to be neighbors (see also the "*Materials and Methods*" section). The volume and quadrupole moments of the two molecules in each neighbor pair were first converted into an integer value by using the following two equations:
+
+
+
+
+
+where superscript "bin" is used to distinguish these integers from the original, non-binned values. The denominator *Binsize* was 5.0 \ |nonascii_26|\ \ :sup:`3`\  for all the three volumes, and 2.5 \ |nonascii_27|\ \ :sup:`5`\ , 0.5 \ |nonascii_28|\ \ :sup:`5`\ , and 0.1 \ |nonascii_29|\ \ :sup:`5`\ , for \ :sub:`x`\ , Q\ :sub:`y`\ Q, and \ :sub:`z`\ Q, respectively. After all 4.18 billion 3-D neighbors were binned according to their \ :sup:`bin`\  Vand \ :sup:`bin`\  Qvalues, the 3-D neighbor distribution for a given (\ :sup:`bin`\ Q.
+
+To illustrate the general premise above that quadrupole deviations from zero result in a reduction is shape similarity, Figure \ :ref:`6<figure_6>` shows the neighbor count as a function of \ :ref:`6<figure_6>` with respect to the ordinate axis (
+
+.. _figure_6:
+
+.. figure:: ../_static/1758-2946-3-25-6.jpg
+   :align: center
+
+   Figure 6. Quadrupole difference tolerance
+
+   **Quadrupole difference tolerance**. The distributions of the 3-D neighbors as a function of the binned quadrupole differences, \ :sup:`bin`\  Qrapidly decreases to zero as a function of magnitude.
+
+
+Figures \ :ref:`7<figure_7>`, \ :ref:`8<figure_8>` and \ :ref:`9<figure_9>` show the \ |nonascii_30|\ \ :sup:`bin`\  Qthreshold for each quadrupole component as a function of volume for the 4.18 billion 3-D neighbors. Note that, since PubChem regularly gets additional new unique content from its contributors, there is always a possibility that the 3-D neighboring of these new records may identify previously unseen cases of \ |nonascii_31|\ \ :sup:`bin`\  Qthreshold. If we use these \ |nonascii_32|\ \ :sup:`bin`\  Qthreshold maps [see panels (a) and (b) of Figures \ :ref:`7<figure_7>`, \ :ref:`8<figure_8>` and \ :ref:`9<figure_9>`] as a filter during neighboring, we would preclude those 3-D neighbors. Therefore, we modified the maps [see panels (c) and (d) of Figures \ :ref:`7<figure_7>`, \ :ref:`8<figure_8>` and \ :ref:`9<figure_9>`], as described in the "*Materials and Methods*" section, to extend \ |nonascii_33|\ \ :sup:`bin`\  Qdifference values or to add neighboring bins where no population is found in an attempt to mitigate any such issues in the fringe regions on the maps.
+
+.. _figure_7:
+
+.. figure:: ../_static/1758-2946-3-25-7.jpg
+   :align: center
+
+   Figure 7. Monopole volume 
+
+   **Monopole volume** . The absolute value of the maximum possible value of 
+
+
+.. _figure_8:
+
+.. figure:: ../_static/1758-2946-3-25-8.jpg
+   :align: center
+
+   Figure 8. Monopole volume 
+
+   **Monopole volume** . The absolute value of the maximum possible value of 
+
+
+.. _figure_9:
+
+.. figure:: ../_static/1758-2946-3-25-9.jpg
+   :align: center
+
+   Figure 9. Monopole volume 
+
+   **Monopole volume** . The absolute value of the maximum possible value of 
+
+
+These modified \ |nonascii_34|\ \ :sup:`bin`\  Qthreshold maps are designated as quadrupole filters. For simplicity, we name these filters with a capital letter "**F**" followed by a subscript, which represents one of the quadrupole components, and a superscript, which represents the type of volume involved. For example, filter "\ :sub:`x`\  Qfilter generated with the analytic volume, \ :sub:`an`\ V.
+
+Given that these quadrupole filters were built using an existing set of 3-D neighbor cases, one needs to validate the extent of their efficacy. To do so, a 13.2 billion molecule conformer pair test set not considered as a part of the original 3-D neighboring training set, is utilized (see the "Materials and Methods" section). After computing the ST scores for the 13.2 billion pairs, the fraction of 3-D neighbors and non-neighbors, which would have been pre-screened if the quadrupole filters were applied, is summarized in Table \ :ref:`3<table_3>`.
+
+Of the three volume types utilized, the monopole-based quadrupole filters, **F**\ :sup:`mp`\ , is arguably the best. Filter *feature* similarity as well as *shape* similarity, while the quadrupole filters deal only with shape similarity. As such, the 30 pairs filtered out had a ST score sufficient to be a 3-D neighbor, making it a "potential" 3-D neighbor.] The false negative count of 30 removed by 
+
+Filters **F**\ :sup:`mp`\  filters are used in a series (denoted as **F**\ :sup:`so`\  showed similar performance to **F**\ :sup:`mp`\ , but it filtered out more potential neighbors (288 for **F**\ :sup:`an`\  filters showed the least loss of potential neighbors (4 for 
+
+Effects of the ST threshold for PubChem 3-D neighboring upon the efficiency of the quadrupole filters were also investigated by generating a set of quadrupole filters, each using a different ST threshold, ranging from 0.80 to 0.99 with an increment of 0.01. As shown in Figure \ :ref:`10,<figure_10,>` the fraction of molecule pairs filtered increases almost linearly as a function of the ST threshold. For the entire ST range tested, the 
+
+.. _figure_10:
+
+.. figure:: ../_static/1758-2946-3-25-10.jpg
+   :align: center
+
+   Figure 10. Shape compatibility filtering efficiency
+
+   **Shape compatibility filtering efficiency**. Performance of the **F**\ :sub:`xyz`\  quadrupole filter to filter conformer pairs at different ST threshold values.
+
+
+3. Application of 3-D neighbor filters using quadrupole moment differences
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Given that filtering conformer pairs using steric shape quadrupoles is effective with minimal loss of potential 3-D neighbors, a "real world" test is made with \ [#B7]_ whereby a set of known drugs and other molecules of keen biomedical interest are neighbored against the 3-D contents of PubChem. Table \ :ref:`4<table_4>` and Table \ :ref:`5<table_5>` summarize the results of these tests.
+
+Considering PubChem 3-D neighboring is a precomputed similarity search, one can see that the neighboring throughput improvements using 
+
+It is important to note that \ :ref:`5<table_5>`, meaning that there are three other filters utilized before \ :ref:`5<table_5>`. The CT Feature, CT Volume, and ST Volume filters, applied in that order, remove 27.9%, 0.1%, and 0.002% conformer pairs, respectively, when 
+
+Conclusion
+**********
+
+Simple molecular shape descriptors, volume and steric quadrupole moments (embodying the length, width, and height of a shape), of 4.18 billion 3-D neighbor pairs resulting from PubChem 3-D neighboring of 17.1 million single conformer molecules were analyzed. The maximum quadrupole differences between neighbor conformers were determined. This examination demonstrated a distinct dependency of shape similarity upon quadrupole variation. With some slight modification of fringe regions, the results of this analysis were turned into computationally inexpensive, yet highly effective set of filters capable of removing 3-D conformer pairs that cannot meet a required shape similarity, using only knowledge of the volume and steric quadrupole moments of the conformer pair. When applied in the context of shape similarity searching, these filters can significantly improve throughput performance by avoiding expensive superposition optimization computation of conformer pairs that cannot possibly meet a pre-defined shape similarity search threshold.
+
+The filters devised were tested using a dataset of 13.2 billion compound pairs. The quadrupole filters based on a monopole volume showed the best efficacy, while the filters using an analytic volume had the lowest efficacy. For all the three volume types, the \ :sub:`x`\  Qfilters eliminated a larger portion of the compound pairs than the \ :sub:`y`\  Qand \ :sub:`z`\  Qfilters. When the filters were used in a series simultaneously, they could eliminate 30~40% of non-neighbor pairs, with the removal of a negligible amount of potential neighbors. For example, the \ :sub:`xyz`\  Qfilter based on the monopole volumes (
+
+In summary, the quadrupole filters developed in this study can speed up the PubChem 3-D neighbor processing with a negligible loss of the 3-D neighbors. However, its applicability is not just limited to PubChem 3-D neighboring. The results of the present study also suggest that the shape multipole moments can be applied generally to enhance the speed of 3-D similarity search methods by the rapid preclusion of dissimilar molecules that cannot be a result. This approach may be able to significantly speed up 3-D similarity search, especially if the 3-D shape superposition optimization is a bottleneck of the similarity search.
+
+Materials and methods
+*********************
+
+1. Datasets
+^^^^^^^^^^^
+
+At the time of project initiation, PubChem 3-D neighboring of 17,143,181 unique molecules (ranging from CID 1 to CID 25,000,000) had been completed using a single conformer per compound, yielding 4,182,412,802 3-D neighbors. Using the Shape Toolkit from the OpenEye Software \ [#B19]_, the analytic volume (\ :sub:`an`\ V), monopole volume (\ :sub:`mp`\ V), self-overlap volume (\ :sub:`so`\ V), and steric shape quadrupole moments (\ :sub:`x`\ , Q\ :sub:`y`\ Q, and \ :sub:`z`\ Q) were computed for the theoretical conformer of all 17.1 million molecules. See Figures \ :ref:`2<figure_2>` and \ :ref:`4<figure_4>` for the distributions of the computed values.
+
+2. Filter generation
+^^^^^^^^^^^^^^^^^^^^
+
+The quadrupole filters developed for pre-screening conformer-pairs based on quadrupole differences as a function of shape similarity ST threshold were generated using the following steps:
+
+1) The 4.18 billion 3-D neighbor pairs and their associated data were obtained from PubChem.
+
+2) The volumes (\ :sub:`mp`\ , V\ :sub:`so`\ V, and \ :sub:`an`\ V) and quadrupole components (\ :sub:`x`\ , Q\ :sub:`y`\ Q, and \ :sub:`z`\ Q) of the compound pair for each 3-D neighbor were converted into integers using **Equations 4** and **5** to yield *BinSize* was 5.0 \ |nonascii_35|\ \ :sup:`3`\  for all three volume types and 2.5 \ |nonascii_36|\ \ :sup:`5`\ , 0.5 \ |nonascii_37|\ \ :sup:`5`\ , and 0.1 \ |nonascii_38|\ \ :sup:`5`\ , for \ :sub:`x`\ , Q\ :sub:`y`\ Q, and \ :sub:`z`\ Q, respectively.
+
+3) For each of the three binned volume types, the following was performed using the 3-D neighbor pairs (in this case using 
+
+a) Of the two conformers in a 3-D neighbor, the one with the smaller 
+
+b) For each of the three binned quadrupole components, and using 
+
+i) 3-D neighbors were binned according to three indices, \ :sub:`x`\  Qdifference between the two molecules.
+
+ii) The neighbor count for all (\ :ref:`7<figure_7>`, \ :ref:`8<figure_8>` and \ :ref:`9<figure_9>`].
+
+iii) The \ :sub:`x`\  Qfilter based on monopole volumes (\ :ref:`7<figure_7>`, \ :ref:`8<figure_8>` and \ :ref:`9<figure_9>`].
+
+4) To obtain filters effective at an ST threshold other than \ |nonascii_39|\  0.80, first restrict the original 4.18 billion 3-D neighbor pairs to those at or above the desired ST threshold and repeat step 3.
+
+3. Modification of filters
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Figure \ :ref:`11<figure_11>` shows a schematic diagram describing how an original difference map is modified at a given \ |nonascii_40|\ \ :sup:`bin`\  Qvalue. In an original map [panel (a) of Figure \ :ref:`11<figure_11>`], the (\ :ref:`11<figure_11>`] at the given \ |nonascii_41|\ \ :sup:`bin`\  Qvalue. Similarly, any empty bins within the range of \ :ref:`11<figure_11>`] for the given \ |nonascii_42|\ \ :sup:`bin`\  Qvalue.
+
+.. _figure_11:
+
+.. figure:: ../_static/1758-2946-3-25-11.jpg
+   :align: center
+
+   Figure 11. Transformation of shape compatibility map into a filter
+
+   **Transformation of shape compatibility map into a filter**. Schematic diagram describing modification of an original difference map at a given \ |nonascii_43|\ \ :sup:`bin`\  Qvalue: (a) in an original map, neighbor regions are indicated in red, (b) all empty bins between the minimum and maximum values of 
+
+
+This procedure is performed for all unique \ |nonascii_44|\ \ :sup:`bin`\  Qvalues starting with the maximum. As lesser \ |nonascii_45|\ \ :sup:`bin`\  Qvalues are considered in this correction, greater \ |nonascii_46|\ \ :sup:`bin`\  Qvalues are considered at the \ |nonascii_47|\ \ :sup:`bin`\  Qvalue being considered. A pseudo-code implementation of this procedure is shown in Figure \ :ref:`12<figure_12>`. All quadrupole filters resulting from this modification are available in Additional file 
+
+.. _figure_12:
+
+.. figure:: ../_static/1758-2946-3-25-12.jpg
+   :align: center
+
+   Figure 12. Pseudo code to transform shape compatibility map into a filter
+
+   **Pseudo code to transform shape compatibility map into a filter**.
+
+
+Additional file 1
+
+**Quadrupole filters**. A zip archive of text files containing information on the maximum quadrupole differences as a function of molecular volumes.
+
+Click here for file
+
+4. Efficiency test of filters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To test the efficiency of the quadrupole filters devised, two sets of molecules were chosen. One set contains molecules in the PubChem CID range of 1 ~ 25,000,000, and the other contains those in the CID range of 25,000,001~25,001,000. Because a theoretical conformer was not generated for all CIDs or because compound records were not "live", the two datasets had 17,488,897 and 753 molecules, respectively. All-by-all comparison between the two sets gives 13,169,139,441 CID pairs. Using the first diverse conformer for each compound, the ST values for these 13.2 billion pairs were computed using ROCS \ [#B20]_ from OpenEye software, Inc., consuming ~419 CPU days in total, and stored. These ST scores were used to estimate how many CID pairs would be filtered out when applying the quadrupole filters as a function of volume type and as a function of ST threshold, for example, as demonstrated in Table \ :ref:`3<table_3>` and Figure \ :ref:`10<figure_10>`.
+
+5. Effect of Quadrupole filters on PubChem3D Neighboring
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+One aspect of this effort is to examine the change in real-world efficiency of PubChem3D neighboring processing when using quadrupole filters while computing the 3-D "Similar Conformers" relationship. To achieve this, the set of 4,218 biologically relevant chemical structures with known pharmacological actions from our earlier efforts \ [#B7]_ was used. These small molecules with known biological action (*Query set*) were neighbored against 26,157,365 compound records (*Search set*), representing the entire "live" PubChem3D contents as of Oct. 2010, using up to 1, 3, 5, 7, and 10 diverse conformers per compound for both compound sets. Timing and efficiency differences with our earlier work are given in Tables \ :ref:`4<table_4>` and \ :ref:`5<table_5>`.
+
+Competing interests
+*******************
+
+The authors declare that they have no competing interests.
+
+Authors' contributions
+**********************
+
+SK analyzed the quadrupole differences of the 3-D neighbors, generated the quadrupole filters, and wrote the first draft. EEB supervised the project and revised manuscript. SHB reviewed the final manuscript. All authors read and approved the final manuscript.
+
+Acknowledgements
+****************
+
+We are grateful to the NCBI Systems staff, especially Ron Patterson, Charlie Cook, and Don Preuss, whose efforts helped make the PubChem3D project possible. This research was supported by the Intramural Research Program of the National Library of Medicine, National Institutes of Health, U.S. Department of Health and Human Services.
+
+.. [#B1]  PubChem: integrated platform of small molecules and biological activities
+
+.. [#B2]  PubChem: a public information system for analyzing bioactivities of small molecules
+
+.. [#B3]  An overview of the PubChem BioAssay resource
+
+.. [#B4]  Database resources of the National Center for Biotechnology Information
+
+.. [#B5]  PubChem3D: conformer generation
+
+.. [#B6]  PubChem3D: diversity of shape
+
+.. [#B7]  PubChem3D: similar conformers
+
+.. [#B8]  PubChem substructure fingerprint description
+
+.. [#B9]  A fast method of molecular shape comparison: a simple application of a Gaussian description of molecular shape
+
+.. [#B10]  A Gaussian description of molecular shape
+
+.. [#B11]  Gaussian shape methods
+
+.. [#B12]  Small molecule shape-fingerprints
+
+.. [#B13]  A new class of molecular shape descriptors. 1. Theory and properties
+
+.. [#B14]  The calculation of molecular volumes and the use of volume analysis in the investigation of structured media and of solid-state organic-reactivity
+
+.. [#B15]  Molecular volume calculation using AM1 semi-empirical method toward diffusion coefficients and electrophoretic mobility estimates in aqueous solution
+
+.. [#B16]  Molecular volumes and Stokes-Einstein equation
+
+.. [#B17]  Partial molar volumes of ionic and nonionic organic solutes in water: a simple additivity scheme based on the intrinsic volume approach
+
+.. [#B18]  Correlation of computed van der waals and molecular volumes with apparent molar volumes (AMV) for amino-acid, carbohydrate and sulfamate tastant molecules. Relationship between Corey-Pauling-Koltun volumes (V\ :sub:`cpk`\ ) and computed volumes
+
+.. [#B19]  ShapeTK-C++
+
+.. [#B20]  ROCS - Rapid Overlay of Chemical Structures
+
+.. |nonascii_1| unicode:: 0x2265
+.. |nonascii_2| unicode:: 0x2265
+.. |nonascii_3| unicode:: 0x2265
+.. |nonascii_4| unicode:: 0x2265
+.. |nonascii_5| unicode:: 0xb1
+.. |nonascii_6| unicode:: 0xc5
+.. |nonascii_7| unicode:: 0xb1
+.. |nonascii_8| unicode:: 0xc5
+.. |nonascii_9| unicode:: 0xb1
+.. |nonascii_10| unicode:: 0xc5
+.. |nonascii_11| unicode:: 0xc5
+.. |nonascii_12| unicode:: 0xc5
+.. |nonascii_13| unicode:: 0xc5
+.. |nonascii_14| unicode:: 0xc5
+.. |nonascii_15| unicode:: 0xc5
+.. |nonascii_16| unicode:: 0xc5
+.. |nonascii_17| unicode:: 0xc5
+.. |nonascii_18| unicode:: 0xc5
+.. |nonascii_19| unicode:: 0xc5
+.. |nonascii_20| unicode:: 0xc5
+.. |nonascii_21| unicode:: 0xc5
+.. |nonascii_22| unicode:: 0xc5
+.. |nonascii_23| unicode:: 0xc5
+.. |nonascii_24| unicode:: 0xc5
+.. |nonascii_25| unicode:: 0x2265
+.. |nonascii_26| unicode:: 0xc5
+.. |nonascii_27| unicode:: 0xc5
+.. |nonascii_28| unicode:: 0xc5
+.. |nonascii_29| unicode:: 0xc5
+.. |nonascii_30| unicode:: 0x394
+.. |nonascii_31| unicode:: 0x394
+.. |nonascii_32| unicode:: 0x394
+.. |nonascii_33| unicode:: 0x394
+.. |nonascii_34| unicode:: 0x394
+.. |nonascii_35| unicode:: 0xc5
+.. |nonascii_36| unicode:: 0xc5
+.. |nonascii_37| unicode:: 0xc5
+.. |nonascii_38| unicode:: 0xc5
+.. |nonascii_39| unicode:: 0x2265
+.. |nonascii_40| unicode:: 0x394
+.. |nonascii_41| unicode:: 0x394
+.. |nonascii_42| unicode:: 0x394
+.. |nonascii_43| unicode:: 0x394
+.. |nonascii_44| unicode:: 0x394
+.. |nonascii_45| unicode:: 0x394
+.. |nonascii_46| unicode:: 0x394
+.. |nonascii_47| unicode:: 0x394
