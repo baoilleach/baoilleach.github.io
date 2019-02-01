@@ -65,7 +65,7 @@ function start() {
     else {
       $('#terminal').terminal().echo("Downloading...");
       $.ajax({
-       url: "https://www.rcsb.org/pdb/files/" + pdbfile,
+       url: "https://files.rcsb.org/view/" + pdbfile,
        success: function(data) {
          if (!isFile(pdbfile)) FS.writeFile(pdbfile, data);
            HandleCommand(["load " + pdbfile]);
