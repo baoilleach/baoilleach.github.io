@@ -56,10 +56,12 @@ TSV = {
   _location: 4,
   conference: 5,
   link: 6,
-  linkalternative: 7,
-  poster: 8,
-  paper: 9,
-  description: 10
+  type: 7,
+  linkalternative: 8,
+  link2: 9,
+  type2: 10,
+  paper: 11,
+  description: 12
 };
 
 
@@ -87,6 +89,9 @@ function handleTSV(data) {
     text += "<span class='paperlocation'>" + parts[TSV._location] + "</span>.\n";
     if (parts[TSV.link]) {
       text += "[<a href='talks/" + parts[TSV.link] + "'>Link</a>]";
+    }
+    if (parts[TSV.type] != "Talk") {
+      text += "(" + parts[TSV.type] + ")";
     }
     if (parts[TSV.linkalternative]) {
       text += parts[TSV.linkalternative];
