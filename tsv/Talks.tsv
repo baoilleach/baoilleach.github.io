@@ -1,4 +1,19 @@
 Authors	Title	Year	Month	Location	Conference	Link	Type	LinkAlternative	Link2	Type2	RelatedPaper	Description
+N. M. O'Boyle; C. de Graaf	An efficient algorithm to find matched pairs of a peptide	2020	10	Virtual	9th Rdkit UGM		Lightning Talk					
+N. M. O'Boyle; R. A. Sayle	Measuring R group similarity using medicinal chemistry data	2019	8	San Diego	258th ACS National Meeting		Talk					
+N. M. O'Boyle; R. A. Sayle	Making a hash of it: The advantage of selectively leaving out structural information	2019	8	San Diego	258th ACS National Meeting		Talk					
+N. M. O'Boyle; A. Dalke	DeepSMILES	2018	9	Cambridge, UK	7th RDKit UGM		Talk					
+N. M. O'Boyle; R. A. Sayle	Building a bridge between human-readable and machine-readable representations of biopolymers	2018	8	Boston	256th ACS National Meeting		Talk					
+N. M. O'Boyle; J. W. Mayfield; R. A. Sayle	A de facto standard or a free-for-all? A benchmark for reading SMILES	2018	8	Boston	256th ACS National Meeting		Talk					
+N. M. O'Boyle; R. A. Sayle; E. Bolton	PubChem as a Biologics Database	2017	8	Washington	254th ACS National Meeting		Talk					
+N. M. O'Boyle; D. M. Lowe; ; J. W. May; R. A. Sayle	100 million compounds, 100K protein structures, 2 million reactions, 1 million journal articles, 20 million patents and 15 billion substructures. Is 20TB really Big Data?	2015	4	XXX	From Big Data to Chemical Information (RSC CICAG)							
+N. M. O'Boyle; R. A. Sayle	Visualization and manipulation of Matched Molecular Series for decision support	2015	8	XXX	250th ACS National Meeting & Exposition							
+N. M. O'Boyle; R. A. Sayle; J. Bostr&ouml;m	Revising the Topliss decision tree …based on 30 years of medicinal chemistry literature	2014	8	XXX	248th ACS National Meeting							
+N. M. O'Boyle; R. A. Sayle; J. Bostr&ouml;m	Evidence-based medicinal chemistry ...using matched molecular series	2014	10	XXX	UK-QSAR Autumn Meeting							
+N. M. O'Boyle; R. A. Sayle; J. Bostr&ouml;m; A. Gill	Using Matched Molecular Series as a Predictive Tool To Optimize Biological Activity	2014	2	XXX	Joint CICAG and Cambridge Cheminformatics Network Meeting							
+N. M. O'Boyle	Using RDKit for Matched Molecular Series Analysis: When two are not enough 	2014	10	XXX	3rd RDKit UGM							
+N. M. O'Boyle	Making portable applications with RDKIT	2013	10	XXX	2nd RDKit UGM							
+N. M. O'Boyle; R. A. Sayle; E. Bolton	Roundtripping between small-molecule and biopolymer representations	2013	4	XXX	245th ACS National Meeting & Exposition							
 N. M. O'Boyle; G. Hutchison	Large-scale computational design and selection of polymers for solar cells.	2012	3	Dublin	Smart Surfaces 2012 - Solar and BioSensor Applications	2012-03-SmartSurfaces2012-PolymersForSolarCells.pptx	Talk					Hello
 N. M. O'Boyle; G. Hutchison	Solving the inverse design problem for polymer solar cells.	2012	1	Trinity College Dublin	Simulators Ireland and Irish Atomistic Simulators Meeting		Talk	See Mar 2012 above.				
 N. M. O'Boyle	Improving the quality of chemical databases with community-developed tools (and <i>vice versa</i>)	2011	8	Frederick, MD, US	5th Meeting on US Government Chemical Databases and Open Chemistry	2011-08-USGovernmentChemicalDatabases-ImprovingQualityChemicalDbs.pptx	Talk					
