@@ -91,13 +91,19 @@ function handleTSV(data) {
       text += "[<a href='talks/" + parts[TSV.link] + "'>Link</a>]";
     }
     if (parts[TSV.type] != "Talk") {
-      text += "(" + parts[TSV.type] + ")";
+      text += " (" + parts[TSV.type] + ")";
+    }
+    if (parts[TSV.link2]) {
+      text += " [<a href='talks/" + parts[TSV.link2] + "'>Link</a>]";
+    }
+    if (parts[TSV.type2] && parts[TSV.type2] != "Talk") {
+      text += " (" + parts[TSV.type2] + ")";
     }
     if (parts[TSV.linkalternative]) {
-      text += parts[TSV.linkalternative];
+      text += " (" + parts[TSV.linkalternative] + ")";
     }
-    if (parts[TSV.DOI]) {
-      text += "[<a href='http://dx.doi.org/" + parts[TSV.DOI] + "'>Link</a>]";
+    if (parts[TSV.paper]) {
+      text += " [<a href='https://doi.org/" + parts[TSV.paper] + "'>Related paper</a>]";
     }
     if (parts[TSV.description]) {
       text += "<div id='deswrapper_" + i + "' style='display:none;'><div class='description' id='description_" + i + "'>" + parts[TSV.description] + "</div></div>";
